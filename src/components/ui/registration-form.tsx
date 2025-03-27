@@ -31,7 +31,7 @@ export default function Form() {
           type="text"
           name="fullName"
           placeholder="Juan"
-          className="w-full"
+          className="border-0 w-full"
         />
 
         <InputField
@@ -39,7 +39,7 @@ export default function Form() {
           type="text"
           name="middleName"
           placeholder="Protacio"
-          className="w-full"
+          className="border-0 w-full"
         />
 
         {/* Last Name, Extension */}
@@ -48,7 +48,7 @@ export default function Form() {
           type="text"
           name="lastName"
           placeholder="Dela Cruz"
-          className="w-full"
+          className="border-0 w-full"
         />
 
         <InputField
@@ -56,7 +56,7 @@ export default function Form() {
           type="text"
           name="ext"
           placeholder="Jr."
-          className="w-1/3"
+          className="border-0 w-1/3"
         />
 
         <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">
@@ -72,7 +72,7 @@ export default function Form() {
               type="text"
               name="studentNumber"
               placeholder="202512345"
-              className="w-full"
+              className="border-0 w-full"
             />
           </div>
 
@@ -83,7 +83,7 @@ export default function Form() {
                 name="course"
                 value={selectedCourse}
                 onChange={(e) => setSelectedCourse(e.target.value)}
-                className="peer w-full pb-2 pt-2 pl-3 pr-8 bg-midnight border outline-2 rounded-md text-white dark:focus:border-teal focus:ring-2 focus:ring-teal focus:border-teal appearance-none focus:outline-none "
+                className="border-0 peer w-full pb-2 pt-2 pl-3 pr-8 bg-midnight outline-2 rounded-md text-white dark:focus:border-teal focus:ring-2 focus:ring-teal focus:border-teal appearance-none focus:outline-none "
               >
                 <option value="">Select Course</option>
                 <option value="CS">Computer Science</option>
@@ -94,7 +94,7 @@ export default function Form() {
               {/* Adjusted SVG size & spacing */}
               <div className="pointer-events-none absolute inset-y-0 right-2 pl-1 border-l-2 flex items-center peer-focus:border-l-teal">
                 <svg
-                  className="w-5 h-5 text-gray-400"
+                  className="border-0 w-5 h-5 text-gray-400"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -116,6 +116,7 @@ export default function Form() {
             type="email"
             name="email"
             placeholder="jprizal@plm.edu.ph"
+            className="border-0"
           />
         </div>
 
@@ -133,6 +134,7 @@ export default function Form() {
             type="password"
             name="password"
             placeholder="Enter Password"
+            className="border-0"
           />
         </div>
 
@@ -142,10 +144,11 @@ export default function Form() {
             type="password"
             name="confirmPassword"
             placeholder="Enter Password Again"
+            className="border-0"
           />
         </div>
 
-        <div className="col-span-2 flex items-center gap-4 h-12 mt-2 bg-teal-950 p-6 rounded-md">
+        <div className="col-span-2 flex items-center gap-4 h-12 mt-2 bg-teal-950 border border-teal-800 p-4 rounded-md">
           {/* Icon Container */}
           <div className="flex justify-center items-center">
             <svg
@@ -164,14 +167,13 @@ export default function Form() {
 
           {/* Text Container with More Space */}
           <p className="text-white text-xs leading-tight w-full">
-            Password should be a minimum of 9 characters, including uppercase
-            letters, lowercase letters, numbers, and symbols.
+            Password should be minimum of 9 characters, including uppercase letters, lowercase letters, numbers, and symbols.
           </p>
         </div>
 
         {/* Submit Button */}
         <div className="col-span-2">
-          <button className="w-full text-white py-2 rounded-md bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br">
+          <button className="w-full text-white py-3 cursor-pointer rounded-md bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br">
             Create Account
           </button>
         </div>

@@ -6,7 +6,7 @@ const InputBox = () => {
     <input
       type="text"
       maxLength={1}
-      className="relative z-10 border-2 h-[70px] w-[70px] rounded-md border-gray-200 bg-midnight text-white text-3xl font-bold text-center outline-none"
+      className="relative z-10 border-0 h-[70px] w-[70px] rounded-md border-gray-200 bg-midnight text-white text-3xl font-bold text-center outline-none"
     />
   );
 };
@@ -15,7 +15,7 @@ const OTP = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-grow flex justify-center">
+      <main className="flex-grow flex justify-center mt-15">
         <div className="flex flex-col items-center w-5xl mt-28">
           <h1 className="text-teal text-5xl font-bold font-mono">
             Check your email!
@@ -39,7 +39,7 @@ const OTP = () => {
 
           <button
             type="submit"
-            className="font-bold mt-4 w-xs h-12 border-2 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-sans cursor-pointer z-10"
+            className="font-bold mt-4 w-sm h-12 border-0 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-sans cursor-pointer z-10"
           >
             Confirm
           </button>

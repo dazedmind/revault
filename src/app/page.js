@@ -93,14 +93,14 @@ export default async function Home() {
               img={document}
               title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students" 
               description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-              tags={["IT", "Design", "UI/UX"]}
+              tags={["IT", "SIA", "Cloud"]}
             />
             
             <DocsCard 
               img={document}
               title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students" 
               description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-              tags={["IT", "Design", "UI/UX"]}
+              tags={["CS", "Research Writing", "Algorithms"]}
             />
 
             <DocsCard 

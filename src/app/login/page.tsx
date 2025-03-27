@@ -102,7 +102,7 @@ const LogIn = () => {
               <div className="flex flex-row justify-center mt-5">
                 <button
                   type="submit"
-                  className="w-xs h-12 border-2 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-sans cursor-pointer z-10"
+                  className="w-xs h-12 border-1 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-sans cursor-pointer z-10"
                 >
                   Log In
                 </button>
@@ -114,7 +114,7 @@ const LogIn = () => {
           <div className="flex flex-row justify-center mt-5 mb-4">
             <p className="text-xs">
               Don&#39;t have an account yet?{" "}
-              <span className="text-teal cursor-pointer">Create account</span>
+              <a href="/registration" className="text-teal cursor-pointer">Create account</a>
             </p>
           </div>
 
