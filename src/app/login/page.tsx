@@ -90,7 +90,9 @@ const LogIn = () => {
           <div className="flex flex-row justify-center mt-5 mb-4">
             <p className="text-xs">
               Don&#39;t have an account yet?{" "}
-              <span className="text-teal cursor-pointer">Create account</span>
+              <a href="/registration" className="text-teal cursor-pointer">
+                Create account
+              </a>
             </p>
           </div>
 
