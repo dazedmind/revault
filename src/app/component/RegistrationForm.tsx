@@ -108,7 +108,6 @@ export default function Form({ link }) {
             type="email"
             name="email"
             placeholder="jprizal@plm.edu.ph"
-            className="border-0"
           />
         </div>
 
@@ -126,7 +125,6 @@ export default function Form({ link }) {
             type="password"
             name="password"
             placeholder="Enter Password"
-            className="border-0"
           />
         </div>
 
