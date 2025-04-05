@@ -4,6 +4,16 @@ import WarningMessage from "@/app/component/WarningMessage";
 import { useState } from "react";
 import InputField from "./InputField";
 import Link from "next/link";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Form({ link }) {
   const [selectedCourse, setSelectedCourse] = useState("");
@@ -69,7 +79,21 @@ export default function Form({ link }) {
           </div>
 
           <div className="flex flex-col flex-grow">
-            <label className="text-sm text-gray-300 mb-1">Course</label>
+            <Label className="text-sm text-gray-300 mb-1">Course</Label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select your course" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Course</SelectLabel>
+                  <SelectItem value="apple">Computer Science</SelectItem>
+                  <SelectItem value="banana">Information Technology</SelectItem>
+                  <SelectItem value="blueberry">Information Systems</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {/* <label className="text-sm text-gray-300 mb-1">Course</label>
             <div className="relative w-full">
               <select
                 name="course"
@@ -83,7 +107,7 @@ export default function Form({ link }) {
                 <option value="IS">Information Systems</option>
               </select>
 
-              {/* Adjusted SVG size & spacing */}
+              {/* Adjusted SVG size & spacing 
               <div className="pointer-events-none absolute inset-y-0 right-2 pl-1 border-l-2 flex items-center peer-focus:border-l-teal">
                 <svg
                   className="border-0 w-5 h-5 text-gray-400"
@@ -97,7 +121,7 @@ export default function Form({ link }) {
                   />
                 </svg>
               </div>
-            </div>
+            </div>*/}
           </div>
         </div>
 

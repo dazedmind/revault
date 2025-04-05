@@ -7,6 +7,11 @@ const SettingsList = ({
   ulClassName = "",
   labelClassName = "text-white-75",
 }) => {
+  const slugify = (text: string) =>
+    text.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-");
+
+  const categoryPath = slugify(category);
+
   return (
     <div>
       <h1 className={categoryClassName}>{category}</h1>
@@ -21,7 +26,9 @@ const SettingsList = ({
               key={index}
               className={`${labelClassName} cursor-pointer hover:text-teal`}
             >
-              <Link href={`/settings/${path}`}>{label}</Link>
+              <Link href={`/settings/${categoryPath}/${path}`} prefetch={true}>
+                {label}
+              </Link>
             </li>
           );
         })}

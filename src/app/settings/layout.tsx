@@ -24,10 +24,6 @@ export default function SettingsLayout({
       category: "Security & Privacy",
       labels: ["Two-Factor Authentication", "Account Activity Log"],
     },
-    {
-      category: "Repository & Upload Settings",
-      labels: ["Default Metadata Preference", "Document Commends"],
-    },
   ];
 
   // A layout that renders the header, the settings sidebar, and the corresponding setting
@@ -58,7 +54,9 @@ export default function SettingsLayout({
         </aside>
 
         {/* Main Content (dynamic) */}
-        <main className="flex-1 pt-29 pl-4 mb-500 h-auto">{children}</main>
+        <main className="flex-1 pt-29 pl-4 mb-500 h-auto w-fill">
+          {children}
+        </main>
       </div>
     </div>
   );
