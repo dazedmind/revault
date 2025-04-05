@@ -17,6 +17,7 @@
   --white-25: #ACACAC;
   --white-50: #C3C3C3;
   --white-75: #D9D9D9;
+  --white-5: #404040;
   --mustard-warning: #CCA628;
   --purple-highlight: #963098;
   --background: oklch(1 0 0);
@@ -70,6 +71,7 @@
   --color-white-25: #ACACAC;
   --color-white-50: #C3C3C3;
   --color-white-75: #D9D9D9;
+  --color-white-5: #404040;
   --color-red-warning: var(--red-warning);
   --color-red-warning-fg: #A52424;
   --color-mustard-warning: #CCA628;

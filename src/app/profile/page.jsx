@@ -1,7 +1,5 @@
 import React from 'react'
 import NavBar from '../component/NavBar'
-import Image from 'next/image'
-import avatar from "../img/user.jpg";
 import { ProfileCard } from '../component/ProfileCard';
 import Link from 'next/link';
 import document from "../img/document.png"
@@ -15,7 +13,7 @@ export default function Profile() {
  
       <ProfileCard/>
 
-      <div className='flex'>
+      <div className='flex bg-midnight'>
         <aside className='flex flex-col gap-8 h-auto w-96 p-14'>
               <div className="flex flex-col gap-2">
                 <h2 className="font-bold">My Profile</h2>

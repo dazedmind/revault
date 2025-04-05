@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoMicrosoft } from "react-icons/io5";
 import LogInInputField from "../component/LogInInputField";
+import { Button } from "@/components/ui/button";
+import { LogInCheckBox } from "../component/LogInCheckBox";
 
 const LogIn = () => {
   const [formData, setFormData] = useState({
@@ -63,12 +65,13 @@ const LogIn = () => {
 
               {/* Remember Password & Forgot Password */}
               <div className="flex flex-row justify-between items-center m-3 mt-5">
-                <div className="flex flex-row justify-center">
+                <LogInCheckBox id="rememberMe" label="Rember password" />
+                {/* <div className="flex flex-row justify-center">
                   <input type="checkbox" />
                   <p className="font-inter text-xs text-align ml-1">
                     Remember Password
                   </p>
-                </div>
+                </div> */}
                 <p className="font-inter text-teal text-xs text-align cursor-pointer">
                   Forgot Password?
                 </p>
@@ -76,12 +79,12 @@ const LogIn = () => {
 
               {/* Submit Button */}
               <div className="flex flex-row justify-center mt-5">
-                <button
+                <Button
                   type="submit"
                   className="w-xs h-12 border-2 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer font-bold text-lg"
                 >
                   Log In
-                </button>
+                </Button>
               </div>
             </form>
           </div>
@@ -90,7 +93,9 @@ const LogIn = () => {
           <div className="flex flex-row justify-center mt-5 mb-4">
             <p className="text-xs">
               Don&#39;t have an account yet?{" "}
-              <span className="text-teal cursor-pointer">Create account</span>
+              <a href="/registration" className="text-teal cursor-pointer">
+                Create account
+              </a>
             </p>
           </div>
 

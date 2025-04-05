@@ -3,7 +3,7 @@ import WarningMessage from "@/app/component/WarningMessage";
 import { Button } from "@/components/ui/button";
 import React from "react";
 
-const ChangePasswordSettings = () => {
+const ChangePassword = () => {
   return (
     <>
       <h1 className="text-2xl ml-1">Change</h1>
@@ -53,4 +53,4 @@ const ChangePasswordSettings = () => {
   );
 };
 
-export default ChangePasswordSettings;
+export default ChangePassword;

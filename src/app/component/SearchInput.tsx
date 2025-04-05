@@ -52,13 +52,13 @@ export const SearchInput = ({ defaultValue }: iDefault) => {
 
     return (
 
-        <div className="search__input border-[1px] font-[family-name:'Inter'] border-solid border-neutral-500 flex flex-row items-center text-sm rounded-[12px]">
+        <div className="search__input border-[1px] font-[family-name:'Inter'] border-solid border-neutral-500 w-auto flex flex-row items-center text-sm rounded-[12px]">
             <input type="text"
                 id="inputId"
                 placeholder="Search paper"
                 value={inputValue ?? ""} onChange={handleChange}
                 onKeyDown={handleKeyPress}
-                className="bg-[transparent] outline-none border-none w-full p-3" />
+                className="bg-[transparent] outline-none border-none w-72 p-3" />
             <label htmlFor="inputId" className="p-3"><FaMagnifyingGlass />
             </label>
 

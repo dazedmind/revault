@@ -1,3 +1,6 @@
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 const InputField = ({
   label,
   type,
@@ -8,14 +11,14 @@ const InputField = ({
   containerClassName = "",
 }) => (
   <div className={`flex flex-col w-full ${containerClassName}`}>
-    <label className={`text-sm text-gray-300 mb-1 ${labelClassName}`}>
+    <Label className={`text-sm text-gray-300 mb-1 ${labelClassName}`}>
       {label}
-    </label>
-    <input
+    </Label>
+    <Input
       type={type}
       name={name}
       placeholder={placeholder}
-      className={`px-3 py-2 bg-midnight border outline-2 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-teal ${inputClassName}`}
+      className={`${inputClassName}`}
     />
   </div>
 );
