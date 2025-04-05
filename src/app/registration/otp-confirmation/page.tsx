@@ -1,14 +1,9 @@
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import Link from "next/link";
-
-const InputBox = () => {
-  return (
-    <input
-      type="text"
-      maxLength={1}
-      className="relative z-10 border-2 h-[70px] w-[70px] rounded-md border-gray-200 bg-midnight text-white text-3xl font-bold text-center outline-none"
-    />
-  );
-};
 
 const OTP = () => {
   return (
@@ -22,15 +17,16 @@ const OTP = () => {
           the One-Time-Passcode (OTP).
         </p>
 
-        {/* Wrapper aligns "Resend in 30s" left of input boxes */}
-        <div className="flex flex-col items-start mt-4">
-          <div className="flex flex-row gap-2">
-            <InputBox />
-            <InputBox />
-            <InputBox />
-            <InputBox />
-            <InputBox />
-          </div>
+        <div className="flex flex-col items-start">
+          <InputOTP maxLength={5}>
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+            </InputOTPGroup>
+          </InputOTP>
           <p className="text-sm mt-2">Resend in 30s</p>
         </div>
 
