@@ -1,19 +1,21 @@
 "use client";
+
+import WarningMessage from "@/app/component/WarningMessage";
 import { useState } from "react";
+import InputField from "./InputField";
+import Link from "next/link";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-const InputField = ({ label, type, name, placeholder, className = "" }) => (
-  <div className="flex flex-col w-full">
-    <label className="text-sm text-gray-300 mb-1">{label}</label>
-    <input
-      type={type}
-      name={name}
-      placeholder={placeholder}
-      className={`px-3 py-2 bg-black/30 border outline-2 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-teal ${className}`}
-    />
-  </div>
-);
-
-export default function Form() {
+export default function Form({ link }) {
   const [selectedCourse, setSelectedCourse] = useState("");
 
   return (
@@ -31,7 +33,7 @@ export default function Form() {
           type="text"
           name="fullName"
           placeholder="Juan"
-          className="border-0 w-full"
+          inputClassName="w-full"
         />
 
         <InputField
@@ -39,7 +41,7 @@ export default function Form() {
           type="text"
           name="middleName"
           placeholder="Protacio"
-          className="border-0 w-full"
+          inputClassName="w-full"
         />
 
         {/* Last Name, Extension */}
@@ -48,7 +50,7 @@ export default function Form() {
           type="text"
           name="lastName"
           placeholder="Dela Cruz"
-          className="border-0 w-full"
+          inputClassName="w-full"
         />
 
         <InputField
@@ -56,7 +58,7 @@ export default function Form() {
           type="text"
           name="ext"
           placeholder="Jr."
-          className="border-0 w-1/3"
+          inputClassName="w-1/3"
         />
 
         <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">
@@ -72,12 +74,26 @@ export default function Form() {
               type="text"
               name="studentNumber"
               placeholder="202512345"
-              className="border-0 w-full"
+              inputClassName="w-full"
             />
           </div>
 
           <div className="flex flex-col flex-grow">
-            <label className="text-sm text-gray-300 mb-1">Course</label>
+            <Label className="text-sm text-gray-300 mb-1">Course</Label>
+            <Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select your course" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Course</SelectLabel>
+                  <SelectItem value="apple">Computer Science</SelectItem>
+                  <SelectItem value="banana">Information Technology</SelectItem>
+                  <SelectItem value="blueberry">Information Systems</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {/* <label className="text-sm text-gray-300 mb-1">Course</label>
             <div className="relative w-full">
               <select
                 name="course"
@@ -91,7 +107,7 @@ export default function Form() {
                 <option value="IS">Information Systems</option>
               </select>
 
-              {/* Adjusted SVG size & spacing */}
+              {/* Adjusted SVG size & spacing 
               <div className="pointer-events-none absolute inset-y-0 right-2 pl-1 border-l-2 flex items-center peer-focus:border-l-teal">
                 <svg
                   className="border-0 w-5 h-5 text-gray-400"
@@ -105,7 +121,7 @@ export default function Form() {
                   />
                 </svg>
               </div>
-            </div>
+            </div>*/}
           </div>
         </div>
 
@@ -116,7 +132,6 @@ export default function Form() {
             type="email"
             name="email"
             placeholder="jprizal@plm.edu.ph"
-            className="border-0"
           />
         </div>
 
@@ -134,7 +149,6 @@ export default function Form() {
             type="password"
             name="password"
             placeholder="Enter Password"
-            className="border-0"
           />
         </div>
 
@@ -143,38 +157,22 @@ export default function Form() {
             label="Confirm Password"
             type="password"
             name="confirmPassword"
-            placeholder="Enter Password Again"
-            className="border-0"
+            placeholder="Confirm Password"
           />
         </div>
 
-        <div className="col-span-2 flex items-center gap-4 h-12 mt-2 bg-teal-950 border border-teal-800 p-4 rounded-md">
-          {/* Icon Container */}
-          <div className="flex justify-center items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="17"
-              height="17"
-              viewBox="0 0 17 17"
-              fill="none"
-            >
-              <path
-                d="M17 8.5C17 13.1955 13.1941 17 8.5 17C3.80591 17 0 13.1955 0 8.5C0 3.80728 3.80591 0 8.5 0C13.1941 0 17 3.80728 17 8.5ZM8.5 10.2137C7.62926 10.2137 6.92339 10.9196 6.92339 11.7903C6.92339 12.6611 7.62926 13.3669 8.5 13.3669C9.37074 13.3669 10.0766 12.6611 10.0766 11.7903C10.0766 10.9196 9.37074 10.2137 8.5 10.2137ZM7.00314 4.54661L7.25739 9.2079C7.26928 9.42602 7.44963 9.59677 7.66806 9.59677H9.33194C9.55037 9.59677 9.73072 9.42602 9.74261 9.2079L9.99686 4.54661C10.0097 4.31101 9.82213 4.1129 9.58618 4.1129H7.41378C7.17784 4.1129 6.99029 4.31101 7.00314 4.54661Z"
-                fill="#D9D9D9"
-              />
-            </svg>
-          </div>
-
-          {/* Text Container with More Space */}
-          <p className="text-white text-xs leading-tight w-full">
-            Password should be minimum of 9 characters, including uppercase letters, lowercase letters, numbers, and symbols.
-          </p>
-        </div>
+        {/* Warning message from WarningMessage.tsx */}
+        <WarningMessage
+          containerClassName="col-span-2"
+          textClassName=" "
+          message="Password should be a minimum of 9 characters, including uppercase
+            letters, lowercase letters, numbers, and symbols."
+        />
 
         {/* Submit Button */}
         <div className="col-span-2">
-          <button className="w-full text-white py-3 cursor-pointer rounded-md bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br">
-            Create Account
+          <button className="w-full text-white py-2 rounded-md bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-lg font-bold">
+            <Link href={link}> Next </Link>
           </button>
         </div>
       </form>
