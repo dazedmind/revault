@@ -6,6 +6,7 @@ const InputField = ({
   type,
   name,
   placeholder,
+  required = true,
   inputClassName = "",
   labelClassName = "",
   containerClassName = "",
@@ -19,6 +20,7 @@ const InputField = ({
       name={name}
       placeholder={placeholder}
       className={`${inputClassName}`}
+      required={required}
     />
   </div>
 );

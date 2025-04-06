@@ -30,12 +30,11 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
 
-export default function NavBar() {
+export default function AdminNavBar() {
     return (
         <>
             <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono  w-full bg-dark p-8 px-16">
-                <div className="flex align-middle items-center gap-10">
-                  
+                <div className="flex align-middle items-center gap-10">     
                     <Link href="/home" className="flex gap-4 font-bold text-3xl text-teal">
                     <Image 
                     src={icon} 
@@ -46,7 +45,12 @@ export default function NavBar() {
                 <SearchInput placeholder="Search paper"/>
                 </div>
                 <ul className="flex flex-row items-center gap-8 text-lg">
-                    
+
+                <Link href="/upload">
+                    <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+                        <FaPlus /> Upload
+                    </button>
+                </Link>      
                 
                 <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -73,9 +77,7 @@ export default function NavBar() {
                                 </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-
                 </ul>
-
             </header>
         </>
     )

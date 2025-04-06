@@ -15,9 +15,6 @@ const InputField = ({ label, type, name, placeholder, className = "" }) => (
 function Upload() {
   return (
     <div className='flex flex-col gap-8'>
-        <div>
-            <input type="file" className='p-10 px-40 border-2 border-dashed border-teal rounded-md ' name='file-input' />
-        </div>
         <span className='flex flex-col gap-2'>
             <label htmlFor="title">Paper Title</label>
             <textarea name="title" id="title" className='p-4 bg-midnight border border-white-5 rounded-md w-2xl outline-0'></textarea>

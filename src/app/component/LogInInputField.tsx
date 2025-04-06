@@ -10,7 +10,7 @@ const LogInInputField = ({
     className={`flex flex-col justify-center items-center relative w-full mt-5 ${className}`}
   >
     <input
-      className={`h-54px block px-2.5 pb-2.5 pt-4 text-sm bg-midnight rounded-lg border-1 outline-2 
+      className={`h-54px block px-2.5 pb-2.5 pt-4 text-sm bg-midnight rounded-lg border-1 outline-1 
           appearance-none dark:text-white dark:focus:border-teal focus:outline-none focus:ring-0 focus:border-teal peer ${className}`}
       type={type}
       name={name}

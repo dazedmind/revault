@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import Link from "next/link";
 
 
 const tagColors = {
@@ -48,13 +49,15 @@ const DocsCard = (props) => {
               <div className="mt-6 flex flex-row items-center justify-between gap-4">
                 {/* Left Side Buttons */}
                 <span className="flex gap-4">
-                    <button className="flex flex-row items-center align-middle gap-2 px-6 py-2 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br rounded-sm cursor-pointer">
-                    <FaBookOpen /> Read
-                    </button>
-                    <button className="flex flex-row items-center align-middle gap-2 px-6 py-2 bg-dusk rounded-sm cursor-pointer hover:bg-dusk-foreground">
+                    <Link href="/view-file">
+                      <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br rounded-lg cursor-pointer">
+                        <FaBookOpen /> Read
+                      </button>
+                    </Link>
+                    <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-dusk rounded-lg cursor-pointer hover:bg-dusk-foreground">
                     <FaLink /> Cite
                     </button>
-                    <button className="flex flex-row items-center align-middle gap-2 px-6 py-2 bg-dusk rounded-sm cursor-pointer hover:bg-dusk-foreground">
+                    <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-dusk rounded-lg cursor-pointer hover:bg-dusk-foreground">
                     <FaBookmark /> Bookmark
                     </button>
                 </span>

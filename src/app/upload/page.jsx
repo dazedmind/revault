@@ -1,66 +1,64 @@
-import React from 'react'
-import NavBar from '../component/NavBar'
-import Upload from '@/components/ui/upload-file'
+"use client";
+import React, { useState } from 'react';
+import NavBar from '../component/NavBar';
+import Upload from '@/components/ui/upload-file';
+// import { extractTextFromPDF } from '../utils/extractTextFromPDF';
 
-function UploadFile() {
+export default function UploadFile() {
   return (
-    <div className='bg-midnight'>
-        <NavBar/>
-
-        <main className='p-8 mx-12'>
-            <div>
-              <h1 className='font-bold text-3xl'>Upload Research Paper</h1>
-              <div className="col-span-2 flex items-center gap-4 h-12 my-8 bg-teal-950 border border-teal-800 p-4 w-auto rounded-md">
-                {/* Icon Container */}
-                <div className="flex justify-center items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="17"
-                    height="17"
-                    viewBox="0 0 17 17"
-                    fill="none"
-                  >
-                    <path
-                      d="M17 8.5C17 13.1955 13.1941 17 8.5 17C3.80591 17 0 13.1955 0 8.5C0 3.80728 3.80591 0 8.5 0C13.1941 0 17 3.80728 17 8.5ZM8.5 10.2137C7.62926 10.2137 6.92339 10.9196 6.92339 11.7903C6.92339 12.6611 7.62926 13.3669 8.5 13.3669C9.37074 13.3669 10.0766 12.6611 10.0766 11.7903C10.0766 10.9196 9.37074 10.2137 8.5 10.2137ZM7.00314 4.54661L7.25739 9.2079C7.26928 9.42602 7.44963 9.59677 7.66806 9.59677H9.33194C9.55037 9.59677 9.73072 9.42602 9.74261 9.2079L9.99686 4.54661C10.0097 4.31101 9.82213 4.1129 9.58618 4.1129H7.41378C7.17784 4.1129 6.99029 4.31101 7.00314 4.54661Z"
-                      fill="#D9D9D9"
-                    />
-                  </svg>
-                </div>
-
-                {/* Text Container with More Space */}
-                <p className="text-white text-sm leading-tight w-full">
-                  Uploaded research papers are subject to approval by the facilitators. It may take up to 5-7 business days for processing. You will be notified once your paper has been published.
-                </p>
-              </div>
-
-            </div>
-
-            <Upload/>
-
-        
-        </main>
-        <div className='flex justify-between items-center bg-darker p-12 px-24 border-t-2 border-dashed border-white-5'>
-          
-              <span className='flex flex-col gap-2'>
-                <label htmlFor="file-name">File Short-hand Name (Nickname)</label>
-                <input name="file-name" id="file-name" className='p-4 bg-midnight border outline-0 rounded-md w-lg'></input>
-
-                <div className="flex flex-row mt-4">
-                  <input type="checkbox" />
-                  <p className="font-inter text-sm text-align ml-1">
-                    By uploading your research paper, you agree to our <span className='text-teal'>Terms and Privacy Policy</span> and consent to its publication.
-                  </p>
-                </div>
-              </span>
-
-    
-            
-              <span>
-                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-8 font-sans flex items-center gap-2 rounded-lg cursor-pointer">Request Upload</button>
-              </span>
+    <div className="bg-midnight">
+      <NavBar />
+      <main className="p-8 mx-12">
+        <div>
+          <h1 className="font-bold text-3xl mb-6">Upload Research Paper</h1>
         </div>
-    </div>
-  )
-}
 
-export default UploadFile
+        <div>
+          <input
+            type="file"
+            className="p-10 px-40 border-2 border-dashed border-teal rounded-md"
+            accept="application/pdf"
+            // onChange={handleFileUpload}
+            name="file-input"
+          />
+        </div>
+
+        <Upload />
+
+        <div className="mt-8">
+          <h3 className="text-lg font-medium text-teal">Detected Title:</h3>
+          <input
+            type="text"
+            className="w-full p-4 mb-6 bg-midnight border outline-0 rounded-md"
+            // value={title}
+            // onChange={(e) => setTitle(e.target.value)}
+          />
+
+          <h3 className="text-lg font-medium text-teal">Extracted Text:</h3>
+          <textarea
+            className="w-full h-48 p-4 bg-midnight border outline-0 rounded-md"
+            readOnly
+          />
+        </div>
+      </main>
+
+      <div className="flex justify-between items-center bg-darker p-12 px-24 border-t-2 border-dashed border-white-5">
+        <span className="flex flex-col gap-2">
+          <div className="flex flex-row mt-4">
+            <input type="checkbox" />
+            <p className="font-inter text-sm ml-1">
+              By uploading your research paper, you agree to our{' '}
+              <span className="text-teal">Terms and Privacy Policy</span> and consent to its publication.
+            </p>
+          </div>
+        </span>
+
+        <span>
+          <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-8 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+            Upload
+          </button>
+        </span>
+      </div>
+    </div>
+  );
+}

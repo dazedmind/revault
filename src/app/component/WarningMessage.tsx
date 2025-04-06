@@ -5,7 +5,7 @@ const WarningMessage = ({
 }) => {
   return (
     <div
-      className={`flex items-center gap-4 h-12 mt-2 bg-teal-950 p-6 rounded-md ${containerClassName}`}
+      className={`flex items-center gap-4 h-12 mt-2 bg-teal-dark p-4 rounded-md ${containerClassName}`}
     >
       {/* Icon Container */}
       <div className="flex justify-center items-center">

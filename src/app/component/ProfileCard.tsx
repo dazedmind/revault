@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
-import avatar from "../img/user.jpg";
+import avatar from "../img/user.png";
 
 export const ProfileCard = () => {
 
@@ -17,13 +17,6 @@ export const ProfileCard = () => {
             </div>
             </div>
 
-            <div>
-            <h1 className='font-bold mb-2'>Contribution Profile</h1>
-            <span className='flex gap-2'>
-                <p className='p-2 border border-white-25 rounded-md'>3 Papers</p>
-                <p className='p-2 border border-white-25 rounded-md'>100 Commends</p>
-            </span>
-            </div>
         </div>
     )
 

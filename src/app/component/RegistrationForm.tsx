@@ -59,6 +59,7 @@ export default function Form({ link }) {
           name="ext"
           placeholder="Jr."
           inputClassName="w-1/3"
+          required={false}
         />
 
         <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">
@@ -89,7 +90,6 @@ export default function Form({ link }) {
                   <SelectLabel>Course</SelectLabel>
                   <SelectItem value="apple">Computer Science</SelectItem>
                   <SelectItem value="banana">Information Technology</SelectItem>
-                  <SelectItem value="blueberry">Information Systems</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>

@@ -21,9 +21,6 @@ export default function Profile() {
                 
                 <ul className="ml-4 flex flex-col gap-2">
                   <li>
-                    <Link href="/"> My Vault</Link>
-                  </li>
-                  <li>
                     <Link href="/"> My Bookmarks</Link>
                   </li>
                 </ul>
@@ -38,9 +35,6 @@ export default function Profile() {
                     <Link href="/">System Settings</Link>
                   </li>
                   <li>
-                    <Link href="/">Edit Profile</Link>
-                  </li>
-                  <li>
                     <Link href="/">Logout</Link>
                   </li>
                 </ul>
@@ -50,8 +44,7 @@ export default function Profile() {
         <main className='flex flex-col gap-5 mr-24 align-middle'>
           <div className='flex flex-col w-full gap-5 mx-2 my-6 align-middle p-8'>
             <div className='flex flex-row justify-between align-middle items-center'>
-              <h1 className="text-3xl font-bold">My Vault</h1>
-              <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer"><FaPlus/>Upload</button>
+              <h1 className="text-3xl font-bold">My Bookmarks</h1>
             </div>
 
             <DocsCardUser

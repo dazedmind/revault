@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import WarningMessage from "@/app/component/WarningMessage";
+import { FaMicrosoft } from "react-icons/fa6";
 
 const EditProfilePage = () => {
   return (
@@ -63,43 +64,39 @@ const EditProfilePage = () => {
         labelClassName="ml-5"
       />
 
-      <InputField
-        containerClassName="pt-4"
-        label="Email"
-        type="email"
-        name="email"
-        placeholder="jatevalena2022@plm.edu.ph"
-        inputClassName="w-sm ml-5 h-14"
-        labelClassName="ml-5"
-      />
+      <span className="relative">
+        <InputField
+          containerClassName="pt-4"
+          label="Email"
+          type="email"
+          name="email"
+          placeholder="jatevalena2022@plm.edu.ph"
+          inputClassName="w-sm ml-5 h-14 "
+          labelClassName="ml-5"
+        />
 
-      <div className="ml-5 mt-4 relative w-full">
-        <Label htmlFor="bio" className=" text-sm text-gray-300 mb-1">
-          Bio
-        </Label>
-        <Textarea id="bio"></Textarea>
-
-        <Button className="absolute top-20 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">
+        <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">
           Save Changes
+        </Button>
+      </span>
+
+
+      <h1 className="text-2xl ml-1 mt-10">Manage Linked Accounts</h1>
+
+      {/* divider */}
+      <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2"></div>
+
+     <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between mt-5">
+        <div className="flex flex-row justify-center items-center gap-2">
+          <FaMicrosoft />
+          <p className="text-white-100 text-base font-normal">Microsoft</p>
+        </div>
+        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white w-[100px]">
+          Link
         </Button>
       </div>
 
-      <h1 className="text-2xl ml-1 mt-10">Contribution Profile</h1>
 
-      {/* divider */}
-      <div className="bg-dusk h-0.5 w-5xl mb-6 mt-2"></div>
-
-      <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between items-center">
-        <div>
-          <p className="text-white-100 text-base font-normal">
-            Show Contribution Information on Profile
-          </p>
-          <p className="text-white-25 text-xs font-normal">
-            Display numbers of contribution on profile
-          </p>
-        </div>
-        <Switch />
-      </div>
     </div>
   );
 };

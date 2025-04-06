@@ -15,9 +15,7 @@ export default function SettingsLayout({
       labels: [
         "Edit Profile",
         "Change Password",
-        "Appearance",
-        "Notification Preference",
-        "Manage Linked Accounts",
+        "Appearance"      
       ],
     },
     {
@@ -28,16 +26,16 @@ export default function SettingsLayout({
 
   // A layout that renders the header, the settings sidebar, and the corresponding setting
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-full flex flex-col bg-midnight">
       {/* Header */}
       <nav>
         <NavBar />
       </nav>
 
       {/* Layout Content */}
-      <div className="flex h-full">
+      <div className="flex h-screen bg-midnight">
         {/* Sidebar */}
-        <aside className="w-auto h-full pl-17 pt-10 ml-5">
+        <aside className="w-auto h-screen pl-17 pt-10 ml-5">
           <h1 className="text-4xl font-bold text-white-75">System Settings</h1>
 
           {/* Settings List of category and their respective labels */}
@@ -54,7 +52,7 @@ export default function SettingsLayout({
         </aside>
 
         {/* Main Content (dynamic) */}
-        <main className="flex-1 pt-29 pl-4 mb-500 h-auto w-fill">
+        <main className="flex-1 pt-29 pl-4 mb-500 h-screen w-fill">
           {children}
         </main>
       </div>
