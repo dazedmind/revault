@@ -54,51 +54,11 @@ const DocsCard = (props) => {
                         <FaBookOpen /> Read
                       </button>
                     </Link>
-                    <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-dusk rounded-lg cursor-pointer hover:bg-dusk-foreground">
-                    <FaLink /> Cite
-                    </button>
+
                     <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-dusk rounded-lg cursor-pointer hover:bg-dusk-foreground">
                     <FaBookmark /> Bookmark
                     </button>
                 </span>
-
-                {/* Report Button */}
-                    <Popover align>
-                      <PopoverTrigger className="absolute right-0">
-                        <FaFlag className="text-dusk text-xl hover:text-teal cursor-pointer" />
-                      </PopoverTrigger>
-
-                      <PopoverContent align="end">
-                        <h1 className="text-2xl font-bold mb-2">Submit Report</h1>
-                        <RadioGroup defaultValue="option-one">
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="option-one" id="option-one" />
-                            <Label htmlFor="option-one">Spam</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="option-two" id="option-two" />
-                            <Label htmlFor="option-two">False Information</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="option-three" id="option-three" />
-                            <Label htmlFor="option-three">Plagiarized Content</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="option-four" id="option-four" />
-                            <Label htmlFor="option-four">Misleading Title</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="option-five" id="option-five" />
-                            <Label htmlFor="option-five">Duplicate</Label>
-                          </div>
-                        </RadioGroup>
-
-                        <div className="flex gap-2 pt-4">
-                          <button className="cursor-pointer rounded-md bg-dusk py-2 px-4 w-full">Cancel</button>
-                          <button className="cursor-pointer rounded-md bg-teal py-2 px-4 w-full">Submit</button>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
 
                 </div>
           </div>

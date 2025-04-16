@@ -60,7 +60,7 @@ const EditProfilePage = () => {
         type="text"
         name="program"
         placeholder="Information Technology"
-        inputClassName="w-sm ml-5 h-14"
+        inputClassName="w-sm ml-5 h-14 cursor-not-allowed"
         labelClassName="ml-5"
       />
 
@@ -73,6 +73,7 @@ const EditProfilePage = () => {
           placeholder="jatevalena2022@plm.edu.ph"
           inputClassName="w-sm ml-5 h-14 "
           labelClassName="ml-5"
+          disabled={false}
         />
 
         <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">

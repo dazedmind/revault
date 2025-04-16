@@ -18,6 +18,8 @@ const ChangePassword = () => {
         placeholder="Enter Old Password"
         inputClassName="w-sm ml-5 h-14 mt-1"
         labelClassName="ml-5"
+        disabled={false}
+
       />
 
       <InputField
@@ -28,6 +30,8 @@ const ChangePassword = () => {
         placeholder="Enter New Password"
         inputClassName="w-sm ml-5 h-14 mt-1"
         labelClassName="ml-5"
+        disabled={false}
+
       />
 
       <InputField
@@ -38,11 +42,13 @@ const ChangePassword = () => {
         placeholder="Confirm New Password"
         inputClassName="w-sm ml-5 h-14 mt-1"
         labelClassName="ml-5"
+        disabled={false}
+
       />
 
       <WarningMessage
         containerClassName="w-xl ml-4.5 mt-5"
-        textClassName=" "
+        textClassName=""
         message="Password should be minimum of 9 Characters with combination of uppercase letters, lowercase letters, numbers, and symbols."
       />
 
