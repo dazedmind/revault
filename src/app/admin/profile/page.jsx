@@ -1,9 +1,9 @@
 import React from 'react'
-import AdminNavBar from '../component/AdminNavBar'
-import { ProfileCard } from '../component/ProfileCard'
-import { SearchInput } from "../component/SearchInput"
+import AdminNavBar from '../components/AdminNavBar'
+import { ProfileCard } from '../../component/ProfileCard'
+import { SearchInput } from "../../component/SearchInput"
 import Image from 'next/image'
-import document from "../img/document.png"
+import document from "../../img/document.png"
 import { FaTrash, FaPen, FaBookOpen, FaPlus, FaFilter, FaMagnifyingGlass } from 'react-icons/fa6'
 import {
     Popover,
