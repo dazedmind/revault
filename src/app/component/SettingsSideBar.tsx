@@ -5,7 +5,7 @@ const SettingsList = ({
   labels,
   categoryClassName = "",
   ulClassName = "",
-  labelClassName = "text-white-75",
+  labelClassName = "",
 }) => {
   const slugify = (text: string) =>
     text.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-");

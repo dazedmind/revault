@@ -4,7 +4,7 @@ import { SearchInput } from "../component/SearchInput";
 import NavBar from "../component/NavBar";
 import document from "../img/document.png";
 import Image from "next/image";
-import { fetchPosts } from '@/lib/api';
+import { fetchPosts } from "@/lib/api";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import {
@@ -15,21 +15,20 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 import AdminNavBar from "../component/AdminNavBar";
 
 export default async function Home() {
   const data = await fetchPosts(1, 5);
-  
+
   return (
-    <div className="font-[family-name:'Inter'] bg-midnight">
-      <NavBar/>
+    <div className="font-[family-name:'Inter']">
+      <NavBar />
 
       <main className="flex flex-row">
-        <aside className="flex h-auto w-96 bg-darker p-8">
-
+        <aside className="flex h-auto w-96 p-8">
           <div className="flex flex-col gap-4 m-2">
-          <h1 className="text-2xl font-bold">Filter Results</h1>
+            <h1 className="text-2xl font-bold">Filter Results</h1>
 
             <div className="flex flex-col gap-2">
               <h2 className="font-bold text-teal">Program</h2>
@@ -37,12 +36,12 @@ export default async function Home() {
 
               <ul className="ml-2 flex flex-col gap-2">
                 <li>
-                <Checkbox id="it-courses"/>
-                <label htmlFor="it-courses"> Information Technology</label>
+                  <Checkbox id="it-courses" />
+                  <label htmlFor="it-courses"> Information Technology</label>
                 </li>
                 <li>
-                <Checkbox id="cs-courses"/>
-                <label htmlFor="cs-courses"> Computer Science</label>
+                  <Checkbox id="cs-courses" />
+                  <label htmlFor="cs-courses"> Computer Science</label>
                 </li>
               </ul>
             </div>
@@ -52,11 +51,11 @@ export default async function Home() {
               <div className="bg-dusk h-0.5 w-full"></div>
               <ul className="ml-2 flex flex-col gap-2">
                 <li>
-                  <Checkbox id="year-2025"/>
+                  <Checkbox id="year-2025" />
                   <label htmlFor="year-2025"> 2025</label>
                 </li>
                 <li>
-                  <Checkbox id="year-2024"/>
+                  <Checkbox id="year-2024" />
                   <label htmlFor="year-2024"> 2024</label>
                 </li>
                 <li>Custom range...</li>
@@ -67,66 +66,72 @@ export default async function Home() {
               <h1 className="font-bold text-teal">Course</h1>
               <div className="bg-dusk h-0.5 w-full"></div>
               <ul className="ml-2 flex flex-col gap-2">
-              <li>
-                  <Checkbox id="sia-course"/>
+                <li>
+                  <Checkbox id="sia-course" />
                   <label htmlFor="sia-course"> SIA</label>
                 </li>
                 <li>
-                  <Checkbox id="capstone-course"/>
+                  <Checkbox id="capstone-course" />
                   <label htmlFor="capstone-course"> Capstone</label>
-                </li>  <li>
-                  <Checkbox id="research-course"/>
+                </li>{" "}
+                <li>
+                  <Checkbox id="research-course" />
                   <label htmlFor="research-course"> Research Writing</label>
-                </li>  <li>
-                  <Checkbox id="thesiswriting-course"/>
-                  <label htmlFor="thesiswriting-course"> CS Thesis Writing</label>
+                </li>{" "}
+                <li>
+                  <Checkbox id="thesiswriting-course" />
+                  <label htmlFor="thesiswriting-course">
+                    {" "}
+                    CS Thesis Writing
+                  </label>
                 </li>
               </ul>
             </div>
-            
-            <button className="bg-teal p-2 rounded-md mt-4 cursor-pointer">Apply Filter</button>
+
+            <button className="bg-teal p-2 rounded-md mt-4 cursor-pointer">
+              Apply Filter
+            </button>
           </div>
         </aside>
 
-        <div className="flex flex-col w-full gap-5 mx-12 my-2 align-middle bg-midnight p-8">
+        <div className="flex flex-col w-full gap-5 mx-12 my-2 align-middle p-8">
           <h1 className="text-3xl font-bold">Recent Papers</h1>
-            <DocsCard
-              img={document}
-              title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students" 
-              description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-              tags={["IT", "SIA", "Cloud"]}
-            />
-            
-            <DocsCard 
-              img={document}
-              title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students" 
-              description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-              tags={["CS", "Research Writing", "Algorithms"]}
-            />
+          <DocsCard
+            img={document}
+            title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students"
+            description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
+            tags={["IT", "SIA", "Cloud"]}
+          />
 
-            <DocsCard 
-              img={document}
-              title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students" 
-              description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-              tags={["IT", "Design", "UI/UX"]}
-            />
-            
-            <DocsCard 
-              img={document}
-              title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students" 
-              description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-              tags={["IT", "Design", "UI/UX"]}
-            />
+          <DocsCard
+            img={document}
+            title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students"
+            description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
+            tags={["CS", "Research Writing", "Algorithms"]}
+          />
 
-            <DocsCard 
-              img={document}
-              title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students" 
-              description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-              tags={["IT", "Design", "UI/UX"]}
-            />
+          <DocsCard
+            img={document}
+            title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students"
+            description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
+            tags={["IT", "Design", "UI/UX"]}
+          />
 
-          <div className="flex flex-col justify-between gap-4">
-          </div>
+          <DocsCard
+            img={document}
+            title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students"
+            description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
+            tags={["IT", "Design", "UI/UX"]}
+          />
+
+          <DocsCard
+            img={document}
+            title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students"
+            description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
+            tags={["IT", "Design", "UI/UX"]}
+          />
+
+          <div className="flex flex-col justify-between gap-4"></div>
 
           <Pagination>
             <PaginationContent>
@@ -146,7 +151,6 @@ export default async function Home() {
           </Pagination>
         </div>
       </main>
-
     </div>
   );
 }
