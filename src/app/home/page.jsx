@@ -15,15 +15,25 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+<<<<<<< HEAD
 } from "@/components/ui/pagination";
 import AdminNavBar from "../component/AdminNavBar";
+=======
+} from "@/components/ui/pagination"
+import AdminNavBar from "../admin/components/AdminNavBar";
+>>>>>>> 753988d7e87acf664078284a852501849e2dad3d
 
 export default async function Home() {
   const data = await fetchPosts(1, 5);
 
   return (
+<<<<<<< HEAD
     <div className="font-[family-name:'Inter']">
       <NavBar />
+=======
+    <div className="font-[family-name:'Inter'] bg-midnight">
+      <NavBar/>       {/* SET CONDITIONING IF admin = use <AdminNavBar /> */}
+>>>>>>> 753988d7e87acf664078284a852501849e2dad3d
 
       <main className="flex flex-row">
         <aside className="flex h-auto w-96 p-8">
@@ -140,6 +150,12 @@ export default async function Home() {
               </PaginationItem>
               <PaginationItem>
                 <PaginationLink href="#">1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">2</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">3</PaginationLink>
               </PaginationItem>
               <PaginationItem>
                 <PaginationEllipsis />

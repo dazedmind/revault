@@ -1,7 +1,7 @@
 import React from "react";
-import { SearchInput } from "./SearchInput"
-import avatar from "../img/user.png";
-import icon from "../img/revault-icon.png";
+import { SearchInput } from "../../component/SearchInput"
+import avatar from "../../img/user.png";
+import icon from "../../img/revault-icon.png";
 import { FaPlus } from "react-icons/fa6";
 import Image from "next/image";
 import Link from "next/link";

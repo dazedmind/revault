@@ -76,25 +76,28 @@ const EditProfilePage = () => {
           disabled={false}
         />
 
-        <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer">
+        <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">
           Save Changes
         </Button>
       </span>
+
 
       <h1 className="text-2xl ml-1 mt-10">Manage Linked Accounts</h1>
 
       {/* divider */}
       <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2"></div>
 
-      <div className="w-3xl outline-2 border-midnight p-5 ml-5 rounded-md flex justify-between mt-5">
+     <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between mt-5">
         <div className="flex flex-row justify-center items-center gap-2">
           <FaMicrosoft />
-          <p className="text-base font-normal">Microsoft</p>
+          <p className="text-white-100 text-base font-normal">Microsoft</p>
         </div>
-        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer w-[100px]">
+        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white w-[100px]">
           Link
         </Button>
       </div>
+
+
     </div>
   );
 };

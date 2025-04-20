@@ -14,65 +14,34 @@ export default function SettingsLayout({
     {
       category: "General",
       labels: ["Edit Profile", "Change Password", "Appearance"],
-<<<<<<< HEAD
-    },
-    {
-      category: "Security & Privacy",
-      labels: ["Two-Factor Authentication", "Account Activity Log"],
-=======
->>>>>>> 753988d7e87acf664078284a852501849e2dad3d
     },
   ];
 
   return (
-<<<<<<< HEAD
-    <div className="h-fit flex flex-col ">
-      {/* Header */}
-=======
     <div className="h-full flex flex-col bg-midnight">
->>>>>>> 753988d7e87acf664078284a852501849e2dad3d
       <nav>
         <NavBar />
       </nav>
 
-<<<<<<< HEAD
-      {/* Layout Content */}
-      <div className="flex h-full ">
-        {/* Sidebar */}
-        <aside className="w-auto h-screen pl-17 pt-10 ml-5 ">
-          <h1 className="text-4xl font-bold">System Settings</h1>
-=======
       <div className="flex h-screen bg-midnight">
         <aside className="w-auto h-screen pl-17 pt-10 ml-5">
           <h1 className="text-4xl font-bold text-white-75">System Settings</h1>
->>>>>>> 753988d7e87acf664078284a852501849e2dad3d
 
           {settingsData.map((setting, index) => (
             <SettingsList
               key={index}
               category={setting.category}
               labels={setting.labels}
-<<<<<<< HEAD
-              categoryClassName="text-base font-bold mb-3 mt-10"
-              ulClassName=""
-              labelClassName="pl-4 text-sm text-normal mb-3 cursor-pointer hover:text-teal "
-=======
               categoryClassName="text-2xl text-white-75 font-bold mb-3 mt-10"
               ulClassName=""
               labelClassName="pl-4 p-3 text-lg text-normal cursor-pointer"
->>>>>>> 753988d7e87acf664078284a852501849e2dad3d
             />
           ))}
         </aside>
 
-<<<<<<< HEAD
-        {/* Main Content (dynamic) */}
-        <main className="flex-1 pt-29 pl-4 h-fit w-fill">{children}</main>
-=======
         <main className="flex-1 pt-29 pl-4 mb-500 h-screen w-fill">
           {children}
         </main>
->>>>>>> 753988d7e87acf664078284a852501849e2dad3d
       </div>
     </div>
   );

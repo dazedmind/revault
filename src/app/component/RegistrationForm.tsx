@@ -34,6 +34,8 @@ export default function Form({ link }) {
           name="fullName"
           placeholder="Juan"
           inputClassName="w-full"
+          disabled={false}
+
         />
 
         <InputField
@@ -42,6 +44,8 @@ export default function Form({ link }) {
           name="middleName"
           placeholder="Protacio"
           inputClassName="w-full"
+          disabled={false}
+
         />
 
         {/* Last Name, Extension */}
@@ -51,6 +55,8 @@ export default function Form({ link }) {
           name="lastName"
           placeholder="Dela Cruz"
           inputClassName="w-full"
+          disabled={false}
+
         />
 
         <InputField
@@ -60,6 +66,8 @@ export default function Form({ link }) {
           placeholder="Jr."
           inputClassName="w-1/3"
           required={false}
+          disabled={false}
+
         />
 
         <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">
@@ -76,6 +84,8 @@ export default function Form({ link }) {
               name="studentNumber"
               placeholder="202512345"
               inputClassName="w-full"
+              disabled={false}
+
             />
           </div>
 
@@ -87,44 +97,13 @@ export default function Form({ link }) {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Course</SelectLabel>
                   <SelectItem value="apple">Computer Science</SelectItem>
                   <SelectItem value="banana">Information Technology</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
-            {/* <label className="text-sm text-gray-300 mb-1">Course</label>
-            <div className="relative w-full">
-              <select
-                name="course"
-                value={selectedCourse}
-                onChange={(e) => setSelectedCourse(e.target.value)}
-                className="border-0 peer w-full pb-2 pt-2 pl-3 pr-8 bg-midnight outline-2 rounded-md text-white dark:focus:border-teal focus:ring-2 focus:ring-teal focus:border-teal appearance-none focus:outline-none "
-              >
-                <option value="">Select Course</option>
-                <option value="CS">Computer Science</option>
-                <option value="IT">Information Technology</option>
-                <option value="IS">Information Systems</option>
-              </select>
-
-              {/* Adjusted SVG size & spacing 
-              <div className="pointer-events-none absolute inset-y-0 right-2 pl-1 border-l-2 flex items-center peer-focus:border-l-teal">
-                <svg
-                  className="border-0 w-5 h-5 text-gray-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>*/}
-          </div>
         </div>
-
+        </div>
         {/* Email Address */}
         <div className="col-span-2">
           <InputField
@@ -132,6 +111,8 @@ export default function Form({ link }) {
             type="email"
             name="email"
             placeholder="jprizal@plm.edu.ph"
+            disabled={false}
+
           />
         </div>
 
@@ -149,6 +130,8 @@ export default function Form({ link }) {
             type="password"
             name="password"
             placeholder="Enter Password"
+            disabled={false}
+
           />
         </div>
 
@@ -158,6 +141,8 @@ export default function Form({ link }) {
             type="password"
             name="confirmPassword"
             placeholder="Confirm Password"
+            disabled={false}
+
           />
         </div>
 
