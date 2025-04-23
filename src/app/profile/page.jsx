@@ -5,12 +5,15 @@ import Link from 'next/link';
 import document from "../img/document.png"
 import DocsCardUser from '../component/DocsCardUser';
 import { FaPlus } from "react-icons/fa6";
+import ProtectedRoute from '../component/ProtectedRoute';
 
 export default function Profile() {
   return (
     <div>
+      <ProtectedRoute>       </ProtectedRoute>
+
       <NavBar/>
- 
+
       <ProfileCard/>
 
       <div className='flex bg-midnight'>

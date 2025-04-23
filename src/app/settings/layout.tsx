@@ -2,6 +2,7 @@
 import { useState } from "react";
 import NavBar from "../component/NavBar";
 import SettingsList from "../component/SettingsSideBar";
+import ProtectedRoute from "../component/ProtectedRoute";
 
 export default function SettingsLayout({
   children,
@@ -19,6 +20,7 @@ export default function SettingsLayout({
 
   return (
     <div className="h-full flex flex-col bg-midnight">
+      <ProtectedRoute>
       <nav>
         <NavBar />
       </nav>
@@ -43,6 +45,7 @@ export default function SettingsLayout({
           {children}
         </main>
       </div>
+      </ProtectedRoute>
     </div>
   );
 }

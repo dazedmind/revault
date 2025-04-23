@@ -5,8 +5,10 @@ const InputField = ({
   label,
   type,
   name,
+  value,
   placeholder,
   required = true,
+  onChange,
   inputClassName = "",
   labelClassName = "",
   containerClassName = "",
@@ -19,6 +21,8 @@ const InputField = ({
     <Input
       type={type}
       name={name}
+      value={value}
+      onChange={onChange}
       placeholder={placeholder}
       className={`${inputClassName}`}
       required={required}

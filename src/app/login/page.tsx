@@ -2,13 +2,12 @@
 
 import Background from "@/app/component/Background";
 import Header from "@/app/component/Header";
-import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { IoLogoMicrosoft } from "react-icons/io5";
+import React, { useEffect, useState } from "react";
 import LogInInputField from "../component/LogInInputField";
 import { Button } from "@/components/ui/button";
 import { LogInCheckBox } from "../component/LogInCheckBox";
 import { FaMicrosoft } from "react-icons/fa6";
+import { loginUser } from '../actions/login'; // adjust path
 
 const LogIn = () => {
   const [formData, setFormData] = useState({
@@ -21,11 +20,28 @@ const LogIn = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle Form Submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
+  
+    const form = new FormData();
+    form.append('studentNumber', formData.studentNumber);
+    form.append('password', formData.password);
+  
+    const result = await loginUser(form);
+  
+    if (result.success) {
+      // Store token in localStorage (or sessionStorage)
+      localStorage.setItem('authToken', result.token); // 🔐 Store the token
+      window.location.href = '/home';
+    } else {
+      alert("Login failed: " + result.message);
+    }
   };
+
+  // ALWAYS CLEARS TOKEN ON LOGIN PAGE LOAD
+   useEffect(() => { 
+      localStorage.removeItem('authToken');
+    },);
 
   return (
     <div className="font-Inter h-screen w-screen overflow-hidden relative">

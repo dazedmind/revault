@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  user_id        Int              @id @default(autoincrement())
+  first_name     String?
+  mid_name       String?
+  last_name      String?
+  ext_name       String?
+  email          String           @unique
+  role           String?
+  password       String
+  created_at     DateTime?
+  facilitators   facilitators?
+  students       students?
+  user_bookmarks user_bookmarks[]
+}
+
+model facilitators {
+  employee_id Int     @id @default(autoincrement())
+  position    String?
+  department  String?
+  user_id     Int     @unique
+  users       users   @relation(fields: [user_id], references: [user_id])
+}
+
+model students {
+  student_num BigInt  @id @unique
+  program     String?
+  college     String?
+  year_level  Int?
+  user_id     Int     @unique
+  users       users   @relation(fields: [user_id], references: [user_id])
+}
+
+model papers {
+  paper_id       Int              @id @default(autoincrement())
+  title          String?
+  author         String?
+  year           Int?
+  date           DateTime?
+  keywords       String?
+  tags           String?
+  abstract       String?
+  created_at     DateTime?
+  updated_at     DateTime?
+  paper_metadata paper_metadata[]
+  user_bookmarks user_bookmarks[]
+}
+
+model paper_metadata {
+  metadata_id Int     @id @default(autoincrement())
+  paper_id    Int
+  type        String?
+  format      String?
+  language    String?
+  source      String?
+  rights      String?
+  papers      papers  @relation(fields: [paper_id], references: [paper_id])
+}
+
+model user_bookmarks {
+  bookmark_id Int       @id @default(autoincrement())
+  user_id     Int
+  paper_id    Int
+  created_at  DateTime?
+  updated_at  DateTime?
+  papers      papers    @relation(fields: [paper_id], references: [paper_id])
+  users       users     @relation(fields: [user_id], references: [user_id])
+
+  @@unique([user_id, paper_id])
+}
+
+model Otp {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  code      String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}

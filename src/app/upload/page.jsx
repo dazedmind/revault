@@ -39,7 +39,6 @@ export default function UploadFile() {
         .replace(/\n/g, ' ')                          // remove line breaks
         .trim();
   
-
         // Step 2: Title Extraction with fallback
         let title = 'Title not found';
 
@@ -61,7 +60,6 @@ export default function UploadFile() {
           }
         }
         
-
         setTitle(title);
 
   

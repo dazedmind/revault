@@ -1,11 +1,102 @@
+"use client";
+
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { generateOTP } from "@/lib/generateOtp"; // Make sure this exists
+import { useSearchParams, useRouter } from "next/navigation";
 
 const OTP = () => {
+  // const [userEmail, setUserEmail] = useState("j********@plm.edu.ph"); // Replace or fetch from localStorage/cookie/session
+  const [otp, setOtp] = useState("");
+  const [generatedOTP, setGeneratedOTP] = useState("");
+  const [isSent, setIsSent] = useState(false);
+  const [timer, setTimer] = useState(30);
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const emailFromQuery = searchParams.get("email");
+
+  const [userEmail, setUserEmail] = useState(emailFromQuery || "");
+
+  const handleSendOTP = async () => {
+    const code = generateOTP();
+    setGeneratedOTP(code);
+    setIsSent(true);
+    setTimer(30);
+
+    await fetch("/api/send-otp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: userEmail, otp: code }),
+    });
+  };
+
+  const handleConfirm = async () => {
+    const res = await fetch("/api/verify-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: userEmail, otp }),
+    });
+  
+    if (res.ok) {
+      const result = await res.json();
+      if (result.verified) {
+        alert("OTP verified successfully!");
+
+        // 🔥 STEP 1: Retrieve saved form data from localStorage
+        const regData = JSON.parse(localStorage.getItem("regForm") || "{}");
+        const formData = new FormData();
+  
+        Object.entries(regData).forEach(([key, value]) => {
+          formData.append(key, String(value));
+        });
+  
+        // 🔥 STEP 2: Send data to our new API route
+        const saveRes = await fetch("/api/save-user", {
+          method: "POST",
+          body: formData,
+        });
+        
+        if (saveRes.ok) {
+          localStorage.removeItem("regForm");
+          localStorage.removeItem("regEmail");
+          router.push("/registration/registration-form");
+        } else {
+          alert("Something went wrong saving info.");
+        }
+      } else {
+        alert("Incorrect OTP");
+      }
+    } else {
+      alert("Incorrect OTP");
+    }
+  };
+  
+
+  useEffect(() => {
+    if (isSent && timer > 0) {
+      const interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isSent, timer]);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("regEmail");
+    if (savedEmail) {
+      setUserEmail(savedEmail);
+    }
+  }, []);
+
+  useEffect(() => {
+    handleSendOTP(); // auto-send on mount
+  }, []);
+
   return (
     <div className="flex-grow flex justify-center">
       <div className="flex flex-col items-center w-5xl mt-28">
@@ -13,29 +104,41 @@ const OTP = () => {
           Check your email!
         </h1>
         <p className="text-xl text-center w-lg mt-3">
-          We have sent an email to j********@plm.edu.ph. Check your inbox for
-          the One-Time-Passcode (OTP).
+          We have sent an email to <span className="font-bold">{userEmail}</span>. Check your inbox for the One-Time-Passcode (OTP).
         </p>
 
-        <div className="flex flex-col items-start">
-          <InputOTP maxLength={5}>
+        <div className="flex flex-col items-start mt-6">
+          <InputOTP maxLength={5} value={otp} onChange={setOtp}>
             <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
+              {[0, 1, 2, 3, 4].map((i) => (
+                <InputOTPSlot key={i} index={i} />
+              ))}
             </InputOTPGroup>
           </InputOTP>
-          <p className="text-sm mt-2">Resend in 30s</p>
+          <p className="text-sm mt-2 text-gray-400">
+            Resend in {timer}s
+          </p>
         </div>
 
-        <button
-          type="submit"
-          className="font-bold mt-4 w-sm h-14 border-2 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-sans cursor-pointer z-10"
-        >
-          <Link href="/registration/registration-form">Confirm</Link>
-        </button>
+        <div className="flex gap-4 mt-6">
+          <button
+            disabled={timer > 0}
+            onClick={handleSendOTP}
+            className={`px-4 py-2 border rounded-lg ${
+              timer > 0 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600 text-white"
+            }`}
+          >
+            Resend OTP
+          </button>
+
+          <button
+            type="button"
+            onClick={handleConfirm}
+            className="font-bold w-sm h-14 border-2 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-sans cursor-pointer z-10 px-6 text-white"
+          >
+            Confirm
+          </button>
+        </div>
       </div>
     </div>
   );
