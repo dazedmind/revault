@@ -9,8 +9,14 @@ import LogInInputField from "../component/LogInInputField";
 import { Button } from "@/components/ui/button";
 import { LogInCheckBox } from "../component/LogInCheckBox";
 import { FaMicrosoft } from "react-icons/fa6";
+import { useTheme } from "next-themes";
 
 const LogIn = () => {
+  const { forcedTheme } = useTheme();
+
+  // Theme is forced, we shouldn't allow user to change the theme
+  const disabled = !!forcedTheme;
+
   const [formData, setFormData] = useState({
     studentNumber: "",
     password: "",
@@ -67,7 +73,7 @@ const LogIn = () => {
               {/* Remember Password & Forgot Password */}
               <div className="flex flex-row justify-between items-center m-3 mt-5">
                 <LogInCheckBox id="rememberMe" label="Remember password" />
-      
+
                 <p className="font-inter text-teal text-xs text-align cursor-pointer">
                   Forgot Password?
                 </p>
@@ -113,7 +119,6 @@ const LogIn = () => {
               Microsoft
             </button>
           </div>
-
         </div>
       </main>
     </div>
@@ -121,3 +126,4 @@ const LogIn = () => {
 };
 
 export default LogIn;
+LogIn.theme = "dark";

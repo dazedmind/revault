@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { SearchInput } from "./SearchInput";
 import avatar from "../img/user.png";
@@ -5,6 +7,8 @@ import icon from "../img/revault-icon.png";
 import { FaPlus } from "react-icons/fa6";
 import Image from "next/image";
 import Link from "next/link";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 import { LogOut, Settings, User } from "lucide-react";
 
@@ -26,9 +30,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export default function NavBar() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
   return (
     <>
-      <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono  w-full p-8 px-16">
+      <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-8 px-16 dark:bg-primary">
         <div className="flex align-middle items-center gap-10">
           <Link
             href="/home"
