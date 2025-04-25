@@ -14,10 +14,10 @@ const InputField = ({
   containerClassName = "",
   disabled = true,
 }) => (
-  <div className={`flex flex-col w-full cursor-not-allowed ${containerClassName}`}>
-    <Label className={`text-sm text-gray-300 mb-1 ${labelClassName}`}>
-      {label}
-    </Label>
+  <div
+    className={`flex flex-col w-full cursor-not-allowed ${containerClassName}`}
+  >
+    <Label className={`text-sm mb-1 ${labelClassName}`}>{label}</Label>
     <Input
       type={type}
       name={name}

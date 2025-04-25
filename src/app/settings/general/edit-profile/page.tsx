@@ -42,6 +42,9 @@ const EditProfilePage = () => {
         placeholder="John Allen Troy Valena"
         inputClassName="w-sm ml-5 h-14 "
         labelClassName="ml-5"
+        disabled={false}
+        value={undefined}
+        onChange={undefined}
       />
 
       <InputField
@@ -52,6 +55,8 @@ const EditProfilePage = () => {
         placeholder="202236115"
         inputClassName="w-sm ml-5 h-14 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         labelClassName="ml-5"
+        value={undefined}
+        onChange={undefined}
       />
 
       <InputField
@@ -62,6 +67,8 @@ const EditProfilePage = () => {
         placeholder="Information Technology"
         inputClassName="w-sm ml-5 h-14 cursor-not-allowed"
         labelClassName="ml-5"
+        value={undefined}
+        onChange={undefined}
       />
 
       <span className="relative">
@@ -73,31 +80,30 @@ const EditProfilePage = () => {
           placeholder="jatevalena2022@plm.edu.ph"
           inputClassName="w-sm ml-5 h-14 "
           labelClassName="ml-5"
-          disabled={false}
+          disabled={true}
+          value={undefined}
+          onChange={undefined}
         />
 
-        <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">
+        <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer">
           Save Changes
         </Button>
       </span>
-
 
       <h1 className="text-2xl ml-1 mt-10">Manage Linked Accounts</h1>
 
       {/* divider */}
       <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2"></div>
 
-     <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between mt-5">
+      <div className="w-3xl outline-2 border-midnight p-5 ml-5 rounded-md flex justify-between mt-5">
         <div className="flex flex-row justify-center items-center gap-2">
           <FaMicrosoft />
-          <p className="text-white-100 text-base font-normal">Microsoft</p>
+          <p className="text-base font-normal">Microsoft</p>
         </div>
-        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white w-[100px]">
+        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer w-[100px]">
           Link
         </Button>
       </div>
-
-
     </div>
   );
 };

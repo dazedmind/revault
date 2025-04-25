@@ -1,35 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 @plugin 'tailwindcss-animate';
 
 @import "tailwindcss";
 
 :root {
-  --teal: #01B783;
+  --teal: #01b783;
   --teal-dark: #0f3126;
-  --teal-gradient-left: #00C18B;
-  --teal-gradient-right: #005B41;
-  --red-warning: #C33838;
+  --teal-gradient-left: #00c18b;
+  --teal-gradient-right: #005b41;
+  --red-warning: #c33838;
   --midnight: #121212;
-  --darker: #1B1B1B;
-  --dusk: #272727;
-  --dusk-foreground: #1F1F1F;
+  --darker: #1b1b1b;
+  --dusk: #1f1f1f;
+  --dusk-foreground: #1f1f1f;
   --dark-outline: #404040;
-  --white-25: #ACACAC;
-  --white-50: #C3C3C3;
-  --white-75: #D9D9D9;
+  --white-25: #acacac;
+  --white-50: #c3c3c3;
+  --white-75: #d9d9d9;
   --white-5: #404040;
-  --mustard-warning: #CCA628;
+  --mustard-warning: #cca628;
   --purple-highlight: #963098;
   --background: oklch(1 0 0);
+  --navbar: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
+  --card: #121212;
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(1 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
+  --secondary: #f0f0f0;
+  --text-color: #121212;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -60,24 +62,24 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: 'IBM Plex Mono';
-  --color-teal-gradient-left: #00C18B;
-  --color-teal-gradient-right: #005B41;
+  --font-mono: "IBM Plex Mono";
+  --color-teal-gradient-left: #00c18b;
+  --color-teal-gradient-right: #005b41;
   --color-purple-highlight: var(--purple-highlight);
   --color-midnight: #121212;
-  --color-darker: #1B1B1B;
+  --color-darker: #1b1b1b;
   --color-dusk: #272727;
   --color-dusk-foreground: #1f1f1f;
   --color-dark: #171717;
-  --color-white-25: #ACACAC;
-  --color-white-50: #C3C3C3;
-  --color-white-75: #D9D9D9;
+  --color-white-25: #acacac;
+  --color-white-50: #c3c3c3;
+  --color-white-75: #d9d9d9;
   --color-white-5: #404040;
   --color-red-warning: var(--red-warning);
-  --color-red-warning-fg: #A52424;
-  --color-mustard-warning: #CCA628;
+  --color-red-warning-fg: #a52424;
+  --color-mustard-warning: #cca628;
   --color-purple-highlight: #963098;
-  --color-teal: #01B783;
+  --color-teal: #01b783;
   --color-teal-dark: var(--teal-dark);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -114,25 +116,29 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --height-h-line: 1px;
-  --color-teal-gradient: linear-gradient(150deg, rgba(0,193,139,1) 0%, rgba(0,91,65,1) 100%);
+  --color-teal-gradient: linear-gradient(
+    150deg,
+    rgba(0, 193, 139, 1) 0%,
+    rgba(0, 91, 65, 1) 100%
+  );
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family:'Inter', Arial, Helvetica, sans-serif;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
 }
 
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
+  --card: #f0f0f0;
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
+  --primary: #171717;
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
+  --secondary: #121212;
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
@@ -164,4 +170,3 @@ body {
     /* transition: .2s ease all; */
   }
 }
-
