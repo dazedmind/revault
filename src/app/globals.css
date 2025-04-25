@@ -12,7 +12,7 @@
   --red-warning: #c33838;
   --midnight: #121212;
   --darker: #1b1b1b;
-  --dusk: #272727;
+  --dusk: #1f1f1f;
   --dusk-foreground: #1f1f1f;
   --dark-outline: #404040;
   --white-25: #acacac;
@@ -24,13 +24,14 @@
   --background: oklch(1 0 0);
   --navbar: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
+  --card: #121212;
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(1 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: #f0f0f0;
+  --text-color: #121212;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -131,7 +132,7 @@ body {
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
+  --card: #f0f0f0;
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);

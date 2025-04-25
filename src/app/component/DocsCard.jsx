@@ -40,8 +40,8 @@ const DocsCard = (props) => {
               props.tags.map((tag, index) => (
                 <p
                   key={index}
-                  className={`flex text-white text-sm rounded-sm w-auto p-1 px-2 ${
-                    tagColors[tag] || "bg-dusk" // Default to gray if no color found
+                  className={`flex dark:text-white text-sm rounded-sm w-auto p-1 px-2 ${
+                    tagColors[tag] || "dark:bg-dusk-foreground" // Default to gray if no color found
                   }`}
                 >
                   {tag}
@@ -56,95 +56,16 @@ const DocsCard = (props) => {
             {/* Left Side Buttons */}
             <span className="flex gap-4">
               <Link href="/view-file">
-                <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br rounded-lg cursor-pointer dark:text-primary">
+                <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br rounded-lg cursor-pointer dark:text-secondary">
                   <FaBookOpen /> Read
                 </button>
               </Link>
 
-              <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 dark:bg-secondary rounded-lg cursor-pointer hover:bg-dusk-foreground">
+              <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer dark:hover:text-midnight dark:hover:bg-white-50">
                 <FaBookmark /> Bookmark
               </button>
             </span>
           </div>
-        </div>
-      </div>
-      <div className="flex flex-col p-4 gap-1 items-start relative">
-        <h3 className="text-xl font-bold">{props.title}</h3>
-        <div className="flex gap-2 flex-wrap overflow-hidden mt-2">
-          {/* Mapping over tags */}
-          {props.tags && props.tags.length > 0 ? (
-            props.tags.map((tag, index) => (
-              <p
-                key={index}
-                className={`flex text-sm rounded-sm w-auto p-1 px-2 ${
-                  tagColors[tag] || "" // Default to gray if no color found
-                }`}
-              >
-                {tag}
-              </p>
-            ))
-          ) : (
-            <p className="text-md italic">No tags available</p>
-          )}
-        </div>
-        <p className="text-md">{props.description}</p>
-        <div className="mt-6 flex flex-row items-center justify-between gap-4">
-          {/* Left Side Buttons */}
-          <span className="flex gap-4">
-            <Link href="/view-file">
-              <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br rounded-lg cursor-pointer">
-                <FaBookOpen /> Read
-              </button>
-            </Link>
-            <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 rounded-lg cursor-pointer">
-              <FaLink /> Cite
-            </button>
-            <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 rounded-lg cursor-pointer">
-              <FaBookmark /> Bookmark
-            </button>
-          </span>
-
-          {/* Report Button */}
-          <Popover align>
-            <PopoverTrigger className="absolute right-0">
-              <FaFlag className="text-dusk text-xl hover:text-teal cursor-pointer" />
-            </PopoverTrigger>
-
-            <PopoverContent align="end">
-              <h1 className="text-2xl font-bold mb-2">Submit Report</h1>
-              <RadioGroup defaultValue="option-one">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="option-one" id="option-one" />
-                  <Label htmlFor="option-one">Spam</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="option-two" id="option-two" />
-                  <Label htmlFor="option-two">False Information</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="option-three" id="option-three" />
-                  <Label htmlFor="option-three">Plagiarized Content</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="option-four" id="option-four" />
-                  <Label htmlFor="option-four">Misleading Title</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="option-five" id="option-five" />
-                  <Label htmlFor="option-five">Duplicate</Label>
-                </div>
-              </RadioGroup>
-
-              <div className="flex gap-2 pt-4">
-                <button className="cursor-pointer rounded-md  py-2 px-4 w-full">
-                  Cancel
-                </button>
-                <button className="cursor-pointer rounded-md bg-teal py-2 px-4 w-full">
-                  Submit
-                </button>
-              </div>
-            </PopoverContent>
-          </Popover>
         </div>
       </div>
     </>

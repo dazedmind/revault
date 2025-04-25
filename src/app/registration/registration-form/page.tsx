@@ -8,7 +8,7 @@ const RegistrationPage = () => {
           <h1 className="self-start text-4xl font-mono font-bold text-teal mb-2 z-10 ml-8">
             Create Account
           </h1>
-          <Form link="/registration/upload-proof" />
+          <Form/>
         </div>
       </div>
     </div>

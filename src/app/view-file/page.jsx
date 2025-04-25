@@ -7,6 +7,7 @@ import avatar from "../img/user.png";
 import { FaBookmark, FaFlag, FaLink, FaMoon, FaCircleInfo, FaChevronLeft } from 'react-icons/fa6';
 import FileMenuButton from '../component/FileMenuButton';
 import ViewMetadata from '../component/ViewMetadata';
+import ProtectedRoute from '../component/ProtectedRoute';
 
 function ViewFile() {
     const [showMetadata, setShowMetadata] = useState(false);
@@ -14,7 +15,7 @@ function ViewFile() {
   return (
     <div className='bg-midnight h-auto'>
         <NavBar/>
-        
+        <ProtectedRoute>
         <main className='flex gap-6 h-auto justify-center'>
             <div className='flex gap-6 relative'>
                 {showMetadata && (
@@ -113,6 +114,8 @@ function ViewFile() {
                 </div>
             </div>
         </main>
+        </ProtectedRoute>
+
     </div>
   )
 }

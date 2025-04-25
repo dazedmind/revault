@@ -1,12 +1,12 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import DocsCard from "../component/DocsCard";
-import { SearchInput } from "../component/SearchInput";
 import NavBar from "../component/NavBar";
 import document from "../img/document.png";
 import Image from "next/image";
 import { fetchPosts } from "@/lib/api";
 import { Checkbox } from "@/components/ui/checkbox";
-
 import {
   Pagination,
   PaginationContent,
@@ -18,8 +18,69 @@ import {
 } from "@/components/ui/pagination";
 import AdminNavBar from "../admin/components/AdminNavBar";
 
-export default async function Home() {
-  const data = await fetchPosts(1, 5);
+export const decode = (token) => {
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join(""),
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.log("Error decoding token:", e.message);
+    return null;
+  }
+};
+
+export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        window.location.href = "/login";
+      }
+
+      if (token) {
+        try {
+          const decoded = decode(token);
+
+          const currentTime = Date.now() / 1000;
+
+          if (decoded.exp > currentTime) {
+            setIsAuthenticated(true); // ✅ Token is valid
+          } else {
+            alert("Token expired. Please log in again.");
+            localStorage.removeItem("authToken"); // Remove expired token
+            setIsAuthenticated(false); // Token expired
+            router.push("/login"); // Redirect to login page
+          }
+        } catch (error) {
+          alert("Invalid token. Please log in again.");
+          console.error("Error decoding token:", error);
+          localStorage.removeItem("authToken"); // Remove invalid token
+          setIsAuthenticated(false); // Invalid token
+          router.push("/login"); // Redirect to login page
+        }
+      } else {
+        alert("No token found. Please log in.");
+        setIsAuthenticated(false); // No token found
+        router.push("/login"); // Redirect to login page
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  if (!isAuthenticated) {
+    return <div>Redirecting to login...</div>;
+  }
 
   return (
     <div className="font-[family-name:'Inter'] dark:bg-secondary">
@@ -109,48 +170,33 @@ export default async function Home() {
             tags={["CS", "Research Writing", "Algorithms"]}
           />
 
-          <DocsCard
-            img={document}
-            title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students"
-            description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-            tags={["IT", "Design", "UI/UX"]}
-          />
-
-          <DocsCard
-            img={document}
-            title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students"
-            description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-            tags={["IT", "Design", "UI/UX"]}
-          />
-
-          <DocsCard
-            img={document}
-            title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students"
-            description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-            tags={["IT", "Design", "UI/UX"]}
-          />
-
           <div className="flex flex-col justify-between gap-4"></div>
 
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious href="#" />
+                <PaginationPrevious href="#" className="dark:text-card" />
               </PaginationItem>
               <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
+                <PaginationLink href="#" className="dark:text-card">
+                  1
+                </PaginationLink>
               </PaginationItem>
               <PaginationItem>
-                <PaginationLink href="#">2</PaginationLink>
+                <PaginationLink href="#" className="dark:text-card">
+                  2
+                </PaginationLink>
               </PaginationItem>
               <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
+                <PaginationLink href="#" className="dark:text-card">
+                  3
+                </PaginationLink>
               </PaginationItem>
               <PaginationItem>
-                <PaginationEllipsis />
+                <PaginationEllipsis className="dark:text-card" />
               </PaginationItem>
               <PaginationItem>
-                <PaginationNext href="#" />
+                <PaginationNext href="#" className="dark:text-card" />
               </PaginationItem>
             </PaginationContent>
           </Pagination>
