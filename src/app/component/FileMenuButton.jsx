@@ -1,19 +1,17 @@
-import React from 'react'
+import React from "react";
 
 function FileMenuButton({ icon, label, onClick }) {
   return (
-    <div className='flex align-middle items-center gap-2 mt-4 cursor-pointer'>
-      <button 
+    <div className="flex align-middle items-center gap-2 mt-4 cursor-pointer">
+      <button
         onClick={onClick}
-        className='flex gap-2 items-center cursor-pointer'
+        className="flex gap-2 items-center cursor-pointer"
       >
-        <div className='bg-dusk rounded-md p-2'>
-          {icon}
-        </div>
+        <div className="dark:bg-card-foreground rounded-md p-2">{icon}</div>
         <p>{label}</p>
       </button>
     </div>
-  )
+  );
 }
 
-export default FileMenuButton
+export default FileMenuButton;
