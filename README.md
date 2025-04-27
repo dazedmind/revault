@@ -1,6 +1,7 @@
 ## ReVault
 
 ReVault: A Cloud Repository Using Information Retrieval Scoring Algorithms with SEO Metadata Tagging for Archiving Research-Based Works of PLM CISTM Students
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
