@@ -5,7 +5,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { REGEXP_ONLY_DIGITS } from "input-otp"
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 import { useEffect, useState } from "react";
 import { generateOTP } from "@/lib/generateOtp"; // Make sure this exists
@@ -19,7 +19,7 @@ const OTP = () => {
   const [timer, setTimer] = useState(30);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showFailureModal, setShowFailureModal] = useState(false);
-  const role = localStorage.getItem("userType") || ""; 
+  const role = localStorage.getItem("userType") || "";
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -46,17 +46,16 @@ const OTP = () => {
     const res = await fetch("/api/verify-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: userEmail, otp, role}),
+      body: JSON.stringify({ email: userEmail, otp, role }),
     });
-  
+
     if (res.ok) {
       const result = await res.json();
       if (result.verified) {
-
         // 🔥 STEP 1: Retrieve saved form data from localStorage
-        const regRole = localStorage.getItem("userType");  // Assuming it's stored as a string
+        const regRole = localStorage.getItem("userType"); // Assuming it's stored as a string
         const regData = JSON.parse(localStorage.getItem("regForm") || "{}");
-  
+
         // 🔥 STEP 2: Send data to our new API route
         regData.role = regRole;
 
@@ -65,7 +64,7 @@ const OTP = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(regData), // ✅ Just send one object
         });
-        
+
         if (saveRes.ok) {
           localStorage.removeItem("regForm");
           localStorage.removeItem("regEmail");
@@ -80,7 +79,6 @@ const OTP = () => {
       setShowFailureModal(true); // Show the success modal
     }
   };
-  
 
   useEffect(() => {
     if (isSent && timer > 0) {
@@ -107,20 +105,25 @@ const OTP = () => {
           Check your email!
         </h1>
         <p className="text-xl text-center w-lg mt-3">
-          We have sent an email to <span className="font-bold">{userEmail}</span>. Check your inbox for the One-Time-Passcode (OTP).
+          We have sent an email to{" "}
+          <span className="font-bold">{userEmail}</span>. Check your inbox for
+          the One-Time-Passcode (OTP).
         </p>
 
         <div className="flex flex-col items-start mt-6">
-          <InputOTP maxLength={5} value={otp} onChange={setOtp}   pattern={REGEXP_ONLY_DIGITS}  >
+          <InputOTP
+            maxLength={5}
+            value={otp}
+            onChange={setOtp}
+            pattern={REGEXP_ONLY_DIGITS}
+          >
             <InputOTPGroup>
               {[0, 1, 2, 3, 4].map((i) => (
                 <InputOTPSlot key={i} index={i} />
               ))}
             </InputOTPGroup>
           </InputOTP>
-          <p className="text-sm mt-2 text-gray-400">
-            Resend in {timer}s
-          </p>
+          <p className="text-sm mt-2 text-gray-400">Resend in {timer}s</p>
         </div>
 
         <div className="flex gap-4 mt-6">
@@ -128,7 +131,9 @@ const OTP = () => {
             disabled={timer > 0}
             onClick={handleSendOTP}
             className={`px-4 py-2 rounded-lg ${
-              timer > 0 ? "bg-gray-400 cursor-not-allowed" : "bg-dusk hover:bg-dusk-foreground text-white cursor-pointer"
+              timer > 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-dusk hover:bg-dusk-foreground text-white cursor-pointer"
             }`}
           >
             Resend OTP
@@ -147,8 +152,12 @@ const OTP = () => {
       {showSuccessModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-midnight rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
-            <h2 className="text-2xl font-bold text-teal mb-4">Account Successfully Created!</h2>
-            <p className="text-white-50 mb-6">You can now proceed to complete your registration.</p>
+            <h2 className="text-2xl font-bold text-teal mb-4">
+              Account Successfully Created!
+            </h2>
+            <p className="text-white-50 mb-6">
+              You can now proceed to complete your registration.
+            </p>
             <button
               className="px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
               onClick={() => router.push("../login")}
@@ -163,11 +172,13 @@ const OTP = () => {
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-midnight rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
             <h2 className="text-2xl font-bold text-teal mb-4">OTP Incorrect</h2>
-            <p className="text-white-50 mb-6">The OTP you entered is incorrect. Please try again.</p>
+            <p className="text-white-50 mb-6">
+              The OTP you entered is incorrect. Please try again.
+            </p>
             <button
               className="cursor-pointer px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
               onClick={() => setShowFailureModal(false)}
-              >
+            >
               Okay
             </button>
           </div>
@@ -175,7 +186,6 @@ const OTP = () => {
       )}
     </div>
   );
-  
 };
 
 export default OTP;
