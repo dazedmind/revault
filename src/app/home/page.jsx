@@ -14,8 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import AdminNavBar from "../admin/components/AdminNavBar";
-import navigate from "next/navigation";
+
 
 export const decode = (token) => {
   try {

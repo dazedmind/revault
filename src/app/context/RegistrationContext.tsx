@@ -9,7 +9,7 @@ interface RegistrationFormData {
   lastName: string;
   ext: string;
   studentNumber: string;
-  course: string;
+  program: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -30,7 +30,7 @@ const defaultFormData: RegistrationFormData = {
   lastName: "",
   ext: "",
   studentNumber: "",
-  course: "",
+  program: "",
   email: "",
   password: "",
   confirmPassword: "",

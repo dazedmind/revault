@@ -32,13 +32,16 @@ export async function POST(req) {
   const token = jwt.sign(
     {
       user_id: student.users.user_id,
+      firstName: student.users.first_name,
       role: student.users.role || 'student',
       email: student.users.email,
+      studentNumber: student.student_num.toString(), // ✅ Include this line
     },
     SECRET_KEY,
     { expiresIn: '2h' }
   );
 
+  console.log("Generated JWT Token:", token); // Log the token for debugging
   // Set the token in a cookie with HttpOnly flag
   const headers = new Headers();
   headers.append('Set-Cookie', `authToken=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=7200`);
@@ -47,6 +50,7 @@ export async function POST(req) {
     JSON.stringify({
       success: true,
       message: "Login successful",
+      token,
       user: {
         name: student.users.first_name,
         role: student.users.role,

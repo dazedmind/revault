@@ -5,6 +5,8 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS } from "input-otp"
+
 import { useEffect, useState } from "react";
 import { generateOTP } from "@/lib/generateOtp"; // Make sure this exists
 import { useSearchParams, useRouter } from "next/navigation";
@@ -15,6 +17,8 @@ const OTP = () => {
   const [generatedOTP, setGeneratedOTP] = useState("");
   const [isSent, setIsSent] = useState(false);
   const [timer, setTimer] = useState(30);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailureModal, setShowFailureModal] = useState(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -47,7 +51,7 @@ const OTP = () => {
     if (res.ok) {
       const result = await res.json();
       if (result.verified) {
-        alert("OTP verified successfully!");
+        // alert("OTP verified successfully!");
 
         // 🔥 STEP 1: Retrieve saved form data from localStorage
         const regData = JSON.parse(localStorage.getItem("regForm") || "{}");
@@ -66,15 +70,15 @@ const OTP = () => {
         if (saveRes.ok) {
           localStorage.removeItem("regForm");
           localStorage.removeItem("regEmail");
-          router.push("/registration/registration-form");
+          setShowSuccessModal(true); // Show the success modal
         } else {
           alert("Something went wrong saving info.");
         }
       } else {
-        alert("Incorrect OTP");
+        setShowFailureModal(true); // Show the success modal
       }
     } else {
-      alert("Incorrect OTP");
+      setShowFailureModal(true); // Show the success modal
     }
   };
   
@@ -108,7 +112,7 @@ const OTP = () => {
         </p>
 
         <div className="flex flex-col items-start mt-6">
-          <InputOTP maxLength={5} value={otp} onChange={setOtp}>
+          <InputOTP maxLength={5} value={otp} onChange={setOtp}   pattern={REGEXP_ONLY_DIGITS}  >
             <InputOTPGroup>
               {[0, 1, 2, 3, 4].map((i) => (
                 <InputOTPSlot key={i} index={i} />
@@ -124,8 +128,8 @@ const OTP = () => {
           <button
             disabled={timer > 0}
             onClick={handleSendOTP}
-            className={`px-4 py-2 border rounded-lg ${
-              timer > 0 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600 text-white"
+            className={`px-4 py-2 rounded-lg ${
+              timer > 0 ? "bg-gray-400 cursor-not-allowed" : "bg-dusk hover:bg-dusk-foreground text-white cursor-pointer"
             }`}
           >
             Resend OTP
@@ -134,14 +138,45 @@ const OTP = () => {
           <button
             type="button"
             onClick={handleConfirm}
-            className="font-bold w-sm h-14 border-2 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-sans cursor-pointer z-10 px-6 text-white"
+            className="font-bold w-sm h-14 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-sans cursor-pointer z-10 px-6 text-white"
           >
             Confirm
           </button>
         </div>
       </div>
+
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-midnight rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+            <h2 className="text-2xl font-bold text-teal mb-4">Account Successfully Created!</h2>
+            <p className="text-white-50 mb-6">You can now proceed to complete your registration.</p>
+            <button
+              className="px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
+              onClick={() => router.push("../login")}
+            >
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showFailureModal && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-midnight rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+            <h2 className="text-2xl font-bold text-teal mb-4">OTP Incorrect</h2>
+            <p className="text-white-50 mb-6">The OTP you entered is incorrect. Please try again.</p>
+            <button
+              className="cursor-pointer px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
+              onClick={() => setShowFailureModal(false)}
+              >
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
+  
 };
 
 export default OTP;

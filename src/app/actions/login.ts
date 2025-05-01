@@ -33,8 +33,10 @@ export async function loginUser(formData: FormData) {
   const token = jwt.sign(
     {
       user_id: student.users.user_id,
+      firstName: student.users.first_name,
       role: student.users.role || 'student',
       email: student.users.email,
+      studentNumber: student.student_num.toString(), // ✅ Include this line
     },
     SECRET_KEY,
     { expiresIn: '2h' }

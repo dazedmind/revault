@@ -41,29 +41,3 @@ export async function POST(req: Request) {
 export function getStoredOTP(email: string) {
   return otpStore.get(email);
 }
-
-// export async function POST(req: Request) {
-//   const { email } = await req.json();
-
-//   const otp = Math.floor(10000 + Math.random() * 90000).toString();
-
-//   // TODO: Save OTP in DB/cache/session/etc.
-
-//   const msg = {
-//     to: email,
-//     from: 'jatevalena2022@plm.edu.ph', // this must match the verified sender!
-//     subject: 'Your OTP Code',
-//     html: `<strong>Your OTP code is: ${otp}</strong><br/>This expires in 5 minutes.`,
-//   };
-
-//   try {
-//     await sgMail.send(msg);
-//     return NextResponse.json({ success: true });
-//   } catch (error) {
-//     console.error(error);
-//     return NextResponse.json({ error: 'Failed to send OTP' }, { status: 500 });
-//   }
-  
-// }
-
-// File-level variable (temp memory)

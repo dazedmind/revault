@@ -11,7 +11,7 @@ export async function saveInformation(formData: FormData) {
     const lastName = formData.get('lastName')?.toString();
     const ext = formData.get('ext')?.toString();
     const studentNumber = formData.get('studentNumber')?.toString();
-    const course = formData.get('course')?.toString();
+    const program = formData.get('program')?.toString();
     const email = formData.get('email')?.toString();
     const password = formData.get('password')?.toString();
     const confirmPassword = formData.get('confirmPassword')?.toString();
@@ -44,7 +44,7 @@ export async function saveInformation(formData: FormData) {
     await prisma.students.create({
       data: {
         student_num: parseFloat(studentNumber),
-        program: course,
+        program: program,
         college: "CISTM", // you can extend your form to get this
         year_level: 1, // also make it dynamic later
         user_id: user.user_id,
@@ -58,7 +58,7 @@ export async function saveInformation(formData: FormData) {
       lastName,
       ext,
       studentNumber,
-      course,
+      program,
       email,
       password,
       confirmPassword,

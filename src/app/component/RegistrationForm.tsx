@@ -10,7 +10,7 @@ import WarningMessage from "./WarningMessage";
 
 export default function Form() {
   const router = useRouter()
-  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedProgram, setSelectedProgram] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -48,7 +48,7 @@ export default function Form() {
           localStorage.setItem("regEmail", formData.email);
           localStorage.setItem("regForm", JSON.stringify({
             ...formData,
-            course: selectedCourse,
+            program: selectedProgram,
           }));
           router.push("/registration/otp-confirmation");
         } else {
@@ -61,7 +61,7 @@ export default function Form() {
 
     // Check if the form data is properly populated
     console.log("Form Data: ", formData);  // For debugging
-    console.log("Selected Course: ", selectedCourse);
+    console.log("Selected Course: ", selectedProgram);
 
     const query = new URLSearchParams({
       firstName: formData.firstName || '',
@@ -69,7 +69,7 @@ export default function Form() {
       lastName: formData.lastName || '',
       ext: formData.ext || '',
       studentNumber: formData.studentNumber || '',
-      course: selectedCourse || '',
+      program: selectedProgram || '',
       email: formData.email || '',
       password: formData.password || '',
       confirmPassword: formData.confirmPassword || '',
@@ -143,14 +143,14 @@ export default function Form() {
 
         <div className="flex flex-col flex-grow">
           <Label className="text-sm text-gray-300 mb-1">Course</Label>
-          <Select name="course" value={selectedCourse} onValueChange={setSelectedCourse}>
+          <Select name="program" value={selectedProgram} onValueChange={setSelectedProgram}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select your course" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="bscs">Computer Science</SelectItem>
-                <SelectItem value="bsit">Information Technology</SelectItem>
+                <SelectItem value="CS">Computer Science</SelectItem>
+                <SelectItem value="IT">Information Technology</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

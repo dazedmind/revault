@@ -1,3 +1,4 @@
+"use client";
 import React, { ReactNode } from "react";
 import Background from "../component/Background";
 import Header from "../component/Header";

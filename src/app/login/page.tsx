@@ -32,9 +32,11 @@ const LogIn = () => {
     if (result.success) {
       // Store token in localStorage (or sessionStorage)
       localStorage.setItem('authToken', result.token); // 🔐 Store the token
+      
       window.location.href = '/home';
     } else {
       alert("Login failed: " + result.message);
+      
     }
   };
 

@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react';
 import NavBar from '../component/NavBar'
 import { ProfileCard } from '../component/ProfileCard';
 import Link from 'next/link';
@@ -8,13 +9,58 @@ import { FaPlus } from "react-icons/fa6";
 import ProtectedRoute from '../component/ProtectedRoute';
 
 export default function Profile() {
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+  
+      try {
+        const res = await fetch('/api/profile', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json(); // <-- move this here regardless of res.ok
+
+        if (!res.ok) {
+          console.error("Failed to fetch profile:", data?.error || res.statusText);
+          return;
+        }
+  
+        setProfile(data);
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchProfile();
+  }, []);
+  
+  if (loading) return <div>Loading profile...</div>;
+
   return (
     <div>
-      <ProtectedRoute>       </ProtectedRoute>
-
+      <ProtectedRoute> 
       <NavBar/>
 
-      <ProfileCard/>
+      {/* <ProfileCard/> */}
+      {profile ? (
+        <ProfileCard
+          name={`${profile.users.first_name} ${profile.users.last_name}`}
+          studentNumber={profile.student_num}
+          college={profile.college}
+          program={profile.program}
+        />
+      ) : (
+        <div>Failed to load profile.</div>
+      )}
 
       <div className='flex bg-midnight'>
         <aside className='flex flex-col gap-8 h-auto w-96 p-14'>
@@ -67,6 +113,7 @@ export default function Profile() {
           </div>
         </main>
       </div>
+      </ProtectedRoute>
     </div>
   )
 }
