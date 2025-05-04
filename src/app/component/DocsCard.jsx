@@ -26,9 +26,15 @@ const DocsCard = (props) => {
   return (
     <>
       <div className="w-9xl flex align-middle items-center gap-2 p-6 px-8 rounded-xl border border-dusk dark:bg-primary">
-        <div className="w-52">
+        <div className="w-52 h-55 relative flex-shrink-0 overflow-hidden rounded">
           <a href={props.link}>
-            <Image src={props.img} alt="Project" />
+            <Image
+              src={props.img}
+              alt={props.title}
+              fill
+              sizes="208px" // matches w-52 (13rem → 208px)
+              style={{ objectFit: "cover" }}
+            />
           </a>
         </div>
 

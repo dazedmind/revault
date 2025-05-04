@@ -21,8 +21,8 @@ export function ThemeWrapper({ children }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="light"
-      enableSystem={false}
+      defaultTheme="system"
+      enableSystem={true}
       forcedTheme={forcedTheme}
     >
       {children}
