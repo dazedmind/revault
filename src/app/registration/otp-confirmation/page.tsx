@@ -19,6 +19,7 @@ const OTP = () => {
   const [timer, setTimer] = useState(30);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showFailureModal, setShowFailureModal] = useState(false);
+  const role = localStorage.getItem("userType") || ""; 
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -37,7 +38,7 @@ const OTP = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email: userEmail, otp: code }),
+      body: JSON.stringify({ email: userEmail, otp: code, role: role }),
     });
   };
 
@@ -45,26 +46,24 @@ const OTP = () => {
     const res = await fetch("/api/verify-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: userEmail, otp }),
+      body: JSON.stringify({ email: userEmail, otp, role}),
     });
   
     if (res.ok) {
       const result = await res.json();
       if (result.verified) {
-        // alert("OTP verified successfully!");
 
         // 🔥 STEP 1: Retrieve saved form data from localStorage
+        const regRole = localStorage.getItem("userType");  // Assuming it's stored as a string
         const regData = JSON.parse(localStorage.getItem("regForm") || "{}");
-        const formData = new FormData();
-  
-        Object.entries(regData).forEach(([key, value]) => {
-          formData.append(key, String(value));
-        });
   
         // 🔥 STEP 2: Send data to our new API route
+        regData.role = regRole;
+
         const saveRes = await fetch("/api/save-user", {
           method: "POST",
-          body: formData,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(regData), // ✅ Just send one object
         });
         
         if (saveRes.ok) {

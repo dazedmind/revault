@@ -19,10 +19,10 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type users = $Result.DefaultSelection<Prisma.$usersPayload>
 /**
- * Model facilitators
+ * Model faculty
  * 
  */
-export type facilitators = $Result.DefaultSelection<Prisma.$facilitatorsPayload>
+export type faculty = $Result.DefaultSelection<Prisma.$facultyPayload>
 /**
  * Model students
  * 
@@ -185,14 +185,14 @@ export class PrismaClient<
   get users(): Prisma.usersDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.facilitators`: Exposes CRUD operations for the **facilitators** model.
+   * `prisma.faculty`: Exposes CRUD operations for the **faculty** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Facilitators
-    * const facilitators = await prisma.facilitators.findMany()
+    * // Fetch zero or more Faculties
+    * const faculties = await prisma.faculty.findMany()
     * ```
     */
-  get facilitators(): Prisma.facilitatorsDelegate<ExtArgs, ClientOptions>;
+  get faculty(): Prisma.facultyDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.students`: Exposes CRUD operations for the **students** model.
@@ -684,7 +684,7 @@ export namespace Prisma {
 
   export const ModelName: {
     users: 'users',
-    facilitators: 'facilitators',
+    faculty: 'faculty',
     students: 'students',
     papers: 'papers',
     paper_metadata: 'paper_metadata',
@@ -708,7 +708,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "facilitators" | "students" | "papers" | "paper_metadata" | "user_bookmarks" | "otp"
+      modelProps: "users" | "faculty" | "students" | "papers" | "paper_metadata" | "user_bookmarks" | "otp"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -786,77 +786,77 @@ export namespace Prisma {
           }
         }
       }
-      facilitators: {
-        payload: Prisma.$facilitatorsPayload<ExtArgs>
-        fields: Prisma.facilitatorsFieldRefs
+      faculty: {
+        payload: Prisma.$facultyPayload<ExtArgs>
+        fields: Prisma.facultyFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.facilitatorsFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload> | null
+            args: Prisma.facultyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.facilitatorsFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload>
+            args: Prisma.facultyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload>
           }
           findFirst: {
-            args: Prisma.facilitatorsFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload> | null
+            args: Prisma.facultyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.facilitatorsFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload>
+            args: Prisma.facultyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload>
           }
           findMany: {
-            args: Prisma.facilitatorsFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload>[]
+            args: Prisma.facultyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload>[]
           }
           create: {
-            args: Prisma.facilitatorsCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload>
+            args: Prisma.facultyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload>
           }
           createMany: {
-            args: Prisma.facilitatorsCreateManyArgs<ExtArgs>
+            args: Prisma.facultyCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.facilitatorsCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload>[]
+            args: Prisma.facultyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload>[]
           }
           delete: {
-            args: Prisma.facilitatorsDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload>
+            args: Prisma.facultyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload>
           }
           update: {
-            args: Prisma.facilitatorsUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload>
+            args: Prisma.facultyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload>
           }
           deleteMany: {
-            args: Prisma.facilitatorsDeleteManyArgs<ExtArgs>
+            args: Prisma.facultyDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.facilitatorsUpdateManyArgs<ExtArgs>
+            args: Prisma.facultyUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.facilitatorsUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload>[]
+            args: Prisma.facultyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload>[]
           }
           upsert: {
-            args: Prisma.facilitatorsUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$facilitatorsPayload>
+            args: Prisma.facultyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$facultyPayload>
           }
           aggregate: {
-            args: Prisma.FacilitatorsAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateFacilitators>
+            args: Prisma.FacultyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFaculty>
           }
           groupBy: {
-            args: Prisma.facilitatorsGroupByArgs<ExtArgs>
-            result: $Utils.Optional<FacilitatorsGroupByOutputType>[]
+            args: Prisma.facultyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FacultyGroupByOutputType>[]
           }
           count: {
-            args: Prisma.facilitatorsCountArgs<ExtArgs>
-            result: $Utils.Optional<FacilitatorsCountAggregateOutputType> | number
+            args: Prisma.facultyCountArgs<ExtArgs>
+            result: $Utils.Optional<FacultyCountAggregateOutputType> | number
           }
         }
       }
@@ -1315,7 +1315,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     users?: usersOmit
-    facilitators?: facilitatorsOmit
+    faculty?: facultyOmit
     students?: studentsOmit
     papers?: papersOmit
     paper_metadata?: paper_metadataOmit
@@ -1715,7 +1715,7 @@ export namespace Prisma {
     role?: boolean
     password?: boolean
     created_at?: boolean
-    facilitators?: boolean | users$facilitatorsArgs<ExtArgs>
+    faculty?: boolean | users$facultyArgs<ExtArgs>
     students?: boolean | users$studentsArgs<ExtArgs>
     user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
@@ -1759,7 +1759,7 @@ export namespace Prisma {
 
   export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "first_name" | "mid_name" | "last_name" | "ext_name" | "email" | "role" | "password" | "created_at", ExtArgs["result"]["users"]>
   export type usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    facilitators?: boolean | users$facilitatorsArgs<ExtArgs>
+    faculty?: boolean | users$facultyArgs<ExtArgs>
     students?: boolean | users$studentsArgs<ExtArgs>
     user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
@@ -1770,7 +1770,7 @@ export namespace Prisma {
   export type $usersPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "users"
     objects: {
-      facilitators: Prisma.$facilitatorsPayload<ExtArgs> | null
+      faculty: Prisma.$facultyPayload<ExtArgs> | null
       students: Prisma.$studentsPayload<ExtArgs> | null
       user_bookmarks: Prisma.$user_bookmarksPayload<ExtArgs>[]
     }
@@ -2178,7 +2178,7 @@ export namespace Prisma {
    */
   export interface Prisma__usersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    facilitators<T extends users$facilitatorsArgs<ExtArgs> = {}>(args?: Subset<T, users$facilitatorsArgs<ExtArgs>>): Prisma__facilitatorsClient<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    faculty<T extends users$facultyArgs<ExtArgs> = {}>(args?: Subset<T, users$facultyArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     students<T extends users$studentsArgs<ExtArgs> = {}>(args?: Subset<T, users$studentsArgs<ExtArgs>>): Prisma__studentsClient<$Result.GetResult<Prisma.$studentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     user_bookmarks<T extends users$user_bookmarksArgs<ExtArgs> = {}>(args?: Subset<T, users$user_bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_bookmarksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -2607,22 +2607,22 @@ export namespace Prisma {
   }
 
   /**
-   * users.facilitators
+   * users.faculty
    */
-  export type users$facilitatorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type users$facultyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
-    where?: facilitatorsWhereInput
+    include?: facultyInclude<ExtArgs> | null
+    where?: facultyWhereInput
   }
 
   /**
@@ -2688,42 +2688,42 @@ export namespace Prisma {
 
 
   /**
-   * Model facilitators
+   * Model faculty
    */
 
-  export type AggregateFacilitators = {
-    _count: FacilitatorsCountAggregateOutputType | null
-    _avg: FacilitatorsAvgAggregateOutputType | null
-    _sum: FacilitatorsSumAggregateOutputType | null
-    _min: FacilitatorsMinAggregateOutputType | null
-    _max: FacilitatorsMaxAggregateOutputType | null
+  export type AggregateFaculty = {
+    _count: FacultyCountAggregateOutputType | null
+    _avg: FacultyAvgAggregateOutputType | null
+    _sum: FacultySumAggregateOutputType | null
+    _min: FacultyMinAggregateOutputType | null
+    _max: FacultyMaxAggregateOutputType | null
   }
 
-  export type FacilitatorsAvgAggregateOutputType = {
+  export type FacultyAvgAggregateOutputType = {
     employee_id: number | null
     user_id: number | null
   }
 
-  export type FacilitatorsSumAggregateOutputType = {
+  export type FacultySumAggregateOutputType = {
     employee_id: number | null
     user_id: number | null
   }
 
-  export type FacilitatorsMinAggregateOutputType = {
-    employee_id: number | null
-    position: string | null
-    department: string | null
-    user_id: number | null
-  }
-
-  export type FacilitatorsMaxAggregateOutputType = {
+  export type FacultyMinAggregateOutputType = {
     employee_id: number | null
     position: string | null
     department: string | null
     user_id: number | null
   }
 
-  export type FacilitatorsCountAggregateOutputType = {
+  export type FacultyMaxAggregateOutputType = {
+    employee_id: number | null
+    position: string | null
+    department: string | null
+    user_id: number | null
+  }
+
+  export type FacultyCountAggregateOutputType = {
     employee_id: number
     position: number
     department: number
@@ -2732,31 +2732,31 @@ export namespace Prisma {
   }
 
 
-  export type FacilitatorsAvgAggregateInputType = {
+  export type FacultyAvgAggregateInputType = {
     employee_id?: true
     user_id?: true
   }
 
-  export type FacilitatorsSumAggregateInputType = {
+  export type FacultySumAggregateInputType = {
     employee_id?: true
     user_id?: true
   }
 
-  export type FacilitatorsMinAggregateInputType = {
-    employee_id?: true
-    position?: true
-    department?: true
-    user_id?: true
-  }
-
-  export type FacilitatorsMaxAggregateInputType = {
+  export type FacultyMinAggregateInputType = {
     employee_id?: true
     position?: true
     department?: true
     user_id?: true
   }
 
-  export type FacilitatorsCountAggregateInputType = {
+  export type FacultyMaxAggregateInputType = {
+    employee_id?: true
+    position?: true
+    department?: true
+    user_id?: true
+  }
+
+  export type FacultyCountAggregateInputType = {
     employee_id?: true
     position?: true
     department?: true
@@ -2764,162 +2764,162 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type FacilitatorsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type FacultyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which facilitators to aggregate.
+     * Filter which faculty to aggregate.
      */
-    where?: facilitatorsWhereInput
+    where?: facultyWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of facilitators to fetch.
+     * Determine the order of faculties to fetch.
      */
-    orderBy?: facilitatorsOrderByWithRelationInput | facilitatorsOrderByWithRelationInput[]
+    orderBy?: facultyOrderByWithRelationInput | facultyOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: facilitatorsWhereUniqueInput
+    cursor?: facultyWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` facilitators from the position of the cursor.
+     * Take `±n` faculties from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` facilitators.
+     * Skip the first `n` faculties.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned facilitators
+     * Count returned faculties
     **/
-    _count?: true | FacilitatorsCountAggregateInputType
+    _count?: true | FacultyCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: FacilitatorsAvgAggregateInputType
+    _avg?: FacultyAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: FacilitatorsSumAggregateInputType
+    _sum?: FacultySumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: FacilitatorsMinAggregateInputType
+    _min?: FacultyMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: FacilitatorsMaxAggregateInputType
+    _max?: FacultyMaxAggregateInputType
   }
 
-  export type GetFacilitatorsAggregateType<T extends FacilitatorsAggregateArgs> = {
-        [P in keyof T & keyof AggregateFacilitators]: P extends '_count' | 'count'
+  export type GetFacultyAggregateType<T extends FacultyAggregateArgs> = {
+        [P in keyof T & keyof AggregateFaculty]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateFacilitators[P]>
-      : GetScalarType<T[P], AggregateFacilitators[P]>
+        : GetScalarType<T[P], AggregateFaculty[P]>
+      : GetScalarType<T[P], AggregateFaculty[P]>
   }
 
 
 
 
-  export type facilitatorsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: facilitatorsWhereInput
-    orderBy?: facilitatorsOrderByWithAggregationInput | facilitatorsOrderByWithAggregationInput[]
-    by: FacilitatorsScalarFieldEnum[] | FacilitatorsScalarFieldEnum
-    having?: facilitatorsScalarWhereWithAggregatesInput
+  export type facultyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: facultyWhereInput
+    orderBy?: facultyOrderByWithAggregationInput | facultyOrderByWithAggregationInput[]
+    by: FacultyScalarFieldEnum[] | FacultyScalarFieldEnum
+    having?: facultyScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: FacilitatorsCountAggregateInputType | true
-    _avg?: FacilitatorsAvgAggregateInputType
-    _sum?: FacilitatorsSumAggregateInputType
-    _min?: FacilitatorsMinAggregateInputType
-    _max?: FacilitatorsMaxAggregateInputType
+    _count?: FacultyCountAggregateInputType | true
+    _avg?: FacultyAvgAggregateInputType
+    _sum?: FacultySumAggregateInputType
+    _min?: FacultyMinAggregateInputType
+    _max?: FacultyMaxAggregateInputType
   }
 
-  export type FacilitatorsGroupByOutputType = {
+  export type FacultyGroupByOutputType = {
     employee_id: number
     position: string | null
     department: string | null
     user_id: number
-    _count: FacilitatorsCountAggregateOutputType | null
-    _avg: FacilitatorsAvgAggregateOutputType | null
-    _sum: FacilitatorsSumAggregateOutputType | null
-    _min: FacilitatorsMinAggregateOutputType | null
-    _max: FacilitatorsMaxAggregateOutputType | null
+    _count: FacultyCountAggregateOutputType | null
+    _avg: FacultyAvgAggregateOutputType | null
+    _sum: FacultySumAggregateOutputType | null
+    _min: FacultyMinAggregateOutputType | null
+    _max: FacultyMaxAggregateOutputType | null
   }
 
-  type GetFacilitatorsGroupByPayload<T extends facilitatorsGroupByArgs> = Prisma.PrismaPromise<
+  type GetFacultyGroupByPayload<T extends facultyGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<FacilitatorsGroupByOutputType, T['by']> &
+      PickEnumerable<FacultyGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof FacilitatorsGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof FacultyGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], FacilitatorsGroupByOutputType[P]>
-            : GetScalarType<T[P], FacilitatorsGroupByOutputType[P]>
+              : GetScalarType<T[P], FacultyGroupByOutputType[P]>
+            : GetScalarType<T[P], FacultyGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type facilitatorsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type facultySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     employee_id?: boolean
     position?: boolean
     department?: boolean
     user_id?: boolean
     users?: boolean | usersDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["facilitators"]>
+  }, ExtArgs["result"]["faculty"]>
 
-  export type facilitatorsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type facultySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     employee_id?: boolean
     position?: boolean
     department?: boolean
     user_id?: boolean
     users?: boolean | usersDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["facilitators"]>
+  }, ExtArgs["result"]["faculty"]>
 
-  export type facilitatorsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type facultySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     employee_id?: boolean
     position?: boolean
     department?: boolean
     user_id?: boolean
     users?: boolean | usersDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["facilitators"]>
+  }, ExtArgs["result"]["faculty"]>
 
-  export type facilitatorsSelectScalar = {
+  export type facultySelectScalar = {
     employee_id?: boolean
     position?: boolean
     department?: boolean
     user_id?: boolean
   }
 
-  export type facilitatorsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"employee_id" | "position" | "department" | "user_id", ExtArgs["result"]["facilitators"]>
-  export type facilitatorsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"employee_id" | "position" | "department" | "user_id", ExtArgs["result"]["faculty"]>
+  export type facultyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | usersDefaultArgs<ExtArgs>
   }
-  export type facilitatorsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | usersDefaultArgs<ExtArgs>
   }
-  export type facilitatorsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | usersDefaultArgs<ExtArgs>
   }
 
-  export type $facilitatorsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "facilitators"
+  export type $facultyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "faculty"
     objects: {
       users: Prisma.$usersPayload<ExtArgs>
     }
@@ -2928,136 +2928,136 @@ export namespace Prisma {
       position: string | null
       department: string | null
       user_id: number
-    }, ExtArgs["result"]["facilitators"]>
+    }, ExtArgs["result"]["faculty"]>
     composites: {}
   }
 
-  type facilitatorsGetPayload<S extends boolean | null | undefined | facilitatorsDefaultArgs> = $Result.GetResult<Prisma.$facilitatorsPayload, S>
+  type facultyGetPayload<S extends boolean | null | undefined | facultyDefaultArgs> = $Result.GetResult<Prisma.$facultyPayload, S>
 
-  type facilitatorsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<facilitatorsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: FacilitatorsCountAggregateInputType | true
+  type facultyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<facultyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FacultyCountAggregateInputType | true
     }
 
-  export interface facilitatorsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['facilitators'], meta: { name: 'facilitators' } }
+  export interface facultyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['faculty'], meta: { name: 'faculty' } }
     /**
-     * Find zero or one Facilitators that matches the filter.
-     * @param {facilitatorsFindUniqueArgs} args - Arguments to find a Facilitators
+     * Find zero or one Faculty that matches the filter.
+     * @param {facultyFindUniqueArgs} args - Arguments to find a Faculty
      * @example
-     * // Get one Facilitators
-     * const facilitators = await prisma.facilitators.findUnique({
+     * // Get one Faculty
+     * const faculty = await prisma.faculty.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends facilitatorsFindUniqueArgs>(args: SelectSubset<T, facilitatorsFindUniqueArgs<ExtArgs>>): Prisma__facilitatorsClient<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends facultyFindUniqueArgs>(args: SelectSubset<T, facultyFindUniqueArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one Facilitators that matches the filter or throw an error with `error.code='P2025'`
+     * Find one Faculty that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {facilitatorsFindUniqueOrThrowArgs} args - Arguments to find a Facilitators
+     * @param {facultyFindUniqueOrThrowArgs} args - Arguments to find a Faculty
      * @example
-     * // Get one Facilitators
-     * const facilitators = await prisma.facilitators.findUniqueOrThrow({
+     * // Get one Faculty
+     * const faculty = await prisma.faculty.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends facilitatorsFindUniqueOrThrowArgs>(args: SelectSubset<T, facilitatorsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__facilitatorsClient<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends facultyFindUniqueOrThrowArgs>(args: SelectSubset<T, facultyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Facilitators that matches the filter.
+     * Find the first Faculty that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {facilitatorsFindFirstArgs} args - Arguments to find a Facilitators
+     * @param {facultyFindFirstArgs} args - Arguments to find a Faculty
      * @example
-     * // Get one Facilitators
-     * const facilitators = await prisma.facilitators.findFirst({
+     * // Get one Faculty
+     * const faculty = await prisma.faculty.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends facilitatorsFindFirstArgs>(args?: SelectSubset<T, facilitatorsFindFirstArgs<ExtArgs>>): Prisma__facilitatorsClient<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends facultyFindFirstArgs>(args?: SelectSubset<T, facultyFindFirstArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Facilitators that matches the filter or
+     * Find the first Faculty that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {facilitatorsFindFirstOrThrowArgs} args - Arguments to find a Facilitators
+     * @param {facultyFindFirstOrThrowArgs} args - Arguments to find a Faculty
      * @example
-     * // Get one Facilitators
-     * const facilitators = await prisma.facilitators.findFirstOrThrow({
+     * // Get one Faculty
+     * const faculty = await prisma.faculty.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends facilitatorsFindFirstOrThrowArgs>(args?: SelectSubset<T, facilitatorsFindFirstOrThrowArgs<ExtArgs>>): Prisma__facilitatorsClient<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends facultyFindFirstOrThrowArgs>(args?: SelectSubset<T, facultyFindFirstOrThrowArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more Facilitators that matches the filter.
+     * Find zero or more Faculties that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {facilitatorsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {facultyFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Facilitators
-     * const facilitators = await prisma.facilitators.findMany()
+     * // Get all Faculties
+     * const faculties = await prisma.faculty.findMany()
      * 
-     * // Get first 10 Facilitators
-     * const facilitators = await prisma.facilitators.findMany({ take: 10 })
+     * // Get first 10 Faculties
+     * const faculties = await prisma.faculty.findMany({ take: 10 })
      * 
      * // Only select the `employee_id`
-     * const facilitatorsWithEmployee_idOnly = await prisma.facilitators.findMany({ select: { employee_id: true } })
+     * const facultyWithEmployee_idOnly = await prisma.faculty.findMany({ select: { employee_id: true } })
      * 
      */
-    findMany<T extends facilitatorsFindManyArgs>(args?: SelectSubset<T, facilitatorsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends facultyFindManyArgs>(args?: SelectSubset<T, facultyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a Facilitators.
-     * @param {facilitatorsCreateArgs} args - Arguments to create a Facilitators.
+     * Create a Faculty.
+     * @param {facultyCreateArgs} args - Arguments to create a Faculty.
      * @example
-     * // Create one Facilitators
-     * const Facilitators = await prisma.facilitators.create({
+     * // Create one Faculty
+     * const Faculty = await prisma.faculty.create({
      *   data: {
-     *     // ... data to create a Facilitators
+     *     // ... data to create a Faculty
      *   }
      * })
      * 
      */
-    create<T extends facilitatorsCreateArgs>(args: SelectSubset<T, facilitatorsCreateArgs<ExtArgs>>): Prisma__facilitatorsClient<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends facultyCreateArgs>(args: SelectSubset<T, facultyCreateArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many Facilitators.
-     * @param {facilitatorsCreateManyArgs} args - Arguments to create many Facilitators.
+     * Create many Faculties.
+     * @param {facultyCreateManyArgs} args - Arguments to create many Faculties.
      * @example
-     * // Create many Facilitators
-     * const facilitators = await prisma.facilitators.createMany({
+     * // Create many Faculties
+     * const faculty = await prisma.faculty.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends facilitatorsCreateManyArgs>(args?: SelectSubset<T, facilitatorsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends facultyCreateManyArgs>(args?: SelectSubset<T, facultyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Facilitators and returns the data saved in the database.
-     * @param {facilitatorsCreateManyAndReturnArgs} args - Arguments to create many Facilitators.
+     * Create many Faculties and returns the data saved in the database.
+     * @param {facultyCreateManyAndReturnArgs} args - Arguments to create many Faculties.
      * @example
-     * // Create many Facilitators
-     * const facilitators = await prisma.facilitators.createManyAndReturn({
+     * // Create many Faculties
+     * const faculty = await prisma.faculty.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many Facilitators and only return the `employee_id`
-     * const facilitatorsWithEmployee_idOnly = await prisma.facilitators.createManyAndReturn({
+     * // Create many Faculties and only return the `employee_id`
+     * const facultyWithEmployee_idOnly = await prisma.faculty.createManyAndReturn({
      *   select: { employee_id: true },
      *   data: [
      *     // ... provide data here
@@ -3067,28 +3067,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends facilitatorsCreateManyAndReturnArgs>(args?: SelectSubset<T, facilitatorsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends facultyCreateManyAndReturnArgs>(args?: SelectSubset<T, facultyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a Facilitators.
-     * @param {facilitatorsDeleteArgs} args - Arguments to delete one Facilitators.
+     * Delete a Faculty.
+     * @param {facultyDeleteArgs} args - Arguments to delete one Faculty.
      * @example
-     * // Delete one Facilitators
-     * const Facilitators = await prisma.facilitators.delete({
+     * // Delete one Faculty
+     * const Faculty = await prisma.faculty.delete({
      *   where: {
-     *     // ... filter to delete one Facilitators
+     *     // ... filter to delete one Faculty
      *   }
      * })
      * 
      */
-    delete<T extends facilitatorsDeleteArgs>(args: SelectSubset<T, facilitatorsDeleteArgs<ExtArgs>>): Prisma__facilitatorsClient<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends facultyDeleteArgs>(args: SelectSubset<T, facultyDeleteArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one Facilitators.
-     * @param {facilitatorsUpdateArgs} args - Arguments to update one Facilitators.
+     * Update one Faculty.
+     * @param {facultyUpdateArgs} args - Arguments to update one Faculty.
      * @example
-     * // Update one Facilitators
-     * const facilitators = await prisma.facilitators.update({
+     * // Update one Faculty
+     * const faculty = await prisma.faculty.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -3098,30 +3098,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends facilitatorsUpdateArgs>(args: SelectSubset<T, facilitatorsUpdateArgs<ExtArgs>>): Prisma__facilitatorsClient<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends facultyUpdateArgs>(args: SelectSubset<T, facultyUpdateArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more Facilitators.
-     * @param {facilitatorsDeleteManyArgs} args - Arguments to filter Facilitators to delete.
+     * Delete zero or more Faculties.
+     * @param {facultyDeleteManyArgs} args - Arguments to filter Faculties to delete.
      * @example
-     * // Delete a few Facilitators
-     * const { count } = await prisma.facilitators.deleteMany({
+     * // Delete a few Faculties
+     * const { count } = await prisma.faculty.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends facilitatorsDeleteManyArgs>(args?: SelectSubset<T, facilitatorsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends facultyDeleteManyArgs>(args?: SelectSubset<T, facultyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Facilitators.
+     * Update zero or more Faculties.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {facilitatorsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {facultyUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Facilitators
-     * const facilitators = await prisma.facilitators.updateMany({
+     * // Update many Faculties
+     * const faculty = await prisma.faculty.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -3131,14 +3131,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends facilitatorsUpdateManyArgs>(args: SelectSubset<T, facilitatorsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends facultyUpdateManyArgs>(args: SelectSubset<T, facultyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Facilitators and returns the data updated in the database.
-     * @param {facilitatorsUpdateManyAndReturnArgs} args - Arguments to update many Facilitators.
+     * Update zero or more Faculties and returns the data updated in the database.
+     * @param {facultyUpdateManyAndReturnArgs} args - Arguments to update many Faculties.
      * @example
-     * // Update many Facilitators
-     * const facilitators = await prisma.facilitators.updateManyAndReturn({
+     * // Update many Faculties
+     * const faculty = await prisma.faculty.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -3147,8 +3147,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Facilitators and only return the `employee_id`
-     * const facilitatorsWithEmployee_idOnly = await prisma.facilitators.updateManyAndReturn({
+     * // Update zero or more Faculties and only return the `employee_id`
+     * const facultyWithEmployee_idOnly = await prisma.faculty.updateManyAndReturn({
      *   select: { employee_id: true },
      *   where: {
      *     // ... provide filter here
@@ -3161,56 +3161,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends facilitatorsUpdateManyAndReturnArgs>(args: SelectSubset<T, facilitatorsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends facultyUpdateManyAndReturnArgs>(args: SelectSubset<T, facultyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one Facilitators.
-     * @param {facilitatorsUpsertArgs} args - Arguments to update or create a Facilitators.
+     * Create or update one Faculty.
+     * @param {facultyUpsertArgs} args - Arguments to update or create a Faculty.
      * @example
-     * // Update or create a Facilitators
-     * const facilitators = await prisma.facilitators.upsert({
+     * // Update or create a Faculty
+     * const faculty = await prisma.faculty.upsert({
      *   create: {
-     *     // ... data to create a Facilitators
+     *     // ... data to create a Faculty
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Facilitators we want to update
+     *     // ... the filter for the Faculty we want to update
      *   }
      * })
      */
-    upsert<T extends facilitatorsUpsertArgs>(args: SelectSubset<T, facilitatorsUpsertArgs<ExtArgs>>): Prisma__facilitatorsClient<$Result.GetResult<Prisma.$facilitatorsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends facultyUpsertArgs>(args: SelectSubset<T, facultyUpsertArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of Facilitators.
+     * Count the number of Faculties.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {facilitatorsCountArgs} args - Arguments to filter Facilitators to count.
+     * @param {facultyCountArgs} args - Arguments to filter Faculties to count.
      * @example
-     * // Count the number of Facilitators
-     * const count = await prisma.facilitators.count({
+     * // Count the number of Faculties
+     * const count = await prisma.faculty.count({
      *   where: {
-     *     // ... the filter for the Facilitators we want to count
+     *     // ... the filter for the Faculties we want to count
      *   }
      * })
     **/
-    count<T extends facilitatorsCountArgs>(
-      args?: Subset<T, facilitatorsCountArgs>,
+    count<T extends facultyCountArgs>(
+      args?: Subset<T, facultyCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], FacilitatorsCountAggregateOutputType>
+          : GetScalarType<T['select'], FacultyCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Facilitators.
+     * Allows you to perform aggregations operations on a Faculty.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FacilitatorsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {FacultyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -3230,13 +3230,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends FacilitatorsAggregateArgs>(args: Subset<T, FacilitatorsAggregateArgs>): Prisma.PrismaPromise<GetFacilitatorsAggregateType<T>>
+    aggregate<T extends FacultyAggregateArgs>(args: Subset<T, FacultyAggregateArgs>): Prisma.PrismaPromise<GetFacultyAggregateType<T>>
 
     /**
-     * Group by Facilitators.
+     * Group by Faculty.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {facilitatorsGroupByArgs} args - Group by arguments.
+     * @param {facultyGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -3251,14 +3251,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends facilitatorsGroupByArgs,
+      T extends facultyGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: facilitatorsGroupByArgs['orderBy'] }
-        : { orderBy?: facilitatorsGroupByArgs['orderBy'] },
+        ? { orderBy: facultyGroupByArgs['orderBy'] }
+        : { orderBy?: facultyGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -3307,20 +3307,20 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, facilitatorsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFacilitatorsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, facultyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFacultyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the facilitators model
+   * Fields of the faculty model
    */
-  readonly fields: facilitatorsFieldRefs;
+  readonly fields: facultyFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for facilitators.
+   * The delegate class that acts as a "Promise-like" for faculty.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__facilitatorsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__facultyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     users<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
@@ -3349,424 +3349,424 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the facilitators model
+   * Fields of the faculty model
    */
-  interface facilitatorsFieldRefs {
-    readonly employee_id: FieldRef<"facilitators", 'Int'>
-    readonly position: FieldRef<"facilitators", 'String'>
-    readonly department: FieldRef<"facilitators", 'String'>
-    readonly user_id: FieldRef<"facilitators", 'Int'>
+  interface facultyFieldRefs {
+    readonly employee_id: FieldRef<"faculty", 'Int'>
+    readonly position: FieldRef<"faculty", 'String'>
+    readonly department: FieldRef<"faculty", 'String'>
+    readonly user_id: FieldRef<"faculty", 'Int'>
   }
     
 
   // Custom InputTypes
   /**
-   * facilitators findUnique
+   * faculty findUnique
    */
-  export type facilitatorsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
+    include?: facultyInclude<ExtArgs> | null
     /**
-     * Filter, which facilitators to fetch.
+     * Filter, which faculty to fetch.
      */
-    where: facilitatorsWhereUniqueInput
+    where: facultyWhereUniqueInput
   }
 
   /**
-   * facilitators findUniqueOrThrow
+   * faculty findUniqueOrThrow
    */
-  export type facilitatorsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
+    include?: facultyInclude<ExtArgs> | null
     /**
-     * Filter, which facilitators to fetch.
+     * Filter, which faculty to fetch.
      */
-    where: facilitatorsWhereUniqueInput
+    where: facultyWhereUniqueInput
   }
 
   /**
-   * facilitators findFirst
+   * faculty findFirst
    */
-  export type facilitatorsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
+    include?: facultyInclude<ExtArgs> | null
     /**
-     * Filter, which facilitators to fetch.
+     * Filter, which faculty to fetch.
      */
-    where?: facilitatorsWhereInput
+    where?: facultyWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of facilitators to fetch.
+     * Determine the order of faculties to fetch.
      */
-    orderBy?: facilitatorsOrderByWithRelationInput | facilitatorsOrderByWithRelationInput[]
+    orderBy?: facultyOrderByWithRelationInput | facultyOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for facilitators.
+     * Sets the position for searching for faculties.
      */
-    cursor?: facilitatorsWhereUniqueInput
+    cursor?: facultyWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` facilitators from the position of the cursor.
+     * Take `±n` faculties from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` facilitators.
+     * Skip the first `n` faculties.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of facilitators.
+     * Filter by unique combinations of faculties.
      */
-    distinct?: FacilitatorsScalarFieldEnum | FacilitatorsScalarFieldEnum[]
+    distinct?: FacultyScalarFieldEnum | FacultyScalarFieldEnum[]
   }
 
   /**
-   * facilitators findFirstOrThrow
+   * faculty findFirstOrThrow
    */
-  export type facilitatorsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
+    include?: facultyInclude<ExtArgs> | null
     /**
-     * Filter, which facilitators to fetch.
+     * Filter, which faculty to fetch.
      */
-    where?: facilitatorsWhereInput
+    where?: facultyWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of facilitators to fetch.
+     * Determine the order of faculties to fetch.
      */
-    orderBy?: facilitatorsOrderByWithRelationInput | facilitatorsOrderByWithRelationInput[]
+    orderBy?: facultyOrderByWithRelationInput | facultyOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for facilitators.
+     * Sets the position for searching for faculties.
      */
-    cursor?: facilitatorsWhereUniqueInput
+    cursor?: facultyWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` facilitators from the position of the cursor.
+     * Take `±n` faculties from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` facilitators.
+     * Skip the first `n` faculties.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of facilitators.
+     * Filter by unique combinations of faculties.
      */
-    distinct?: FacilitatorsScalarFieldEnum | FacilitatorsScalarFieldEnum[]
+    distinct?: FacultyScalarFieldEnum | FacultyScalarFieldEnum[]
   }
 
   /**
-   * facilitators findMany
+   * faculty findMany
    */
-  export type facilitatorsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
+    include?: facultyInclude<ExtArgs> | null
     /**
-     * Filter, which facilitators to fetch.
+     * Filter, which faculties to fetch.
      */
-    where?: facilitatorsWhereInput
+    where?: facultyWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of facilitators to fetch.
+     * Determine the order of faculties to fetch.
      */
-    orderBy?: facilitatorsOrderByWithRelationInput | facilitatorsOrderByWithRelationInput[]
+    orderBy?: facultyOrderByWithRelationInput | facultyOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing facilitators.
+     * Sets the position for listing faculties.
      */
-    cursor?: facilitatorsWhereUniqueInput
+    cursor?: facultyWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` facilitators from the position of the cursor.
+     * Take `±n` faculties from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` facilitators.
+     * Skip the first `n` faculties.
      */
     skip?: number
-    distinct?: FacilitatorsScalarFieldEnum | FacilitatorsScalarFieldEnum[]
+    distinct?: FacultyScalarFieldEnum | FacultyScalarFieldEnum[]
   }
 
   /**
-   * facilitators create
+   * faculty create
    */
-  export type facilitatorsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
+    include?: facultyInclude<ExtArgs> | null
     /**
-     * The data needed to create a facilitators.
+     * The data needed to create a faculty.
      */
-    data: XOR<facilitatorsCreateInput, facilitatorsUncheckedCreateInput>
+    data: XOR<facultyCreateInput, facultyUncheckedCreateInput>
   }
 
   /**
-   * facilitators createMany
+   * faculty createMany
    */
-  export type facilitatorsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many facilitators.
+     * The data used to create many faculties.
      */
-    data: facilitatorsCreateManyInput | facilitatorsCreateManyInput[]
+    data: facultyCreateManyInput | facultyCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * facilitators createManyAndReturn
+   * faculty createManyAndReturn
    */
-  export type facilitatorsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelectCreateManyAndReturn<ExtArgs> | null
+    select?: facultySelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
-     * The data used to create many facilitators.
+     * The data used to create many faculties.
      */
-    data: facilitatorsCreateManyInput | facilitatorsCreateManyInput[]
+    data: facultyCreateManyInput | facultyCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: facultyIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * facilitators update
+   * faculty update
    */
-  export type facilitatorsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
+    include?: facultyInclude<ExtArgs> | null
     /**
-     * The data needed to update a facilitators.
+     * The data needed to update a faculty.
      */
-    data: XOR<facilitatorsUpdateInput, facilitatorsUncheckedUpdateInput>
+    data: XOR<facultyUpdateInput, facultyUncheckedUpdateInput>
     /**
-     * Choose, which facilitators to update.
+     * Choose, which faculty to update.
      */
-    where: facilitatorsWhereUniqueInput
+    where: facultyWhereUniqueInput
   }
 
   /**
-   * facilitators updateMany
+   * faculty updateMany
    */
-  export type facilitatorsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update facilitators.
+     * The data used to update faculties.
      */
-    data: XOR<facilitatorsUpdateManyMutationInput, facilitatorsUncheckedUpdateManyInput>
+    data: XOR<facultyUpdateManyMutationInput, facultyUncheckedUpdateManyInput>
     /**
-     * Filter which facilitators to update
+     * Filter which faculties to update
      */
-    where?: facilitatorsWhereInput
+    where?: facultyWhereInput
     /**
-     * Limit how many facilitators to update.
+     * Limit how many faculties to update.
      */
     limit?: number
   }
 
   /**
-   * facilitators updateManyAndReturn
+   * faculty updateManyAndReturn
    */
-  export type facilitatorsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: facultySelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
-     * The data used to update facilitators.
+     * The data used to update faculties.
      */
-    data: XOR<facilitatorsUpdateManyMutationInput, facilitatorsUncheckedUpdateManyInput>
+    data: XOR<facultyUpdateManyMutationInput, facultyUncheckedUpdateManyInput>
     /**
-     * Filter which facilitators to update
+     * Filter which faculties to update
      */
-    where?: facilitatorsWhereInput
+    where?: facultyWhereInput
     /**
-     * Limit how many facilitators to update.
+     * Limit how many faculties to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: facultyIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * facilitators upsert
+   * faculty upsert
    */
-  export type facilitatorsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
+    include?: facultyInclude<ExtArgs> | null
     /**
-     * The filter to search for the facilitators to update in case it exists.
+     * The filter to search for the faculty to update in case it exists.
      */
-    where: facilitatorsWhereUniqueInput
+    where: facultyWhereUniqueInput
     /**
-     * In case the facilitators found by the `where` argument doesn't exist, create a new facilitators with this data.
+     * In case the faculty found by the `where` argument doesn't exist, create a new faculty with this data.
      */
-    create: XOR<facilitatorsCreateInput, facilitatorsUncheckedCreateInput>
+    create: XOR<facultyCreateInput, facultyUncheckedCreateInput>
     /**
-     * In case the facilitators was found with the provided `where` argument, update it with this data.
+     * In case the faculty was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<facilitatorsUpdateInput, facilitatorsUncheckedUpdateInput>
+    update: XOR<facultyUpdateInput, facultyUncheckedUpdateInput>
   }
 
   /**
-   * facilitators delete
+   * faculty delete
    */
-  export type facilitatorsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
+    include?: facultyInclude<ExtArgs> | null
     /**
-     * Filter which facilitators to delete.
+     * Filter which faculty to delete.
      */
-    where: facilitatorsWhereUniqueInput
+    where: facultyWhereUniqueInput
   }
 
   /**
-   * facilitators deleteMany
+   * faculty deleteMany
    */
-  export type facilitatorsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which facilitators to delete
+     * Filter which faculties to delete
      */
-    where?: facilitatorsWhereInput
+    where?: facultyWhereInput
     /**
-     * Limit how many facilitators to delete.
+     * Limit how many faculties to delete.
      */
     limit?: number
   }
 
   /**
-   * facilitators without action
+   * faculty without action
    */
-  export type facilitatorsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type facultyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the facilitators
+     * Select specific fields to fetch from the faculty
      */
-    select?: facilitatorsSelect<ExtArgs> | null
+    select?: facultySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the facilitators
+     * Omit specific fields from the faculty
      */
-    omit?: facilitatorsOmit<ExtArgs> | null
+    omit?: facultyOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: facilitatorsInclude<ExtArgs> | null
+    include?: facultyInclude<ExtArgs> | null
   }
 
 
@@ -9325,14 +9325,14 @@ export namespace Prisma {
   export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
 
 
-  export const FacilitatorsScalarFieldEnum: {
+  export const FacultyScalarFieldEnum: {
     employee_id: 'employee_id',
     position: 'position',
     department: 'department',
     user_id: 'user_id'
   };
 
-  export type FacilitatorsScalarFieldEnum = (typeof FacilitatorsScalarFieldEnum)[keyof typeof FacilitatorsScalarFieldEnum]
+  export type FacultyScalarFieldEnum = (typeof FacultyScalarFieldEnum)[keyof typeof FacultyScalarFieldEnum]
 
 
   export const StudentsScalarFieldEnum: {
@@ -9512,7 +9512,7 @@ export namespace Prisma {
     role?: StringNullableFilter<"users"> | string | null
     password?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
-    facilitators?: XOR<FacilitatorsNullableScalarRelationFilter, facilitatorsWhereInput> | null
+    faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
     students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
     user_bookmarks?: User_bookmarksListRelationFilter
   }
@@ -9527,7 +9527,7 @@ export namespace Prisma {
     role?: SortOrderInput | SortOrder
     password?: SortOrder
     created_at?: SortOrderInput | SortOrder
-    facilitators?: facilitatorsOrderByWithRelationInput
+    faculty?: facultyOrderByWithRelationInput
     students?: studentsOrderByWithRelationInput
     user_bookmarks?: user_bookmarksOrderByRelationAggregateInput
   }
@@ -9545,7 +9545,7 @@ export namespace Prisma {
     role?: StringNullableFilter<"users"> | string | null
     password?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
-    facilitators?: XOR<FacilitatorsNullableScalarRelationFilter, facilitatorsWhereInput> | null
+    faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
     students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
     user_bookmarks?: User_bookmarksListRelationFilter
   }, "user_id" | "email">
@@ -9582,18 +9582,18 @@ export namespace Prisma {
     created_at?: DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null
   }
 
-  export type facilitatorsWhereInput = {
-    AND?: facilitatorsWhereInput | facilitatorsWhereInput[]
-    OR?: facilitatorsWhereInput[]
-    NOT?: facilitatorsWhereInput | facilitatorsWhereInput[]
-    employee_id?: IntFilter<"facilitators"> | number
-    position?: StringNullableFilter<"facilitators"> | string | null
-    department?: StringNullableFilter<"facilitators"> | string | null
-    user_id?: IntFilter<"facilitators"> | number
+  export type facultyWhereInput = {
+    AND?: facultyWhereInput | facultyWhereInput[]
+    OR?: facultyWhereInput[]
+    NOT?: facultyWhereInput | facultyWhereInput[]
+    employee_id?: IntFilter<"faculty"> | number
+    position?: StringNullableFilter<"faculty"> | string | null
+    department?: StringNullableFilter<"faculty"> | string | null
+    user_id?: IntFilter<"faculty"> | number
     users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }
 
-  export type facilitatorsOrderByWithRelationInput = {
+  export type facultyOrderByWithRelationInput = {
     employee_id?: SortOrder
     position?: SortOrderInput | SortOrder
     department?: SortOrderInput | SortOrder
@@ -9601,37 +9601,37 @@ export namespace Prisma {
     users?: usersOrderByWithRelationInput
   }
 
-  export type facilitatorsWhereUniqueInput = Prisma.AtLeast<{
+  export type facultyWhereUniqueInput = Prisma.AtLeast<{
     employee_id?: number
     user_id?: number
-    AND?: facilitatorsWhereInput | facilitatorsWhereInput[]
-    OR?: facilitatorsWhereInput[]
-    NOT?: facilitatorsWhereInput | facilitatorsWhereInput[]
-    position?: StringNullableFilter<"facilitators"> | string | null
-    department?: StringNullableFilter<"facilitators"> | string | null
+    AND?: facultyWhereInput | facultyWhereInput[]
+    OR?: facultyWhereInput[]
+    NOT?: facultyWhereInput | facultyWhereInput[]
+    position?: StringNullableFilter<"faculty"> | string | null
+    department?: StringNullableFilter<"faculty"> | string | null
     users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }, "employee_id" | "user_id">
 
-  export type facilitatorsOrderByWithAggregationInput = {
+  export type facultyOrderByWithAggregationInput = {
     employee_id?: SortOrder
     position?: SortOrderInput | SortOrder
     department?: SortOrderInput | SortOrder
     user_id?: SortOrder
-    _count?: facilitatorsCountOrderByAggregateInput
-    _avg?: facilitatorsAvgOrderByAggregateInput
-    _max?: facilitatorsMaxOrderByAggregateInput
-    _min?: facilitatorsMinOrderByAggregateInput
-    _sum?: facilitatorsSumOrderByAggregateInput
+    _count?: facultyCountOrderByAggregateInput
+    _avg?: facultyAvgOrderByAggregateInput
+    _max?: facultyMaxOrderByAggregateInput
+    _min?: facultyMinOrderByAggregateInput
+    _sum?: facultySumOrderByAggregateInput
   }
 
-  export type facilitatorsScalarWhereWithAggregatesInput = {
-    AND?: facilitatorsScalarWhereWithAggregatesInput | facilitatorsScalarWhereWithAggregatesInput[]
-    OR?: facilitatorsScalarWhereWithAggregatesInput[]
-    NOT?: facilitatorsScalarWhereWithAggregatesInput | facilitatorsScalarWhereWithAggregatesInput[]
-    employee_id?: IntWithAggregatesFilter<"facilitators"> | number
-    position?: StringNullableWithAggregatesFilter<"facilitators"> | string | null
-    department?: StringNullableWithAggregatesFilter<"facilitators"> | string | null
-    user_id?: IntWithAggregatesFilter<"facilitators"> | number
+  export type facultyScalarWhereWithAggregatesInput = {
+    AND?: facultyScalarWhereWithAggregatesInput | facultyScalarWhereWithAggregatesInput[]
+    OR?: facultyScalarWhereWithAggregatesInput[]
+    NOT?: facultyScalarWhereWithAggregatesInput | facultyScalarWhereWithAggregatesInput[]
+    employee_id?: IntWithAggregatesFilter<"faculty"> | number
+    position?: StringNullableWithAggregatesFilter<"faculty"> | string | null
+    department?: StringNullableWithAggregatesFilter<"faculty"> | string | null
+    user_id?: IntWithAggregatesFilter<"faculty"> | number
   }
 
   export type studentsWhereInput = {
@@ -9965,7 +9965,7 @@ export namespace Prisma {
     role?: string | null
     password: string
     created_at?: Date | string | null
-    facilitators?: facilitatorsCreateNestedOneWithoutUsersInput
+    faculty?: facultyCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
   }
@@ -9980,7 +9980,7 @@ export namespace Prisma {
     role?: string | null
     password: string
     created_at?: Date | string | null
-    facilitators?: facilitatorsUncheckedCreateNestedOneWithoutUsersInput
+    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
   }
@@ -9994,7 +9994,7 @@ export namespace Prisma {
     role?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    facilitators?: facilitatorsUpdateOneWithoutUsersNestedInput
+    faculty?: facultyUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
   }
@@ -10009,7 +10009,7 @@ export namespace Prisma {
     role?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    facilitators?: facilitatorsUncheckedUpdateOneWithoutUsersNestedInput
+    faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
   }
@@ -10049,45 +10049,45 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type facilitatorsCreateInput = {
+  export type facultyCreateInput = {
     position?: string | null
     department?: string | null
-    users: usersCreateNestedOneWithoutFacilitatorsInput
+    users: usersCreateNestedOneWithoutFacultyInput
   }
 
-  export type facilitatorsUncheckedCreateInput = {
+  export type facultyUncheckedCreateInput = {
     employee_id?: number
     position?: string | null
     department?: string | null
     user_id: number
   }
 
-  export type facilitatorsUpdateInput = {
+  export type facultyUpdateInput = {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
-    users?: usersUpdateOneRequiredWithoutFacilitatorsNestedInput
+    users?: usersUpdateOneRequiredWithoutFacultyNestedInput
   }
 
-  export type facilitatorsUncheckedUpdateInput = {
+  export type facultyUncheckedUpdateInput = {
     employee_id?: IntFieldUpdateOperationsInput | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     user_id?: IntFieldUpdateOperationsInput | number
   }
 
-  export type facilitatorsCreateManyInput = {
+  export type facultyCreateManyInput = {
     employee_id?: number
     position?: string | null
     department?: string | null
     user_id: number
   }
 
-  export type facilitatorsUpdateManyMutationInput = {
+  export type facultyUpdateManyMutationInput = {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type facilitatorsUncheckedUpdateManyInput = {
+  export type facultyUncheckedUpdateManyInput = {
     employee_id?: IntFieldUpdateOperationsInput | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10470,9 +10470,9 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type FacilitatorsNullableScalarRelationFilter = {
-    is?: facilitatorsWhereInput | null
-    isNot?: facilitatorsWhereInput | null
+  export type FacultyNullableScalarRelationFilter = {
+    is?: facultyWhereInput | null
+    isNot?: facultyWhereInput | null
   }
 
   export type StudentsNullableScalarRelationFilter = {
@@ -10610,33 +10610,33 @@ export namespace Prisma {
     isNot?: usersWhereInput
   }
 
-  export type facilitatorsCountOrderByAggregateInput = {
+  export type facultyCountOrderByAggregateInput = {
     employee_id?: SortOrder
     position?: SortOrder
     department?: SortOrder
     user_id?: SortOrder
   }
 
-  export type facilitatorsAvgOrderByAggregateInput = {
+  export type facultyAvgOrderByAggregateInput = {
     employee_id?: SortOrder
     user_id?: SortOrder
   }
 
-  export type facilitatorsMaxOrderByAggregateInput = {
-    employee_id?: SortOrder
-    position?: SortOrder
-    department?: SortOrder
-    user_id?: SortOrder
-  }
-
-  export type facilitatorsMinOrderByAggregateInput = {
+  export type facultyMaxOrderByAggregateInput = {
     employee_id?: SortOrder
     position?: SortOrder
     department?: SortOrder
     user_id?: SortOrder
   }
 
-  export type facilitatorsSumOrderByAggregateInput = {
+  export type facultyMinOrderByAggregateInput = {
+    employee_id?: SortOrder
+    position?: SortOrder
+    department?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type facultySumOrderByAggregateInput = {
     employee_id?: SortOrder
     user_id?: SortOrder
   }
@@ -10925,10 +10925,10 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type facilitatorsCreateNestedOneWithoutUsersInput = {
-    create?: XOR<facilitatorsCreateWithoutUsersInput, facilitatorsUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: facilitatorsCreateOrConnectWithoutUsersInput
-    connect?: facilitatorsWhereUniqueInput
+  export type facultyCreateNestedOneWithoutUsersInput = {
+    create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
+    connect?: facultyWhereUniqueInput
   }
 
   export type studentsCreateNestedOneWithoutUsersInput = {
@@ -10944,10 +10944,10 @@ export namespace Prisma {
     connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
   }
 
-  export type facilitatorsUncheckedCreateNestedOneWithoutUsersInput = {
-    create?: XOR<facilitatorsCreateWithoutUsersInput, facilitatorsUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: facilitatorsCreateOrConnectWithoutUsersInput
-    connect?: facilitatorsWhereUniqueInput
+  export type facultyUncheckedCreateNestedOneWithoutUsersInput = {
+    create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
+    connect?: facultyWhereUniqueInput
   }
 
   export type studentsUncheckedCreateNestedOneWithoutUsersInput = {
@@ -10975,14 +10975,14 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
-  export type facilitatorsUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<facilitatorsCreateWithoutUsersInput, facilitatorsUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: facilitatorsCreateOrConnectWithoutUsersInput
-    upsert?: facilitatorsUpsertWithoutUsersInput
-    disconnect?: facilitatorsWhereInput | boolean
-    delete?: facilitatorsWhereInput | boolean
-    connect?: facilitatorsWhereUniqueInput
-    update?: XOR<XOR<facilitatorsUpdateToOneWithWhereWithoutUsersInput, facilitatorsUpdateWithoutUsersInput>, facilitatorsUncheckedUpdateWithoutUsersInput>
+  export type facultyUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
+    upsert?: facultyUpsertWithoutUsersInput
+    disconnect?: facultyWhereInput | boolean
+    delete?: facultyWhereInput | boolean
+    connect?: facultyWhereUniqueInput
+    update?: XOR<XOR<facultyUpdateToOneWithWhereWithoutUsersInput, facultyUpdateWithoutUsersInput>, facultyUncheckedUpdateWithoutUsersInput>
   }
 
   export type studentsUpdateOneWithoutUsersNestedInput = {
@@ -11017,14 +11017,14 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type facilitatorsUncheckedUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<facilitatorsCreateWithoutUsersInput, facilitatorsUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: facilitatorsCreateOrConnectWithoutUsersInput
-    upsert?: facilitatorsUpsertWithoutUsersInput
-    disconnect?: facilitatorsWhereInput | boolean
-    delete?: facilitatorsWhereInput | boolean
-    connect?: facilitatorsWhereUniqueInput
-    update?: XOR<XOR<facilitatorsUpdateToOneWithWhereWithoutUsersInput, facilitatorsUpdateWithoutUsersInput>, facilitatorsUncheckedUpdateWithoutUsersInput>
+  export type facultyUncheckedUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
+    upsert?: facultyUpsertWithoutUsersInput
+    disconnect?: facultyWhereInput | boolean
+    delete?: facultyWhereInput | boolean
+    connect?: facultyWhereUniqueInput
+    update?: XOR<XOR<facultyUpdateToOneWithWhereWithoutUsersInput, facultyUpdateWithoutUsersInput>, facultyUncheckedUpdateWithoutUsersInput>
   }
 
   export type studentsUncheckedUpdateOneWithoutUsersNestedInput = {
@@ -11051,18 +11051,18 @@ export namespace Prisma {
     deleteMany?: user_bookmarksScalarWhereInput | user_bookmarksScalarWhereInput[]
   }
 
-  export type usersCreateNestedOneWithoutFacilitatorsInput = {
-    create?: XOR<usersCreateWithoutFacilitatorsInput, usersUncheckedCreateWithoutFacilitatorsInput>
-    connectOrCreate?: usersCreateOrConnectWithoutFacilitatorsInput
+  export type usersCreateNestedOneWithoutFacultyInput = {
+    create?: XOR<usersCreateWithoutFacultyInput, usersUncheckedCreateWithoutFacultyInput>
+    connectOrCreate?: usersCreateOrConnectWithoutFacultyInput
     connect?: usersWhereUniqueInput
   }
 
-  export type usersUpdateOneRequiredWithoutFacilitatorsNestedInput = {
-    create?: XOR<usersCreateWithoutFacilitatorsInput, usersUncheckedCreateWithoutFacilitatorsInput>
-    connectOrCreate?: usersCreateOrConnectWithoutFacilitatorsInput
-    upsert?: usersUpsertWithoutFacilitatorsInput
+  export type usersUpdateOneRequiredWithoutFacultyNestedInput = {
+    create?: XOR<usersCreateWithoutFacultyInput, usersUncheckedCreateWithoutFacultyInput>
+    connectOrCreate?: usersCreateOrConnectWithoutFacultyInput
+    upsert?: usersUpsertWithoutFacultyInput
     connect?: usersWhereUniqueInput
-    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutFacilitatorsInput, usersUpdateWithoutFacilitatorsInput>, usersUncheckedUpdateWithoutFacilitatorsInput>
+    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutFacultyInput, usersUpdateWithoutFacultyInput>, usersUncheckedUpdateWithoutFacultyInput>
   }
 
   export type usersCreateNestedOneWithoutStudentsInput = {
@@ -11440,20 +11440,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type facilitatorsCreateWithoutUsersInput = {
+  export type facultyCreateWithoutUsersInput = {
     position?: string | null
     department?: string | null
   }
 
-  export type facilitatorsUncheckedCreateWithoutUsersInput = {
+  export type facultyUncheckedCreateWithoutUsersInput = {
     employee_id?: number
     position?: string | null
     department?: string | null
   }
 
-  export type facilitatorsCreateOrConnectWithoutUsersInput = {
-    where: facilitatorsWhereUniqueInput
-    create: XOR<facilitatorsCreateWithoutUsersInput, facilitatorsUncheckedCreateWithoutUsersInput>
+  export type facultyCreateOrConnectWithoutUsersInput = {
+    where: facultyWhereUniqueInput
+    create: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
   }
 
   export type studentsCreateWithoutUsersInput = {
@@ -11498,23 +11498,23 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type facilitatorsUpsertWithoutUsersInput = {
-    update: XOR<facilitatorsUpdateWithoutUsersInput, facilitatorsUncheckedUpdateWithoutUsersInput>
-    create: XOR<facilitatorsCreateWithoutUsersInput, facilitatorsUncheckedCreateWithoutUsersInput>
-    where?: facilitatorsWhereInput
+  export type facultyUpsertWithoutUsersInput = {
+    update: XOR<facultyUpdateWithoutUsersInput, facultyUncheckedUpdateWithoutUsersInput>
+    create: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
+    where?: facultyWhereInput
   }
 
-  export type facilitatorsUpdateToOneWithWhereWithoutUsersInput = {
-    where?: facilitatorsWhereInput
-    data: XOR<facilitatorsUpdateWithoutUsersInput, facilitatorsUncheckedUpdateWithoutUsersInput>
+  export type facultyUpdateToOneWithWhereWithoutUsersInput = {
+    where?: facultyWhereInput
+    data: XOR<facultyUpdateWithoutUsersInput, facultyUncheckedUpdateWithoutUsersInput>
   }
 
-  export type facilitatorsUpdateWithoutUsersInput = {
+  export type facultyUpdateWithoutUsersInput = {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type facilitatorsUncheckedUpdateWithoutUsersInput = {
+  export type facultyUncheckedUpdateWithoutUsersInput = {
     employee_id?: IntFieldUpdateOperationsInput | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11572,7 +11572,7 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"user_bookmarks"> | Date | string | null
   }
 
-  export type usersCreateWithoutFacilitatorsInput = {
+  export type usersCreateWithoutFacultyInput = {
     first_name?: string | null
     mid_name?: string | null
     last_name?: string | null
@@ -11585,7 +11585,7 @@ export namespace Prisma {
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
   }
 
-  export type usersUncheckedCreateWithoutFacilitatorsInput = {
+  export type usersUncheckedCreateWithoutFacultyInput = {
     user_id?: number
     first_name?: string | null
     mid_name?: string | null
@@ -11599,23 +11599,23 @@ export namespace Prisma {
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
   }
 
-  export type usersCreateOrConnectWithoutFacilitatorsInput = {
+  export type usersCreateOrConnectWithoutFacultyInput = {
     where: usersWhereUniqueInput
-    create: XOR<usersCreateWithoutFacilitatorsInput, usersUncheckedCreateWithoutFacilitatorsInput>
+    create: XOR<usersCreateWithoutFacultyInput, usersUncheckedCreateWithoutFacultyInput>
   }
 
-  export type usersUpsertWithoutFacilitatorsInput = {
-    update: XOR<usersUpdateWithoutFacilitatorsInput, usersUncheckedUpdateWithoutFacilitatorsInput>
-    create: XOR<usersCreateWithoutFacilitatorsInput, usersUncheckedCreateWithoutFacilitatorsInput>
+  export type usersUpsertWithoutFacultyInput = {
+    update: XOR<usersUpdateWithoutFacultyInput, usersUncheckedUpdateWithoutFacultyInput>
+    create: XOR<usersCreateWithoutFacultyInput, usersUncheckedCreateWithoutFacultyInput>
     where?: usersWhereInput
   }
 
-  export type usersUpdateToOneWithWhereWithoutFacilitatorsInput = {
+  export type usersUpdateToOneWithWhereWithoutFacultyInput = {
     where?: usersWhereInput
-    data: XOR<usersUpdateWithoutFacilitatorsInput, usersUncheckedUpdateWithoutFacilitatorsInput>
+    data: XOR<usersUpdateWithoutFacultyInput, usersUncheckedUpdateWithoutFacultyInput>
   }
 
-  export type usersUpdateWithoutFacilitatorsInput = {
+  export type usersUpdateWithoutFacultyInput = {
     first_name?: NullableStringFieldUpdateOperationsInput | string | null
     mid_name?: NullableStringFieldUpdateOperationsInput | string | null
     last_name?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11628,7 +11628,7 @@ export namespace Prisma {
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
   }
 
-  export type usersUncheckedUpdateWithoutFacilitatorsInput = {
+  export type usersUncheckedUpdateWithoutFacultyInput = {
     user_id?: IntFieldUpdateOperationsInput | number
     first_name?: NullableStringFieldUpdateOperationsInput | string | null
     mid_name?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11651,7 +11651,7 @@ export namespace Prisma {
     role?: string | null
     password: string
     created_at?: Date | string | null
-    facilitators?: facilitatorsCreateNestedOneWithoutUsersInput
+    faculty?: facultyCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
   }
 
@@ -11665,7 +11665,7 @@ export namespace Prisma {
     role?: string | null
     password: string
     created_at?: Date | string | null
-    facilitators?: facilitatorsUncheckedCreateNestedOneWithoutUsersInput
+    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -11694,7 +11694,7 @@ export namespace Prisma {
     role?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    facilitators?: facilitatorsUpdateOneWithoutUsersNestedInput
+    faculty?: facultyUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
   }
 
@@ -11708,7 +11708,7 @@ export namespace Prisma {
     role?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    facilitators?: facilitatorsUncheckedUpdateOneWithoutUsersNestedInput
+    faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -11918,7 +11918,7 @@ export namespace Prisma {
     role?: string | null
     password: string
     created_at?: Date | string | null
-    facilitators?: facilitatorsCreateNestedOneWithoutUsersInput
+    faculty?: facultyCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
   }
 
@@ -11932,7 +11932,7 @@ export namespace Prisma {
     role?: string | null
     password: string
     created_at?: Date | string | null
-    facilitators?: facilitatorsUncheckedCreateNestedOneWithoutUsersInput
+    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
   }
 
@@ -11999,7 +11999,7 @@ export namespace Prisma {
     role?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    facilitators?: facilitatorsUpdateOneWithoutUsersNestedInput
+    faculty?: facultyUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
   }
 
@@ -12013,7 +12013,7 @@ export namespace Prisma {
     role?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    facilitators?: facilitatorsUncheckedUpdateOneWithoutUsersNestedInput
+    faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
   }
 

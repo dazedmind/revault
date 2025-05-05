@@ -3,7 +3,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
-  const { email, otp } = await req.json();
+  const { email, otp, role } = await req.json();
+  
+  console.log(`Verifying OTP for email: ${email}, Role: ${role}`);
 
   const record = await prisma.otp.findUnique({
     where: { email }

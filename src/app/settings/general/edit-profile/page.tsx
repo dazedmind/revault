@@ -1,3 +1,4 @@
+"use client";
 import InputField from "@/app/component/InputField";
 import Image from "next/image";
 import avatar from "@/app/img/user.jpg";
@@ -7,8 +8,43 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import WarningMessage from "@/app/component/WarningMessage";
 import { FaMicrosoft } from "react-icons/fa6";
+import { useEffect, useState } from "react";
 
 const EditProfilePage = () => {
+   const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const fetchProfile = async () => {
+  
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+    
+        try {
+          const res = await fetch('/api/profile', {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const data = await res.json(); // <-- move this here regardless of res.ok
+  
+          if (!res.ok) {
+            console.error("Failed to fetch profile:", data?.error || res.statusText);
+            return;
+          }
+    
+          setProfile(data);
+        } catch (err) {
+          console.error('Error fetching profile:', err);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      fetchProfile();
+    }, []);
+
   return (
     <div className="flex flex-col pb-25 w-fit">
       <h1 className="text-2xl ml-1">Edit Profile</h1>
@@ -33,53 +69,56 @@ const EditProfilePage = () => {
         />
       </div>
 
-      {/* Input Fields from InputField.tsx */}
-      <InputField
-        containerClassName="mt-5"
-        label="Name"
-        type="text"
-        name="fullName"
-        placeholder="John Allen Troy Valena"
-        inputClassName="w-sm ml-5 h-14 "
-        labelClassName="ml-5"
-      />
-
-      <InputField
-        containerClassName="pt-4"
-        label="Student Number"
-        type="number"
-        name="studentNumber"
-        placeholder="202236115"
-        inputClassName="w-sm ml-5 h-14 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-        labelClassName="ml-5"
-      />
-
-      <InputField
-        containerClassName="pt-4"
-        label="Program"
-        type="text"
-        name="program"
-        placeholder="Information Technology"
-        inputClassName="w-sm ml-5 h-14 cursor-not-allowed"
-        labelClassName="ml-5"
-      />
-
-      <span className="relative">
+      {!loading && profile && (
+      <>
         <InputField
-          containerClassName="pt-4"
-          label="Email"
-          type="email"
-          name="email"
-          placeholder="jatevalena2022@plm.edu.ph"
-          inputClassName="w-sm ml-5 h-14 "
+          containerClassName="mt-5"
+          label="Name"
+          type="text"
+          name="fullName"
+          placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
+          inputClassName="w-sm ml-5 h-14"
           labelClassName="ml-5"
-          disabled={false}
         />
 
-        <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">
-          Save Changes
-        </Button>
-      </span>
+        <InputField
+          containerClassName="pt-4"
+          label="Student Number"
+          type="number"
+          name="studentNumber"
+          placeholder={profile.student_num || ""}
+          inputClassName="w-sm ml-5 h-14 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          labelClassName="ml-5"
+        />
+
+        <InputField
+          containerClassName="pt-4"
+          label="Program"
+          type="text"
+          name="program"
+          placeholder={profile.program || ""}
+          inputClassName="w-sm ml-5 h-14 cursor-not-allowed"
+          labelClassName="ml-5"
+        />
+
+        <span className="relative">
+          <InputField
+            containerClassName="pt-4"
+            label="Email"
+            type="email"
+            name="email"
+            placeholder={profile.users.email || ""}
+            inputClassName="w-sm ml-5 h-14"
+            labelClassName="ml-5"
+            disabled={false}
+          />
+
+          <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">
+            Save Changes
+          </Button>
+        </span>
+      </>
+    )}
 
 
       <h1 className="text-2xl ml-1 mt-10">Manage Linked Accounts</h1>

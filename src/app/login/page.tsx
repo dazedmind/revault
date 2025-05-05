@@ -11,7 +11,7 @@ import { loginUser } from '../actions/login'; // adjust path
 
 const LogIn = () => {
   const [formData, setFormData] = useState({
-    studentNumber: "",
+    idNumber: "",
     password: "",
   });
 
@@ -23,20 +23,42 @@ const LogIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    const form = new FormData();
-    form.append('studentNumber', formData.studentNumber);
-    form.append('password', formData.password);
+    // Debugging line to log form data before sending it
+    console.log("Form Data: ", formData);
   
-    const result = await loginUser(form);
+    // Send login request to the server
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Content-Type set to JSON
+      },
+      body: JSON.stringify({
+        idNumber: formData.idNumber, // Correctly using formData.idNumber
+        password: formData.password,  // Correctly using formData.password
+      }),
+    });
   
+       // Check if response is OK (status 200-299)
+       if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      // Try to parse the response body
+      const result = await response.json().catch((error) => {
+        console.error("Failed to parse JSON:", error);
+        return null; // return null if parsing fails
+      });
+
+    // Parse the response from the API (assuming it's JSON)
+  
+    // Handle login result
     if (result.success) {
-      // Store token in localStorage (or sessionStorage)
+      // Store token in localStorage if login is successful
       localStorage.setItem('authToken', result.token); // 🔐 Store the token
-      
-      window.location.href = '/home';
+      window.location.href = '/home'; // Redirect to home page
     } else {
+      // Alert the user if login failed
       alert("Login failed: " + result.message);
-      
     }
   };
 
@@ -65,10 +87,10 @@ const LogIn = () => {
           <div className="flex flex-col justify-center items-center">
             <form className="w-xs" onSubmit={handleSubmit}>
               <LogInInputField
-                label="Student Number"
+                label="Student/Employee Number"
                 type="text"
-                name="studentNumber"
-                value={formData.studentNumber}
+                name="idNumber"
+                value={formData.idNumber}
                 onChange={handleChange}
                 className="w-xs"
               />
@@ -108,7 +130,7 @@ const LogIn = () => {
           <div className="flex flex-row justify-center mt-5 mb-4">
             <p className="text-xs">
               Don&#39;t have an account yet?{" "}
-              <a href="/registration" className="text-teal cursor-pointer">
+              <a href="/registration/user-selection" className="text-teal cursor-pointer">
                 Create account
               </a>
             </p>

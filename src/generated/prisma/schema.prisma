@@ -18,12 +18,12 @@ model users {
   role           String?
   password       String
   created_at     DateTime?
-  facilitators   facilitators?
+  faculty        faculty?
   students       students?
   user_bookmarks user_bookmarks[]
 }
 
-model facilitators {
+model faculty {
   employee_id Int     @id @default(autoincrement())
   position    String?
   department  String?

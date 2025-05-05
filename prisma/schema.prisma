@@ -1,6 +1,8 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
+  // output   = "../node_modules/.prisma/client"
+
 }
 
 datasource db {
@@ -18,13 +20,13 @@ model users {
   role           String?
   password       String
   created_at     DateTime?
-  facilitators   facilitators?
+  faculty        faculty?
   students       students?
   user_bookmarks user_bookmarks[]
 }
 
-model facilitators {
-  employee_id Int     @id @default(autoincrement())
+model faculty {
+  employee_id Int     @id @unique
   position    String?
   department  String?
   user_id     Int     @unique

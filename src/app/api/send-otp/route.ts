@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     to: email,
     from: 'jatevalena2022@plm.edu.ph',
     subject: 'Your OTP Code',
-    html: `<strong>Your OTP code is: ${generatedOtp}</strong><br/>This expires in 5 minutes.`,
+    html: `<strong>Your OTP code is: ${generatedOtp}</strong><br/>This expires in 5 minutes. Please do not share this code with anyone. If you did not request this, please ignore this email.`,
   };
 
   try {

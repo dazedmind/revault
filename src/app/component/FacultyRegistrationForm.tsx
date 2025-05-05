@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import InputField from "./InputField";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
@@ -8,23 +8,25 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useRouter } from 'next/navigation'
 import WarningMessage from "./WarningMessage";
 
-export default function Form() {
 
+// FOR FACULTY REGISTRATION FORM
+// This is the form that will be used for faculty registration. It includes fields for first name, middle name, last name, employee number, department, email address, and password. The form also includes a button to send an OTP to the user's email address.
+export default function FacultyForm() {
   const [role, setRole] = useState("student");
-  
-    useEffect(() => {
-      const storedRole = localStorage.getItem("userType");
-      if (storedRole) setRole(storedRole);
-    }, []);
+
+  useEffect(() => {
+    const storedRole = localStorage.getItem("userType");
+    if (storedRole) setRole(storedRole);
+  }, []);
 
   const router = useRouter()
-  const [selectedProgram, setSelectedProgram] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
     lastName: "",
     ext: "",
-    studentNumber: "",
+    employeeID: "",
     email: "",
     password: "",
     confirmPassword: ""
@@ -56,7 +58,7 @@ export default function Form() {
           localStorage.setItem("regEmail", formData.email);
           localStorage.setItem("regForm", JSON.stringify({
             ...formData,
-            program: selectedProgram,
+            department: selectedDepartment,
           }));
           router.push("/registration/otp-confirmation");
         } else {
@@ -69,15 +71,15 @@ export default function Form() {
 
     // Check if the form data is properly populated
     console.log("Form Data: ", formData);  // For debugging
-    console.log("Selected Course: ", selectedProgram);
+    console.log("Selected Deperatment: ", selectedDepartment);
     
     const query = new URLSearchParams({
       firstName: formData.firstName || '',
       middleName: formData.middleName || '',
       lastName: formData.lastName || '',
       ext: formData.ext || '',
-      studentNumber: formData.studentNumber || '',
-      program: selectedProgram || '',
+      employeeID: formData.employeeID || '',
+      department: selectedDepartment || '',
       email: formData.email || '',
       password: formData.password || '',
       confirmPassword: formData.confirmPassword || '',
@@ -135,30 +137,30 @@ export default function Form() {
           disabled={false}
         />
 
-        <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">Student Information</h1>
+        <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">Employee Information</h1>
         <div className="bg-dusk h-0.5 w-full col-span-2"></div>
 
         <InputField
-          label="Student Number"
+          label="Employee Number"
           type="text"
-          name="studentNumber"
-          value={formData.studentNumber}
+          name="employeeID"
+          value={formData.employeeID}
           onChange={handleChange}
-          placeholder="202512345"
+          placeholder="1023456"
           inputClassName="w-full"
           disabled={false}
         />
 
         <div className="flex flex-col flex-grow">
-          <Label className="text-sm text-gray-300 mb-1">Course</Label>
-          <Select name="program" value={selectedProgram} onValueChange={setSelectedProgram}>
+          <Label className="text-sm text-gray-300 mb-1">Department</Label>
+          <Select name="department" value={selectedDepartment} onValueChange={setSelectedDepartment}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select your course" />
+              <SelectValue placeholder="Select your department" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="CS">Computer Science</SelectItem>
-                <SelectItem value="IT">Information Technology</SelectItem>
+                <SelectItem value="CS">Computer Science Department</SelectItem>
+                <SelectItem value="IT">Information Technology Department</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

@@ -129,7 +129,7 @@ exports.Prisma.UsersScalarFieldEnum = {
   created_at: 'created_at'
 };
 
-exports.Prisma.FacilitatorsScalarFieldEnum = {
+exports.Prisma.FacultyScalarFieldEnum = {
   employee_id: 'employee_id',
   position: 'position',
   department: 'department',
@@ -201,7 +201,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   users: 'users',
-  facilitators: 'facilitators',
+  faculty: 'faculty',
   students: 'students',
   papers: 'papers',
   paper_metadata: 'paper_metadata',

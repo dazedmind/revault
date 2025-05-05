@@ -3,18 +3,22 @@
 import { prisma } from "@/lib/prisma"; // Make sure prisma client is set up here
 import bcrypt from 'bcryptjs';
 
-export async function saveInformation(formData: FormData) {
+export async function saveInformation(formData: any) {
   try {
-    // Extract values from formData
-    const firstName = formData.get('firstName')?.toString();
-    const midName = formData.get('middleName')?.toString();
-    const lastName = formData.get('lastName')?.toString();
-    const ext = formData.get('ext')?.toString();
-    const studentNumber = formData.get('studentNumber')?.toString();
-    const program = formData.get('program')?.toString();
-    const email = formData.get('email')?.toString();
-    const password = formData.get('password')?.toString();
-    const confirmPassword = formData.get('confirmPassword')?.toString();
+    const {
+      firstName,
+      middleName,
+      lastName,
+      ext,
+      studentNumber,
+      program,
+      email,
+      password,
+      confirmPassword,
+      employeeID,
+      department,
+      role,
+    } = formData;
 
     if (!email || !password || !confirmPassword || !firstName) {
       throw new Error("Missing required fields.");
@@ -27,42 +31,57 @@ export async function saveInformation(formData: FormData) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert into users first
-    const user = await prisma.users.create({
-      data: {
-        first_name: firstName,
-        mid_name: midName || null,
-        last_name: lastName,
-        ext_name: ext || null,
-        email,
-        password: hashedPassword,
-        role: "student", // or whatever default
-        created_at: new Date(),
-      },
-    });
+    // For students
+    if (role === "student") {
+      const user = await prisma.users.create({
+        data: {
+          first_name: firstName,
+          mid_name: middleName || null,
+          last_name: lastName,
+          ext_name: ext || null,
+          email,
+          password: hashedPassword,
+          role: "student", // Set the role to 'student' here
+          created_at: new Date(),
+        },
+      });
 
-    // Then insert into students
-    await prisma.students.create({
-      data: {
-        student_num: parseFloat(studentNumber),
-        program: program,
-        college: "CISTM", // you can extend your form to get this
-        year_level: 1, // also make it dynamic later
-        user_id: user.user_id,
-      },
-    });
+      await prisma.students.create({
+        data: {
+          student_num: parseFloat(studentNumber),
+          program: program || "Unknown", // Set default if program is empty
+          college: "CISTM", // Or you can make it dynamic
+          year_level: 1, // Default year level, adjust as needed
+          user_id: user.user_id, // Link to the user
+        },
+      });
 
-    console.log("User and student info saved!");
-    console.log({
-      firstName,
-      midName,
-      lastName,
-      ext,
-      studentNumber,
-      program,
-      email,
-      password,
-      confirmPassword,
-    });
+      console.log("User and student info saved!");
+    } else if (role === "faculty") {
+      const user = await prisma.users.create({
+        data: {
+          first_name: firstName,
+          mid_name: middleName || null,
+          last_name: lastName,
+          ext_name: ext || null,
+          email,
+          password: hashedPassword,
+          role: "faculty", // Set the role to 'faculty' here
+          created_at: new Date(),
+        },
+      });
+
+      await prisma.faculty.create({
+        data: {
+          employee_id: parseFloat(employeeID), // Ensure employee ID is correct
+          position: "Unknown", // Set default if position is empty
+          department: department || "", // Set default if department is empty
+          user_id: user.user_id, // Link to the user
+        },
+      });
+
+      console.log("User and faculty info saved!");
+    }
     
   } catch (err) {
     console.error("Save error:", err);
