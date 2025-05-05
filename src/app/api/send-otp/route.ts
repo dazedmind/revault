@@ -27,7 +27,14 @@ export async function POST(req: Request) {
     to: email,
     from: 'jatevalena2022@plm.edu.ph',
     subject: 'Your OTP Code',
-    html: `<strong>Your OTP code is: ${generatedOtp}</strong><br/>This expires in 5 minutes. Please do not share this code with anyone. If you did not request this, please ignore this email.`,
+    html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
+    <img src="https://i.imgur.com/vFihHON.png" alt="PLM Logo" style="max-width: 120px; margin-bottom: 20px;">
+    <h1 style="color: #01B783; margin-bottom: 30px;">PLM ReVault</h1>
+    <p style="font-size: 16px; margin-bottom: 15px;">Your OTP is</p>
+    <h2 style="color: #01B783; font-size: 32px; letter-spacing: 5px; padding: 15px; background-color: #f5f5f5; border-radius: 8px; margin: 20px 0;">${generatedOtp}</h2>
+    <p style="font-size: 14px; color: #666; margin-top: 20px;">This expires in 5 minutes. Please do not share this code with anyone.</p>
+    <p style="font-size: 14px; color: #666;">If you did not request this, please ignore this email.</p>
+  </div>`,
   };
 
   try {

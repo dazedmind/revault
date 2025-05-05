@@ -157,8 +157,8 @@ export default function Form() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="CS">Computer Science</SelectItem>
-                <SelectItem value="IT">Information Technology</SelectItem>
+                <SelectItem value="Computer Science">Computer Science</SelectItem>
+                <SelectItem value="Information Technology">Information Technology</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

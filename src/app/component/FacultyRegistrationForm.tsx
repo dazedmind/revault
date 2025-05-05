@@ -159,8 +159,8 @@ export default function FacultyForm() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="CS">Computer Science Department</SelectItem>
-                <SelectItem value="IT">Information Technology Department</SelectItem>
+                <SelectItem value="Computer Science">Computer Science Department</SelectItem>
+                <SelectItem value="Information Technology">Information Technology Department</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
