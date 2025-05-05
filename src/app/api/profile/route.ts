@@ -13,38 +13,57 @@ export async function GET(req: Request) {
   }
 
   try {
-    const payload = jwt.verify(token, SECRET_KEY);
+    const payload: any = jwt.verify(token, SECRET_KEY);
     console.log("JWT Payload:", payload);
 
-    const studentNumber = BigInt(payload.studentNumber);
+    const userNumber = Number(payload.userNumber); // <- FIXED
+    let user;
 
-    const user = await prisma.students.findFirst({
-        where: {
-            student_num: studentNumber,
-        },
-        include: {
-          users: true,
-        }
+    if (payload.role === 'student') {
+      user = await prisma.students.findFirst({
+        where: { student_num: userNumber },
+        include: { users: true },
       });
+
+      if (user) {
+        user = {
+          ...user,
+          student_num: user.student_num.toString(),
+          users: {
+            ...user.users,
+            user_id: user.users.user_id.toString(),
+          },
+        };
+      }
+    } else if (payload.role === 'faculty') {
+      user = await prisma.faculty.findFirst({
+        where: { employee_id: userNumber },
+        include: { users: true },
+      });
+
+      if (user) {
+        user = {
+          ...user,
+          employee_id: user.employee_id.toString(),
+          users: {
+            ...user.users,
+            user_id: user.users.user_id.toString(),
+          },
+        };
+      }
+    } else {
+      return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
+    }
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-   // ✅ Convert BigInt to string so JSON.stringify works
-   const safeUser = {
-    ...user,
-    student_num: user.student_num.toString(),
-    users: {
-      ...user.users,
-      user_id: user.users.user_id.toString(), // just in case it's BigInt too
-    }
-  };
+    user.role = payload.role; // set role to pass on to the front-end
 
-  return NextResponse.json(safeUser);
-} catch (err) {
-    console.error("Error verifying token:", err); // Log error to debug
-
+    return NextResponse.json(user);
+  } catch (err) {
+    console.error("Error verifying token:", err);
     return NextResponse.json({ error: 'Invalid or expired token' }, { status: 403 });
   }
 }

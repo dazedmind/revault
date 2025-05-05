@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import NavBar from '../component/NavBar'
-import { ProfileCard } from '../component/ProfileCard';
+import {ProfileCard} from '../component/ProfileCard';
 import Link from 'next/link';
 import document from "../img/document.png"
 import DocsCardUser from '../component/DocsCardUser';
@@ -52,15 +52,17 @@ export default function Profile() {
 
       {/* <ProfileCard/> */}
       {profile ? (
-        <ProfileCard
-          name={`${profile.users.first_name} ${profile.users.last_name}`}
-          studentNumber={profile.student_num}
-          college={profile.college}
-          program={profile.program}
-        />
-      ) : (
-        <div>Failed to load profile.</div>
-      )}
+          <ProfileCard
+            name={`${profile.users.first_name} ${profile.users.last_name}`}
+            number={profile.role === 'student' ? profile.student_num : profile.employee_id}
+            college={profile.college}
+            position={profile.position}
+            programOrDept={profile.role === 'student' ? profile.program : profile.department}
+            role={profile.role}
+          />
+        ) : (
+          <div>Failed to load profile.</div>
+        )}
 
       <div className='flex bg-midnight'>
         <aside className='flex flex-col gap-8 h-auto w-96 p-14'>

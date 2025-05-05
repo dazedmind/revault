@@ -74,7 +74,7 @@ export async function saveInformation(formData: any) {
       await prisma.faculty.create({
         data: {
           employee_id: parseFloat(employeeID), // Ensure employee ID is correct
-          position: "Unknown", // Set default if position is empty
+          position: "Faculty", // Set default if position is empty
           department: department || "", // Set default if department is empty
           user_id: user.user_id, // Link to the user
         },
