@@ -1,10 +1,4 @@
-import React from "react";
-import NavBar from "../component/NavBar";
-import { ProfileCard } from "../component/ProfileCard";
-import Link from "next/link";
-import document from "../img/document.png";
-import DocsCardUser from "../component/DocsCardUser";
-("use client");
+"use client"
 import React, { useEffect, useState } from "react";
 import NavBar from "../component/NavBar";
 import { ProfileCard } from "../component/ProfileCard";
