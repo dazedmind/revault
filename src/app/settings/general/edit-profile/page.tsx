@@ -86,17 +86,17 @@ const EditProfilePage = () => {
           label="Student Number"
           type="number"
           name="studentNumber"
-          placeholder={profile.student_num || ""}
+          placeholder={profile.student_num || profile.employee_id}
           inputClassName="w-sm ml-5 h-14 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           labelClassName="ml-5"
         />
 
         <InputField
           containerClassName="pt-4"
-          label="Program"
+          label="Program/Department"
           type="text"
           name="program"
-          placeholder={profile.program || ""}
+          placeholder={profile.program || profile.department}
           inputClassName="w-sm ml-5 h-14 cursor-not-allowed"
           labelClassName="ml-5"
         />
