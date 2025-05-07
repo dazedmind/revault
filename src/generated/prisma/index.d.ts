@@ -29,6 +29,11 @@ export type faculty = $Result.DefaultSelection<Prisma.$facultyPayload>
  */
 export type students = $Result.DefaultSelection<Prisma.$studentsPayload>
 /**
+ * Model librarian
+ * 
+ */
+export type librarian = $Result.DefaultSelection<Prisma.$librarianPayload>
+/**
  * Model papers
  * 
  */
@@ -203,6 +208,16 @@ export class PrismaClient<
     * ```
     */
   get students(): Prisma.studentsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.librarian`: Exposes CRUD operations for the **librarian** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Librarians
+    * const librarians = await prisma.librarian.findMany()
+    * ```
+    */
+  get librarian(): Prisma.librarianDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.papers`: Exposes CRUD operations for the **papers** model.
@@ -686,6 +701,7 @@ export namespace Prisma {
     users: 'users',
     faculty: 'faculty',
     students: 'students',
+    librarian: 'librarian',
     papers: 'papers',
     paper_metadata: 'paper_metadata',
     user_bookmarks: 'user_bookmarks',
@@ -708,7 +724,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "faculty" | "students" | "papers" | "paper_metadata" | "user_bookmarks" | "otp"
+      modelProps: "users" | "faculty" | "students" | "librarian" | "papers" | "paper_metadata" | "user_bookmarks" | "otp"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -931,6 +947,80 @@ export namespace Prisma {
           count: {
             args: Prisma.studentsCountArgs<ExtArgs>
             result: $Utils.Optional<StudentsCountAggregateOutputType> | number
+          }
+        }
+      }
+      librarian: {
+        payload: Prisma.$librarianPayload<ExtArgs>
+        fields: Prisma.librarianFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.librarianFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.librarianFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload>
+          }
+          findFirst: {
+            args: Prisma.librarianFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.librarianFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload>
+          }
+          findMany: {
+            args: Prisma.librarianFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload>[]
+          }
+          create: {
+            args: Prisma.librarianCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload>
+          }
+          createMany: {
+            args: Prisma.librarianCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.librarianCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload>[]
+          }
+          delete: {
+            args: Prisma.librarianDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload>
+          }
+          update: {
+            args: Prisma.librarianUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload>
+          }
+          deleteMany: {
+            args: Prisma.librarianDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.librarianUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.librarianUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload>[]
+          }
+          upsert: {
+            args: Prisma.librarianUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$librarianPayload>
+          }
+          aggregate: {
+            args: Prisma.LibrarianAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLibrarian>
+          }
+          groupBy: {
+            args: Prisma.librarianGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LibrarianGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.librarianCountArgs<ExtArgs>
+            result: $Utils.Optional<LibrarianCountAggregateOutputType> | number
           }
         }
       }
@@ -1317,6 +1407,7 @@ export namespace Prisma {
     users?: usersOmit
     faculty?: facultyOmit
     students?: studentsOmit
+    librarian?: librarianOmit
     papers?: papersOmit
     paper_metadata?: paper_metadataOmit
     user_bookmarks?: user_bookmarksOmit
@@ -1717,6 +1808,7 @@ export namespace Prisma {
     created_at?: boolean
     faculty?: boolean | users$facultyArgs<ExtArgs>
     students?: boolean | users$studentsArgs<ExtArgs>
+    librarian?: boolean | users$librarianArgs<ExtArgs>
     user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["users"]>
@@ -1761,6 +1853,7 @@ export namespace Prisma {
   export type usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     faculty?: boolean | users$facultyArgs<ExtArgs>
     students?: boolean | users$studentsArgs<ExtArgs>
+    librarian?: boolean | users$librarianArgs<ExtArgs>
     user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -1772,6 +1865,7 @@ export namespace Prisma {
     objects: {
       faculty: Prisma.$facultyPayload<ExtArgs> | null
       students: Prisma.$studentsPayload<ExtArgs> | null
+      librarian: Prisma.$librarianPayload<ExtArgs> | null
       user_bookmarks: Prisma.$user_bookmarksPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -2180,6 +2274,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     faculty<T extends users$facultyArgs<ExtArgs> = {}>(args?: Subset<T, users$facultyArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     students<T extends users$studentsArgs<ExtArgs> = {}>(args?: Subset<T, users$studentsArgs<ExtArgs>>): Prisma__studentsClient<$Result.GetResult<Prisma.$studentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    librarian<T extends users$librarianArgs<ExtArgs> = {}>(args?: Subset<T, users$librarianArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     user_bookmarks<T extends users$user_bookmarksArgs<ExtArgs> = {}>(args?: Subset<T, users$user_bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_bookmarksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2642,6 +2737,25 @@ export namespace Prisma {
      */
     include?: studentsInclude<ExtArgs> | null
     where?: studentsWhereInput
+  }
+
+  /**
+   * users.librarian
+   */
+  export type users$librarianArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
+    where?: librarianWhereInput
   }
 
   /**
@@ -4867,6 +4981,1093 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: studentsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model librarian
+   */
+
+  export type AggregateLibrarian = {
+    _count: LibrarianCountAggregateOutputType | null
+    _avg: LibrarianAvgAggregateOutputType | null
+    _sum: LibrarianSumAggregateOutputType | null
+    _min: LibrarianMinAggregateOutputType | null
+    _max: LibrarianMaxAggregateOutputType | null
+  }
+
+  export type LibrarianAvgAggregateOutputType = {
+    employee_id: number | null
+    contact_num: number | null
+    user_id: number | null
+  }
+
+  export type LibrarianSumAggregateOutputType = {
+    employee_id: number | null
+    contact_num: number | null
+    user_id: number | null
+  }
+
+  export type LibrarianMinAggregateOutputType = {
+    employee_id: number | null
+    hire_date: Date | null
+    contact_num: number | null
+    user_id: number | null
+  }
+
+  export type LibrarianMaxAggregateOutputType = {
+    employee_id: number | null
+    hire_date: Date | null
+    contact_num: number | null
+    user_id: number | null
+  }
+
+  export type LibrarianCountAggregateOutputType = {
+    employee_id: number
+    hire_date: number
+    contact_num: number
+    user_id: number
+    _all: number
+  }
+
+
+  export type LibrarianAvgAggregateInputType = {
+    employee_id?: true
+    contact_num?: true
+    user_id?: true
+  }
+
+  export type LibrarianSumAggregateInputType = {
+    employee_id?: true
+    contact_num?: true
+    user_id?: true
+  }
+
+  export type LibrarianMinAggregateInputType = {
+    employee_id?: true
+    hire_date?: true
+    contact_num?: true
+    user_id?: true
+  }
+
+  export type LibrarianMaxAggregateInputType = {
+    employee_id?: true
+    hire_date?: true
+    contact_num?: true
+    user_id?: true
+  }
+
+  export type LibrarianCountAggregateInputType = {
+    employee_id?: true
+    hire_date?: true
+    contact_num?: true
+    user_id?: true
+    _all?: true
+  }
+
+  export type LibrarianAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which librarian to aggregate.
+     */
+    where?: librarianWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of librarians to fetch.
+     */
+    orderBy?: librarianOrderByWithRelationInput | librarianOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: librarianWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` librarians from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` librarians.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned librarians
+    **/
+    _count?: true | LibrarianCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LibrarianAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LibrarianSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LibrarianMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LibrarianMaxAggregateInputType
+  }
+
+  export type GetLibrarianAggregateType<T extends LibrarianAggregateArgs> = {
+        [P in keyof T & keyof AggregateLibrarian]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLibrarian[P]>
+      : GetScalarType<T[P], AggregateLibrarian[P]>
+  }
+
+
+
+
+  export type librarianGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: librarianWhereInput
+    orderBy?: librarianOrderByWithAggregationInput | librarianOrderByWithAggregationInput[]
+    by: LibrarianScalarFieldEnum[] | LibrarianScalarFieldEnum
+    having?: librarianScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LibrarianCountAggregateInputType | true
+    _avg?: LibrarianAvgAggregateInputType
+    _sum?: LibrarianSumAggregateInputType
+    _min?: LibrarianMinAggregateInputType
+    _max?: LibrarianMaxAggregateInputType
+  }
+
+  export type LibrarianGroupByOutputType = {
+    employee_id: number
+    hire_date: Date
+    contact_num: number
+    user_id: number
+    _count: LibrarianCountAggregateOutputType | null
+    _avg: LibrarianAvgAggregateOutputType | null
+    _sum: LibrarianSumAggregateOutputType | null
+    _min: LibrarianMinAggregateOutputType | null
+    _max: LibrarianMaxAggregateOutputType | null
+  }
+
+  type GetLibrarianGroupByPayload<T extends librarianGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LibrarianGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LibrarianGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LibrarianGroupByOutputType[P]>
+            : GetScalarType<T[P], LibrarianGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type librarianSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    employee_id?: boolean
+    hire_date?: boolean
+    contact_num?: boolean
+    user_id?: boolean
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["librarian"]>
+
+  export type librarianSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    employee_id?: boolean
+    hire_date?: boolean
+    contact_num?: boolean
+    user_id?: boolean
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["librarian"]>
+
+  export type librarianSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    employee_id?: boolean
+    hire_date?: boolean
+    contact_num?: boolean
+    user_id?: boolean
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["librarian"]>
+
+  export type librarianSelectScalar = {
+    employee_id?: boolean
+    hire_date?: boolean
+    contact_num?: boolean
+    user_id?: boolean
+  }
+
+  export type librarianOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"employee_id" | "hire_date" | "contact_num" | "user_id", ExtArgs["result"]["librarian"]>
+  export type librarianInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }
+  export type librarianIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }
+  export type librarianIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }
+
+  export type $librarianPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "librarian"
+    objects: {
+      users: Prisma.$usersPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      employee_id: number
+      hire_date: Date
+      contact_num: number
+      user_id: number
+    }, ExtArgs["result"]["librarian"]>
+    composites: {}
+  }
+
+  type librarianGetPayload<S extends boolean | null | undefined | librarianDefaultArgs> = $Result.GetResult<Prisma.$librarianPayload, S>
+
+  type librarianCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<librarianFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LibrarianCountAggregateInputType | true
+    }
+
+  export interface librarianDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['librarian'], meta: { name: 'librarian' } }
+    /**
+     * Find zero or one Librarian that matches the filter.
+     * @param {librarianFindUniqueArgs} args - Arguments to find a Librarian
+     * @example
+     * // Get one Librarian
+     * const librarian = await prisma.librarian.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends librarianFindUniqueArgs>(args: SelectSubset<T, librarianFindUniqueArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Librarian that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {librarianFindUniqueOrThrowArgs} args - Arguments to find a Librarian
+     * @example
+     * // Get one Librarian
+     * const librarian = await prisma.librarian.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends librarianFindUniqueOrThrowArgs>(args: SelectSubset<T, librarianFindUniqueOrThrowArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Librarian that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {librarianFindFirstArgs} args - Arguments to find a Librarian
+     * @example
+     * // Get one Librarian
+     * const librarian = await prisma.librarian.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends librarianFindFirstArgs>(args?: SelectSubset<T, librarianFindFirstArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Librarian that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {librarianFindFirstOrThrowArgs} args - Arguments to find a Librarian
+     * @example
+     * // Get one Librarian
+     * const librarian = await prisma.librarian.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends librarianFindFirstOrThrowArgs>(args?: SelectSubset<T, librarianFindFirstOrThrowArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Librarians that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {librarianFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Librarians
+     * const librarians = await prisma.librarian.findMany()
+     * 
+     * // Get first 10 Librarians
+     * const librarians = await prisma.librarian.findMany({ take: 10 })
+     * 
+     * // Only select the `employee_id`
+     * const librarianWithEmployee_idOnly = await prisma.librarian.findMany({ select: { employee_id: true } })
+     * 
+     */
+    findMany<T extends librarianFindManyArgs>(args?: SelectSubset<T, librarianFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Librarian.
+     * @param {librarianCreateArgs} args - Arguments to create a Librarian.
+     * @example
+     * // Create one Librarian
+     * const Librarian = await prisma.librarian.create({
+     *   data: {
+     *     // ... data to create a Librarian
+     *   }
+     * })
+     * 
+     */
+    create<T extends librarianCreateArgs>(args: SelectSubset<T, librarianCreateArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Librarians.
+     * @param {librarianCreateManyArgs} args - Arguments to create many Librarians.
+     * @example
+     * // Create many Librarians
+     * const librarian = await prisma.librarian.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends librarianCreateManyArgs>(args?: SelectSubset<T, librarianCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Librarians and returns the data saved in the database.
+     * @param {librarianCreateManyAndReturnArgs} args - Arguments to create many Librarians.
+     * @example
+     * // Create many Librarians
+     * const librarian = await prisma.librarian.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Librarians and only return the `employee_id`
+     * const librarianWithEmployee_idOnly = await prisma.librarian.createManyAndReturn({
+     *   select: { employee_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends librarianCreateManyAndReturnArgs>(args?: SelectSubset<T, librarianCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Librarian.
+     * @param {librarianDeleteArgs} args - Arguments to delete one Librarian.
+     * @example
+     * // Delete one Librarian
+     * const Librarian = await prisma.librarian.delete({
+     *   where: {
+     *     // ... filter to delete one Librarian
+     *   }
+     * })
+     * 
+     */
+    delete<T extends librarianDeleteArgs>(args: SelectSubset<T, librarianDeleteArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Librarian.
+     * @param {librarianUpdateArgs} args - Arguments to update one Librarian.
+     * @example
+     * // Update one Librarian
+     * const librarian = await prisma.librarian.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends librarianUpdateArgs>(args: SelectSubset<T, librarianUpdateArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Librarians.
+     * @param {librarianDeleteManyArgs} args - Arguments to filter Librarians to delete.
+     * @example
+     * // Delete a few Librarians
+     * const { count } = await prisma.librarian.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends librarianDeleteManyArgs>(args?: SelectSubset<T, librarianDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Librarians.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {librarianUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Librarians
+     * const librarian = await prisma.librarian.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends librarianUpdateManyArgs>(args: SelectSubset<T, librarianUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Librarians and returns the data updated in the database.
+     * @param {librarianUpdateManyAndReturnArgs} args - Arguments to update many Librarians.
+     * @example
+     * // Update many Librarians
+     * const librarian = await prisma.librarian.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Librarians and only return the `employee_id`
+     * const librarianWithEmployee_idOnly = await prisma.librarian.updateManyAndReturn({
+     *   select: { employee_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends librarianUpdateManyAndReturnArgs>(args: SelectSubset<T, librarianUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Librarian.
+     * @param {librarianUpsertArgs} args - Arguments to update or create a Librarian.
+     * @example
+     * // Update or create a Librarian
+     * const librarian = await prisma.librarian.upsert({
+     *   create: {
+     *     // ... data to create a Librarian
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Librarian we want to update
+     *   }
+     * })
+     */
+    upsert<T extends librarianUpsertArgs>(args: SelectSubset<T, librarianUpsertArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Librarians.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {librarianCountArgs} args - Arguments to filter Librarians to count.
+     * @example
+     * // Count the number of Librarians
+     * const count = await prisma.librarian.count({
+     *   where: {
+     *     // ... the filter for the Librarians we want to count
+     *   }
+     * })
+    **/
+    count<T extends librarianCountArgs>(
+      args?: Subset<T, librarianCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LibrarianCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Librarian.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LibrarianAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LibrarianAggregateArgs>(args: Subset<T, LibrarianAggregateArgs>): Prisma.PrismaPromise<GetLibrarianAggregateType<T>>
+
+    /**
+     * Group by Librarian.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {librarianGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends librarianGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: librarianGroupByArgs['orderBy'] }
+        : { orderBy?: librarianGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, librarianGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLibrarianGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the librarian model
+   */
+  readonly fields: librarianFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for librarian.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__librarianClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    users<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the librarian model
+   */
+  interface librarianFieldRefs {
+    readonly employee_id: FieldRef<"librarian", 'Int'>
+    readonly hire_date: FieldRef<"librarian", 'DateTime'>
+    readonly contact_num: FieldRef<"librarian", 'Int'>
+    readonly user_id: FieldRef<"librarian", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * librarian findUnique
+   */
+  export type librarianFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
+    /**
+     * Filter, which librarian to fetch.
+     */
+    where: librarianWhereUniqueInput
+  }
+
+  /**
+   * librarian findUniqueOrThrow
+   */
+  export type librarianFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
+    /**
+     * Filter, which librarian to fetch.
+     */
+    where: librarianWhereUniqueInput
+  }
+
+  /**
+   * librarian findFirst
+   */
+  export type librarianFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
+    /**
+     * Filter, which librarian to fetch.
+     */
+    where?: librarianWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of librarians to fetch.
+     */
+    orderBy?: librarianOrderByWithRelationInput | librarianOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for librarians.
+     */
+    cursor?: librarianWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` librarians from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` librarians.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of librarians.
+     */
+    distinct?: LibrarianScalarFieldEnum | LibrarianScalarFieldEnum[]
+  }
+
+  /**
+   * librarian findFirstOrThrow
+   */
+  export type librarianFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
+    /**
+     * Filter, which librarian to fetch.
+     */
+    where?: librarianWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of librarians to fetch.
+     */
+    orderBy?: librarianOrderByWithRelationInput | librarianOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for librarians.
+     */
+    cursor?: librarianWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` librarians from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` librarians.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of librarians.
+     */
+    distinct?: LibrarianScalarFieldEnum | LibrarianScalarFieldEnum[]
+  }
+
+  /**
+   * librarian findMany
+   */
+  export type librarianFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
+    /**
+     * Filter, which librarians to fetch.
+     */
+    where?: librarianWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of librarians to fetch.
+     */
+    orderBy?: librarianOrderByWithRelationInput | librarianOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing librarians.
+     */
+    cursor?: librarianWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` librarians from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` librarians.
+     */
+    skip?: number
+    distinct?: LibrarianScalarFieldEnum | LibrarianScalarFieldEnum[]
+  }
+
+  /**
+   * librarian create
+   */
+  export type librarianCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
+    /**
+     * The data needed to create a librarian.
+     */
+    data: XOR<librarianCreateInput, librarianUncheckedCreateInput>
+  }
+
+  /**
+   * librarian createMany
+   */
+  export type librarianCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many librarians.
+     */
+    data: librarianCreateManyInput | librarianCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * librarian createManyAndReturn
+   */
+  export type librarianCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * The data used to create many librarians.
+     */
+    data: librarianCreateManyInput | librarianCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * librarian update
+   */
+  export type librarianUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
+    /**
+     * The data needed to update a librarian.
+     */
+    data: XOR<librarianUpdateInput, librarianUncheckedUpdateInput>
+    /**
+     * Choose, which librarian to update.
+     */
+    where: librarianWhereUniqueInput
+  }
+
+  /**
+   * librarian updateMany
+   */
+  export type librarianUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update librarians.
+     */
+    data: XOR<librarianUpdateManyMutationInput, librarianUncheckedUpdateManyInput>
+    /**
+     * Filter which librarians to update
+     */
+    where?: librarianWhereInput
+    /**
+     * Limit how many librarians to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * librarian updateManyAndReturn
+   */
+  export type librarianUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * The data used to update librarians.
+     */
+    data: XOR<librarianUpdateManyMutationInput, librarianUncheckedUpdateManyInput>
+    /**
+     * Filter which librarians to update
+     */
+    where?: librarianWhereInput
+    /**
+     * Limit how many librarians to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * librarian upsert
+   */
+  export type librarianUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
+    /**
+     * The filter to search for the librarian to update in case it exists.
+     */
+    where: librarianWhereUniqueInput
+    /**
+     * In case the librarian found by the `where` argument doesn't exist, create a new librarian with this data.
+     */
+    create: XOR<librarianCreateInput, librarianUncheckedCreateInput>
+    /**
+     * In case the librarian was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<librarianUpdateInput, librarianUncheckedUpdateInput>
+  }
+
+  /**
+   * librarian delete
+   */
+  export type librarianDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
+    /**
+     * Filter which librarian to delete.
+     */
+    where: librarianWhereUniqueInput
+  }
+
+  /**
+   * librarian deleteMany
+   */
+  export type librarianDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which librarians to delete
+     */
+    where?: librarianWhereInput
+    /**
+     * Limit how many librarians to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * librarian without action
+   */
+  export type librarianDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the librarian
+     */
+    select?: librarianSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the librarian
+     */
+    omit?: librarianOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: librarianInclude<ExtArgs> | null
   }
 
 
@@ -9346,6 +10547,16 @@ export namespace Prisma {
   export type StudentsScalarFieldEnum = (typeof StudentsScalarFieldEnum)[keyof typeof StudentsScalarFieldEnum]
 
 
+  export const LibrarianScalarFieldEnum: {
+    employee_id: 'employee_id',
+    hire_date: 'hire_date',
+    contact_num: 'contact_num',
+    user_id: 'user_id'
+  };
+
+  export type LibrarianScalarFieldEnum = (typeof LibrarianScalarFieldEnum)[keyof typeof LibrarianScalarFieldEnum]
+
+
   export const PapersScalarFieldEnum: {
     paper_id: 'paper_id',
     title: 'title',
@@ -9514,6 +10725,7 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
     students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
+    librarian?: XOR<LibrarianNullableScalarRelationFilter, librarianWhereInput> | null
     user_bookmarks?: User_bookmarksListRelationFilter
   }
 
@@ -9529,6 +10741,7 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     faculty?: facultyOrderByWithRelationInput
     students?: studentsOrderByWithRelationInput
+    librarian?: librarianOrderByWithRelationInput
     user_bookmarks?: user_bookmarksOrderByRelationAggregateInput
   }
 
@@ -9547,6 +10760,7 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
     students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
+    librarian?: XOR<LibrarianNullableScalarRelationFilter, librarianWhereInput> | null
     user_bookmarks?: User_bookmarksListRelationFilter
   }, "user_id" | "email">
 
@@ -9610,7 +10824,7 @@ export namespace Prisma {
     position?: StringNullableFilter<"faculty"> | string | null
     department?: StringNullableFilter<"faculty"> | string | null
     users?: XOR<UsersScalarRelationFilter, usersWhereInput>
-  }, "employee_id" | "user_id">
+  }, "employee_id" | "employee_id" | "user_id">
 
   export type facultyOrderByWithAggregationInput = {
     employee_id?: SortOrder
@@ -9689,6 +10903,58 @@ export namespace Prisma {
     college?: StringNullableWithAggregatesFilter<"students"> | string | null
     year_level?: IntNullableWithAggregatesFilter<"students"> | number | null
     user_id?: IntWithAggregatesFilter<"students"> | number
+  }
+
+  export type librarianWhereInput = {
+    AND?: librarianWhereInput | librarianWhereInput[]
+    OR?: librarianWhereInput[]
+    NOT?: librarianWhereInput | librarianWhereInput[]
+    employee_id?: IntFilter<"librarian"> | number
+    hire_date?: DateTimeFilter<"librarian"> | Date | string
+    contact_num?: IntFilter<"librarian"> | number
+    user_id?: IntFilter<"librarian"> | number
+    users?: XOR<UsersScalarRelationFilter, usersWhereInput>
+  }
+
+  export type librarianOrderByWithRelationInput = {
+    employee_id?: SortOrder
+    hire_date?: SortOrder
+    contact_num?: SortOrder
+    user_id?: SortOrder
+    users?: usersOrderByWithRelationInput
+  }
+
+  export type librarianWhereUniqueInput = Prisma.AtLeast<{
+    employee_id?: number
+    user_id?: number
+    AND?: librarianWhereInput | librarianWhereInput[]
+    OR?: librarianWhereInput[]
+    NOT?: librarianWhereInput | librarianWhereInput[]
+    hire_date?: DateTimeFilter<"librarian"> | Date | string
+    contact_num?: IntFilter<"librarian"> | number
+    users?: XOR<UsersScalarRelationFilter, usersWhereInput>
+  }, "employee_id" | "employee_id" | "user_id">
+
+  export type librarianOrderByWithAggregationInput = {
+    employee_id?: SortOrder
+    hire_date?: SortOrder
+    contact_num?: SortOrder
+    user_id?: SortOrder
+    _count?: librarianCountOrderByAggregateInput
+    _avg?: librarianAvgOrderByAggregateInput
+    _max?: librarianMaxOrderByAggregateInput
+    _min?: librarianMinOrderByAggregateInput
+    _sum?: librarianSumOrderByAggregateInput
+  }
+
+  export type librarianScalarWhereWithAggregatesInput = {
+    AND?: librarianScalarWhereWithAggregatesInput | librarianScalarWhereWithAggregatesInput[]
+    OR?: librarianScalarWhereWithAggregatesInput[]
+    NOT?: librarianScalarWhereWithAggregatesInput | librarianScalarWhereWithAggregatesInput[]
+    employee_id?: IntWithAggregatesFilter<"librarian"> | number
+    hire_date?: DateTimeWithAggregatesFilter<"librarian"> | Date | string
+    contact_num?: IntWithAggregatesFilter<"librarian"> | number
+    user_id?: IntWithAggregatesFilter<"librarian"> | number
   }
 
   export type papersWhereInput = {
@@ -9967,6 +11233,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     faculty?: facultyCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
+    librarian?: librarianCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
   }
 
@@ -9982,6 +11249,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -9996,6 +11264,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
   }
 
@@ -10011,6 +11280,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -10050,19 +11320,21 @@ export namespace Prisma {
   }
 
   export type facultyCreateInput = {
+    employee_id: number
     position?: string | null
     department?: string | null
     users: usersCreateNestedOneWithoutFacultyInput
   }
 
   export type facultyUncheckedCreateInput = {
-    employee_id?: number
+    employee_id: number
     position?: string | null
     department?: string | null
     user_id: number
   }
 
   export type facultyUpdateInput = {
+    employee_id?: IntFieldUpdateOperationsInput | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     users?: usersUpdateOneRequiredWithoutFacultyNestedInput
@@ -10076,13 +11348,14 @@ export namespace Prisma {
   }
 
   export type facultyCreateManyInput = {
-    employee_id?: number
+    employee_id: number
     position?: string | null
     department?: string | null
     user_id: number
   }
 
   export type facultyUpdateManyMutationInput = {
+    employee_id?: IntFieldUpdateOperationsInput | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -10146,6 +11419,54 @@ export namespace Prisma {
     program?: NullableStringFieldUpdateOperationsInput | string | null
     college?: NullableStringFieldUpdateOperationsInput | string | null
     year_level?: NullableIntFieldUpdateOperationsInput | number | null
+    user_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type librarianCreateInput = {
+    employee_id: number
+    hire_date: Date | string
+    contact_num: number
+    users: usersCreateNestedOneWithoutLibrarianInput
+  }
+
+  export type librarianUncheckedCreateInput = {
+    employee_id: number
+    hire_date: Date | string
+    contact_num: number
+    user_id: number
+  }
+
+  export type librarianUpdateInput = {
+    employee_id?: IntFieldUpdateOperationsInput | number
+    hire_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact_num?: IntFieldUpdateOperationsInput | number
+    users?: usersUpdateOneRequiredWithoutLibrarianNestedInput
+  }
+
+  export type librarianUncheckedUpdateInput = {
+    employee_id?: IntFieldUpdateOperationsInput | number
+    hire_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact_num?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type librarianCreateManyInput = {
+    employee_id: number
+    hire_date: Date | string
+    contact_num: number
+    user_id: number
+  }
+
+  export type librarianUpdateManyMutationInput = {
+    employee_id?: IntFieldUpdateOperationsInput | number
+    hire_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact_num?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type librarianUncheckedUpdateManyInput = {
+    employee_id?: IntFieldUpdateOperationsInput | number
+    hire_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact_num?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
   }
 
@@ -10480,6 +11801,11 @@ export namespace Prisma {
     isNot?: studentsWhereInput | null
   }
 
+  export type LibrarianNullableScalarRelationFilter = {
+    is?: librarianWhereInput | null
+    isNot?: librarianWhereInput | null
+  }
+
   export type User_bookmarksListRelationFilter = {
     every?: user_bookmarksWhereInput
     some?: user_bookmarksWhereInput
@@ -10731,6 +12057,64 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type librarianCountOrderByAggregateInput = {
+    employee_id?: SortOrder
+    hire_date?: SortOrder
+    contact_num?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type librarianAvgOrderByAggregateInput = {
+    employee_id?: SortOrder
+    contact_num?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type librarianMaxOrderByAggregateInput = {
+    employee_id?: SortOrder
+    hire_date?: SortOrder
+    contact_num?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type librarianMinOrderByAggregateInput = {
+    employee_id?: SortOrder
+    hire_date?: SortOrder
+    contact_num?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type librarianSumOrderByAggregateInput = {
+    employee_id?: SortOrder
+    contact_num?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
   export type Paper_metadataListRelationFilter = {
     every?: paper_metadataWhereInput
     some?: paper_metadataWhereInput
@@ -10876,17 +12260,6 @@ export namespace Prisma {
     paper_id?: SortOrder
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type OtpCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
@@ -10911,20 +12284,6 @@ export namespace Prisma {
     expiresAt?: SortOrder
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type facultyCreateNestedOneWithoutUsersInput = {
     create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
     connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
@@ -10935,6 +12294,12 @@ export namespace Prisma {
     create?: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
     connectOrCreate?: studentsCreateOrConnectWithoutUsersInput
     connect?: studentsWhereUniqueInput
+  }
+
+  export type librarianCreateNestedOneWithoutUsersInput = {
+    create?: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: librarianCreateOrConnectWithoutUsersInput
+    connect?: librarianWhereUniqueInput
   }
 
   export type user_bookmarksCreateNestedManyWithoutUsersInput = {
@@ -10954,6 +12319,12 @@ export namespace Prisma {
     create?: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
     connectOrCreate?: studentsCreateOrConnectWithoutUsersInput
     connect?: studentsWhereUniqueInput
+  }
+
+  export type librarianUncheckedCreateNestedOneWithoutUsersInput = {
+    create?: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: librarianCreateOrConnectWithoutUsersInput
+    connect?: librarianWhereUniqueInput
   }
 
   export type user_bookmarksUncheckedCreateNestedManyWithoutUsersInput = {
@@ -10993,6 +12364,16 @@ export namespace Prisma {
     delete?: studentsWhereInput | boolean
     connect?: studentsWhereUniqueInput
     update?: XOR<XOR<studentsUpdateToOneWithWhereWithoutUsersInput, studentsUpdateWithoutUsersInput>, studentsUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type librarianUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: librarianCreateOrConnectWithoutUsersInput
+    upsert?: librarianUpsertWithoutUsersInput
+    disconnect?: librarianWhereInput | boolean
+    delete?: librarianWhereInput | boolean
+    connect?: librarianWhereUniqueInput
+    update?: XOR<XOR<librarianUpdateToOneWithWhereWithoutUsersInput, librarianUpdateWithoutUsersInput>, librarianUncheckedUpdateWithoutUsersInput>
   }
 
   export type user_bookmarksUpdateManyWithoutUsersNestedInput = {
@@ -11035,6 +12416,16 @@ export namespace Prisma {
     delete?: studentsWhereInput | boolean
     connect?: studentsWhereUniqueInput
     update?: XOR<XOR<studentsUpdateToOneWithWhereWithoutUsersInput, studentsUpdateWithoutUsersInput>, studentsUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type librarianUncheckedUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: librarianCreateOrConnectWithoutUsersInput
+    upsert?: librarianUpsertWithoutUsersInput
+    disconnect?: librarianWhereInput | boolean
+    delete?: librarianWhereInput | boolean
+    connect?: librarianWhereUniqueInput
+    update?: XOR<XOR<librarianUpdateToOneWithWhereWithoutUsersInput, librarianUpdateWithoutUsersInput>, librarianUncheckedUpdateWithoutUsersInput>
   }
 
   export type user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput = {
@@ -11093,6 +12484,24 @@ export namespace Prisma {
     upsert?: usersUpsertWithoutStudentsInput
     connect?: usersWhereUniqueInput
     update?: XOR<XOR<usersUpdateToOneWithWhereWithoutStudentsInput, usersUpdateWithoutStudentsInput>, usersUncheckedUpdateWithoutStudentsInput>
+  }
+
+  export type usersCreateNestedOneWithoutLibrarianInput = {
+    create?: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
+    connectOrCreate?: usersCreateOrConnectWithoutLibrarianInput
+    connect?: usersWhereUniqueInput
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type usersUpdateOneRequiredWithoutLibrarianNestedInput = {
+    create?: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
+    connectOrCreate?: usersCreateOrConnectWithoutLibrarianInput
+    upsert?: usersUpsertWithoutLibrarianInput
+    connect?: usersWhereUniqueInput
+    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutLibrarianInput, usersUpdateWithoutLibrarianInput>, usersUncheckedUpdateWithoutLibrarianInput>
   }
 
   export type paper_metadataCreateNestedManyWithoutPapersInput = {
@@ -11219,10 +12628,6 @@ export namespace Prisma {
     upsert?: usersUpsertWithoutUser_bookmarksInput
     connect?: usersWhereUniqueInput
     update?: XOR<XOR<usersUpdateToOneWithWhereWithoutUser_bookmarksInput, usersUpdateWithoutUser_bookmarksInput>, usersUncheckedUpdateWithoutUser_bookmarksInput>
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -11441,12 +12846,13 @@ export namespace Prisma {
   }
 
   export type facultyCreateWithoutUsersInput = {
+    employee_id: number
     position?: string | null
     department?: string | null
   }
 
   export type facultyUncheckedCreateWithoutUsersInput = {
-    employee_id?: number
+    employee_id: number
     position?: string | null
     department?: string | null
   }
@@ -11473,6 +12879,23 @@ export namespace Prisma {
   export type studentsCreateOrConnectWithoutUsersInput = {
     where: studentsWhereUniqueInput
     create: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
+  }
+
+  export type librarianCreateWithoutUsersInput = {
+    employee_id: number
+    hire_date: Date | string
+    contact_num: number
+  }
+
+  export type librarianUncheckedCreateWithoutUsersInput = {
+    employee_id: number
+    hire_date: Date | string
+    contact_num: number
+  }
+
+  export type librarianCreateOrConnectWithoutUsersInput = {
+    where: librarianWhereUniqueInput
+    create: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
   }
 
   export type user_bookmarksCreateWithoutUsersInput = {
@@ -11510,6 +12933,7 @@ export namespace Prisma {
   }
 
   export type facultyUpdateWithoutUsersInput = {
+    employee_id?: IntFieldUpdateOperationsInput | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -11543,6 +12967,29 @@ export namespace Prisma {
     program?: NullableStringFieldUpdateOperationsInput | string | null
     college?: NullableStringFieldUpdateOperationsInput | string | null
     year_level?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type librarianUpsertWithoutUsersInput = {
+    update: XOR<librarianUpdateWithoutUsersInput, librarianUncheckedUpdateWithoutUsersInput>
+    create: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
+    where?: librarianWhereInput
+  }
+
+  export type librarianUpdateToOneWithWhereWithoutUsersInput = {
+    where?: librarianWhereInput
+    data: XOR<librarianUpdateWithoutUsersInput, librarianUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type librarianUpdateWithoutUsersInput = {
+    employee_id?: IntFieldUpdateOperationsInput | number
+    hire_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact_num?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type librarianUncheckedUpdateWithoutUsersInput = {
+    employee_id?: IntFieldUpdateOperationsInput | number
+    hire_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    contact_num?: IntFieldUpdateOperationsInput | number
   }
 
   export type user_bookmarksUpsertWithWhereUniqueWithoutUsersInput = {
@@ -11582,6 +13029,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     students?: studentsCreateNestedOneWithoutUsersInput
+    librarian?: librarianCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
   }
 
@@ -11596,6 +13044,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -11625,6 +13074,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     students?: studentsUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
   }
 
@@ -11639,6 +13089,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -11652,6 +13103,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     faculty?: facultyCreateNestedOneWithoutUsersInput
+    librarian?: librarianCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
   }
 
@@ -11666,6 +13118,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
+    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -11695,6 +13148,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
   }
 
@@ -11709,6 +13163,81 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
+    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+  }
+
+  export type usersCreateWithoutLibrarianInput = {
+    first_name?: string | null
+    mid_name?: string | null
+    last_name?: string | null
+    ext_name?: string | null
+    email: string
+    role?: string | null
+    password: string
+    created_at?: Date | string | null
+    faculty?: facultyCreateNestedOneWithoutUsersInput
+    students?: studentsCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersUncheckedCreateWithoutLibrarianInput = {
+    user_id?: number
+    first_name?: string | null
+    mid_name?: string | null
+    last_name?: string | null
+    ext_name?: string | null
+    email: string
+    role?: string | null
+    password: string
+    created_at?: Date | string | null
+    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
+    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersCreateOrConnectWithoutLibrarianInput = {
+    where: usersWhereUniqueInput
+    create: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
+  }
+
+  export type usersUpsertWithoutLibrarianInput = {
+    update: XOR<usersUpdateWithoutLibrarianInput, usersUncheckedUpdateWithoutLibrarianInput>
+    create: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
+    where?: usersWhereInput
+  }
+
+  export type usersUpdateToOneWithWhereWithoutLibrarianInput = {
+    where?: usersWhereInput
+    data: XOR<usersUpdateWithoutLibrarianInput, usersUncheckedUpdateWithoutLibrarianInput>
+  }
+
+  export type usersUpdateWithoutLibrarianInput = {
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    mid_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    ext_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    faculty?: facultyUpdateOneWithoutUsersNestedInput
+    students?: studentsUpdateOneWithoutUsersNestedInput
+    user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+  }
+
+  export type usersUncheckedUpdateWithoutLibrarianInput = {
+    user_id?: IntFieldUpdateOperationsInput | number
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    mid_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    ext_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
+    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -11920,6 +13449,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     faculty?: facultyCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
+    librarian?: librarianCreateNestedOneWithoutUsersInput
   }
 
   export type usersUncheckedCreateWithoutUser_bookmarksInput = {
@@ -11934,6 +13464,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
   }
 
   export type usersCreateOrConnectWithoutUser_bookmarksInput = {
@@ -12001,6 +13532,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUpdateOneWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutUser_bookmarksInput = {
@@ -12015,6 +13547,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
   }
 
   export type user_bookmarksCreateManyUsersInput = {

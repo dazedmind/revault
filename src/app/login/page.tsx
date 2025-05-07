@@ -55,6 +55,7 @@ const LogIn = () => {
     if (result.success) {
       // Store token in localStorage if login is successful
       localStorage.setItem('authToken', result.token); // 🔐 Store the token
+      localStorage.setItem('userType', result.role); // 🔐 Store the token
       window.location.href = '/home'; // Redirect to home page
     } else {
       // Alert the user if login failed

@@ -6,43 +6,68 @@ import React, { useEffect, useState } from "react";
 import LogInInputField from "../../component/LogInInputField";
 import { Button } from "@/components/ui/button";
 import { LogInCheckBox } from "../../component/LogInCheckBox";
-import { loginUser } from '../../actions/login'; // adjust path
+import { loginUser } from '../actions/login'; // adjust path
 import Link from "next/link";
 import { FaChevronLeft } from "react-icons/fa6";
 
 const AdminLogin = () => {
-  const [formData, setFormData] = useState({
-    studentNumber: "",
-    password: "",
-  });
-
-  // Handle Input Changes
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+   const [formData, setFormData] = useState({
+      idNumber: "",
+      password: "",
+    });
   
-    const form = new FormData();
-    form.append('studentNumber', formData.studentNumber);
-    form.append('password', formData.password);
+    // Handle Input Changes
+    const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
   
-    const result = await loginUser(form);
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+    
+      // Debugging line to log form data before sending it
+      console.log("Form Data: ", formData);
+    
+      // Send login request to the server
+      const response = await fetch("/admin/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Content-Type set to JSON
+        },
+        body: JSON.stringify({
+          idNumber: formData.idNumber, // Correctly using formData.idNumber
+          password: formData.password,  // Correctly using formData.password
+        }),
+      });
+    
+         // Check if response is OK (status 200-299)
+         if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
+        // Try to parse the response body
+        const result = await response.json().catch((error) => {
+          console.error("Failed to parse JSON:", error);
+          return null; // return null if parsing fails
+        });
   
-    if (result.success) {
-      // Store token in localStorage (or sessionStorage)
-      localStorage.setItem('authToken', result.token); // 🔐 Store the token
-      window.location.href = '/home';
-    } else {
-      alert("Login failed: " + result.message);
-    }
-  };
-
-  // ALWAYS CLEARS TOKEN ON LOGIN PAGE LOAD
-   useEffect(() => { 
-      localStorage.removeItem('authToken');
-    },);
+      // Parse the response from the API (assuming it's JSON)
+    
+      // Handle login result
+      if (result.success) {
+        // Store token and userType in localStorage if login is successful
+        localStorage.setItem('authToken', result.token);
+        localStorage.setItem('userType', 'librarian'); // Store the user type as admin
+        window.location.href = '/home'; // Redirect to home page
+      } else {
+        // Alert the user if login failed
+        alert("Login failed: " + result.message);
+      }
+    };
+  
+    // ALWAYS CLEARS TOKEN ON LOGIN PAGE LOAD
+     useEffect(() => { 
+        localStorage.removeItem('authToken');
+      },);
 
   return (
     <div className="font-Inter h-screen w-screen overflow-hidden relative">
@@ -78,8 +103,8 @@ const AdminLogin = () => {
               <LogInInputField
                 label="Employee ID"
                 type="text"
-                name="employee_id"
-                value={formData.employeeId}
+                name="idNumber"
+                value={formData.idNumber}
                 onChange={handleChange}
                 className="w-xs"
               />
@@ -114,7 +139,6 @@ const AdminLogin = () => {
               </div>
             </form>
           </div>
-
         </div>
       </main>
     </div>

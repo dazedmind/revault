@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import NavBar from "../component/NavBar";
-import SettingsList from "../component/SettingsSideBar";
+import AdminNavBar from '../components/AdminNavBar'
+import SettingsList from "../../component/SettingsSideBar";
 
 export default function SettingsLayout({
   children,
@@ -20,7 +20,7 @@ export default function SettingsLayout({
   return (
     <div className="h-full flex flex-col bg-midnight">
       <nav>
-        <NavBar />
+        <AdminNavBar />
       </nav>
 
       <div className="flex h-screen bg-midnight">

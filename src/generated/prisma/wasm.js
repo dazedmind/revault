@@ -144,6 +144,13 @@ exports.Prisma.StudentsScalarFieldEnum = {
   user_id: 'user_id'
 };
 
+exports.Prisma.LibrarianScalarFieldEnum = {
+  employee_id: 'employee_id',
+  hire_date: 'hire_date',
+  contact_num: 'contact_num',
+  user_id: 'user_id'
+};
+
 exports.Prisma.PapersScalarFieldEnum = {
   paper_id: 'paper_id',
   title: 'title',
@@ -203,6 +210,7 @@ exports.Prisma.ModelName = {
   users: 'users',
   faculty: 'faculty',
   students: 'students',
+  librarian: 'librarian',
   papers: 'papers',
   paper_metadata: 'paper_metadata',
   user_bookmarks: 'user_bookmarks',

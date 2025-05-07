@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import AdminNavBar from '../components/AdminNavBar'
 import { ProfileCard } from '../../component/ProfileCard'
@@ -11,6 +12,7 @@ import {
     PopoverTrigger,
   } from "@/components/ui/popover"
 import { Checkbox } from "@/components/ui/checkbox";
+import { useState, useEffect } from 'react';
 import { RadioGroup } from '@radix-ui/react-dropdown-menu'
 import { Label } from "@/components/ui/label";
 import {
@@ -33,11 +35,58 @@ import {
     PaginationPrevious,
   } from "@/components/ui/pagination"
 
-function AdminProfile() {
+  export default function AdminProfile() {
+    const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const fetchProfile = async () => {
+  
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+    
+        try {
+          const res = await fetch('/admin/api/profile', {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const data = await res.json(); // <-- move this here regardless of res.ok
+  
+          if (!res.ok) {
+            console.error("Failed to fetch profile:", data?.error || res.statusText);
+            return;
+          }
+    
+          setProfile(data);
+        } catch (err) {
+          console.error('Error fetching profile:', err);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      fetchProfile();
+    }, []);
+    
+    if (loading) return <div>Loading profile...</div>;
+  
   return (
     <div>
         <AdminNavBar/>
-        <ProfileCard/>
+
+      {/* <ProfileCard/> */}
+      {profile ? (
+          <ProfileCard
+            name={`${profile.users.first_name} ${profile.users.last_name}`}
+            number={profile.employee_id}
+            position={profile.position}
+          />
+        ) : (
+          <div>Failed to load profile.</div>
+        )}
+
 
         <main className='flex flex-col px-40 bg-midnight h-full'>
             <div className='flex gap-4 my-10'>
@@ -267,5 +316,3 @@ function AdminProfile() {
     </div>
   )
 }
-
-export default AdminProfile

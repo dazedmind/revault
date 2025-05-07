@@ -1,6 +1,7 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
+  // output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -20,11 +21,12 @@ model users {
   created_at     DateTime?
   faculty        faculty?
   students       students?
+  librarian      librarian?
   user_bookmarks user_bookmarks[]
 }
 
 model faculty {
-  employee_id Int     @id @default(autoincrement())
+  employee_id Int     @id @unique
   position    String?
   department  String?
   user_id     Int     @unique
@@ -38,6 +40,14 @@ model students {
   year_level  Int?
   user_id     Int     @unique
   users       users   @relation(fields: [user_id], references: [user_id])
+}
+
+model librarian {
+  employee_id Int      @id @unique
+  hire_date   DateTime
+  contact_num Int
+  user_id     Int      @unique
+  users       users    @relation(fields: [user_id], references: [user_id])
 }
 
 model papers {

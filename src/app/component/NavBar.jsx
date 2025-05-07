@@ -5,6 +5,7 @@ import icon from "../img/revault-icon.png";
 import { FaPlus } from "react-icons/fa6";
 import Image from "next/image";
 import Link from "next/link";
+import { logout } from "../utils/auth";
 
 import {
     LogOut,
@@ -67,10 +68,10 @@ export default function NavBar() {
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={logout}>
                                 <LogOut />
-                                <Link href="/login">Log Out</Link>
-                                </DropdownMenuItem>
+                                <span>Log Out</span>
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
 
