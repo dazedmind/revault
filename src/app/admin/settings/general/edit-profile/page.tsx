@@ -1,3 +1,4 @@
+'use client'
 import InputField from "@/app/component/InputField";
 import Image from "next/image";
 import avatar from "@/app/img/user.jpg";
@@ -20,7 +21,7 @@ const EditProfilePage = () => {
       if (!token) return;
   
       try {
-        const res = await fetch('../admin/api/profile', {
+        const res = await fetch('/admin/api/profile', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -44,7 +45,13 @@ const EditProfilePage = () => {
     fetchProfile();
   }, []);
 
+  if (loading) {
+    return <div>Loading profile...</div>; // or your own spinner
+  }
   
+  if (!profile) {
+    return <div>Profile not found or failed to load.</div>;
+  }
   return (
     <div className="flex flex-col pb-25 w-fit">
       <h1 className="text-2xl ml-1">Edit Profile</h1>
@@ -80,7 +87,7 @@ const EditProfilePage = () => {
         label="Employee ID"
         type="number"
         name="employeeID"
-        placeholder={`${profile.users.employee_id || ""}`}
+        placeholder={`${profile.employee_id || ""}`}
         inputClassName="w-sm ml-5 h-14 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         labelClassName="ml-5"
       />

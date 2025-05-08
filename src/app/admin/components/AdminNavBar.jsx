@@ -68,7 +68,7 @@ export default function AdminNavBar() {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
                                     <Settings />
-                                    <Link href="/admin/settings">Settings</Link>
+                                    <Link href="/admin/settings/general/edit-profile">Settings</Link>
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />

@@ -46,7 +46,7 @@ import {
         if (!token) return;
     
         try {
-          const res = await fetch('../admin/api/profile', {
+          const res = await fetch('/admin/api/profile', {
             method: 'GET',
             headers: {
               Authorization: `Bearer ${token}`,
@@ -86,7 +86,6 @@ import {
         ) : (
           <div>Failed to load profile.</div>
         )}
-
 
         <main className='flex flex-col px-40 bg-midnight h-full'>
             <div className='flex gap-4 my-10'>

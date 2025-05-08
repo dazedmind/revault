@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import AdminNavBar from '../components/AdminNavBar'
-import SettingsList from "../../component/SettingsSideBar";
+import SettingsList from "../components/SettingsSideBar";
 
 export default function SettingsLayout({
   children,
@@ -14,6 +14,10 @@ export default function SettingsLayout({
     {
       category: "General",
       labels: ["Edit Profile", "Change Password", "Appearance"],
+    },
+    {
+      category: "Security",
+      labels: ["Manage Users", "Activity Logs"],
     },
   ];
 
