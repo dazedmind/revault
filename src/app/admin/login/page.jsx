@@ -11,6 +11,9 @@ import Link from "next/link";
 import { FaChevronLeft } from "react-icons/fa6";
 
 const AdminLogin = () => {
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  
    const [formData, setFormData] = useState({
       idNumber: "",
       password: "",
@@ -41,8 +44,9 @@ const AdminLogin = () => {
     
          // Check if response is OK (status 200-299)
          if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+          setErrorMessage("Login failed. Please check your credentials.");
+          setShowErrorModal(true);
+          return;        }
     
         // Try to parse the response body
         const result = await response.json().catch((error) => {
@@ -88,13 +92,14 @@ const AdminLogin = () => {
             <Link href="/login" className="flex items-center gap-1 text-teal"><FaChevronLeft/> Back to regular sign in</Link>
             <h1 className="flex items-center"></h1>
         </span>
+        
           {/* Title */}
           <div className="flex flex-col justify-center items-center">
             <h1 className="text-4xl font-mono font-bold text-teal">ReVault</h1>
-          </div>
 
-          <div className="text-center bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right mx-6 my-2 p-2 rounded-md w-auto">
-            <h1 className="text-2xl font-mono font-bold text-midnight">Librarian Sign In</h1>
+            <div className="text-center bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right my-2 w-auto px-2 rounded-md">
+            <h1 className="text-2xl font-mono font-bold text-midnight">for Librarian</h1>
+          </div>
           </div>
 
           {/* Form */}
@@ -141,6 +146,21 @@ const AdminLogin = () => {
           </div>
         </div>
       </main>
+
+      {showErrorModal && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-midnight rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+            <h2 className="text-2xl font-bold text-teal mb-4">Login Failed</h2>
+            <p className="text-white-50 mb-6">{errorMessage}</p>
+            <button
+              className="cursor-pointer px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
+              onClick={() => setShowErrorModal(false)}
+            >
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

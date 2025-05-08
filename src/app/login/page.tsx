@@ -168,7 +168,7 @@ const LogIn = () => {
             <h2 className="text-2xl font-bold text-teal mb-4">Login Failed</h2>
             <p className="text-white-50 mb-6">{errorMessage}</p>
             <button
-              className="px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
+              className="cursor-pointer px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
               onClick={() => setShowErrorModal(false)}
             >
               Okay
