@@ -59,7 +59,7 @@ export async function POST(req: Request) {
     {
       user_id: userRecord.user_id,
       firstName: userRecord.first_name,
-      role,
+      role: userRecord.role,
       email: userRecord.email,
       userNumber: idNumber,
     },
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
       token,
       user: {
         name: userRecord.first_name,
-        role,
+        role: userRecord.role,
       }
     }),
     { headers }

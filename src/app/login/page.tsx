@@ -7,9 +7,11 @@ import LogInInputField from "../component/LogInInputField";
 import { Button } from "@/components/ui/button";
 import { LogInCheckBox } from "../component/LogInCheckBox";
 import { FaMicrosoft } from "react-icons/fa6";
-import { loginUser } from '../actions/login'; // adjust path
 
 const LogIn = () => {
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [formData, setFormData] = useState({
     idNumber: "",
     password: "",
@@ -40,7 +42,9 @@ const LogIn = () => {
   
        // Check if response is OK (status 200-299)
        if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        setErrorMessage("Login failed. Please check your credentials.");
+        setShowErrorModal(true);
+        return;
       }
   
       // Try to parse the response body
@@ -55,7 +59,7 @@ const LogIn = () => {
     if (result.success) {
       // Store token in localStorage if login is successful
       localStorage.setItem('authToken', result.token); // 🔐 Store the token
-      localStorage.setItem('userType', result.role); // 🔐 Store the token
+      localStorage.setItem('userType', result.user.role); // 🔐 Store the token
       window.location.href = '/home'; // Redirect to home page
     } else {
       // Alert the user if login failed
@@ -157,6 +161,21 @@ const LogIn = () => {
 
         </div>
       </main>
+
+      {showErrorModal && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-midnight rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+            <h2 className="text-2xl font-bold text-teal mb-4">Login Failed</h2>
+            <p className="text-white-50 mb-6">{errorMessage}</p>
+            <button
+              className="px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
+              onClick={() => setShowErrorModal(false)}
+            >
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

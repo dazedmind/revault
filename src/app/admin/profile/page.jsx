@@ -46,7 +46,7 @@ import {
         if (!token) return;
     
         try {
-          const res = await fetch('/admin/api/profile', {
+          const res = await fetch('../admin/api/profile', {
             method: 'GET',
             headers: {
               Authorization: `Bearer ${token}`,

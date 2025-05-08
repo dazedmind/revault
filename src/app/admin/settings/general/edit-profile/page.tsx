@@ -7,8 +7,44 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import WarningMessage from "@/app/component/WarningMessage";
 import { FaMicrosoft } from "react-icons/fa6";
+import { useEffect, useState } from "react";
 
 const EditProfilePage = () => {
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+  
+      try {
+        const res = await fetch('../admin/api/profile', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json(); // <-- move this here regardless of res.ok
+
+        if (!res.ok) {
+          console.error("Failed to fetch profile:", data?.error || res.statusText);
+          return;
+        }
+  
+        setProfile(data);
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchProfile();
+  }, []);
+
+  
   return (
     <div className="flex flex-col pb-25 w-fit">
       <h1 className="text-2xl ml-1">Edit Profile</h1>
@@ -19,11 +55,6 @@ const EditProfilePage = () => {
       {/* Warning message from WarningMessage.tsx */}
 
       <div className="relative w-full mt-5">
-        <WarningMessage
-          containerClassName="w-xl"
-          textClassName=" "
-          message="Contact your admin if you want to request to change your Student Information"
-        />
 
         {/* Image positioned absolutely */}
         <Image
@@ -39,28 +70,18 @@ const EditProfilePage = () => {
         label="Name"
         type="text"
         name="fullName"
-        placeholder="John Allen Troy Valena"
+        placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
         inputClassName="w-sm ml-5 h-14 "
         labelClassName="ml-5"
       />
 
       <InputField
         containerClassName="pt-4"
-        label="Student Number"
+        label="Employee ID"
         type="number"
-        name="studentNumber"
-        placeholder="202236115"
+        name="employeeID"
+        placeholder={`${profile.users.employee_id || ""}`}
         inputClassName="w-sm ml-5 h-14 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-        labelClassName="ml-5"
-      />
-
-      <InputField
-        containerClassName="pt-4"
-        label="Program"
-        type="text"
-        name="program"
-        placeholder="Information Technology"
-        inputClassName="w-sm ml-5 h-14 cursor-not-allowed"
         labelClassName="ml-5"
       />
 
@@ -70,7 +91,7 @@ const EditProfilePage = () => {
           label="Email"
           type="email"
           name="email"
-          placeholder="jatevalena2022@plm.edu.ph"
+          placeholder={`${profile.users.email || ""}`}
           inputClassName="w-sm ml-5 h-14 "
           labelClassName="ml-5"
           disabled={false}
