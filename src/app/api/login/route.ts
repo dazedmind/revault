@@ -90,7 +90,6 @@ export async function POST(req: Request) {
       success: true,
       message: "Login successful",
       token,
-      token,
       user: {
         name: userRecord.first_name,
         role: userRecord.role,
