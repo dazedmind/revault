@@ -78,6 +78,8 @@ const EditProfilePage = () => {
         type="text"
         name="fullName"
         placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
+        value={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
+        onChange={() => {}}
         inputClassName="w-sm ml-5 h-14 "
         labelClassName="ml-5"
       />
@@ -88,6 +90,8 @@ const EditProfilePage = () => {
         type="number"
         name="employeeID"
         placeholder={`${profile.employee_id || ""}`}
+        value={`${profile.employee_id || ""}`}
+        onChange={() => {}}
         inputClassName="w-sm ml-5 h-14 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         labelClassName="ml-5"
       />
@@ -99,6 +103,8 @@ const EditProfilePage = () => {
           type="email"
           name="email"
           placeholder={`${profile.users.email || ""}`}
+          value={`${profile.users.email || ""}`}
+          onChange={() => {}}
           inputClassName="w-sm ml-5 h-14 "
           labelClassName="ml-5"
           disabled={false}

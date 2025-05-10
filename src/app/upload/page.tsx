@@ -1,18 +1,17 @@
 "use client";
-import React, { useState } from 'react';
 import NavBar from '../component/NavBar';
 import Upload from '@/components/ui/upload-file';
 import pdfToText from 'react-pdftotext';
-import { useRef } from 'react';
-import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+import { useEffect, useRef, useState } from 'react';
+import AdminNavBar from '../admin/components/AdminNavBar';
 
-export default function UploadFile() {
+const UploadFile = () => {
   const [title, setTitle] = useState('');
   const [fullText, setFullText] = useState('');
   const [authors, setAuthors] = useState(''); // Add authors state
   const [key, setKey] = useState(Date.now()); // forces re-render of input
-  const ref = useRef();
-  
+  const ref = useRef<HTMLInputElement>(null);
+
   function fixSplitAccents(text) {
     return text
       // Common accents accidentally separated by spaces
@@ -32,38 +31,52 @@ export default function UploadFile() {
     try {
       const rawText = await pdfToText(file);
   
-      // Step 1: Sanitize the raw text
-      const sanitized = rawText
-      .replace(/([a-z])\s+([a-z])/g, '$1$2') // only join lowercase letters
-      .replace(/\s+/g, ' ')                         // collapse multiple spaces
-        .replace(/\n/g, ' ')                          // remove line breaks
+      // Step 1: Get first page only by cutting off at "Table of contents"
+      const firstPageEnd = rawText.toLowerCase().indexOf('table of contents');
+      const firstPageText = firstPageEnd !== -1 
+        ? rawText.substring(0, firstPageEnd)
+        : rawText;
+      
+      // Step 2: Sanitize the text
+      const sanitized = firstPageText
+        .replace(/\s+/g, ' ')
         .trim();
   
-        // Step 2: Title Extraction with fallback
-        let title = 'Title not found';
+      // Step 3: Title Extraction with fallback
+      let title = 'Title not found';
 
-        // Use sanitized version to find match
+      // Find the earliest occurrence of any of the cutoff phrases
+      const cutoffPhrases = ['a thesis', 'a research', 'a project'];
+      let earliestCutoff = -1;
+      let cutoffPhrase = '';
 
-        const rawStart = rawText.indexOf('Pamantasan ng Lungsod ng Maynila');
-        const rawEnd = rawText.toLowerCase().indexOf('a thesis', rawStart);
-        
-        if (rawStart !== -1 && rawEnd !== -1 && rawEnd > rawStart) {
-          title = rawText.substring(rawStart + 'Pamantasan ng Lungsod ng Maynila'.length, rawEnd)
-            .replace(/\s+/g, ' ')
-            .trim();
-        } else {
-          const fallbackEnd = rawText.toLowerCase().indexOf('a thesis');
-          if (fallbackEnd !== -1) {
-            title = rawText.substring(0, fallbackEnd)
-              .replace(/\s+/g, ' ')
-              .trim();
-          }
+      for (const phrase of cutoffPhrases) {
+        const position = firstPageText.toLowerCase().indexOf(phrase);
+        if (position !== -1 && (earliestCutoff === -1 || position < earliestCutoff)) {
+          earliestCutoff = position;
+          cutoffPhrase = phrase;
         }
-        
-        setTitle(title);
+      }
 
-  
-      // Step 3: Author Extraction and Fix Accents
+      if (earliestCutoff !== -1) {
+        // Get the text before the cutoff phrase
+        const textBeforeCutoff = firstPageText.substring(0, earliestCutoff)
+          .replace(/\s+/g, ' ')
+          .trim();
+        
+        // Split by newlines and get the first non-empty line
+        const lines = textBeforeCutoff.split(/[\n\r]+/);
+        const firstLine = lines.find(line => line.trim().length > 0);
+        
+        // If we found a line, use it as the title
+        if (firstLine) {
+          title = firstLine.trim();
+        }
+      }
+      
+      setTitle(title);
+
+      // Step 4: Author Extraction and Fix Accents
       const authorMatch = sanitized.match(/By\s+(.*?)\s+Thesis\s+Adviser/i);
       const extractedAuthors = authorMatch && authorMatch[1]
         ? authorMatch[1].trim()
@@ -71,7 +84,7 @@ export default function UploadFile() {
   
       const fixedAuthors = fixSplitAccents(extractedAuthors).replace(/\s{2,}/g, ' ').trim();
   
-      // Step 4: Set States
+      // Step 5: Set States
       setTitle(title);
       setAuthors(fixedAuthors);
       setFullText(sanitized);
@@ -94,7 +107,7 @@ export default function UploadFile() {
 
   return (
     <div className="bg-midnight">
-      <NavBar />
+      <AdminNavBar />
       <main className="p-8 mx-12">
 
         <div>
@@ -102,15 +115,16 @@ export default function UploadFile() {
         </div>
 
         <div>
-          <input
-            type="file"
-            className="p-10 px-40 border-2 border-dashed border-teal rounded-md"
-            accept="application/pdf"
-            onChange={extractText}
-            name="file-input"
-            key={ref}
-            readOnly
-          />
+            <input
+                type="file"
+                className="p-10 px-40 border-2 border-dashed border-teal rounded-md"
+                accept="application/pdf"
+                onChange={extractText}
+                name="file-input"
+              key={ref.current?.value}
+              readOnly
+            />
+
         <button
           onClick={handleClearFile}
           className="ml-4 px-4 py-2 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-md"
@@ -118,6 +132,7 @@ export default function UploadFile() {
           Remove File
         </button>
         </div>
+        <label htmlFor="file-input" className='text-sm text-white-50'>File type: .pdf and .tiff only (Maximum file size: 10MB)</label>
 
         <div className="flex flex-col gap-8 mt-8">
           <span className='flex flex-col gap-2'>
@@ -199,3 +214,5 @@ export default function UploadFile() {
     </div>
   );
 }
+
+export default UploadFile;
