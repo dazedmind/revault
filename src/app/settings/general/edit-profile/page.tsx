@@ -77,7 +77,7 @@ const EditProfilePage = () => {
           type="text"
           name="fullName"
           placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
-          inputClassName="w-sm ml-5 h-14"
+          inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
           labelClassName="ml-5"
         />
 
@@ -87,7 +87,7 @@ const EditProfilePage = () => {
           type="number"
           name="studentNumber"
           placeholder={profile.student_num || profile.employee_id}
-          inputClassName="w-sm ml-5 h-14 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          inputClassName="w-sm ml-5 h-14 dark:bg-secondary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           labelClassName="ml-5"
         />
 
@@ -97,7 +97,7 @@ const EditProfilePage = () => {
           type="text"
           name="program"
           placeholder={profile.program || profile.department}
-          inputClassName="w-sm ml-5 h-14 cursor-not-allowed"
+          inputClassName="w-sm ml-5 h-14 dark:bg-secondary cursor-not-allowed"
           labelClassName="ml-5"
         />
 
@@ -108,7 +108,7 @@ const EditProfilePage = () => {
             type="email"
             name="email"
             placeholder={profile.users.email || ""}
-            inputClassName="w-sm ml-5 h-14"
+            inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
             labelClassName="ml-5"
             disabled={false}
           />
@@ -126,7 +126,7 @@ const EditProfilePage = () => {
       {/* divider */}
       <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2"></div>
 
-     <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between mt-5">
+     <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between mt-5 dark:bg-secondary">
         <div className="flex flex-row justify-center items-center gap-2">
           <FaMicrosoft />
           <p className="text-white-100 text-base font-normal">Microsoft</p>

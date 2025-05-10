@@ -14,6 +14,7 @@ export const logout = async () => {
       // Clear all auth-related items from localStorage
       localStorage.removeItem('authToken');
       localStorage.removeItem('userType');
+      localStorage.removeItem('theme');
       
       // Redirect to login page
       window.location.href = '/login';

@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import NavBar from "../component/NavBar";
+import AdminNavBar from "../admin/components/AdminNavBar";
 import Image from "next/image";
-import document from "../img/document.png";
 import avatar from "../img/user.png";
 import {
   FaBookmark,
@@ -18,13 +19,77 @@ import ViewMetadata from "../component/ViewMetadata";
 import ProtectedRoute from "../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 
+export const decode = (token) => {
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join(""),
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.log("Error decoding token:", e.message);
+    return null;
+  }
+};
+
 function ViewFile() {
   const { theme, setTheme } = useTheme("light");
   const [showMetadata, setShowMetadata] = useState(false);
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userType, setUserType] = useState(null);
 
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('authToken');
+      const storedUserType = localStorage.getItem('userType');
+      
+      if (!token) {
+        window.location.href = "/login";      
+      }
+
+      if (token) {
+        try {
+          const decoded = decode(token);
+          const currentTime = Date.now() / 1000;
+
+          if (decoded.exp > currentTime) {
+            setIsAuthenticated(true);  // ✅ Token is valid
+            setUserType(storedUserType); // Set the user type from localStorage
+          } else {
+            alert("Token expired. Please log in again.");
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("userType"); // Also remove userType
+            setIsAuthenticated(false);
+            router.push("/login");
+          }
+        } catch (error) {
+          alert("Invalid token. Please log in again.");
+          console.error("Error decoding token:", error);
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("userType"); // Also remove userType
+          setIsAuthenticated(false);
+          router.push("/login");
+        }
+      } else {
+        alert("No token found. Please log in.");
+        setIsAuthenticated(false);
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+  }, []);
+  
   return (
     <div className="dark:bg-secondary h-auto">
-      <NavBar />
+      {userType === "librarian" ? <AdminNavBar /> : <NavBar />}
+
       <ProtectedRoute>
         <main className="flex gap-6 h-auto justify-center">
           <div className="flex gap-6 relative">
@@ -43,7 +108,7 @@ function ViewFile() {
                   </button>
                 </span>
 
-                <div className="border-2 border-white-5 p-8 rounded-md ">
+                <div className="border-2 border-white-5 p-8 rounded-md">
                   <p className="font-bold text-2xl">Abstract.md</p>
                   <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.

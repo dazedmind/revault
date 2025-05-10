@@ -146,7 +146,7 @@ exports.Prisma.StudentsScalarFieldEnum = {
 
 exports.Prisma.LibrarianScalarFieldEnum = {
   employee_id: 'employee_id',
-  hire_date: 'hire_date',
+  position: 'position',
   contact_num: 'contact_num',
   user_id: 'user_id'
 };
@@ -156,7 +156,7 @@ exports.Prisma.PapersScalarFieldEnum = {
   title: 'title',
   author: 'author',
   year: 'year',
-  date: 'date',
+  department: 'department',
   keywords: 'keywords',
   tags: 'tags',
   abstract: 'abstract',
@@ -190,9 +190,44 @@ exports.Prisma.OtpScalarFieldEnum = {
   expiresAt: 'expiresAt'
 };
 
+exports.Prisma.Paper_bm25_indexScalarFieldEnum = {
+  index_id: 'index_id',
+  paper_id: 'paper_id',
+  token_frequencies: 'token_frequencies',
+  document_length: 'document_length'
+};
+
+exports.Prisma.Term_scoreScalarFieldEnum = {
+  id: 'id',
+  term: 'term',
+  tf: 'tf',
+  tfidf: 'tfidf',
+  bm25: 'bm25',
+  paper_id: 'paper_id'
+};
+
+exports.Prisma.Activity_logsScalarFieldEnum = {
+  employee_id: 'employee_id',
+  user_id: 'user_id',
+  name: 'name',
+  activity: 'activity',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Global_statsScalarFieldEnum = {
+  id: 'id',
+  total_docs: 'total_docs',
+  avg_doc_length: 'avg_doc_length',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -205,6 +240,12 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
   users: 'users',
@@ -214,7 +255,11 @@ exports.Prisma.ModelName = {
   papers: 'papers',
   paper_metadata: 'paper_metadata',
   user_bookmarks: 'user_bookmarks',
-  Otp: 'Otp'
+  Otp: 'Otp',
+  paper_bm25_index: 'paper_bm25_index',
+  term_score: 'term_score',
+  activity_logs: 'activity_logs',
+  global_stats: 'global_stats'
 };
 
 /**

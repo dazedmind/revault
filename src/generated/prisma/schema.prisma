@@ -43,26 +43,29 @@ model students {
 }
 
 model librarian {
-  employee_id Int      @id @unique
-  hire_date   DateTime
-  contact_num Int
-  user_id     Int      @unique
-  users       users    @relation(fields: [user_id], references: [user_id])
+  employee_id   Int             @id @unique
+  position      String?
+  contact_num   Int
+  user_id       Int             @unique
+  users         users           @relation(fields: [user_id], references: [user_id])
+  activity_logs activity_logs[]
 }
 
 model papers {
-  paper_id       Int              @id @default(autoincrement())
-  title          String?
-  author         String?
-  year           Int?
-  date           DateTime?
-  keywords       String?
-  tags           String?
-  abstract       String?
-  created_at     DateTime?
-  updated_at     DateTime?
-  paper_metadata paper_metadata[]
-  user_bookmarks user_bookmarks[]
+  paper_id         Int                @id @default(autoincrement())
+  title            String?
+  author           String?
+  year             Int?
+  department       String?
+  keywords         String[]
+  tags             String[]
+  abstract         String?
+  created_at       DateTime?
+  updated_at       DateTime?
+  paper_metadata   paper_metadata[]
+  user_bookmarks   user_bookmarks[]
+  paper_bm25_index paper_bm25_index[]
+  term_score       term_score[]
 }
 
 model paper_metadata {
@@ -94,4 +97,41 @@ model Otp {
   code      String
   createdAt DateTime @default(now())
   expiresAt DateTime
+}
+
+model paper_bm25_index {
+  index_id          Int  @id @default(autoincrement())
+  paper_id          Int
+  token_frequencies Json
+  document_length   Int
+
+  papers papers @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
+}
+
+model term_score {
+  id       Int    @id @default(autoincrement())
+  term     String
+  tf       Float
+  tfidf    Float
+  bm25     Float
+  paper_id Int
+
+  papers papers @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
+}
+
+model activity_logs {
+  employee_id Int      @id
+  user_id     Int
+  name        String
+  activity    String
+  created_at  DateTime
+
+  librarian librarian @relation(fields: [user_id], references: [employee_id], onDelete: Cascade)
+}
+
+model global_stats {
+  id             Int      @id @default(autoincrement())
+  total_docs     Int
+  avg_doc_length Float
+  updated_at     DateTime @updatedAt
 }

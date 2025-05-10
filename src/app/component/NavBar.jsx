@@ -4,15 +4,12 @@ import React from "react";
 import { SearchInput } from "./SearchInput";
 import avatar from "../img/user.png";
 import icon from "../img/revault-icon.png";
-import { FaPlus } from "react-icons/fa6";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-
 import { LogOut, Settings, User } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +25,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { logout } from "../utils/auth";
 
 export default function NavBar() {
   const [mounted, setMounted] = useState(false);
@@ -54,7 +52,7 @@ export default function NavBar() {
             <DropdownMenuTrigger asChild>
               <Image
                 src={avatar}
-                className="w-10 h-10 rounded-full cursor-pointer border-2 border-midnight"
+                className="w-10 h-10 rounded-full cursor-pointer border-1 border-midnight"
                 alt="User profile picture"
               />
             </DropdownMenuTrigger>
@@ -70,9 +68,9 @@ export default function NavBar() {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={logout}>
                 <LogOut />
-                <Link href="/login">Log Out</Link>
+                <span>Log Out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

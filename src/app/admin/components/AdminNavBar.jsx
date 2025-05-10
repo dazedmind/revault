@@ -6,6 +6,8 @@ import { FaPlus } from "react-icons/fa6";
 import Image from "next/image";
 import Link from "next/link";
 import { logout } from "../../utils/auth";
+import { useEffect, useState } from "react";
+
 
 import {
     LogOut,
@@ -32,54 +34,60 @@ import {
   } from "@/components/ui/dropdown-menu"
 
 export default function AdminNavBar() {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => setMounted(true), []);
+  
+    if (!mounted) return null;
+
     return (
         <>
-            <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono  w-full bg-dark p-8 px-16">
-                <div className="flex align-middle items-center gap-10">     
-                    <Link href="/home" className="flex gap-4 font-bold text-3xl text-teal">
-                    <Image 
-                    src={icon} 
-                    className="w-14"
-                    alt="revault-icon"/>
-                    ReVault
-                    </Link>
-                <SearchInput placeholder="Search paper"/>
-                </div>
-                <ul className="flex flex-row items-center gap-8 text-lg">
+       <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-8 px-16 dark:bg-primary">
+        <div className="flex align-middle items-center gap-10">
+          <Link
+            href="/home"
+            className="flex gap-4 font-bold text-3xl text-teal"
+          >
+            <Image src={icon} className="w-14" alt="revault-icon" />
+            ReVault
+          </Link>
+          <SearchInput placeholder="Search paper" />
+        </div>
+        <ul className="flex flex-row items-center gap-8 text-lg">
 
-                <Link href="/upload">
-                    <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-                        <FaPlus /> Upload
-                    </button>
-                </Link>      
-                
-                <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Image
-                                src={avatar}
-                                className="w-10 h-10 rounded-full cursor-pointer"
-                                alt="User profile picture"/>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-dark" align="end">
-                            <DropdownMenuGroup>
-                                <DropdownMenuItem>
-                                    <User />
-                                    <Link href="/admin/profile">Profile</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <Settings />
-                                    <Link href="/admin/settings/general/edit-profile">Settings</Link>
-                                </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={logout}>
-                                <LogOut />
-                                <span>Log Out</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </ul>
-            </header>
+        <Link href="/upload">
+            <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+                <FaPlus /> Upload
+            </button>
+        </Link>    
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Image
+                src={avatar}
+                className="w-10 h-10 rounded-full cursor-pointer border-1 border-midnight"
+                alt="User profile picture"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="" align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <User />
+                  <Link href="/admin/profile">Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings />
+                  <Link href="/admin/settings/general/edit-profile">Settings</Link>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout}>
+                <LogOut />
+                <span>Log Out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </ul>
+      </header>
         </>
     )
 }

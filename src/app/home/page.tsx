@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 import DocsCard from "../component/DocsCard";
 import NavBar from "../component/NavBar";
 import document from "../img/document.png";
-import Image from "next/image";
-import { fetchPosts } from "@/lib/api";
+import AdminNavBar from "../admin/components/AdminNavBar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Pagination,
@@ -35,9 +34,54 @@ export const decode = (token) => {
 };
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userType, setUserType] = useState(null);
   const [papers, setPapers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem('authToken');
+      const storedUserType = localStorage.getItem('userType');
+      
+      if (!token) {
+        window.location.href = "/login";      
+      }
+
+      if (token) {
+        try {
+          const decoded = decode(token);
+          const currentTime = Date.now() / 1000;
+
+          if (decoded.exp > currentTime) {
+            setIsAuthenticated(true);  // ✅ Token is valid
+            setUserType(storedUserType); // Set the user type from localStorage
+          } else {
+            alert("Token expired. Please log in again.");
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("userType"); // Also remove userType
+            setIsAuthenticated(false);
+            router.push("/login");
+          }
+        } catch (error) {
+          alert("Invalid token. Please log in again.");
+          console.error("Error decoding token:", error);
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("userType"); // Also remove userType
+          setIsAuthenticated(false);
+          router.push("/login");
+        }
+      } else {
+        alert("No token found. Please log in.");
+        setIsAuthenticated(false);
+        router.push("/login");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   useEffect(() => {
     async function init() {
@@ -63,8 +107,12 @@ export default function Home() {
             ...paper,
             title: paper.title.replace(/"/g, ""),
             author: paper.author.replace(/"/g, ""),
-            keywords: paper.keywords.replace(/"/g, ""),
-            tags: paper.tags.replace(/"/g, ""),
+            keywords: Array.isArray(paper.keywords) 
+            ? paper.keywords.flatMap(k => k.split(',').map(item => item.trim()))
+            : [],
+            tags: Array.isArray(paper.tags) 
+              ? paper.tags.flatMap(t => t.split(',').map(item => item.trim()))
+              : [],
             abstract: paper.abstract.replace(/"/g, ""),
           })),
         );
@@ -88,7 +136,8 @@ export default function Home() {
 
   return (
     <div className="font-[family-name:'Inter'] dark:bg-secondary">
-      <NavBar /> {/* SET CONDITIONING IF admin = use <AdminNavBar /> */}
+      {userType === "librarian" ? <AdminNavBar /> : <NavBar />}
+      
       <main className="flex flex-row">
         <aside className="flex h-auto w-96 p-8">
           <div className="flex flex-col gap-4 m-2">
@@ -168,11 +217,7 @@ export default function Home() {
                 img={document}
                 title={paper.title || "Untitled"}
                 description={paper.abstract || "No abstract available"}
-                tags={
-                  paper.keywords
-                    ? paper.keywords.split(",").map((k) => k.trim())
-                    : []
-                }
+                tags={paper.keywords || []}
               />
             ))
           ) : (

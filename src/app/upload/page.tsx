@@ -105,8 +105,14 @@ const UploadFile = () => {
     setKey(Date.now()); // Update key to force re-render
   };
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
   return (
-    <div className="bg-midnight">
+    <div className="bg-midnight dark:bg-secondary">
       <AdminNavBar />
       <main className="p-8 mx-12">
 
@@ -117,7 +123,7 @@ const UploadFile = () => {
         <div>
             <input
                 type="file"
-                className="p-10 px-40 border-2 border-dashed border-teal rounded-md"
+                className="p-10 px-40 border-2 border-dashed border-teal rounded-md dark:bg-secondary"
                 accept="application/pdf"
                 onChange={extractText}
                 name="file-input"
@@ -138,7 +144,7 @@ const UploadFile = () => {
           <span className='flex flex-col gap-2'>
             <h3 className="text-md font-medium text-teal">Research Title:</h3>
               <textarea
-                className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0"
+                className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0 dark:bg-secondary"
                 value={title}
                 readOnly
               />
@@ -148,7 +154,7 @@ const UploadFile = () => {
             <h3 className="text-md font-medium text-teal">Authors:</h3>
             <input
               type="text"
-              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0"
+              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0 dark:bg-secondary"
               value={authors}
               readOnly
             />
@@ -158,7 +164,7 @@ const UploadFile = () => {
             <h3 className="text-md font-medium text-teal">Keywords:</h3>
             <input
               type="text"
-              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0"
+              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0 dark:bg-secondary"
             />
           </span>
 
@@ -166,11 +172,11 @@ const UploadFile = () => {
               <label htmlFor="tags">Tags</label>
 
               <div className='tags-card flex gap-4 items-center align-middle'>
-                <div className='flex gap-2 items-center align-middle bg-dusk w-auto p-2 text-sm rounded-md'>
+                <div className='flex gap-2 items-center align-middle bg-dusk w-auto p-2 text-sm rounded-md dark:bg-accent'>
                   <p>Information Technology</p>
                   <button className='bg-white-5 p-1 rounded-full cursor-pointer text-xs'>x</button>
                 </div>
-                <div className='flex gap-2 items-center align-middle text-center bg-dusk w-auto p-2 text-sm rounded-md'>
+                <div className='flex gap-2 items-center align-middle text-center bg-dusk w-auto p-2 text-sm rounded-md dark:bg-accent'>
                   <p>SIA</p>
                   <button className='bg-white-5 p-1 rounded-full cursor-pointer text-xs'>x</button>
                 </div>
@@ -183,7 +189,7 @@ const UploadFile = () => {
           <span className='flex flex-col gap-2'>
             <h3 className="text-md font-medium text-teal">Abstract:</h3>
             <textarea
-              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl h-64 outline-0"
+              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl h-64 outline-0 dark:bg-secondary"
               value={fullText}
               readOnly
             />
@@ -194,7 +200,7 @@ const UploadFile = () => {
 
       </main>
 
-      <div className="flex justify-between items-center bg-darker p-12 px-24 border-t-2 border-dashed border-white-5">
+      <div className="flex justify-between items-center bg-darker p-12 px-24 border-t-2 border-dashed border-white-5 dark:bg-primary">
         <span className="flex flex-col gap-2">
           <div className="flex flex-row mt-4">
             <input type="checkbox" />

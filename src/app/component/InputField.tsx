@@ -1,7 +1,21 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const InputField = ({
+interface InputFieldProps {
+  label: string;
+  type: string;
+  name: string;
+  value?: string;
+  placeholder?: string;
+  required?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  inputClassName?: string;
+  labelClassName?: string;
+  containerClassName?: string;
+  disabled?: boolean;
+}
+
+const InputField: React.FC<InputFieldProps> = ({
   label,
   type,
   name,

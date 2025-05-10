@@ -72,6 +72,7 @@ import {
     
     if (loading) return <div>Loading profile...</div>;
   
+    
   return (
     <div>
         <AdminNavBar/>

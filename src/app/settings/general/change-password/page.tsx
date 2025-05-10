@@ -16,7 +16,7 @@ const ChangePassword = () => {
         type="password"
         name="oldPassword"
         placeholder="Enter Old Password"
-        inputClassName="w-sm ml-5 h-14 mt-1"
+        inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
         labelClassName="ml-5"
         disabled={false}
 
@@ -28,7 +28,7 @@ const ChangePassword = () => {
         type="password"
         name="newPassword"
         placeholder="Enter New Password"
-        inputClassName="w-sm ml-5 h-14 mt-1"
+        inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
         labelClassName="ml-5"
         disabled={false}
 
@@ -40,7 +40,7 @@ const ChangePassword = () => {
         type="password"
         name="confirmNewPassword"
         placeholder="Confirm New Password"
-        inputClassName="w-sm ml-5 h-14 mt-1"
+        inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
         labelClassName="ml-5"
         disabled={false}
 

@@ -80,7 +80,7 @@ const EditProfilePage = () => {
         placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
         value={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
         onChange={() => {}}
-        inputClassName="w-sm ml-5 h-14 "
+        inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
         labelClassName="ml-5"
       />
 
@@ -92,7 +92,7 @@ const EditProfilePage = () => {
         placeholder={`${profile.employee_id || ""}`}
         value={`${profile.employee_id || ""}`}
         onChange={() => {}}
-        inputClassName="w-sm ml-5 h-14 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        inputClassName="w-sm ml-5 h-14 dark:bg-secondary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
         labelClassName="ml-5"
       />
 
@@ -105,7 +105,7 @@ const EditProfilePage = () => {
           placeholder={`${profile.users.email || ""}`}
           value={`${profile.users.email || ""}`}
           onChange={() => {}}
-          inputClassName="w-sm ml-5 h-14 "
+          inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
           labelClassName="ml-5"
           disabled={false}
         />
@@ -119,9 +119,9 @@ const EditProfilePage = () => {
       <h1 className="text-2xl ml-1 mt-10">Manage Linked Accounts</h1>
 
       {/* divider */}
-      <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2"></div>
+      <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2 dark:bg-white-75"></div>
 
-     <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between mt-5">
+     <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between mt-5 dark:bg-secondary">
         <div className="flex flex-row justify-center items-center gap-2">
           <FaMicrosoft />
           <p className="text-white-100 text-base font-normal">Microsoft</p>
