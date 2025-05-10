@@ -64,7 +64,7 @@ const DocsCard = (props) => {
   }
 
   return (
-    <div className="w-9xl flex align-middle items-center gap-2 p-6 px-8 rounded-xl border border-dusk bg-dark">
+    <div className="w-9xl flex align-middle items-center gap-2 p-6 px-8 rounded-xl border border-dusk dark:bg-primary">
       <div className="w-52">
         <a href={props.link}>
           <Image src={props.img} alt="Project" className="w-full h-full" />
@@ -80,7 +80,7 @@ const DocsCard = (props) => {
               <p
                 key={index}
                 className={`flex text-white text-sm rounded-sm w-auto p-1 px-2 ${
-                  tagColors[tag] || "bg-dusk" // Default to gray if no color found
+                  tagColors[tag] || "dark:bg-dusk-foreground" // Default to gray if no color found
                 }`}
               >
                 {tag}
@@ -101,7 +101,7 @@ const DocsCard = (props) => {
               </button>
             </Link>
 
-            <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-dusk rounded-lg cursor-pointer hover:bg-dusk-foreground">
+            <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer  dark:hover:text-midnight dark:hover:bg-white-50">
               <Bookmark /> Bookmark
             </button>
           </span>
