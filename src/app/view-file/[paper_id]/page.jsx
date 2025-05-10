@@ -19,6 +19,8 @@ import ViewMetadata from "../../component/ViewMetadata";
 import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 import { useParams } from 'next/navigation';
+import { Bookmark, Info, Moon, SunMedium } from "lucide-react";
+import LoadingScreen from "@/app/component/LoadingScreen";
 
 export const decode = (token) => {
   try {
@@ -151,9 +153,7 @@ function ViewFile() {
   
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        Loading recent papers…
-      </div>
+      <LoadingScreen />
     );
   }
   return (
@@ -227,7 +227,7 @@ function ViewFile() {
               <h1 className="text-2xl font-bold">File Menu</h1>
 
               <FileMenuButton
-                icon={<FaCircleInfo className="text-xl text-teal" />}
+                icon={<Info className="text-xl text-teal" />}
                 label="View Metadata"
                 onClick={() => setShowMetadata(!showMetadata)}
               />
@@ -238,9 +238,9 @@ function ViewFile() {
               <FileMenuButton
                 icon={
                   theme === "dark" ? (
-                    <FaSun className="text-xl text-teal" />
+                    <SunMedium className="text-xl text-teal" />
                   ) : (
-                    <FaMoon className="text-xl text-teal" />
+                    <Moon className="text-xl text-teal" />
                   )
                 }
                 label={
@@ -249,7 +249,7 @@ function ViewFile() {
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               />
               <FileMenuButton
-                icon={<FaBookmark className="text-xl text-teal" />}
+                icon={<Bookmark className="text-xl text-teal" />}
                 label="Add to Bookmark"
               />
             </aside>

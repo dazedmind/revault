@@ -15,6 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import LoadingScreen from "../component/LoadingScreen";
 
 export const decode = (token) => {
   try {
@@ -128,9 +129,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        Loading recent papers…
-      </div>
+      <LoadingScreen/>
     );
   }
 

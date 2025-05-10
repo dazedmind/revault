@@ -7,6 +7,7 @@ import document from "../img/document.png"
 import DocsCardUser from '../component/DocsCardUser';
 import { FaPlus } from "react-icons/fa6";
 import ProtectedRoute from '../component/ProtectedRoute';
+import LoadingScreen from '../component/LoadingScreen';
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -43,7 +44,7 @@ export default function Profile() {
     fetchProfile();
   }, []);
   
-  if (loading) return <div>Loading profile...</div>;
+  if (loading) return <LoadingScreen />;
 
   return (
     <div>

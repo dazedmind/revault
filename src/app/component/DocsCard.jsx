@@ -5,6 +5,8 @@ import { FaBook, FaBookmark, FaBookOpen, FaFlag, FaLink } from "react-icons/fa6"
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Bookmark, BookOpen, BookOpenText } from "lucide-react";
+import DocsLoader from "./DocsLoader";
 
 const tagColors = {
     IT: "bg-dusk",
@@ -53,9 +55,7 @@ const DocsCard = (props) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        Loading recent papers…
-      </div>
+      <DocsLoader message="Loading Recent Papers"/>
     );
   }
 
@@ -92,14 +92,14 @@ const DocsCard = (props) => {
                 <span className="flex gap-4">
                     <Link href={`/view-file/${props.paper_id}`}>
                     <button className="transition-all duration-300 flex flex-row items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:brightness-120 rounded-lg cursor-pointer">
-                      <FaBookOpen />
+                      <BookOpenText />
                       Read
                     </button>
 
                     </Link>
 
                     <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-dusk rounded-lg cursor-pointer hover:bg-dusk-foreground">
-                    <FaBookmark /> Bookmark
+                    <Bookmark /> Bookmark
                     </button>
                 </span>
 

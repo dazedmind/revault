@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import WarningMessage from "@/app/component/WarningMessage";
 import { FaMicrosoft } from "react-icons/fa6";
 import { useEffect, useState } from "react";
+import ContentLoader from "@/app/component/ContentLoader";
 
 const EditProfilePage = () => {
   const [profile, setProfile] = useState(null);
@@ -46,7 +47,7 @@ const EditProfilePage = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading profile...</div>; // or your own spinner
+    return <ContentLoader />; // or your own spinner
   }
   
   if (!profile) {

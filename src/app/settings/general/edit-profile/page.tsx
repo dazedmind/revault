@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import WarningMessage from "@/app/component/WarningMessage";
 import { FaMicrosoft } from "react-icons/fa6";
 import { useEffect, useState } from "react";
+import LoadingScreen from "@/app/component/LoadingScreen";
 
 const EditProfilePage = () => {
    const [profile, setProfile] = useState(null);
@@ -45,6 +46,8 @@ const EditProfilePage = () => {
       fetchProfile();
     }, []);
 
+    if (loading) return <LoadingScreen />;
+    
   return (
     <div className="flex flex-col pb-25 w-fit">
       <h1 className="text-2xl ml-1">Edit Profile</h1>
