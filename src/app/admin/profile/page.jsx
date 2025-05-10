@@ -234,7 +234,7 @@ export default function AdminProfile() {
                   {" "}
                   <FaTrash />{" "}
                 </button>
-                <button className="bg-dusk rounded-md p-4 text-2xl cursor-pointer">
+                <button className="bg-dusk text-white rounded-md p-4 text-2xl cursor-pointer">
                   {" "}
                   <FaPen />{" "}
                 </button>
