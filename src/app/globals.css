@@ -30,7 +30,7 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(1 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: #f0f0f0;
+  --secondary: #f2f2f2;
   --text-color: #121212;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -167,6 +167,15 @@ body {
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    /* transition: .2s ease all; */
+  }
+
+  /* Add a more specific selector for theme transitions */
+  body, 
+  .dark,
+  [class*="dark:"] {
+    transition: background-color 0.3s ease-in-out, 
+                color 0.3s ease-in-out, 
+                border-color 0.3s ease-in-out,
+                box-shadow 0.3s ease-in-out;
   }
 }

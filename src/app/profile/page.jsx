@@ -47,7 +47,7 @@ export default function Profile() {
   if (loading) return <LoadingScreen />;
 
   return (
-    <div>
+    <div className='bg-midnight dark:bg-secondary'>
       <ProtectedRoute> 
       <NavBar/>
 
@@ -66,7 +66,7 @@ export default function Profile() {
         )}
 
       <div className='flex bg-midnight'>
-        <aside className='flex flex-col gap-8 h-auto w-96 p-14'>
+        <aside className='hidden md:flex flex-col gap-8 h-auto w-96 p-14'>
               <div className="flex flex-col gap-2">
                 <h2 className="font-bold">My Profile</h2>
                 <div className="bg-dusk h-0.5 w-full"></div>
@@ -93,8 +93,8 @@ export default function Profile() {
               </div>
         </aside>
 
-        <main className='flex flex-col gap-5 mr-24 align-middle'>
-          <div className='flex flex-col w-full gap-5 mx-2 my-6 align-middle p-8'>
+        <main className='flex flex-col gap-5 md:mr-24 align-middle'>
+          <div className='flex flex-col w-full gap-5 m-4 md:mx-2 md:my-6 align-middle p-2 md:p-8'>
             <div className='flex flex-row justify-between align-middle items-center'>
               <h1 className="text-3xl font-bold">My Bookmarks</h1>
             </div>

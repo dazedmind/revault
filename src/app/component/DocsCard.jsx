@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Bookmark, BookOpen, BookOpenText } from "lucide-react";
 import DocsLoader from "./DocsLoader";
+import { Eye } from "lucide-react"
 
 const tagColors = {
     IT: "bg-dusk",
@@ -53,6 +54,15 @@ const DocsCard = (props) => {
     init();
   }, [router]);
 
+  const truncateText = (text, maxWords = 50) => {
+    if (!text) return "No description available";
+    const words = text.split(' ');
+    if (words.length > maxWords) {
+      return words.slice(0, maxWords).join(' ') + '...';
+    }
+    return text;
+  };
+
   if (loading) {
     return (
       <DocsLoader message="Loading Recent Papers"/>
@@ -60,15 +70,15 @@ const DocsCard = (props) => {
   }
 
     return (  
-      <div className='w-9xl flex align-middle items-center gap-2 p-6 px-8 rounded-xl border border-dusk bg-dark'> 
+      <div className='w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:p-6 md:px-8 rounded-xl border border-dusk dark:bg-primary dark:border-dusk-foreground'> 
           <div className='w-52'>
             <a href={props.link}>
-              <Image src={props.img} alt="Project" className="w-full h-full"/>
+              <Image src={props.img} alt="Project" className="hidden md:flex w-full h-full"/>
             </a>
           </div>
   
           <div className='w-full flex flex-col p-4 gap-1 items-start relative'>
-              <h3 className='text-xl font-bold'>{props.title}</h3>
+              <h3 className='text-xl font-bold dark:text-white'>{props.title}</h3>
               <div className="flex gap-2 flex-wrap overflow-hidden mt-2">
                 {/* Mapping over tags */}
                 {props.tags && props.tags.length > 0 ? (
@@ -76,30 +86,30 @@ const DocsCard = (props) => {
                     <p
                       key={index}
                       className={`flex text-white text-sm rounded-sm w-auto p-1 px-2 ${
-                        tagColors[tag] || "bg-dusk" // Default to gray if no color found
+                        tagColors[tag] || "bg-dusk dark:bg-dusk-foreground" // Updated dark mode background
                       }`}
                     >
                       {tag}
                     </p>
                   ))
                 ) : (
-                  <p className="text-white text-md italic">No tags available</p>
+                  <p className="text-white-25 dark:text-white-50 text-md italic">No tags available</p>
                 )}
               </div>
-              <p className=' text-md'>{props.description}</p>
+              <p className='text-md line-clamp-4 dark:text-white-75'>{truncateText(props.description)}</p>
               <div className="mt-6 flex flex-row items-center justify-between gap-4">
                 {/* Left Side Buttons */}
                 <span className="flex gap-4">
                     <Link href={`/view-file/${props.paper_id}`}>
-                    <button className="transition-all duration-300 flex flex-row items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:brightness-120 rounded-lg cursor-pointer">
-                      <BookOpenText />
+                    <button className="transition-all duration-300 flex flex-row items-center gap-2 px-4 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:brightness-120 rounded-lg cursor-pointer">
+                      <Eye />
                       Read
                     </button>
 
                     </Link>
 
-                    <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-dusk rounded-lg cursor-pointer hover:bg-dusk-foreground">
-                    <Bookmark /> Bookmark
+                    <button className="transition-all duration-300 flex flex-row items-center gap-2 px-4 py-3 bg-dusk dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer hover:bg-dusk-foreground dark:hover:bg-dusk">
+                    <Bookmark /> <span className="hidden md:flex">Bookmark</span>
                     </button>
                 </span>
 
