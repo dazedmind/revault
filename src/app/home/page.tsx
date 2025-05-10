@@ -15,7 +15,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import Link from "next/link";
 
 export const decode = (token) => {
   try {
@@ -146,7 +145,7 @@ export default function Home() {
 
             <div className="flex flex-col gap-2">
               <h2 className="font-bold text-teal">Program</h2>
-              <div className="bg-dusk h-0.5 w-full"></div>
+              <div className="bg-dusk h-0.5 w-full dark:bg-white-25"></div>
 
               <ul className="ml-2 flex flex-col gap-2">
                 <li>
@@ -162,7 +161,7 @@ export default function Home() {
 
             <div className="flex flex-col gap-2">
               <h2 className="font-bold text-teal">Publication Date</h2>
-              <div className="bg-dusk h-0.5 w-full"></div>
+              <div className="bg-dusk h-0.5 w-full dark:bg-white-25"></div>
               <ul className="ml-2 flex flex-col gap-2">
                 <li>
                   <Checkbox id="year-2025" />
@@ -178,7 +177,7 @@ export default function Home() {
 
             <div className="flex flex-col gap-2">
               <h1 className="font-bold text-teal">Course</h1>
-              <div className="bg-dusk h-0.5 w-full"></div>
+              <div className="bg-dusk h-0.5 w-full dark:bg-white-25"></div>
               <ul className="ml-2 flex flex-col gap-2">
                 <li>
                   <Checkbox id="sia-course" />

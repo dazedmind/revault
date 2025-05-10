@@ -60,7 +60,7 @@ const DocsCard = (props) => {
   }
 
     return (  
-      <div className='w-9xl flex align-middle items-center gap-2 p-6 px-8 rounded-xl border border-dusk bg-dark'>
+      <div className='w-9xl flex align-middle items-center gap-2 p-6 px-8 rounded-xl border border-dusk bg-dark'> 
           <div className='w-52'>
             <a href={props.link}>
               <Image src={props.img} alt="Project" className="w-full h-full"/>
@@ -86,14 +86,16 @@ const DocsCard = (props) => {
                   <p className="text-white text-md italic">No tags available</p>
                 )}
               </div>
-              <p className='text-white text-md'>{props.description}</p>
+              <p className=' text-md'>{props.description}</p>
               <div className="mt-6 flex flex-row items-center justify-between gap-4">
                 {/* Left Side Buttons */}
                 <span className="flex gap-4">
                     <Link href={`/view-file/${props.paper_id}`}>
-                      <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br rounded-lg cursor-pointer">
-                        <FaBookOpen />Read
-                      </button>
+                    <button className="transition-all duration-300 flex flex-row items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:brightness-120 rounded-lg cursor-pointer">
+                      <FaBookOpen />
+                      Read
+                    </button>
+
                     </Link>
 
                     <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-dusk rounded-lg cursor-pointer hover:bg-dusk-foreground">

@@ -299,7 +299,7 @@ function ViewFile() {
             <span className="flex gap-2 flex-wrap overflow-hidden my-2">
               {Array.isArray(paper.tags) ? (   
                     paper.tags.map((tag, tagIndex) => (
-                    <span key={tagIndex} className="mr-2 bg-dusk p-2 rounded-md w-auto text-sm px-3">
+                    <span key={tagIndex} className="mr-2 bg-dusk p-2 rounded-md w-auto text-sm px-3  ">
                     {tag}
                     </span>
                     ))
