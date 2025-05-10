@@ -19,6 +19,8 @@ const ChangePassword = () => {
         inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
         labelClassName="ml-5"
         disabled={false}
+        value={undefined}
+        onChange={undefined}
       />
 
       <InputField
@@ -30,6 +32,8 @@ const ChangePassword = () => {
         inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
         labelClassName="ml-5"
         disabled={false}
+        value={undefined}
+        onChange={undefined}
       />
 
       <InputField
@@ -41,6 +45,8 @@ const ChangePassword = () => {
         inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
         labelClassName="ml-5"
         disabled={false}
+        value={undefined}
+        onChange={undefined}
       />
 
       <WarningMessage

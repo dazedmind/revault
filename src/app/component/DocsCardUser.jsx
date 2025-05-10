@@ -48,7 +48,7 @@ const DocsCardUser = (props) => {
         <div className="mt-6 flex flex-row items-center justify-between gap-4">
           {/* Left Side Buttons */}
           <span className="flex gap-4">
-            <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br rounded-lg cursor-pointer dark:text-primary">
+            <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br rounded-lg cursor-pointer dark:text-white">
               <FaBookOpen /> Read
             </button>
             <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer dark:hover:text-midnight dark:hover:bg-white-50">

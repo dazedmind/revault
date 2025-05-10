@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchInput } from "../../component/SearchInput"
+import { SearchInput } from "../../component/SearchInput";
 import avatar from "../../img/user.png";
 import icon from "../../img/revault-icon.png";
 import { FaPlus } from "react-icons/fa6";
@@ -8,41 +8,35 @@ import Link from "next/link";
 import { logout } from "../../utils/auth";
 import { useEffect, useState } from "react";
 
+import { LogOut, Settings, User } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
-    LogOut,
-    Settings,
-    User,
-  } from "lucide-react"
-   
-  import { Button } from "@/components/ui/button"
-  import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
-    DropdownMenuRadioGroup,
-
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function AdminNavBar() {
-    const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-    useEffect(() => setMounted(true), []);
-  
-    if (!mounted) return null;
+  useEffect(() => setMounted(true), []);
 
-    return (
-        <>
-       <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-8 px-16 dark:bg-primary">
+  if (!mounted) return null;
+
+  return (
+    <>
+      <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-8 px-16 dark:bg-primary">
         <div className="flex align-middle items-center gap-10">
           <Link
             href="/home"
@@ -54,12 +48,11 @@ export default function AdminNavBar() {
           <SearchInput placeholder="Search paper" />
         </div>
         <ul className="flex flex-row items-center gap-8 text-lg">
-
-        <Link href="/upload">
+          <Link href="/upload">
             <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-                <FaPlus /> Upload
+              <FaPlus /> Upload
             </button>
-        </Link>    
+          </Link>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Image
@@ -76,7 +69,9 @@ export default function AdminNavBar() {
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings />
-                  <Link href="/admin/settings/general/edit-profile">Settings</Link>
+                  <Link href="/admin/settings/general/edit-profile">
+                    Settings
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
@@ -88,6 +83,6 @@ export default function AdminNavBar() {
           </DropdownMenu>
         </ul>
       </header>
-        </>
-    )
+    </>
+  );
 }

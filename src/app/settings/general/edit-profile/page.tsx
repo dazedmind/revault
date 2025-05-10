@@ -84,6 +84,8 @@ const EditProfilePage = () => {
             placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
             inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
             labelClassName="ml-5"
+            value={undefined}
+            onChange={undefined}
           />
 
           <InputField
@@ -94,6 +96,8 @@ const EditProfilePage = () => {
             placeholder={profile.student_num || profile.employee_id}
             inputClassName="w-sm ml-5 h-14 dark:bg-secondary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             labelClassName="ml-5"
+            value={undefined}
+            onChange={undefined}
           />
 
           <InputField
@@ -104,6 +108,8 @@ const EditProfilePage = () => {
             placeholder={profile.program || profile.department}
             inputClassName="w-sm ml-5 h-14 dark:bg-secondary cursor-not-allowed"
             labelClassName="ml-5"
+            value={undefined}
+            onChange={undefined}
           />
 
           <span className="relative">
@@ -116,6 +122,8 @@ const EditProfilePage = () => {
               inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
               labelClassName="ml-5"
               disabled={false}
+              value={undefined}
+              onChange={undefined}
             />
 
             <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">

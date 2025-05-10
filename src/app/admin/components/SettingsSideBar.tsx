@@ -41,9 +41,7 @@ const SettingsList = ({
             <li
               key={index}
               className={`${labelClassName} cursor-pointer hover:text-teal ${
-                isActive 
-                  ? `text-teal bg-dusk rounded-md` 
-                  : ""
+                isActive ? `text-teal bg-dusk rounded-md` : ""
               }`}
             >
               <Link href={fullPath} prefetch={true}>

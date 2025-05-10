@@ -1,8 +1,8 @@
-'use server';
+"use server";
 
 import { prisma } from "@/lib/prisma";
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -23,7 +23,10 @@ export async function loginUser(formData: FormData) {
     return { success: false, message: "No user found" };
   }
 
-  const isPasswordCorrect = await bcrypt.compare(password, student.users.password);
+  const isPasswordCorrect = await bcrypt.compare(
+    password,
+    student.users.password,
+  );
 
   if (!isPasswordCorrect) {
     return { success: false, message: "Invalid password" };
@@ -34,12 +37,12 @@ export async function loginUser(formData: FormData) {
     {
       user_id: student.users.user_id,
       firstName: student.users.first_name,
-      role: student.users.role || 'student',
+      role: student.users.role || "student",
       email: student.users.email,
       studentNumber: student.student_num.toString(), // ✅ Include this line
     },
     SECRET_KEY,
-    { expiresIn: '2h' }
+    { expiresIn: "2h" },
   );
 
   return {

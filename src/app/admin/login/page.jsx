@@ -6,72 +6,73 @@ import React, { useEffect, useState } from "react";
 import LogInInputField from "../../component/LogInInputField";
 import { Button } from "@/components/ui/button";
 import { LogInCheckBox } from "../../component/LogInCheckBox";
-import { loginUser } from '../actions/login'; // adjust path
+import { loginUser } from "../actions/login"; // adjust path
 import Link from "next/link";
 import { FaChevronLeft } from "react-icons/fa6";
 
 const AdminLogin = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  
-   const [formData, setFormData] = useState({
-      idNumber: "",
-      password: "",
+
+  const [formData, setFormData] = useState({
+    idNumber: "",
+    password: "",
+  });
+
+  // Handle Input Changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Debugging line to log form data before sending it
+    console.log("Form Data: ", formData);
+
+    // Send login request to the server
+    const response = await fetch("/admin/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Content-Type set to JSON
+      },
+      body: JSON.stringify({
+        idNumber: formData.idNumber, // Correctly using formData.idNumber
+        password: formData.password, // Correctly using formData.password
+      }),
     });
-  
-    // Handle Input Changes
-    const handleChange = (e) => {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-    
-      // Debugging line to log form data before sending it
-      console.log("Form Data: ", formData);
-    
-      // Send login request to the server
-      const response = await fetch("/admin/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Content-Type set to JSON
-        },
-        body: JSON.stringify({
-          idNumber: formData.idNumber, // Correctly using formData.idNumber
-          password: formData.password,  // Correctly using formData.password
-        }),
-      });
-    
-         // Check if response is OK (status 200-299)
-         if (!response.ok) {
-          setErrorMessage("Login failed. Please check your credentials.");
-          setShowErrorModal(true);
-          return;        }
-    
-        // Try to parse the response body
-        const result = await response.json().catch((error) => {
-          console.error("Failed to parse JSON:", error);
-          return null; // return null if parsing fails
-        });
-  
-      // Parse the response from the API (assuming it's JSON)
-    
-      // Handle login result
-      if (result.success) {
-        // Store token and userType in localStorage if login is successful
-        localStorage.setItem('authToken', result.token);
-        localStorage.setItem('userType', 'librarian'); // Store the user type as admin
-        window.location.href = '/home'; // Redirect to home page
-      } else {
-        // Alert the user if login failed
-        alert("Login failed: " + result.message);
-      }
-    };
-  
-    // ALWAYS CLEARS TOKEN ON LOGIN PAGE LOAD
-     useEffect(() => { 
-        localStorage.removeItem('authToken');
-      },);
+
+    // Check if response is OK (status 200-299)
+    if (!response.ok) {
+      setErrorMessage("Login failed. Please check your credentials.");
+      setShowErrorModal(true);
+      return;
+    }
+
+    // Try to parse the response body
+    const result = await response.json().catch((error) => {
+      console.error("Failed to parse JSON:", error);
+      return null; // return null if parsing fails
+    });
+
+    // Parse the response from the API (assuming it's JSON)
+
+    // Handle login result
+    if (result.success) {
+      // Store token and userType in localStorage if login is successful
+      localStorage.setItem("authToken", result.token);
+      localStorage.setItem("userType", "librarian"); // Store the user type as admin
+      window.location.href = "/home"; // Redirect to home page
+    } else {
+      // Alert the user if login failed
+      alert("Login failed: " + result.message);
+    }
+  };
+
+  // ALWAYS CLEARS TOKEN ON LOGIN PAGE LOAD
+  useEffect(() => {
+    localStorage.removeItem("authToken");
+  });
 
   return (
     <div className="font-Inter h-screen w-screen overflow-hidden relative">
@@ -81,25 +82,25 @@ const AdminLogin = () => {
       {/* Header using header component */}
       <Header />
 
-   
       {/* Main Content */}
       <main className="flex flex-col mt-30 items-center relative z-10">
-        
-   
         <div className="w-96 m-5 p-6 h-auto rounded-md outline-1 bg-midnight relative z-10">
-
-        <span className="absolute -top-10 -left-1 ">
-            <Link href="/login" className="flex items-center gap-1 text-teal"><FaChevronLeft/> Back to regular sign in</Link>
+          <span className="absolute -top-10 -left-1 ">
+            <Link href="/login" className="flex items-center gap-1 text-teal">
+              <FaChevronLeft /> Back to regular sign in
+            </Link>
             <h1 className="flex items-center"></h1>
-        </span>
-        
+          </span>
+
           {/* Title */}
           <div className="flex flex-col justify-center items-center">
             <h1 className="text-4xl font-mono font-bold text-teal">ReVault</h1>
 
             <div className="text-center bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right my-2 w-auto px-2 rounded-md">
-            <h1 className="text-2xl font-mono font-bold text-midnight">for Librarian</h1>
-          </div>
+              <h1 className="text-2xl font-mono font-bold text-midnight">
+                for Librarian
+              </h1>
+            </div>
           </div>
 
           {/* Form */}
@@ -126,7 +127,7 @@ const AdminLogin = () => {
               {/* Remember Password & Forgot Password */}
               <div className="flex flex-row justify-between items-center m-3 mt-5">
                 <LogInCheckBox id="rememberMe" label="Remember password" />
-      
+
                 <p className="font-inter text-teal text-xs text-align cursor-pointer">
                   Forgot Password?
                 </p>
