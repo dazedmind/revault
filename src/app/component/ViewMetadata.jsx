@@ -1,4 +1,6 @@
-import React from 'react'
+"use client";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { FaChevronLeft } from 'react-icons/fa6';
 
 function ViewMetadata({onClick}) {
@@ -19,11 +21,11 @@ function ViewMetadata({onClick}) {
                 <p className='font-bold text-2xl'>Results</p>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit ex imperdiet, tristique erat non, luctus justo. In at facilisis metus. Donec volutpat nisi magna, sit amet dignissim neque imperdiet sit amet. </p> <br></br>
 
-                <p><strong>Title:</strong> ReVault: A Version-Controlled Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students</p>
-                <p><strong>Authors:</strong> John Allen Troy Valena, etc.</p>
-                <p><strong>Date:</strong> April 6, 2025</p>
-                <p><strong>Tags:</strong> IT, SIA, Cloud</p>
-                <p><strong>Keywords:</strong> SEO, Repository</p>
+                <p><strong>Title:</strong> {papers.title}</p>
+                <p><strong>Authors:</strong> {papers.author}</p>
+                <p><strong>Date:</strong> {papers.year}</p>
+                <p><strong>Tags:</strong> {papers.tags}</p>
+                <p><strong>Keywords:</strong> {papers.keywords}</p>
             </div>
         </div>
     </div>

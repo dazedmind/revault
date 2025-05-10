@@ -15,6 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import Link from "next/link";
 
 export const decode = (token) => {
   try {
@@ -218,11 +219,13 @@ export default function Home() {
                 title={paper.title || "Untitled"}
                 description={paper.abstract || "No abstract available"}
                 tags={paper.keywords || []}
+                paper_id={paper.paper_id}
               />
             ))
           ) : (
             <p>No recent papers found.</p>
           )}
+
 
           <div className="flex flex-col justify-between gap-4"></div>
 

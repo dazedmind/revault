@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import NavBar from "../component/NavBar";
-import AdminNavBar from "../admin/components/AdminNavBar";
+import NavBar from "../../component/NavBar";
+import AdminNavBar from "../../admin/components/AdminNavBar";
 import Image from "next/image";
-import avatar from "../img/user.png";
+import avatar from "../../img/user.png";
 import {
   FaBookmark,
   FaFlag,
@@ -14,9 +14,9 @@ import {
   FaCircleInfo,
   FaChevronLeft,
 } from "react-icons/fa6";
-import FileMenuButton from "../component/FileMenuButton";
-import ViewMetadata from "../component/ViewMetadata";
-import ProtectedRoute from "../component/ProtectedRoute";
+import FileMenuButton from "../../component/FileMenuButton";
+import ViewMetadata from "../../component/ViewMetadata";
+import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 import { useParams } from 'next/navigation';
 
@@ -45,7 +45,7 @@ function ViewFile() {
   const [isLoading, setIsLoading] = useState(true);
   const [userType, setUserType] = useState(null);
 
-  const [papers, setPapers] = useState([]);
+  const [paper, setPaper] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [selectedPaperIndex, setSelectedPaperIndex] = useState(null);
@@ -110,7 +110,7 @@ function ViewFile() {
           throw new Error(res.statusText);
         }
         const data = await res.json();
-        setPapers(
+        setPaper(
           data.map((paper) => ({
             ...paper,
             title: paper.title.replace(/"/g, ""),
@@ -170,6 +170,7 @@ function ViewFile() {
                     {" "}
                     Viewing Document Metadata
                   </h2>
+
                   <button
                     className="text-2xl px-4 rounded-md cursor-pointer"
                     onClick={() => setShowMetadata(false)}
@@ -181,35 +182,23 @@ function ViewFile() {
                 <div className="border-2 border-white-5 p-8 rounded-md">
                   <p className="font-bold text-2xl">Abstract.md</p>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris blandit ex imperdiet, tristique erat non, luctus
-                    justo. In at facilisis metus. Donec volutpat nisi magna, sit
-                    amet dignissim neque imperdiet sit amet. 
+                    {paper.abstract}
                   </p>{" "}
-                  <br></br>
-                  <p className="font-bold text-2xl">Results</p>
+                 
+                 <br />
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris blandit ex imperdiet, tristique erat non, luctus
-                    justo. In at facilisis metus. Donec volutpat nisi magna, sit
-                    amet dignissim neque imperdiet sit amet. 
-                  </p>{" "}
-                  <br></br>
-                  <p>
-                    <strong>Title:</strong> ReVault: A Version-Controlled Cloud
-                    Repository with SEO Metadata Tagging for Archiving Thesis
-                    Works of PLM CISTM Students
+                    <strong>Title:</strong> {paper.title}
                   </p>
                   <p>
-                    <strong>Authors:</strong> John Allen Troy Valena, etc.
+                    <strong>Authors:</strong> {paper.author}
                   </p>
                   <p>
-                    <strong>Date:</strong> April 6, 2025
+                    <strong>Date:</strong> {paper.year}
                   </p>
                   <div>
                     <strong>Tags:</strong>{" "}
-                    {Array.isArray(papers.tags) ? (   
-                      papers.tags.map((tag, tagIndex) => (
+                    {Array.isArray(paper.tags) ? (   
+                      paper.tags.map((tag, tagIndex) => (
                         <span key={tagIndex} className="mr-2">
                         {tag}
                       </span>
@@ -220,43 +209,19 @@ function ViewFile() {
                   </div>
                   <p>
                     <strong>Keywords:</strong> {""}
+                    {Array.isArray(paper.keywords) ? (   
+                      paper.keywords.map((keywords, keywordsIndex) => (
+                        <span key={keywordsIndex} className="mr-2">
+                        {keywords}
+                      </span>
+                      ))
+                    ) : (   
+                      <span>No keywords available</span>
+                    )}
                   </p>
                 </div>
               </div>
             )}
-{/* 
-            {papers.map((paper, paperIndex) => (
-              <div key={paperIndex}>
-                <h2>Paper {paperIndex + 1}</h2>
-                <div>
-                  <strong>Title:</strong> {paper.title}
-                </div>
-                <div>
-                  <strong>Author:</strong> {paper.author}
-                </div>
-                <div>
-                  <strong>Tags:</strong>{" "}
-                  {Array.isArray(paper.tags) ? (
-                    paper.tags.map((tag, tagIndex) => (
-                      <span key={tagIndex} className="mr-2">
-                        {tag} (Tag Index: {tagIndex})
-                      </span>
-                    ))
-                  ) : (
-                    <span>No tags available</span>
-                  )}
-                </div>
-                <button
-                  className="mt-2 p-2 bg-teal-500 text-white rounded"
-                  onClick={() => {
-                    setSelectedPaperIndex(paperIndex);
-                    setShowMetadata(true);
-                  }}
-                >
-                  View Metadata
-                </button>
-              </div>
-            ))} */}
 
             <aside className="flex flex-col w-72 h-auto dark:bg-secondary p-8">
               <h1 className="text-2xl font-bold">File Menu</h1>
@@ -312,57 +277,43 @@ function ViewFile() {
 
           <div className="p-6 w-1/3 relative">
             <p className="text-2xl font-bold">
-              ReVault: A Version-Controlled Cloud Repository with SEO Metadata
-              Tagging for Archiving Thesis Works of PLM CISTM Students
+                {paper.title}
             </p>
 
             <div className="flex flex-row gap-3 items-center my-4 flex-wrap">
-              <div className="flex flex-row gap-2 items-center">
-                <Image src={avatar} className="w-8 rounded-full" alt="author" />
-                <p>John Allen Troy Valena</p>
-              </div>
 
-              <div className="flex flex-row gap-2 items-center">
-                <Image src={avatar} className="w-8 rounded-full" alt="author" />
-                <p>Matthew Jacob Insigne</p>
-              </div>
-
-              <div className="flex flex-row gap-2 items-center">
-                <Image src={avatar} className="w-8 rounded-full" alt="author" />
-                <p>Jetthro Karl Yacub</p>
-              </div>
-
-              <div className="flex flex-row gap-2 items-center">
-                <Image src={avatar} className="w-8 rounded-full" alt="author" />
-                <p>Kristhia Lastra</p>
-              </div>
-
-              <div className="flex flex-row gap-2 items-center">
-                <Image src={avatar} className="w-8 rounded-full" alt="author" />
-                <p>KC Durante</p>
-              </div>
+                {paper.author &&
+                    paper.author
+                    .split(/\s{2,}/)  // Split by two or more spaces
+                    .map((author, index) => (
+                        <div key={index} className="flex flex-row gap-2 items-center">
+                        <Image src={avatar} className="w-8 rounded-full" alt={`author-${index}`} />
+                        <p>{author.trim()}</p>
+                        </div>
+                ))}
             </div>
 
-            <p>April 6, 2025</p>
+            <p>Published: {paper.year}</p>
+            <p>Department: {paper.department}</p>
 
             <span className="flex gap-2 flex-wrap overflow-hidden my-2">
-              <p className="dark:bg-card-foreground p-2 rounded-md w-auto text-sm px-3">
-                IT
-              </p>
-              <p className="dark:bg-card-foreground p-2 rounded-md w-auto text-sm px-3">
-                SIA
-              </p>
+              {Array.isArray(paper.tags) ? (   
+                    paper.tags.map((tag, tagIndex) => (
+                    <span key={tagIndex} className="mr-2 bg-dusk p-2 rounded-md w-auto text-sm px-3">
+                    {tag}
+                    </span>
+                    ))
+                ) : (   
+                    <span>No tags available</span>
+                )}
             </span>
 
-            <p>Keywords: Cloud Repository, SEO</p>
+            <p>Keywords: {paper.keywords}</p>
 
             <div className="dark:bg-card-foreground border-2 border-white-5 p-6 rounded-md mt-4">
               <h1 className="text-xl font-bold">Abstract.md </h1>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
-                blandit ex imperdiet, tristique erat non, luctus justo. In at
-                facilisis metus. Donec volutpat nisi magna, sit amet dignissim
-                neque imperdiet sit amet. 
+                {paper.abstract}
               </p>
             </div>
           </div>
