@@ -11,7 +11,7 @@ export const ProfileCard = ({
   role,
 }) => {
   return (
-    <div className="flex flex-row justify-between bg-dusk p-10 md:px-72">
+    <div className="flex flex-row justify-between dark:bg-card-foreground p-10 md:px-72">
       <div className="flex flex-row align-middle items-center gap-6">
         <div>
           <Image
