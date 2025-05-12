@@ -1,15 +1,14 @@
 import Image from "next/image";
 import React from "react";
-import avatar from "../img/user.png";
 
-export const ProfileCard = ({ name, number, college, position, programOrDept, role }) => {
+export const ProfileCard = ({ name, number, college, position, programOrDept, profile_picture }) => {
 
     return (
     <div className='bg-midnight dark:bg-secondary'>
       <div className='flex flex-row justify-between bg-dusk p-10 md:px-72'>
         <div className='flex flex-row align-middle items-center gap-6'>
           <div>
-            <Image src={avatar} alt="user profile" className='w-18 md:w-28 rounded-full' />
+            <Image src={profile_picture} alt="user profile" width={100} height={100} className='w-18 md:w-28 rounded-full' />
           </div>
           <div>
             <h1 className='text-lg md:text-3xl font-bold'>{name}</h1>

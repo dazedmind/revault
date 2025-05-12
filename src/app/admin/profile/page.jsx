@@ -5,6 +5,7 @@ import { ProfileCard } from "../../component/ProfileCard";
 import { SearchInput } from "../../component/SearchInput";
 import Image from "next/image";
 import document from "../../img/document.png";
+import avatar from "../../img/user.png";
 import {
   FaTrash,
   FaPen,
@@ -20,14 +21,11 @@ import {
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
-import { RadioGroup } from "@radix-ui/react-dropdown-menu";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -88,6 +86,7 @@ export default function AdminProfile() {
       {/* <ProfileCard/> */}
       {profile ? (
         <ProfileCard
+          profile_picture={profile?.users?.profile_picture || avatar}
           name={`${profile.users.first_name} ${profile.users.last_name}`}
           number={profile.employee_id}
           position={profile.position}

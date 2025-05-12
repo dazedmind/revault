@@ -7,33 +7,58 @@ import Image from "next/image";
 import Link from "next/link";
 import { logout } from "../../utils/auth";
 import { useEffect, useState } from "react";
-
 import { LogOut, Settings, User } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuRadioGroup,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import LoadingScreen from "@/app/component/LoadingScreen";
 
 export default function AdminNavBar() {
   const [mounted, setMounted] = useState(false);
-
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => setMounted(true), []);
 
-  if (!mounted) return null;
+  useEffect(() => {
+    const fetchProfile = async () => {
 
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+  
+      try {
+        const res = await fetch('/admin/api/profile', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json(); // <-- move this here regardless of res.ok
+
+        if (!res.ok) {
+          console.error("Failed to fetch profile:", data?.error || res.statusText);
+          return;
+        }
+  
+        setProfile(data);
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchProfile();
+  }, []);
+  
+  if (loading) return <LoadingScreen />;
+
+  if (!mounted) return null;
   return (
     <>
       <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-8 px-16 dark:bg-primary">
@@ -55,10 +80,12 @@ export default function AdminNavBar() {
           </Link>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Image
-                src={avatar}
+            <Image
+                src={profile?.users?.profile_picture || avatar}
                 className="w-10 h-10 rounded-full cursor-pointer border-1 border-midnight"
                 alt="User profile picture"
+                width={100}
+                height={100}
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">

@@ -16,6 +16,7 @@ model users {
   last_name      String?
   ext_name       String?
   email          String           @unique
+  profile_picture String?
   role           String?
   password       String
   created_at     DateTime?

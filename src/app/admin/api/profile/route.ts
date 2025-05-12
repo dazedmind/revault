@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
   try {
     const payload: any = jwt.verify(token, SECRET_KEY);
-    console.log("JWT Payload:", payload);
+    // console.log("JWT Payload:", payload);
 
     const userNumber = Number(payload.userNumber); // <- FIXED
     let user;

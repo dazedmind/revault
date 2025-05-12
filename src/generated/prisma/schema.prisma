@@ -10,19 +10,20 @@ datasource db {
 }
 
 model users {
-  user_id        Int              @id @default(autoincrement())
-  first_name     String?
-  mid_name       String?
-  last_name      String?
-  ext_name       String?
-  email          String           @unique
-  role           String?
-  password       String
-  created_at     DateTime?
-  faculty        faculty?
-  students       students?
-  librarian      librarian?
-  user_bookmarks user_bookmarks[]
+  user_id         Int              @id @default(autoincrement())
+  first_name      String?
+  mid_name        String?
+  last_name       String?
+  ext_name        String?
+  email           String           @unique
+  profile_picture String?
+  role            String?
+  password        String
+  created_at      DateTime?
+  faculty         faculty?
+  students        students?
+  librarian       librarian?
+  user_bookmarks  user_bookmarks[]
 }
 
 model faculty {

@@ -55,6 +55,8 @@ export default function Profile() {
       {profile ? (
           <ProfileCard
             name={`${profile.users.first_name} ${profile.users.last_name}`}
+            profile_picture={profile?.users?.profile_picture || avatar}
+            
             number={profile.role === 'student' ? profile.student_num : profile.employee_id}
             college={profile.college}
             position={profile.position}

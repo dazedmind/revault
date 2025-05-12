@@ -6,31 +6,59 @@ import avatar from "../img/user.png";
 import icon from "../img/revault-icon.png";
 import Image from "next/image";
 import Link from "next/link";
-import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { LogOut, Settings, User } from "lucide-react";
+import LoadingScreen from "./LoadingScreen";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuRadioGroup,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout } from "../utils/auth";
 
 export default function NavBar() {
   const [mounted, setMounted] = useState(false);
-
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+  
+      try {
+        const res = await fetch('/api/profile', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json(); // <-- move this here regardless of res.ok
+
+        if (!res.ok) {
+          console.error("Failed to fetch profile:", data?.error || res.statusText);
+          return;
+        }
+  
+        setProfile(data);
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchProfile();
+  }, []);
+  
+  if (loading) return <LoadingScreen />;
 
   if (!mounted) return null;
 
@@ -54,9 +82,11 @@ export default function NavBar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Image
-                src={avatar}
+                src={profile?.users?.profile_picture || avatar}
                 className="w-10 h-10 rounded-full cursor-pointer border-1 border-midnight"
                 alt="User profile picture"
+                width={100}
+                height={100}
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">

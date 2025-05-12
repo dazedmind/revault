@@ -302,7 +302,7 @@ function ViewFile() {
           </div>
 
           <div className="p-6 w-1/3 relative">
-            <p className="text-2xl font-bold">
+            <p className="text-2xl font-bold mb-2">
                 {paper.title}
             </p>
 {/* 

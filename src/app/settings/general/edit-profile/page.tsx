@@ -8,10 +8,53 @@ import { FaMicrosoft } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { useTheme } from "next-themes";
+import { Camera } from "lucide-react";
+
 const EditProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
+  const [preview, setPreview] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setPreview(imageUrl);
+      setSelectedFile(file); // 👈 store file for upload
+    }
+  };
+
+  // Save changes
+  const handleSaveChanges = async () => {
+    if (!selectedFile || !profile) {
+      console.warn("No file or profile loaded.");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append("profile_picture", selectedFile);
+    formData.append("user_id", profile.users.user_id); // assuming this is the correct field
+  
+    try {
+      const res = await fetch("/api/upload-profile", {
+        method: "POST",
+        body: formData,
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        alert("Profile picture updated!");
+        // Optionally refetch the profile or update state
+      } else {
+        console.error("Upload failed:", data.error);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -64,12 +107,29 @@ const EditProfilePage = () => {
           message="Contact your admin if you want to request to change your Student Information"
         />
 
-        {/* Image positioned absolutely */}
-        <Image
-          src={avatar}
-          alt="Avatar"
-          className="w-[124px] h-[124px] rounded-full absolute top-0 right-25"
-        />
+        <div className=" relative w-[124px] h-[124px] group">
+          {/* Image */}
+          <Image
+            src={preview || profile?.users?.profile_picture || avatar} // fallback to default
+            alt="Avatar"
+            width={124}
+            height={124}
+            className="w-full h-full object-cover rounded-full"
+          />
+
+          {/* Hover overlay with camera icon */}
+          <div className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
+              <Camera className="text-white w-6 h-6" />
+            </div>
+
+            {/* File input */}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="absolute inset-0 opacity-0 cursor-pointer"
+            />
+        </div>
       </div>
 
       {!loading && profile && (
@@ -124,10 +184,14 @@ const EditProfilePage = () => {
               onChange={undefined}
             />
 
-            <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">
+            <Button
+              onClick={handleSaveChanges}
+              className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white"
+            >
               Save Changes
             </Button>
-          </span>
+
+            </span>
         </>
       )}
 
