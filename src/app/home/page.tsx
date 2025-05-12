@@ -140,13 +140,12 @@ export default function Home() {
       {userType === "librarian" ? <AdminNavBar /> : <NavBar />}
 
       <main className="flex flex-row">
-        <aside className="flex h-auto w-96 p-8">
-          <div className="flex flex-col gap-4 m-2">
+        <aside className="hidden md:flex h-auto w-96 p-8">
+          <div className="flex flex-col gap-6 m-2">
             <h1 className="text-2xl font-bold">Filter Results</h1>
 
             <div className="flex flex-col gap-2">
               <h2 className="font-bold text-teal">Program</h2>
-              <div className="bg-dusk h-0.5 w-full dark:bg-white-25"></div>
 
               <ul className="ml-2 flex flex-col gap-2">
                 <li>
@@ -162,7 +161,6 @@ export default function Home() {
 
             <div className="flex flex-col gap-2">
               <h2 className="font-bold text-teal">Publication Date</h2>
-              <div className="bg-dusk h-0.5 w-full dark:bg-white-25"></div>
               <ul className="ml-2 flex flex-col gap-2">
                 <li>
                   <Checkbox id="year-2025" />
@@ -178,7 +176,6 @@ export default function Home() {
 
             <div className="flex flex-col gap-2">
               <h1 className="font-bold text-teal">Course</h1>
-              <div className="bg-dusk h-0.5 w-full dark:bg-white-25"></div>
               <ul className="ml-2 flex flex-col gap-2">
                 <li>
                   <Checkbox id="sia-course" />
@@ -208,7 +205,7 @@ export default function Home() {
           </div>
         </aside>
 
-        <div className="flex flex-col w-full gap-5 mx-12 my-2 align-middle p-8">
+        <div className="flex flex-col w-full gap-5 md:mx-12 my-2 align-middle p-8">
           <h1 className="text-3xl font-bold">Recent Papers</h1>
 
           {papers.length > 0 ? (

@@ -59,13 +59,9 @@ const EditProfilePage = () => {
     <div className="flex flex-col pb-25 w-fit">
       <h1 className="text-2xl ml-1">Edit Profile</h1>
       {/* divider */}
-
       <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2"></div>
 
-      {/* Warning message from WarningMessage.tsx */}
-
-      <div className="relative w-full mt-5 ">
-        {/* Image positioned absolutely */}
+      <div className="relative w-full mt-5">
         <Image
           src={avatar}
           alt="Avatar"

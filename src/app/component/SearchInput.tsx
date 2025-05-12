@@ -33,7 +33,7 @@ export const SearchInput = ({ defaultValue }: iDefault) => {
     }
 
     return (
-        <div className="search__input border-[1px] font-[family-name:'Inter'] border-solid border-neutral-500 w-auto flex flex-row items-center text-sm rounded-[12px]">
+        <div className="hidden md:flex search__input border-[1px] font-[family-name:'Inter'] border-solid border-neutral-500 w-auto flex-row items-center text-sm rounded-[12px]">
             <input type="text"
                 id="inputId"
                 placeholder="Search paper"

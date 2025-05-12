@@ -36,15 +36,18 @@ export default function NavBar() {
 
   return (
     <>
-      <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-8 px-16 dark:bg-primary">
+      <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-8 px-10 md:px-16 dark:bg-primary">
         <div className="flex align-middle items-center gap-10">
           <Link
             href="/home"
-            className="flex gap-4 font-bold text-3xl text-teal"
+            className="hidden md:flex gap-4 font-bold text-3xl text-teal"
           >
             <Image src={icon} className="w-14" alt="revault-icon" />
             ReVault
           </Link>
+          
+          <Image src={icon} className="md:hidden w-14" alt="revault-icon" />
+
           <SearchInput placeholder="Search paper" />
         </div>
         <ul className="flex flex-row items-center gap-8 text-lg">

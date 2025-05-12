@@ -164,64 +164,101 @@ function ViewFile() {
         <main className="flex gap-6 h-auto justify-center">
           <div className="flex gap-6 relative">
             {showMetadata && (
-              <div className="absolute top-0 left-0 w-full h-screen z-50 p-10 shadow-lg duration-300 ease-in-out overflow-y-auto dark:bg-card-foreground">
-                <span className="flex items-center text-center align-middle gap-2 justify-between mb-6">
-                  <h2 className="text-3xl font-bold">
-                    {" "}
-                    Viewing Document Metadata
-                  </h2>
-
-                  <button
-                    className="text-2xl px-4 rounded-md cursor-pointer"
-                    onClick={() => setShowMetadata(false)}
-                  >
-                    <FaChevronLeft />
-                  </button>
-                </span>
-
-                <div className="border-2 border-white-5 p-8 rounded-md">
-                  <p className="font-bold text-2xl">Abstract.md</p>
-                  <p>
-                    {paper.abstract}
-                  </p>{" "}
-                 
-                 <br />
-                  <p>
-                    <strong>Title:</strong> {paper.title}
-                  </p>
-                  <p>
-                    <strong>Authors:</strong> {paper.author}
-                  </p>
-                  <p>
-                    <strong>Date:</strong> {paper.year}
-                  </p>
-                  <div>
-                    <strong>Tags:</strong>{" "}
-                    {Array.isArray(paper.tags) ? (   
-                      paper.tags.map((tag, tagIndex) => (
-                        <span key={tagIndex} className="mr-2">
-                        {tag}
-                      </span>
-                      ))
-                    ) : (   
-                      <span>No tags available</span>
-                    )}
-                  </div>
-                  <p>
-                    <strong>Keywords:</strong> {""}
-                    {Array.isArray(paper.keywords) ? (   
-                      paper.keywords.map((keywords, keywordsIndex) => (
-                        <span key={keywordsIndex} className="mr-2">
-                        {keywords}
-                      </span>
-                      ))
-                    ) : (   
-                      <span>No keywords available</span>
-                    )}
-                  </p>
-                </div>
-              </div>
+              <div 
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
+                onClick={() => setShowMetadata(false)}
+              />
             )}
+
+            <div 
+              className={`fixed top-0 left-0 w-full md:w-[800px] h-screen z-50 p-10 shadow-lg 
+                transform transition-transform duration-300 ease-in-out
+                ${showMetadata ? 'translate-x-0' : '-translate-x-full'}
+                dark:bg-card-foreground overflow-y-auto`}
+            >
+              <span className="flex items-center text-center align-middle gap-2 justify-between mb-6">
+                <h2 className="text-3xl font-bold">
+                  Viewing Document Metadata
+                </h2>
+
+                <button
+                  className="text-2xl px-4 rounded-md cursor-pointer hover:bg-dusk/20 transition-colors duration-200"
+                  onClick={() => setShowMetadata(false)}
+                >
+                  <FaChevronLeft />
+                </button>
+              </span>
+
+              <div className="border-2 border-white-5 p-8 rounded-md">
+                <p className="font-bold text-2xl text-teal mb-6">Metadata</p>
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-1">
+                    <p className="text-lg">
+                      <strong>Title:</strong> {paper.title}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <p className="text-lg">
+                      <strong>Authors:</strong> {paper.author}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <p className="text-lg">
+                      <strong>Date:</strong> {paper.year}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <strong className="text-lg">Tags:</strong>
+                    <div className="flex flex-wrap gap-2">
+                      {Array.isArray(paper.tags) ? (   
+                        paper.tags.map((tag, tagIndex) => (
+                          <span 
+                            key={tagIndex} 
+                            className="px-3 py-1 bg-dusk dark:bg-white-50 dark:text-midnight rounded-md text-sm"
+                          >
+                            {tag}
+                          </span>
+                        ))
+                      ) : (   
+                        <span className="text-white-25">No tags available</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <strong className="text-lg">Keywords:</strong>
+                    <div className="flex flex-wrap gap-2">
+                      {Array.isArray(paper.keywords) ? (   
+                        paper.keywords
+                          .flatMap(keyword => 
+                            keyword.split(/[,\s]+/) // Split by comma or whitespace
+                              .map(word => word.trim()) // Trim whitespace
+                              .filter(word => word.length > 0) // Remove empty strings
+                          )
+                          .map((keyword, keywordIndex) => (
+                            <span 
+                              key={keywordIndex} 
+                              className="px-3 py-1 bg-dusk dark:bg-white-50 dark:text-midnight rounded-md text-sm"
+                            >
+                              {keyword}
+                            </span>
+                          ))
+                      ) : (   
+                        <span className="text-white-25">No keywords available</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <br />
+                <p className="font-bold text-2xl text-teal">Abstract</p>
+                <p>
+                  {paper.abstract}
+                </p>{" "}
+              </div>
+            </div>
 
             <aside className="flex flex-col w-72 h-auto dark:bg-secondary p-8">
               <h1 className="text-2xl font-bold">File Menu</h1>
@@ -299,7 +336,7 @@ function ViewFile() {
             <span className="flex gap-2 flex-wrap overflow-hidden my-2">
               {Array.isArray(paper.tags) ? (   
                     paper.tags.map((tag, tagIndex) => (
-                    <span key={tagIndex} className="mr-2 bg-dusk p-2 rounded-md w-auto text-sm px-3  ">
+                    <span key={tagIndex} className="mr-2 bg-dusk dark:bg-white-50 dark:text-midnight p-2 rounded-md w-auto text-sm px-3  ">
                     {tag}
                     </span>
                     ))

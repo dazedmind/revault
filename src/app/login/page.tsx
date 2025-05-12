@@ -81,8 +81,8 @@ const LogIn = () => {
       <Header />
 
       {/* Main Content */}
-      <main className="flex flex-row justify-center mt-20 items-center relative z-10">
-        <div className="w-96 m-5 p-6 h-auto rounded-md outline-1 bg-midnight relative z-10">
+      <main className="flex flex-row justify-center mt-20 md:mt-10 items-center relative z-10">
+        <div className="w-80 md:w-96 m-5 p-6 h-auto rounded-md outline-1 bg-midnight relative z-10">
           {/* Title */}
           <div className="flex flex-col justify-center items-center">
             <h1 className="text-4xl font-mono font-bold text-teal">ReVault</h1>
@@ -97,7 +97,7 @@ const LogIn = () => {
                 name="idNumber"
                 value={formData.idNumber}
                 onChange={handleChange}
-                className="w-xs"
+                className="w-68 md:w-xs"
               />
 
               <LogInInputField
@@ -106,11 +106,11 @@ const LogIn = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-xs"
+                className="w-68 md:w-xs"
               />
 
               {/* Remember Password & Forgot Password */}
-              <div className="flex flex-row justify-between items-center m-3 mt-5">
+              <div className="flex flex-row justify-between items-center m-5 md:my-4 md:mx-1 mt-5">
                 <LogInCheckBox id="rememberMe" label="Remember password" />
 
                 <p className="font-inter text-teal text-xs text-align cursor-pointer">
@@ -122,7 +122,7 @@ const LogIn = () => {
               <div className="flex flex-row justify-center mt-5">
                 <Button
                   type="submit"
-                  className="w-xs h-12 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer font-bold text-lg text-white
+                  className="w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer font-bold text-md md:text-lg text-white
                   "
                 >
                   Log In
@@ -147,7 +147,7 @@ const LogIn = () => {
           {/* Divider */}
           <div className="flex flex-row justify-center items-center gap-2 text-base mt-5">
             <div className="bg-dusk h-0.5 w-full"></div>
-            <p className="w-100">or Sign Up With</p>
+            <p className="w-120 md:w-100">or Sign Up With</p>
             <div className="bg-dusk h-0.5 w-full"></div>
           </div>
 

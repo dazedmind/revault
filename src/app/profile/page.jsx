@@ -49,10 +49,6 @@ export default function Profile() {
   if (loading) return <LoadingScreen />;
 
   return (
-    <div>
-      <ProtectedRoute>
-        <NavBar />
-
         {/* <ProfileCard/> */}
         {profile ? (
           <ProfileCard
@@ -72,13 +68,6 @@ export default function Profile() {
         ) : (
           <div>Failed to load profile.</div>
         )}
-
-        <div className="flex dark:bg-secondary">
-          <aside className="flex flex-col gap-8 h-auto w-96 p-14">
-            <div className="flex flex-col gap-2">
-              <h2 className="font-bold">My Profile</h2>
-              <div className="bg-dusk h-0.5 w-full"></div>
-
               <ul className="ml-4 flex flex-col gap-2">
                 <li>
                   <Link href="/"> My Bookmarks</Link>
@@ -105,13 +94,6 @@ export default function Profile() {
               <div className="flex flex-row justify-between align-middle items-center">
                 <h1 className="text-3xl font-bold">My Bookmarks</h1>
               </div>
-
-              <DocsCardUser
-                img={document}
-                title="ReVault: Cloud Repository with SEO Metadata Tagging for Archiving Thesis Works of PLM CISTM Students"
-                description="Traditional systems for archiving research-based works rely on physical documentation or unstructured digital repositories, leading to inefficiencies in version tracking, categorization, and retrieval "
-                tags={["IT", "Design", "UI/UX"]}
-              />
 
               <DocsCardUser
                 img={document}
