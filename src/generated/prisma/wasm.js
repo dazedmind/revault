@@ -158,7 +158,7 @@ exports.Prisma.PapersScalarFieldEnum = {
   year: 'year',
   department: 'department',
   keywords: 'keywords',
-  tags: 'tags',
+  course: 'course',
   abstract: 'abstract',
   created_at: 'created_at',
   updated_at: 'updated_at'

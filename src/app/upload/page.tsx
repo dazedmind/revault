@@ -1,16 +1,25 @@
 "use client";
-import NavBar from '../component/NavBar';
-import Upload from '@/components/ui/upload-file';
 import pdfToText from 'react-pdftotext';
 import { useEffect, useRef, useState } from 'react';
 import AdminNavBar from '../admin/components/AdminNavBar';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Trash } from 'lucide-react';
 
 const UploadFile = () => {
   const [title, setTitle] = useState('');
   const [fullText, setFullText] = useState('');
   const [authors, setAuthors] = useState(''); // Add authors state
+  const [course, setCourse] = useState('');
+  const [department, setDepartment] = useState('');
+  const [year, setYear] = useState('');
   const [key, setKey] = useState(Date.now()); // forces re-render of input
+  const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [isEditingAuthors, setIsEditingAuthors] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
+  const [isEditingAbstract, setIsEditingAbstract] = useState(false);
 
   function fixSplitAccents(text) {
     return text
@@ -24,11 +33,33 @@ const UploadFile = () => {
       .replace(/([A-Za-z])\s*ú\s*([A-Za-z])/gi, '$1ú$2');
   }
 
+  // Add progress animation function
+  const startProgressAnimation = () => {
+    setProgress(0);
+    const duration = 2000; // 2 seconds
+    const interval = 50; // Update every 50ms
+    const steps = duration / interval;
+    const increment = 100 / steps;
+    
+    let currentProgress = 0;
+    const timer = setInterval(() => {
+      currentProgress += increment;
+      if (currentProgress >= 100) {
+        clearInterval(timer);
+        setProgress(100);
+      } else {
+        setProgress(currentProgress);
+      }
+    }, interval);
+  };
+
   async function extractText(event) {
     const file = event.target.files[0];
     if (!file || file.type !== 'application/pdf') return;
   
     try {
+      setIsLoading(true);
+      startProgressAnimation();
       const rawText = await pdfToText(file);
   
       // Step 1: Get first page only by cutting off at "Table of contents"
@@ -74,7 +105,7 @@ const UploadFile = () => {
         }
       }
       
-      setTitle(title);
+      // setTitle(title);
 
       // Step 4: Author Extraction and Fix Accents
       const authorMatch = sanitized.match(/By\s+(.*?)\s+Thesis\s+Adviser/i);
@@ -85,12 +116,43 @@ const UploadFile = () => {
       const fixedAuthors = fixSplitAccents(extractedAuthors).replace(/\s{2,}/g, ' ').trim();
   
       // Step 5: Set States
-      setTitle(title);
-      setAuthors(fixedAuthors);
-      setFullText(sanitized);
+
   
+      const response = await fetch('/api/extract', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: sanitized })
+      });
+      
+      // const jsonString = await response.text(); // first get raw text
+      // const result = JSON.parse(jsonString); // then parse it into object
+      const result = await response.json();
+
+      // Log the full response to debug
+      console.log('Full API Response:', result);
+
+
+      // Access properties safely (optional chaining + nullish coalescing)
+      console.log('Title:', result?.extractedTitle ?? 'No title found');
+      console.log('Authors:', result?.extractedAuthor ?? 'No authors found');
+      console.log('Course:', result?.extractedCourse ?? 'No course found');
+      console.log('Department:', result?.extractedDepartment ?? 'No department found');
+      console.log('Year:', result?.extractedYear ?? 'No year found');
+    
+      // Update state
+      if (result) {
+        setTitle(result.extractedTitle ?? '');
+        setAuthors(result.extractedAuthor ?? '');
+        setFullText(result.extractedAbstract ?? '');
+        setCourse(result.extractedCourse ?? ''); // Check for typos (extracted vs extrated)
+        setDepartment(result.extractedDepartment ?? '');
+        setYear(result.extractedYear ?? '');
+      }
     } catch (error) {
       console.error('Error extracting text:', error);
+    } finally {
+      setIsLoading(false);
+      setProgress(100); // Ensure progress bar is full when done
     }
   }
   
@@ -102,6 +164,9 @@ const UploadFile = () => {
     setTitle(''); // Clear the detected title
     setFullText(''); // Clear the extracted text
     setAuthors(''); // Clear the authors
+    setCourse('');
+    setDepartment('');
+    setYear('');
     setKey(Date.now()); // Update key to force re-render
   };
 
@@ -127,37 +192,81 @@ const UploadFile = () => {
                 accept="application/pdf"
                 onChange={extractText}
                 name="file-input"
-              key={ref.current?.value}
-              readOnly
+                key={ref.current?.value}
+                disabled={isLoading}
             />
 
-        <button
-          onClick={handleClearFile}
-          className="ml-4 px-4 py-2 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-md"
-        >
-          Remove File
-        </button>
+            <button
+              onClick={handleClearFile}
+              className="ml-4 px-4 py-4 cursor-pointer bg-dusk hover:bg-red-warning text-white rounded-md"
+              disabled={isLoading}
+            >
+              <Trash className='w-6 h-6' />
+            </button>
         </div>
         <label htmlFor="file-input" className='text-sm text-white-50'>File type: .pdf and .tiff only (Maximum file size: 10MB)</label>
 
+        {isLoading && (
+          <div className="mt-4">
+            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
+              <div 
+                className="bg-teal h-2.5 rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <p className="text-sm text-teal mt-2">
+              {progress < 100 ? 'Extracting text from PDF...' : 'Processing complete!'}
+            </p>
+          </div>
+        )}
+
         <div className="flex flex-col gap-8 mt-8">
           <span className='flex flex-col gap-2'>
-            <h3 className="text-md font-medium text-teal">Research Title:</h3>
+            <div className="flex justify-between items-center">
+              <span className='flex flex-row justify-between w-4xl gap-2'>
+                <h3 className="text-md font-medium text-teal">Research Title:</h3>
+                <button
+                    onClick={() => setIsEditingTitle(!isEditingTitle)}
+                    className="text-sm px-3 py-1 bg-teal/10 hover:bg-teal/20 text-teal rounded-md transition-colors"
+                  >
+                    {isEditingTitle ? 'Save' : 'Edit'}
+                </button>
+              </span>
+      
+            </div>
               <textarea
-                className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0 dark:bg-secondary"
+                className={`p-4 bg-midnight border rounded-md w-4xl outline-0 dark:bg-secondary ${
+                  isEditingTitle 
+                    ? 'border-teal cursor-text' 
+                    : 'border-white-5 cursor-default'
+                }`}
                 value={title}
-                readOnly
+                onChange={(e) => setTitle(e.target.value)}
+                readOnly={!isEditingTitle}
               />
           </span>
 
           <span className='flex flex-col gap-2'>
-            <h3 className="text-md font-medium text-teal">Authors:</h3>
-            <input
-              type="text"
-              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0 dark:bg-secondary"
-              value={authors}
-              readOnly
-            />
+              <span className='flex flex-row justify-between w-4xl gap-2'>
+                <h3 className="text-md font-medium text-teal">Authors:</h3>
+                <button
+                    onClick={() => setIsEditingAuthors(!isEditingAuthors)}
+                    className="text-sm px-3 py-1 bg-teal/10 hover:bg-teal/20 text-teal rounded-md transition-colors"
+                  >
+                    {isEditingAuthors ? 'Save' : 'Edit'}
+                </button>
+              </span>            
+              <input
+                type="text"
+                className={`p-4 bg-midnight border rounded-md w-4xl outline-0 dark:bg-secondary ${
+                  isEditingAuthors 
+                    ? 'border-teal cursor-text' 
+                    : 'border-white-5 cursor-default'
+                }`}
+                value={authors}
+                onChange={(e) => setAuthors(e.target.value)}
+                readOnly={!isEditingAuthors}
+              />
           </span>
       
           <span className='flex flex-col gap-2'>
@@ -168,30 +277,73 @@ const UploadFile = () => {
             />
           </span>
 
-          <span className='flex flex-col gap-2'>
-              <label htmlFor="tags">Tags</label>
-
-              <div className='tags-card flex gap-4 items-center align-middle'>
-                <div className='flex gap-2 items-center align-middle bg-dusk w-auto p-2 text-sm rounded-md dark:bg-accent'>
-                  <p>Information Technology</p>
-                  <button className='bg-white-5 p-1 rounded-full cursor-pointer text-xs'>x</button>
-                </div>
-                <div className='flex gap-2 items-center align-middle text-center bg-dusk w-auto p-2 text-sm rounded-md dark:bg-accent'>
-                  <p>SIA</p>
-                  <button className='bg-white-5 p-1 rounded-full cursor-pointer text-xs'>x</button>
-                </div>
-                <div className='flex gap-2 items-center align-middle bg-teal w-auto p-2 text-sm rounded-md'>
-                  <button className=' p-1 rounded-full cursor-pointer text-xs'>Add +</button>
-                </div>
-              </div>
+          <span className='flex flex-col gap-2'>               
+            <div className="flex flex-col flex-grow">
+              <Label className="text-md font-medium text-teal mb-2">Department:</Label>
+              <Select name="program" value={department} onValueChange={setDepartment}>
+                <SelectTrigger className="w-4xl p-7 px-4 text-md">
+                  <SelectValue placeholder="Select paper department" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem className='p-4' value="Computer Science">Computer Science</SelectItem>
+                    <SelectItem className='p-4' value="Information Technology">Information Technology</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </span>
 
+          <div className='flex flex-row gap-4'>
+            <span className='flex flex-col gap-2'>
+                <div className="flex flex-col flex-grow">
+                  <Label className="text-md font-medium text-teal mb-2">Course:</Label>
+                  <Select name="program" value={course} onValueChange={setCourse}>
+                    <SelectTrigger className="w-md p-7 px-4 text-md">
+                      <SelectValue placeholder="Select course" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem className='p-4' value="SIA">SIA</SelectItem>
+                        <SelectItem className='p-4' value="Capstone">Capstone</SelectItem>
+                        <SelectItem className='p-4' value="Compiler Design">Compiler Design</SelectItem>
+                        <SelectItem className='p-4' value="CS Thesis Writing">CS Thesis Writing</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </span>
+
+              
+              <span className='flex flex-col gap-2'>
+                <h3 className="text-md font-medium text-teal">Year:</h3>
+                <input
+                  type="text"
+                  className="p-4 bg-midnight border border-white-5 rounded-md w-md outline-0 dark:bg-secondary"
+                  value={year}
+                />
+              </span>
+          </div>
+
+
           <span className='flex flex-col gap-2'>
-            <h3 className="text-md font-medium text-teal">Abstract:</h3>
-            <textarea
-              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl h-64 outline-0 dark:bg-secondary"
+              <span className='flex flex-row justify-between w-4xl gap-2'>
+                <h3 className="text-md font-medium text-teal">Abstract:</h3>
+                <button
+                    onClick={() => setIsEditingAbstract(!isEditingAbstract)}
+                    className="text-sm px-3 py-1 bg-teal/10 hover:bg-teal/20 text-teal rounded-md transition-colors"
+                  >
+                    {isEditingAbstract ? 'Save' : 'Edit'}
+                </button>
+              </span>                <textarea
+              className={`p-4 bg-midnight border rounded-md w-4xl h-64 outline-0 dark:bg-secondary ${
+                isEditingAbstract 
+                  ? 'border-teal cursor-text' 
+                  : 'border-white-5 cursor-default'
+              }`}
               value={fullText}
-              readOnly
+              onChange={(e) => setFullText(e.target.value)}
+              readOnly={!isEditingAbstract}
             />
           </span>
         </div>

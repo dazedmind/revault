@@ -58,7 +58,7 @@ model papers {
   year             Int?
   department       String?
   keywords         String[]
-  tags             String[]
+  course           String?
   abstract         String?
   created_at       DateTime?
   updated_at       DateTime?

@@ -6542,6 +6542,7 @@ export namespace Prisma {
     author: string | null
     year: number | null
     department: string | null
+    course: string | null
     abstract: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -6553,6 +6554,7 @@ export namespace Prisma {
     author: string | null
     year: number | null
     department: string | null
+    course: string | null
     abstract: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -6565,7 +6567,7 @@ export namespace Prisma {
     year: number
     department: number
     keywords: number
-    tags: number
+    course: number
     abstract: number
     created_at: number
     updated_at: number
@@ -6589,6 +6591,7 @@ export namespace Prisma {
     author?: true
     year?: true
     department?: true
+    course?: true
     abstract?: true
     created_at?: true
     updated_at?: true
@@ -6600,6 +6603,7 @@ export namespace Prisma {
     author?: true
     year?: true
     department?: true
+    course?: true
     abstract?: true
     created_at?: true
     updated_at?: true
@@ -6612,7 +6616,7 @@ export namespace Prisma {
     year?: true
     department?: true
     keywords?: true
-    tags?: true
+    course?: true
     abstract?: true
     created_at?: true
     updated_at?: true
@@ -6712,7 +6716,7 @@ export namespace Prisma {
     year: number | null
     department: string | null
     keywords: string[]
-    tags: string[]
+    course: string | null
     abstract: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -6744,7 +6748,7 @@ export namespace Prisma {
     year?: boolean
     department?: boolean
     keywords?: boolean
-    tags?: boolean
+    course?: boolean
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -6762,7 +6766,7 @@ export namespace Prisma {
     year?: boolean
     department?: boolean
     keywords?: boolean
-    tags?: boolean
+    course?: boolean
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -6775,7 +6779,7 @@ export namespace Prisma {
     year?: boolean
     department?: boolean
     keywords?: boolean
-    tags?: boolean
+    course?: boolean
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -6788,13 +6792,13 @@ export namespace Prisma {
     year?: boolean
     department?: boolean
     keywords?: boolean
-    tags?: boolean
+    course?: boolean
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type papersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"paper_id" | "title" | "author" | "year" | "department" | "keywords" | "tags" | "abstract" | "created_at" | "updated_at", ExtArgs["result"]["papers"]>
+  export type papersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"paper_id" | "title" | "author" | "year" | "department" | "keywords" | "course" | "abstract" | "created_at" | "updated_at", ExtArgs["result"]["papers"]>
   export type papersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     paper_metadata?: boolean | papers$paper_metadataArgs<ExtArgs>
     user_bookmarks?: boolean | papers$user_bookmarksArgs<ExtArgs>
@@ -6820,7 +6824,7 @@ export namespace Prisma {
       year: number | null
       department: string | null
       keywords: string[]
-      tags: string[]
+      course: string | null
       abstract: string | null
       created_at: Date | null
       updated_at: Date | null
@@ -7257,7 +7261,7 @@ export namespace Prisma {
     readonly year: FieldRef<"papers", 'Int'>
     readonly department: FieldRef<"papers", 'String'>
     readonly keywords: FieldRef<"papers", 'String[]'>
-    readonly tags: FieldRef<"papers", 'String[]'>
+    readonly course: FieldRef<"papers", 'String'>
     readonly abstract: FieldRef<"papers", 'String'>
     readonly created_at: FieldRef<"papers", 'DateTime'>
     readonly updated_at: FieldRef<"papers", 'DateTime'>
@@ -15379,7 +15383,7 @@ export namespace Prisma {
     year: 'year',
     department: 'department',
     keywords: 'keywords',
-    tags: 'tags',
+    course: 'course',
     abstract: 'abstract',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -15858,7 +15862,7 @@ export namespace Prisma {
     year?: IntNullableFilter<"papers"> | number | null
     department?: StringNullableFilter<"papers"> | string | null
     keywords?: StringNullableListFilter<"papers">
-    tags?: StringNullableListFilter<"papers">
+    course?: StringNullableFilter<"papers"> | string | null
     abstract?: StringNullableFilter<"papers"> | string | null
     created_at?: DateTimeNullableFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"papers"> | Date | string | null
@@ -15875,7 +15879,7 @@ export namespace Prisma {
     year?: SortOrderInput | SortOrder
     department?: SortOrderInput | SortOrder
     keywords?: SortOrder
-    tags?: SortOrder
+    course?: SortOrderInput | SortOrder
     abstract?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
@@ -15895,7 +15899,7 @@ export namespace Prisma {
     year?: IntNullableFilter<"papers"> | number | null
     department?: StringNullableFilter<"papers"> | string | null
     keywords?: StringNullableListFilter<"papers">
-    tags?: StringNullableListFilter<"papers">
+    course?: StringNullableFilter<"papers"> | string | null
     abstract?: StringNullableFilter<"papers"> | string | null
     created_at?: DateTimeNullableFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"papers"> | Date | string | null
@@ -15912,7 +15916,7 @@ export namespace Prisma {
     year?: SortOrderInput | SortOrder
     department?: SortOrderInput | SortOrder
     keywords?: SortOrder
-    tags?: SortOrder
+    course?: SortOrderInput | SortOrder
     abstract?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
@@ -15933,7 +15937,7 @@ export namespace Prisma {
     year?: IntNullableWithAggregatesFilter<"papers"> | number | null
     department?: StringNullableWithAggregatesFilter<"papers"> | string | null
     keywords?: StringNullableListFilter<"papers">
-    tags?: StringNullableListFilter<"papers">
+    course?: StringNullableWithAggregatesFilter<"papers"> | string | null
     abstract?: StringNullableWithAggregatesFilter<"papers"> | string | null
     created_at?: DateTimeNullableWithAggregatesFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableWithAggregatesFilter<"papers"> | Date | string | null
@@ -16597,7 +16601,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -16614,7 +16618,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -16630,7 +16634,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16647,7 +16651,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16664,7 +16668,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -16676,7 +16680,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16689,7 +16693,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17479,7 +17483,7 @@ export namespace Prisma {
     year?: SortOrder
     department?: SortOrder
     keywords?: SortOrder
-    tags?: SortOrder
+    course?: SortOrder
     abstract?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -17496,6 +17500,7 @@ export namespace Prisma {
     author?: SortOrder
     year?: SortOrder
     department?: SortOrder
+    course?: SortOrder
     abstract?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -17507,6 +17512,7 @@ export namespace Prisma {
     author?: SortOrder
     year?: SortOrder
     department?: SortOrder
+    course?: SortOrder
     abstract?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -18136,10 +18142,6 @@ export namespace Prisma {
     set: string[]
   }
 
-  export type papersCreatetagsInput = {
-    set: string[]
-  }
-
   export type paper_metadataCreateNestedManyWithoutPapersInput = {
     create?: XOR<paper_metadataCreateWithoutPapersInput, paper_metadataUncheckedCreateWithoutPapersInput> | paper_metadataCreateWithoutPapersInput[] | paper_metadataUncheckedCreateWithoutPapersInput[]
     connectOrCreate?: paper_metadataCreateOrConnectWithoutPapersInput | paper_metadataCreateOrConnectWithoutPapersInput[]
@@ -18197,11 +18199,6 @@ export namespace Prisma {
   }
 
   export type papersUpdatekeywordsInput = {
-    set?: string[]
-    push?: string | string[]
-  }
-
-  export type papersUpdatetagsInput = {
     set?: string[]
     push?: string | string[]
   }
@@ -19320,7 +19317,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -19336,7 +19333,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -19367,7 +19364,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19383,7 +19380,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19398,7 +19395,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -19414,7 +19411,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -19479,7 +19476,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19495,7 +19492,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19550,7 +19547,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -19566,7 +19563,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -19597,7 +19594,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19613,7 +19610,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19628,7 +19625,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -19644,7 +19641,7 @@ export namespace Prisma {
     year?: number | null
     department?: string | null
     keywords?: papersCreatekeywordsInput | string[]
-    tags?: papersCreatetagsInput | string[]
+    course?: string | null
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -19675,7 +19672,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -19691,7 +19688,7 @@ export namespace Prisma {
     year?: NullableIntFieldUpdateOperationsInput | number | null
     department?: NullableStringFieldUpdateOperationsInput | string | null
     keywords?: papersUpdatekeywordsInput | string[]
-    tags?: papersUpdatetagsInput | string[]
+    course?: NullableStringFieldUpdateOperationsInput | string | null
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

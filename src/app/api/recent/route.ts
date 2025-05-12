@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export async function GET() {
   try {
     const recentPapers = await prisma.papers.findMany({
-      orderBy: { year: "desc" },
+      orderBy: { created_at: "desc" },
       take: 5,
     });
     // return as JSON!

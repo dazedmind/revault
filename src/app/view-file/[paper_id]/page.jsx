@@ -5,17 +5,8 @@ import NavBar from "../../component/NavBar";
 import AdminNavBar from "../../admin/components/AdminNavBar";
 import Image from "next/image";
 import avatar from "../../img/user.png";
-import {
-  FaBookmark,
-  FaFlag,
-  FaLink,
-  FaSun,
-  FaMoon,
-  FaCircleInfo,
-  FaChevronLeft,
-} from "react-icons/fa6";
+import { FaChevronLeft } from "react-icons/fa6";
 import FileMenuButton from "../../component/FileMenuButton";
-import ViewMetadata from "../../component/ViewMetadata";
 import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 import { useParams } from 'next/navigation';
@@ -120,9 +111,8 @@ function ViewFile() {
             keywords: Array.isArray(paper.keywords) 
             ? paper.keywords.flatMap(k => k.split(',').map(item => item.trim()))
             : [],
-            tags: Array.isArray(paper.tags) 
-              ? paper.tags.flatMap(t => t.split(',').map(item => item.trim()))
-              : [],
+            course: paper.course.replace(/"/g, ""),
+            department: paper.department.replace(/"/g, ""),
             abstract: paper.abstract.replace(/"/g, ""),
           })),
         );
@@ -211,21 +201,15 @@ function ViewFile() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <strong className="text-lg">Tags:</strong>
-                    <div className="flex flex-wrap gap-2">
-                      {Array.isArray(paper.tags) ? (   
-                        paper.tags.map((tag, tagIndex) => (
-                          <span 
-                            key={tagIndex} 
-                            className="px-3 py-1 bg-dusk dark:bg-white-50 dark:text-midnight rounded-md text-sm"
-                          >
-                            {tag}
-                          </span>
-                        ))
-                      ) : (   
-                        <span className="text-white-25">No tags available</span>
-                      )}
-                    </div>
+                    <p className="text-lg">
+                      <strong>Course:</strong> {paper.course}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <p className="text-lg">
+                      <strong>Department:</strong> {paper.department}
+                    </p>
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -332,20 +316,30 @@ function ViewFile() {
 
             <p>Published: {paper.year}</p>
             <p>Department: {paper.department}</p>
-
             <span className="flex gap-2 flex-wrap overflow-hidden my-2">
-              {Array.isArray(paper.tags) ? (   
-                    paper.tags.map((tag, tagIndex) => (
-                    <span key={tagIndex} className="mr-2 bg-dusk dark:bg-white-50 dark:text-midnight p-2 rounded-md w-auto text-sm px-3  ">
-                    {tag}
-                    </span>
-                    ))
-                ) : (   
-                    <span>No tags available</span>
-                )}
+              Course: {paper.course}
             </span>
 
-            <p>Keywords: {paper.keywords}</p>
+            <p>Keywords: 
+              {Array.isArray(paper.keywords) ? (   
+                        paper.keywords
+                          .flatMap(keyword => 
+                            keyword.split(/[,\s]+/) // Split by comma or whitespace
+                              .map(word => word.trim()) // Trim whitespace
+                              .filter(word => word.length > 0) // Remove empty strings
+                          )
+                          .map((keyword, keywordIndex) => (
+                            <span 
+                              key={keywordIndex} 
+                              className="px-3 py-1 bg-dusk dark:bg-white-50 dark:text-midnight rounded-md text-sm m-1"
+                            >
+                              {keyword}
+                            </span>
+                          ))
+                      ) : (   
+                        <span className="text-white-25">No keywords available</span>
+              )}
+            </p>
 
             <div className="dark:bg-card-foreground border-2 border-white-5 p-6 rounded-md mt-4">
               <h1 className="text-xl font-bold">Abstract.md </h1>
