@@ -31,6 +31,7 @@
   --primary: oklch(1 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: #f2f2f2;
+  --tertiary: #e5e5e5;
   --text-color: #121212;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -105,6 +106,7 @@
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
@@ -174,7 +176,7 @@ body {
   .dark,
   [class*="dark:"] {
     transition: background-color 0.3s ease-in-out, 
-                color 0.3s ease-in-out, 
+                color 0.1s ease-in-out, 
                 border-color 0.3s ease-in-out,
                 box-shadow 0.3s ease-in-out;
   }

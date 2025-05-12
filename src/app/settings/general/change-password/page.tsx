@@ -1,16 +1,27 @@
 "use client";
-
 import InputField from "@/app/component/InputField";
 import WarningMessage from "@/app/component/WarningMessage";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useTheme } from "next-themes";   
 
 const ChangePassword = () => {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
-    <>
-      <h1 className="text-2xl ml-1">Change</h1>
+    <div className={`flex flex-col pb-10 w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mr-10 rounded-xl border-1 border-white-5`}>
+      <h1 className="text-2xl ml-1">Change Password</h1>
       {/* divider */}
-      <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2"></div>
+      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
 
       <InputField
         containerClassName="mt-5"
@@ -56,11 +67,13 @@ const ChangePassword = () => {
         textClassName=""
         message="Password should be minimum of 9 Characters with combination of uppercase letters, lowercase letters, numbers, and symbols."
       />
+      <span>
+        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white text-base p-6 ml-4.5 mt-5">
+          Save Changes
+        </Button>
+      </span>
 
-      <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-base ml-4.5 mt-5">
-        Save Changes
-      </Button>
-    </>
+    </div>
   );
 };
 

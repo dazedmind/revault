@@ -3,17 +3,15 @@ import InputField from "@/app/component/InputField";
 import Image from "next/image";
 import avatar from "@/app/img/user.jpg";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import WarningMessage from "@/app/component/WarningMessage";
 import { FaMicrosoft } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import ContentLoader from "@/app/component/ContentLoader";
+import { useTheme } from "next-themes";
 
 const EditProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -56,17 +54,17 @@ const EditProfilePage = () => {
     return <div>Profile not found or failed to load.</div>;
   }
   return (
-    <div className="flex flex-col pb-25 w-fit">
+    <div className={`flex flex-col w-auto mr-10 ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 pb-10 rounded-xl border-1 border-white-5`}>
       <h1 className="text-2xl ml-1">Edit Profile</h1>
       {/* divider */}
-      <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2"></div>
+      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
 
-      <div className="relative w-full mt-5">
-        <Image
-          src={avatar}
-          alt="Avatar"
+      <div className="relative w-full">
+          <Image
+            src={avatar}
+            alt="Avatar"
           className="w-[124px] h-[124px] rounded-full absolute top-0 right-25"
-        />
+        />  
       </div>
 
       {/* Input Fields from InputField.tsx */}
@@ -116,7 +114,7 @@ const EditProfilePage = () => {
       <h1 className="text-2xl ml-1 mt-10">Manage Linked Accounts</h1>
 
       {/* divider */}
-      <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2 dark:bg-white-75"></div>
+      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
 
       <div className="w-3xl outline-2  p-5 ml-5 rounded-md flex justify-between mt-5 dark:bg-secondary">
         <div className="flex flex-row justify-center items-center gap-2">

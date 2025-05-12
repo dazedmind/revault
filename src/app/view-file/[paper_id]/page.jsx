@@ -179,7 +179,7 @@ function ViewFile() {
                 </button>
               </span>
 
-              <div className="border-2 border-white-5 p-8 rounded-md">
+              <div className={`border-2 ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-8 rounded-md`}>
                 <p className="font-bold text-2xl text-teal mb-6">Metadata</p>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
@@ -189,9 +189,20 @@ function ViewFile() {
                   </div>
 
                   <div className="flex flex-col gap-1">
-                    <p className="text-lg">
-                      <strong>Authors:</strong> {paper.author}
-                    </p>
+                            <p className="text-lg">
+                              <strong>Authors:</strong>
+                            </p>
+                    <div className="flex flex-row gap-3 items-center my-4 flex-wrap">
+                        {paper.author &&
+                            paper.author
+                            .split(/\s{2,}/)  // Split by two or more spaces
+                            .map((author, index) => (
+                                <div key={index} className="flex flex-row gap-2 items-center">
+                                <Image src={avatar} className="w-8 rounded-full" alt={`author-${index}`} />
+                                <p>{author.trim()}</p>
+                                </div>
+                        ))}
+                    </div>
                   </div>
 
                   <div className="flex flex-col gap-1">
@@ -225,7 +236,7 @@ function ViewFile() {
                           .map((keyword, keywordIndex) => (
                             <span 
                               key={keywordIndex} 
-                              className="px-3 py-1 bg-dusk dark:bg-white-50 dark:text-midnight rounded-md text-sm"
+                              className={`px-3 py-1 bg-dusk ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'} rounded-md text-sm m-1`}
                             >
                               {keyword}
                             </span>
@@ -253,9 +264,6 @@ function ViewFile() {
                 onClick={() => setShowMetadata(!showMetadata)}
               />
 
-              {/* divider */}
-              <div className="bg-dusk h-0.5 w-auto my-4"></div>
-
               <FileMenuButton
                 icon={
                   theme === "dark" ? (
@@ -276,9 +284,6 @@ function ViewFile() {
             </aside>
 
             <div className="Document ">
-              {/* <Image src={document} className='h-auto w-fit' alt='document'/> */}
-              {/* <PdfViewer pdfUrl="https://poropointfreeport.gov.ph/wp-content/uploads/2023/02/PPFZ-Request-for-Inspection-Form.pdf" /> */}
-
               <object
                 data="/sample.pdf"
                 type="application/pdf"
@@ -300,7 +305,7 @@ function ViewFile() {
             <p className="text-2xl font-bold">
                 {paper.title}
             </p>
-
+{/* 
             <div className="flex flex-row gap-3 items-center my-4 flex-wrap">
 
                 {paper.author &&
@@ -312,16 +317,10 @@ function ViewFile() {
                         <p>{author.trim()}</p>
                         </div>
                 ))}
-            </div>
+            </div> */}
 
-            <p>Published: {paper.year}</p>
-            <p>Department: {paper.department}</p>
-            <span className="flex gap-2 flex-wrap overflow-hidden my-2">
-              Course: {paper.course}
-            </span>
-
-            <p>Keywords: 
-              {Array.isArray(paper.keywords) ? (   
+            <p>Keywords:</p>
+            {Array.isArray(paper.keywords) ? (   
                         paper.keywords
                           .flatMap(keyword => 
                             keyword.split(/[,\s]+/) // Split by comma or whitespace
@@ -331,7 +330,7 @@ function ViewFile() {
                           .map((keyword, keywordIndex) => (
                             <span 
                               key={keywordIndex} 
-                              className="px-3 py-1 bg-dusk dark:bg-white-50 dark:text-midnight rounded-md text-sm m-1"
+                              className={`px-3 py-1 bg-dusk ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'} rounded-md text-sm m-1`}
                             >
                               {keyword}
                             </span>
@@ -339,9 +338,8 @@ function ViewFile() {
                       ) : (   
                         <span className="text-white-25">No keywords available</span>
               )}
-            </p>
 
-            <div className="dark:bg-card-foreground border-2 border-white-5 p-6 rounded-md mt-4">
+            <div className={`dark:bg-card-foreground border-2 ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6 rounded-md mt-4`}>
               <h1 className="text-xl font-bold">Abstract.md </h1>
               <p>
                 {paper.abstract}

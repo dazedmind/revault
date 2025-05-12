@@ -5,6 +5,7 @@ import avatar from "../img/user.png";
 export const ProfileCard = ({ name, number, college, position, programOrDept, role }) => {
 
     return (
+    <div className='bg-midnight dark:bg-secondary'>
       <div className='flex flex-row justify-between bg-dusk p-10 md:px-72'>
         <div className='flex flex-row align-middle items-center gap-6'>
           <div>

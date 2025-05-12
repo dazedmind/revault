@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 const SettingsList = ({
   category,
@@ -12,7 +13,7 @@ const SettingsList = ({
 }) => {
   const pathname = usePathname();
   const [isLightTheme, setIsLightTheme] = useState(false);
-
+  const { theme, setTheme } = useTheme();
   useEffect(() => {
     const theme = localStorage.getItem("theme");
     if (theme === "light") {
@@ -31,18 +32,17 @@ const SettingsList = ({
     <div>
       <h1 className={categoryClassName}>{category}</h1>
       <ul className={ulClassName}>
-        <div className={`bg-dusk h-0.5 w-5/6 mb-2 dark:bg-dusk`}></div>
-        {labels.map((label, index) => {
+      {labels.map((label, index) => {
           const path = slugify(label);
           const fullPath = `/admin/settings/${categoryPath}/${path}`;
           const isActive = pathname === fullPath;
 
           return (
             <li
-              key={index}
-              className={`${labelClassName} cursor-pointer hover:text-teal ${
-                isActive ? `text-teal bg-dusk rounded-md` : ""
-              }`}
+            key={index}
+            className={`${labelClassName} cursor-pointer hover:text-teal ${
+              isActive && theme === 'light' ? "text-teal font-bold bg-tertiary rounded-md" : ""
+            } ${ isActive && theme === 'dark' ? 'bg-darker font-bold text-teal rounded-md' : ''}`}
             >
               <Link href={fullPath} prefetch={true}>
                 {label}

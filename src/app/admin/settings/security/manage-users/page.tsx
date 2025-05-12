@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import {
   Table,
   TableBody,
@@ -11,11 +11,20 @@ import {
 import { FaPen, FaTrash } from "react-icons/fa";
 import user from "../../../../img/user.png";
 import Image from "next/image";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 const ManageUserSettings = () => {
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
   return (
-    <div>
-      <div className="flex justify-between w-6xl ">
+    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} mr-10 p-6 rounded-xl border-1 border-white-5`}>
+      <div className="flex justify-between w-auto ">
         <h1 className="text-2xl ml-1">Manage Users</h1>
         <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
           Add Librarian
@@ -23,14 +32,14 @@ const ManageUserSettings = () => {
       </div>
 
       {/* divider */}
-      <div className="bg-dusk h-0.5 w-6xl mb-2 mt-2"></div>
+      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
 
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]"></TableHead>
-            <TableHead className="w-[300px]">Name</TableHead>
-            <TableHead className="w-[300px]">Email</TableHead>
+            <TableHead className="w-[200px]">Name</TableHead>
+            <TableHead className="w-[250px]">Email</TableHead>
             <TableHead>Role</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Actions</TableHead>

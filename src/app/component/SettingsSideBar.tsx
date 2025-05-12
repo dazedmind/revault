@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 
 const SettingsList = ({
   category,
@@ -10,7 +11,7 @@ const SettingsList = ({
   labelClassName = "text-white-75",
 }) => {
   const pathname = usePathname();
-
+  const { theme, setTheme } = useTheme();
   const slugify = (text: string) =>
     text.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-");
 
@@ -20,7 +21,6 @@ const SettingsList = ({
     <div>
       <h1 className={categoryClassName}>{category}</h1>
       <ul className={ulClassName}>
-        <div className="bg-dusk h-0.5 w-5/6 mb-2"></div>
         {labels.map((label, index) => {
           const path = slugify(label);
           const fullPath = `/settings/${categoryPath}/${path}`;
@@ -28,10 +28,10 @@ const SettingsList = ({
 
           return (
             <li
-              key={index}
-              className={`${labelClassName} cursor-pointer hover:text-teal ${
-                isActive ? "text-teal bg-darker rounded-md" : ""
-              }`}
+            key={index}
+            className={`${labelClassName} cursor-pointer hover:text-teal ${
+              isActive && theme === 'light' ? "text-teal font-bold bg-tertiary rounded-md" : ""
+            } ${ isActive && theme === 'dark' ? 'bg-darker font-bold text-teal rounded-md' : ''}`}
             >
               <Link href={fullPath} prefetch={true}>
                 {label}
