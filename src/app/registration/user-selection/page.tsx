@@ -4,11 +4,10 @@ import { PiStudentBold } from "react-icons/pi";
 import { FaChalkboardTeacher } from "react-icons/fa";
 
 const UserSelection = () => {
-
   const handleUserTypeSelection = (type: string) => {
     localStorage.setItem("userType", type); // Store user type in localStorage
-    window.location.href = "registration-form"; // Redirect to registration form 
-  }
+    window.location.href = "registration-form"; // Redirect to registration form
+  };
 
   return (
     <div className="flex flex-col justify-center items-center mt-40">
@@ -17,10 +16,10 @@ const UserSelection = () => {
       </h1>
 
       <div className="flex flex-row justify-evenly gap-8 mt-10">
-      <button
-        onClick={handleUserTypeSelection.bind(null, "student")}
-        className="w-xs h-48 bg-midnight border-2 rounded-lg text-white flex flex-col justify-center items-center p-6 cursor-pointer"
-      >
+        <button
+          onClick={handleUserTypeSelection.bind(null, "student")}
+          className="w-xs h-48 bg-midnight border-2 rounded-lg text-white flex flex-col justify-center items-center p-6 cursor-pointer"
+        >
           <PiStudentBold className="size-12 mb-2" />
 
           {/* Main heading */}

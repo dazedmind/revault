@@ -1,7 +1,7 @@
-'use server';
+"use server";
 
 import { prisma } from "@/lib/prisma"; // Make sure prisma client is set up here
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 
 export async function saveInformation(formData: any) {
   try {
@@ -82,7 +82,6 @@ export async function saveInformation(formData: any) {
 
       console.log("User and faculty info saved!");
     }
-    
   } catch (err) {
     console.error("Save error:", err);
   }

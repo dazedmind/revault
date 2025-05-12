@@ -12,42 +12,44 @@ import { useEffect, useState } from "react";
 import LoadingScreen from "@/app/component/LoadingScreen";
 
 const EditProfilePage = () => {
-   const [profile, setProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      const fetchProfile = async () => {
-  
-        const token = localStorage.getItem('authToken');
-        if (!token) return;
-    
-        try {
-          const res = await fetch('/api/profile', {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          const data = await res.json(); // <-- move this here regardless of res.ok
-  
-          if (!res.ok) {
-            console.error("Failed to fetch profile:", data?.error || res.statusText);
-            return;
-          }
-    
-          setProfile(data);
-        } catch (err) {
-          console.error('Error fetching profile:', err);
-        } finally {
-          setLoading(false);
-        }
-      };
-    
-      fetchProfile();
-    }, []);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    if (loading) return <LoadingScreen />;
-    
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) return;
+
+      try {
+        const res = await fetch("/api/profile", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json(); // <-- move this here regardless of res.ok
+
+        if (!res.ok) {
+          console.error(
+            "Failed to fetch profile:",
+            data?.error || res.statusText,
+          );
+          return;
+        }
+
+        setProfile(data);
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  if (loading) return <LoadingScreen />;
+
   return (
     <div className="flex flex-col pb-25 w-fit">
       <h1 className="text-2xl ml-1">Edit Profile</h1>
@@ -73,73 +75,78 @@ const EditProfilePage = () => {
       </div>
 
       {!loading && profile && (
-      <>
-        <InputField
-          containerClassName="mt-5"
-          label="Name"
-          type="text"
-          name="fullName"
-          placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
-          inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
-          labelClassName="ml-5"
-        />
-
-        <InputField
-          containerClassName="pt-4"
-          label="Student Number"
-          type="number"
-          name="studentNumber"
-          placeholder={profile.student_num || profile.employee_id}
-          inputClassName="w-sm ml-5 h-14 dark:bg-secondary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-          labelClassName="ml-5"
-        />
-
-        <InputField
-          containerClassName="pt-4"
-          label="Program/Department"
-          type="text"
-          name="program"
-          placeholder={profile.program || profile.department}
-          inputClassName="w-sm ml-5 h-14 dark:bg-secondary cursor-not-allowed"
-          labelClassName="ml-5"
-        />
-
-        <span className="relative">
+        <>
           <InputField
-            containerClassName="pt-4"
-            label="Email"
-            type="email"
-            name="email"
-            placeholder={profile.users.email || ""}
+            containerClassName="mt-5"
+            label="Name"
+            type="text"
+            name="fullName"
+            placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
             inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
             labelClassName="ml-5"
-            disabled={false}
+            value={undefined}
+            onChange={undefined}
           />
 
-          <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">
-            Save Changes
-          </Button>
-        </span>
-      </>
-    )}
+          <InputField
+            containerClassName="pt-4"
+            label="Student Number"
+            type="number"
+            name="studentNumber"
+            placeholder={profile.student_num || profile.employee_id}
+            inputClassName="w-sm ml-5 h-14 dark:bg-secondary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            labelClassName="ml-5"
+            value={undefined}
+            onChange={undefined}
+          />
 
+          <InputField
+            containerClassName="pt-4"
+            label="Program/Department"
+            type="text"
+            name="program"
+            placeholder={profile.program || profile.department}
+            inputClassName="w-sm ml-5 h-14 dark:bg-secondary cursor-not-allowed"
+            labelClassName="ml-5"
+            value={undefined}
+            onChange={undefined}
+          />
+
+          <span className="relative">
+            <InputField
+              containerClassName="pt-4"
+              label="Email"
+              type="email"
+              name="email"
+              placeholder={profile.users.email || ""}
+              inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
+              labelClassName="ml-5"
+              disabled={false}
+              value={undefined}
+              onChange={undefined}
+            />
+
+            <Button className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white">
+              Save Changes
+            </Button>
+          </span>
+        </>
+      )}
 
       <h1 className="text-2xl ml-1 mt-10">Manage Linked Accounts</h1>
 
       {/* divider */}
       <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2"></div>
 
-     <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between mt-5 dark:bg-secondary">
+      <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between mt-5 dark:bg-secondary">
         <div className="flex flex-row justify-center items-center gap-2">
           <FaMicrosoft />
-          <p className="text-white-100 text-base font-normal">Microsoft</p>
+          <p className="text-base font-normal">Microsoft</p>
         </div>
-        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white w-[100px]">
+        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer w-[100px]">
           Link
         </Button>
       </div>
-
-
     </div>
   );
 };

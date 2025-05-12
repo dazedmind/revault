@@ -1,3 +1,5 @@
+"use client";
+
 import InputField from "@/app/component/InputField";
 import WarningMessage from "@/app/component/WarningMessage";
 import { Button } from "@/components/ui/button";
@@ -19,7 +21,8 @@ const ChangePassword = () => {
         inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
         labelClassName="ml-5"
         disabled={false}
-
+        value={undefined}
+        onChange={undefined}
       />
 
       <InputField
@@ -31,7 +34,8 @@ const ChangePassword = () => {
         inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
         labelClassName="ml-5"
         disabled={false}
-
+        value={undefined}
+        onChange={undefined}
       />
 
       <InputField
@@ -43,7 +47,8 @@ const ChangePassword = () => {
         inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
         labelClassName="ml-5"
         disabled={false}
-
+        value={undefined}
+        onChange={undefined}
       />
 
       <WarningMessage
@@ -52,7 +57,7 @@ const ChangePassword = () => {
         message="Password should be minimum of 9 Characters with combination of uppercase letters, lowercase letters, numbers, and symbols."
       />
 
-      <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white text-base ml-4.5 mt-5">
+      <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-base ml-4.5 mt-5">
         Save Changes
       </Button>
     </>

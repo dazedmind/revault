@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AdminNavBar from '../components/AdminNavBar'
+import AdminNavBar from "../components/AdminNavBar";
 import SettingsList from "../components/SettingsSideBar";
 import ProtectedRoute from "../../component/ProtectedRoute";
 

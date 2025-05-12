@@ -44,11 +44,11 @@ export default function Home() {
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem('authToken');
-      const storedUserType = localStorage.getItem('userType');
-      
+      const token = localStorage.getItem("authToken");
+      const storedUserType = localStorage.getItem("userType");
+
       if (!token) {
-        window.location.href = "/login";      
+        window.location.href = "/login";
       }
 
       if (token) {
@@ -57,7 +57,7 @@ export default function Home() {
           const currentTime = Date.now() / 1000;
 
           if (decoded.exp > currentTime) {
-            setIsAuthenticated(true);  // ✅ Token is valid
+            setIsAuthenticated(true); // ✅ Token is valid
             setUserType(storedUserType); // Set the user type from localStorage
           } else {
             alert("Token expired. Please log in again.");
@@ -108,11 +108,15 @@ export default function Home() {
             ...paper,
             title: paper.title.replace(/"/g, ""),
             author: paper.author.replace(/"/g, ""),
-            keywords: Array.isArray(paper.keywords) 
-            ? paper.keywords.flatMap(k => k.split(',').map(item => item.trim()))
-            : [],
-            tags: Array.isArray(paper.tags) 
-              ? paper.tags.flatMap(t => t.split(',').map(item => item.trim()))
+            keywords: Array.isArray(paper.keywords)
+              ? paper.keywords.flatMap((k) =>
+                  k.split(",").map((item) => item.trim()),
+                )
+              : [],
+            tags: Array.isArray(paper.tags)
+              ? paper.tags.flatMap((t) =>
+                  t.split(",").map((item) => item.trim()),
+                )
               : [],
             abstract: paper.abstract.replace(/"/g, ""),
           })),
@@ -128,15 +132,13 @@ export default function Home() {
   }, [router]);
 
   if (loading) {
-    return (
-      <LoadingScreen/>
-    );
+    return <LoadingScreen />;
   }
 
   return (
     <div className="font-[family-name:'Inter'] dark:bg-secondary">
       {userType === "librarian" ? <AdminNavBar /> : <NavBar />}
-      
+
       <main className="flex flex-row">
         <aside className="hidden md:flex h-auto w-96 p-8">
           <div className="flex flex-col gap-6 m-2">
@@ -220,7 +222,6 @@ export default function Home() {
           ) : (
             <p>No recent papers found.</p>
           )}
-
 
           <div className="flex flex-col justify-between gap-4"></div>
 

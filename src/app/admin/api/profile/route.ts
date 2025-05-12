@@ -1,15 +1,15 @@
-import { NextResponse } from 'next/server';
-import { jwtVerify } from 'jose'; // install with `npm install jose`
+import { NextResponse } from "next/server";
+import { jwtVerify } from "jose"; // install with `npm install jose`
 import { prisma } from "@/lib/prisma"; // adjust based on your setup
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 export async function GET(req: Request) {
-  const token = req.headers.get('authorization')?.replace('Bearer ', '');
+  const token = req.headers.get("authorization")?.replace("Bearer ", "");
 
   if (!token) {
-    return NextResponse.json({ error: 'No token provided' }, { status: 401 });
+    return NextResponse.json({ error: "No token provided" }, { status: 401 });
   }
 
   try {
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     const userNumber = Number(payload.userNumber); // <- FIXED
     let user;
 
-    if (payload.role === 'librarian') {
+    if (payload.role === "librarian") {
       user = await prisma.librarian.findFirst({
         where: { employee_id: userNumber },
         include: { users: true },
@@ -36,11 +36,11 @@ export async function GET(req: Request) {
         };
       }
     } else {
-      return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
+      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
     }
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     user.role = payload.role; // set role to pass on to the front-end
@@ -48,6 +48,9 @@ export async function GET(req: Request) {
     return NextResponse.json(user);
   } catch (err) {
     console.error("Error verifying token:", err);
-    return NextResponse.json({ error: 'Invalid or expired token' }, { status: 403 });
+    return NextResponse.json(
+      { error: "Invalid or expired token" },
+      { status: 403 },
+    );
   }
 }

@@ -1,7 +1,13 @@
 import React from "react";
-import { FiLink2 } from 'react-icons/fi'
+import { FiLink2 } from "react-icons/fi";
 import Image from "next/image";
-import { FaBook, FaBookmark, FaBookOpen, FaFlag, FaLink } from "react-icons/fa6";
+import {
+  FaBook,
+  FaBookmark,
+  FaBookOpen,
+  FaFlag,
+  FaLink,
+} from "react-icons/fa6";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -10,9 +16,9 @@ import DocsLoader from "./DocsLoader";
 import { Eye } from "lucide-react"
 
 const tagColors = {
-    IT: "bg-dusk",
-    // Add more tags as needed
-  };
+  IT: "bg-dusk",
+  // Add more tags as needed
+};
 
 const DocsCard = (props) => {
   const [papers, setPapers] = useState();
@@ -64,9 +70,7 @@ const DocsCard = (props) => {
   };
 
   if (loading) {
-    return (
-      <DocsLoader message="Loading Recent Papers"/>
-    );
+    return <DocsLoader message="Loading Recent Papers" />;
   }
 
     return (  
@@ -112,11 +116,14 @@ const DocsCard = (props) => {
                     <Bookmark /> <span className="hidden md:flex">Bookmark</span>
                     </button>
                 </span>
-
-                </div>
-          </div>
+            <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer  dark:hover:text-midnight dark:hover:bg-white-50">
+              <Bookmark /> Bookmark
+            </button>
+          </span>
+        </div>
       </div>
-    )
-  }
-  
-  export default DocsCard
+    </div>
+  );
+};
+
+export default DocsCard;

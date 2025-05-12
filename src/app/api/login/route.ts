@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -8,7 +8,10 @@ export async function POST(req: Request) {
   const { idNumber, password } = await req.json();
 
   if (!idNumber || !password) {
-    return Response.json({ success: false, message: "Missing credentials" }, { status: 400 });
+    return Response.json(
+      { success: false, message: "Missing credentials" },
+      { status: 400 },
+    );
   }
 
   // 🧠 Determine role based on first digit
@@ -20,7 +23,10 @@ export async function POST(req: Request) {
   if (firstDigit === "2") role = "student";
   else if (firstDigit === "1") role = "faculty";
   else {
-    return Response.json({ success: false, message: "Invalid ID format" }, { status: 400 });
+    return Response.json(
+      { success: false, message: "Invalid ID format" },
+      { status: 400 },
+    );
   }
 
   let userRecord: any = null;
@@ -46,12 +52,18 @@ export async function POST(req: Request) {
   }
 
   if (!userRecord) {
-    return Response.json({ success: false, message: "User not found" }, { status: 404 });
+    return Response.json(
+      { success: false, message: "User not found" },
+      { status: 404 },
+    );
   }
 
   const isPasswordCorrect = await bcrypt.compare(password, userRecord.password);
   if (!isPasswordCorrect) {
-    return Response.json({ success: false, message: "Invalid password" }, { status: 401 });
+    return Response.json(
+      { success: false, message: "Invalid password" },
+      { status: 401 },
+    );
   }
 
   // 🪙 Create token
@@ -64,11 +76,14 @@ export async function POST(req: Request) {
       userNumber: idNumber,
     },
     SECRET_KEY,
-    { expiresIn: '2h' }
+    { expiresIn: "2h" },
   );
 
   const headers = new Headers();
-  headers.append('Set-Cookie', `authToken=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=7200`);
+  headers.append(
+    "Set-Cookie",
+    `authToken=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=7200`,
+  );
 
   return new Response(
     JSON.stringify({
@@ -78,8 +93,8 @@ export async function POST(req: Request) {
       user: {
         name: userRecord.first_name,
         role: userRecord.role,
-      }
+      },
     }),
-    { headers }
+    { headers },
   );
 }

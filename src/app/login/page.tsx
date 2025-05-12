@@ -24,10 +24,10 @@ const LogIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Debugging line to log form data before sending it
     console.log("Form Data: ", formData);
-  
+
     // Send login request to the server
     const response = await fetch("/api/login", {
       method: "POST",
@@ -36,31 +36,31 @@ const LogIn = () => {
       },
       body: JSON.stringify({
         idNumber: formData.idNumber, // Correctly using formData.idNumber
-        password: formData.password,  // Correctly using formData.password
+        password: formData.password, // Correctly using formData.password
       }),
     });
-  
-       // Check if response is OK (status 200-299)
-       if (!response.ok) {
-        setErrorMessage("Login failed. Please check your credentials.");
-        setShowErrorModal(true);
-        return;
-      }
-  
-      // Try to parse the response body
-      const result = await response.json().catch((error) => {
-        console.error("Failed to parse JSON:", error);
-        return null; // return null if parsing fails
-      });
+
+    // Check if response is OK (status 200-299)
+    if (!response.ok) {
+      setErrorMessage("Login failed. Please check your credentials.");
+      setShowErrorModal(true);
+      return;
+    }
+
+    // Try to parse the response body
+    const result = await response.json().catch((error) => {
+      console.error("Failed to parse JSON:", error);
+      return null; // return null if parsing fails
+    });
 
     // Parse the response from the API (assuming it's JSON)
-  
+
     // Handle login result
     if (result.success) {
       // Store token in localStorage if login is successful
-      localStorage.setItem('authToken', result.token); // 🔐 Store the token
-      localStorage.setItem('userType', result.user.role); // 🔐 Store the token
-      window.location.href = '/home'; // Redirect to home page
+      localStorage.setItem("authToken", result.token); // 🔐 Store the token
+      localStorage.setItem("userType", result.user.role); // 🔐 Store the token
+      window.location.href = "/home"; // Redirect to home page
     } else {
       // Alert the user if login failed
       alert("Login failed: " + result.message);
@@ -68,9 +68,9 @@ const LogIn = () => {
   };
 
   // ALWAYS CLEARS TOKEN ON LOGIN PAGE LOAD
-   useEffect(() => { 
-      localStorage.removeItem('authToken');
-    },);
+  useEffect(() => {
+    localStorage.removeItem("authToken");
+  });
 
   return (
     <div className="font-Inter h-screen w-screen overflow-hidden relative">
@@ -112,7 +112,7 @@ const LogIn = () => {
               {/* Remember Password & Forgot Password */}
               <div className="flex flex-row justify-between items-center m-5 md:my-4 md:mx-1 mt-5">
                 <LogInCheckBox id="rememberMe" label="Remember password" />
-      
+
                 <p className="font-inter text-teal text-xs text-align cursor-pointer">
                   Forgot Password?
                 </p>
@@ -135,7 +135,10 @@ const LogIn = () => {
           <div className="flex flex-row justify-center mt-5 mb-4">
             <p className="text-xs">
               Don&#39;t have an account yet?{" "}
-              <a href="/registration/user-selection" className="text-teal cursor-pointer">
+              <a
+                href="/registration/user-selection"
+                className="text-teal cursor-pointer"
+              >
                 Create account
               </a>
             </p>
@@ -158,7 +161,6 @@ const LogIn = () => {
               Microsoft
             </button>
           </div>
-
         </div>
       </main>
 

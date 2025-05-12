@@ -245,7 +245,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\allen\\Desktop\\revault\\src\\generated\\prisma",
+      "value": "C:\\Users\\Matthew Jacob\\Desktop\\SIA\\revault\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -259,12 +259,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\allen\\Desktop\\revault\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Matthew Jacob\\Desktop\\SIA\\revault\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.6.0",

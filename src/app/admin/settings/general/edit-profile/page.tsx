@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import InputField from "@/app/component/InputField";
 import Image from "next/image";
 import avatar from "@/app/img/user.jpg";
@@ -17,13 +17,12 @@ const EditProfilePage = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) return;
-  
+
       try {
-        const res = await fetch('/admin/api/profile', {
-          method: 'GET',
+        const res = await fetch("/admin/api/profile", {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -31,25 +30,28 @@ const EditProfilePage = () => {
         const data = await res.json(); // <-- move this here regardless of res.ok
 
         if (!res.ok) {
-          console.error("Failed to fetch profile:", data?.error || res.statusText);
+          console.error(
+            "Failed to fetch profile:",
+            data?.error || res.statusText,
+          );
           return;
         }
-  
+
         setProfile(data);
       } catch (err) {
-        console.error('Error fetching profile:', err);
+        console.error("Error fetching profile:", err);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchProfile();
   }, []);
 
   if (loading) {
     return <ContentLoader />; // or your own spinner
   }
-  
+
   if (!profile) {
     return <div>Profile not found or failed to load.</div>;
   }
@@ -111,13 +113,12 @@ const EditProfilePage = () => {
         </Button>
       </span>
 
-
       <h1 className="text-2xl ml-1 mt-10">Manage Linked Accounts</h1>
 
       {/* divider */}
       <div className="bg-dusk h-0.5 w-5xl mb-2 mt-2 dark:bg-white-75"></div>
 
-     <div className="w-3xl outline-2 bg-midnight  p-5 ml-5 rounded-md flex justify-between mt-5 dark:bg-secondary">
+      <div className="w-3xl outline-2  p-5 ml-5 rounded-md flex justify-between mt-5 dark:bg-secondary">
         <div className="flex flex-row justify-center items-center gap-2">
           <FaMicrosoft />
           <p className="text-white-100 text-base font-normal">Microsoft</p>
@@ -126,8 +127,6 @@ const EditProfilePage = () => {
           Link
         </Button>
       </div>
-
-
     </div>
   );
 };

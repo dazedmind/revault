@@ -1,5 +1,5 @@
-import Image from 'next/image'
-import React from 'react'
+import Image from "next/image";
+import React from "react";
 import avatar from "../img/user.png";
 
 export const ProfileCard = ({ name, number, college, position, programOrDept, role }) => {
@@ -19,5 +19,6 @@ export const ProfileCard = ({ name, number, college, position, programOrDept, ro
           </div>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
