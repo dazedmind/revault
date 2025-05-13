@@ -99,101 +99,103 @@ const EditProfilePage = () => {
       <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
 
       {/* Warning message from WarningMessage.tsx */}
-
-      <div className="relative w-full mt-5">
-        <WarningMessage
-          containerClassName="w-xl"
+      <WarningMessage
+          containerClassName="w-full"
           textClassName=" "
           message="Contact your admin if you want to request to change your Student Information"
         />
 
-        <div className=" relative w-[124px] h-[124px] group">
-          {/* Image */}
-          <Image
-            src={preview || profile?.users?.profile_picture || avatar} // fallback to default
-            alt="Avatar"
-            width={124}
-            height={124}
-            className="w-full h-full object-cover rounded-full"
-          />
-
-          {/* Hover overlay with camera icon */}
-          <div className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
-              <Camera className="text-white w-6 h-6" />
-            </div>
-
-            {/* File input */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="absolute inset-0 opacity-0 cursor-pointer"
+      <div className="flex gap-100 flex-row-reverse justify-between">
+        <div className="relative w-full mt-5">
+          <div className=" relative w-[124px] h-[124px] group m-4">
+            {/* Image */}
+            <Image
+              src={preview || profile?.users?.profile_picture || avatar} // fallback to default
+              alt="Avatar"
+              width={124}
+              height={124}
+              className="w-full h-full object-cover rounded-full"
             />
+
+            {/* Hover overlay with camera icon */}
+            <div className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
+                <Camera className="text-white w-6 h-6" />
+              </div>
+
+              {/* File input */}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+          </div>
+              <Button
+                onClick={handleSaveChanges}
+                className="absolute bottom-0 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white"
+              >
+                Save Changes
+              </Button>
         </div>
-      </div>
 
-      {!loading && profile && (
-        <>
-          <InputField
-            containerClassName="mt-5"
-            label="Name"
-            type="text"
-            name="fullName"
-            placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
-            inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
-            labelClassName="ml-5"
-            value={undefined}
-            onChange={undefined}
-          />
-
-          <InputField
-            containerClassName="pt-4"
-            label="Student Number"
-            type="number"
-            name="studentNumber"
-            placeholder={profile.student_num || profile.employee_id}
-            inputClassName="w-sm ml-5 h-14 dark:bg-secondary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            labelClassName="ml-5"
-            value={undefined}
-            onChange={undefined}
-          />
-
-          <InputField
-            containerClassName="pt-4"
-            label="Program/Department"
-            type="text"
-            name="program"
-            placeholder={profile.program || profile.department}
-            inputClassName="w-sm ml-5 h-14 dark:bg-secondary cursor-not-allowed"
-            labelClassName="ml-5"
-            value={undefined}
-            onChange={undefined}
-          />
-
-          <span className="relative">
+        <div className="w-full">
+        {!loading && profile && (
+          <>
             <InputField
-              containerClassName="pt-4"
-              label="Email"
-              type="email"
-              name="email"
-              placeholder={profile.users.email || ""}
+              containerClassName="mt-5"
+              label="Name"
+              type="text"
+              name="fullName"
+              placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
               inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
               labelClassName="ml-5"
-              disabled={false}
               value={undefined}
               onChange={undefined}
             />
 
-            <Button
-              onClick={handleSaveChanges}
-              className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white"
-            >
-              Save Changes
-            </Button>
+            <InputField
+              containerClassName="pt-4"
+              label="Student Number"
+              type="number"
+              name="studentNumber"
+              placeholder={profile.student_num || profile.employee_id}
+              inputClassName="w-sm ml-5 h-14 dark:bg-secondary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              labelClassName="ml-5"
+              value={undefined}
+              onChange={undefined}
+            />
 
-            </span>
-        </>
-      )}
+            <InputField
+              containerClassName="pt-4"
+              label="Program/Department"
+              type="text"
+              name="program"
+              placeholder={profile.program || profile.department}
+              inputClassName="w-sm ml-5 h-14 dark:bg-secondary cursor-not-allowed"
+              labelClassName="ml-5"
+              value={undefined}
+              onChange={undefined}
+            />
+
+            <span className="relative">
+              <InputField
+                containerClassName="pt-4"
+                label="Email"
+                type="email"
+                name="email"
+                placeholder={profile.users.email || ""}
+                inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
+                labelClassName="ml-5"
+                disabled={false}
+                value={undefined}
+                onChange={undefined}
+              />
+              </span>
+          </>
+        )}
+        </div>
+
+      </div>
 
       <h1 className="text-2xl ml-1 mt-10">Manage Linked Accounts</h1>
 

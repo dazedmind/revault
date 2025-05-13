@@ -204,7 +204,7 @@ const UploadFile = () => {
               <Trash className='w-6 h-6' />
             </button>
         </div>
-        <label htmlFor="file-input" className='text-sm text-white-50'>File type: .pdf and .tiff only (Maximum file size: 10MB)</label>
+        <label htmlFor="file-input" className='text-sm text-white-50'>File type: .pdf and .tiff only (Maximum file size: 15MB)</label>
 
         {isLoading && (
           <div className="mt-4">
