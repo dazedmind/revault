@@ -16,6 +16,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import LoadingScreen from "../component/LoadingScreen";
+import { Toaster } from "@/components/ui/sonner"
+
 
 export const decode = (token) => {
   try {
@@ -217,6 +219,7 @@ export default function Home() {
                 description={paper.abstract || "No abstract available"}
                 tags={paper.keywords || []}
                 paper_id={paper.paper_id}
+                viewFromAdmin={userType === "librarian"}
               />
             ))
           ) : (
@@ -255,6 +258,9 @@ export default function Home() {
           </Pagination>
         </div>
       </main>
+
+      <Toaster />
+
     </div>
   );
 }

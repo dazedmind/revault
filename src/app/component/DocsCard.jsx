@@ -2,10 +2,11 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Bookmark, BookOpenText } from "lucide-react";
+import { redirect, useRouter } from "next/navigation";
+import { Bookmark, BookmarkX, Eye, Pen, Pencil } from "lucide-react";
 import DocsLoader from "./DocsLoader";
 import { useTheme } from "next-themes";
+import { toast } from "sonner";
 
 const tagColors = {
   IT: "bg-dusk",
@@ -17,7 +18,68 @@ const DocsCard = (props) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { theme, setTheme } = useTheme("light");
+  const {
+    paper_id,
+    savedFromProfile = false, // 👈 default is false unless passed explicitly
+    viewFromAdmin = false
+  } = props;
 
+  const handleUnbookmark = async (paperId) => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      toast.error("You're not logged in.");
+      return;
+    }
+  
+    try {
+      const res = await fetch(`/api/bookmark/${paperId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to unbookmark");
+  
+      toast.success(data.message || "Bookmark removed.");
+      
+      router.refresh(); // Optionally refresh the view
+      window.location.reload();
+    } catch (err) {
+      console.error("Unbookmark error:", err);
+      toast.error("An error occurred while removing the bookmark.");
+    }
+  };
+
+  const handleBookmark = async (paperId) => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      alert("You're not logged in.");
+      return;
+    }
+  
+    try {
+      const res = await fetch('/api/bookmark', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ paper_id: paperId }),
+      });
+  
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to bookmark");
+  
+      toast.success(data.message || "Paper Bookmarked successfully.");
+    } catch (err) {
+      console.error("Bookmark error:", err);
+      alert("An error occurred while bookmarking.");
+    }
+  };
+
+  
   useEffect(() => {
     async function init() {
       // 1. Auth check (simplified)
@@ -51,6 +113,8 @@ const DocsCard = (props) => {
     }
 
     init();
+
+ 
   }, [router]);
 
   const truncateText = (text, maxWords = 48) => {
@@ -98,15 +162,35 @@ const DocsCard = (props) => {
           {/* Left Side Buttons */}
           <span className="flex gap-4">
             <Link href={`/view-file/${props.paper_id}`}>
-              <button className="transition-all duration-300 flex flex-row items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:brightness-120 rounded-lg cursor-pointer">
-                <BookOpenText />
+              <button className="transition-all duration-300 flex flex-row items-center gap-2 px-5 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:brightness-120 rounded-lg cursor-pointer">
+                <Eye />
                 Read
               </button>
             </Link>
-
-            <button className="flex flex-row items-center align-middle gap-2 px-6 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer  dark:hover:text-midnight dark:hover:bg-white-50">
-              <Bookmark /> Bookmark
-            </button>
+              {viewFromAdmin ? (
+                <button
+                  onClick={() => router.push('/upload')}
+                  className="flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-dusk"
+                >
+                  <Pencil />
+                </button>
+              ) : (
+                savedFromProfile ? (
+                  <button
+                    onClick={() => handleUnbookmark(paper_id)}
+                    className="flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-red-warning-fg"
+                  >
+                    <BookmarkX /> Unsave
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleBookmark(paper_id)}
+                    className="flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer dark:hover:text-midnight dark:hover:bg-white-50"
+                  >
+                    <Bookmark /> Bookmark
+                  </button>
+                )
+              )}
           </span>
         </div>
       </div>

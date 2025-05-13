@@ -7,15 +7,12 @@ import Image from "next/image";
 import avatar from "../img/user.png";
 import {
   FaBookmark,
-  FaFlag,
-  FaLink,
   FaSun,
   FaMoon,
   FaCircleInfo,
   FaChevronLeft,
 } from "react-icons/fa6";
 import FileMenuButton from "../component/FileMenuButton";
-import ViewMetadata from "../component/ViewMetadata";
 import ProtectedRoute from "../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 import { useParams } from 'next/navigation';

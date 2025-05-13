@@ -319,7 +319,6 @@ function ViewFile() {
                 ))}
             </div> */}
 
-            <p>Keywords:</p>
             {Array.isArray(paper.keywords) ? (   
                         paper.keywords
                           .flatMap(keyword => 

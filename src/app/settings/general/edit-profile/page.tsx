@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { useTheme } from "next-themes";
 import { Camera } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
 const EditProfilePage = () => {
   const [profile, setProfile] = useState(null);
@@ -46,8 +47,7 @@ const EditProfilePage = () => {
       const data = await res.json();
   
       if (res.ok) {
-        alert("Profile picture updated!");
-        // Optionally refetch the profile or update state
+        toast.success(data.message || "Profile picture updated successfully!")
       } else {
         console.error("Upload failed:", data.error);
       }
@@ -211,6 +211,7 @@ const EditProfilePage = () => {
           Link
         </Button>
       </div>
+      <Toaster />
     </div>
   );
 };
