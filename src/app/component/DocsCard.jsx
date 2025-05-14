@@ -21,29 +21,29 @@ const DocsCard = (props) => {
   const {
     paper_id,
     savedFromProfile = false, // 👈 default is false unless passed explicitly
-    viewFromAdmin = false
+    viewFromAdmin = false,
   } = props;
 
   const handleUnbookmark = async (paperId) => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (!token) {
       toast.error("You're not logged in.");
       return;
     }
-  
+
     try {
       const res = await fetch(`/api/bookmark/${paperId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed to unbookmark");
-  
+
       toast.success(data.message || "Bookmark removed.");
-      
+
       router.refresh(); // Optionally refresh the view
       window.location.reload();
     } catch (err) {
@@ -53,25 +53,25 @@ const DocsCard = (props) => {
   };
 
   const handleBookmark = async (paperId) => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (!token) {
       alert("You're not logged in.");
       return;
     }
-  
+
     try {
-      const res = await fetch('/api/bookmark', {
-        method: 'POST',
+      const res = await fetch("/api/bookmark", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ paper_id: paperId }),
       });
-  
+
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed to bookmark");
-  
+
       toast.success(data.message || "Paper Bookmarked successfully.");
     } catch (err) {
       console.error("Bookmark error:", err);
@@ -79,7 +79,6 @@ const DocsCard = (props) => {
     }
   };
 
-  
   useEffect(() => {
     async function init() {
       // 1. Auth check (simplified)
@@ -113,28 +112,32 @@ const DocsCard = (props) => {
     }
 
     init();
-
- 
   }, [router]);
 
   const truncateText = (text, maxWords = 48) => {
     if (!text) return "No description available";
-    const words = text.split(' ');
+    const words = text.split(" ");
     if (words.length > maxWords) {
-      return words.slice(0, maxWords).join(' ') + '...';
+      return words.slice(0, maxWords).join(" ") + "...";
     }
     return text;
   };
-  
+
   if (loading) {
     return <DocsLoader message="Loading Recent Papers" />;
   }
 
   return (
-    <div className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:p-6 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
+    <div
+      className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:p-6 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}
+    >
       <div className="w-52">
         <a href={props.link}>
-          <Image src={props.img} alt="Project" className="hidden md:flex w-full h-full" />
+          <Image
+            src={props.img}
+            alt="Project"
+            className="hidden md:flex w-full h-full"
+          />
         </a>
       </div>
 
@@ -155,7 +158,9 @@ const DocsCard = (props) => {
             <p className="text-white text-md italic">No tags available</p>
           )}
         </div>
-        <p className='text-sm line-clamp-4 md:text-justify dark:text-white-75'>{truncateText(props.description)}</p>
+        <p className="text-sm line-clamp-4 text-justify dark:text-card">
+          {truncateText(props.description)}
+        </p>
         <div className="mt-6 flex flex-row items-center justify-between gap-4">
           {/* Left Side Buttons */}
           <span className="flex gap-4">
@@ -165,30 +170,28 @@ const DocsCard = (props) => {
                 Read
               </button>
             </Link>
-              {viewFromAdmin ? (
-                <button
-                  onClick={() => router.push('/upload')}
-                  className="transition-all duration-300flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-dusk"
-                >
-                  <Pencil />
-                </button>
-              ) : (
-                savedFromProfile ? (
-                  <button
-                    onClick={() => handleUnbookmark(paper_id)}
-                    className="transition-all duration-300 flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-red-warning-fg"
-                  >
-                    <BookmarkX /> <span className="hidden md:flex">Unsave</span>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleBookmark(paper_id)}
-                    className="transition-all duration-300 flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer hover:bg-dusk"
-                  >
-                    <Bookmark /> <span className="hidden md:flex">Bookmark</span>
-                  </button>
-                )
-              )}
+            {viewFromAdmin ? (
+              <button
+                onClick={() => router.push("/upload")}
+                className="transition-all duration-300flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-dusk"
+              >
+                <Pencil />
+              </button>
+            ) : savedFromProfile ? (
+              <button
+                onClick={() => handleUnbookmark(paper_id)}
+                className="transition-all duration-300 flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-red-warning-fg"
+              >
+                <BookmarkX /> <span className="hidden md:flex">Unsave</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => handleBookmark(paper_id)}
+                className="transition-all duration-300 flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer hover:bg-dusk"
+              >
+                <Bookmark /> <span className="hidden md:flex">Bookmark</span>
+              </button>
+            )}
           </span>
         </div>
       </div>
