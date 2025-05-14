@@ -376,8 +376,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.6.0
-   * Query Engine version: f676762280b54cd07c770017ed3711ddde35f37a
+   * Prisma Client JS version: 6.7.0
+   * Query Engine version: 3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
    */
   export type PrismaVersion = {
     client: string
@@ -6559,6 +6559,7 @@ export namespace Prisma {
     abstract: string | null
     created_at: Date | null
     updated_at: Date | null
+    paper_url: string | null
   }
 
   export type PapersMaxAggregateOutputType = {
@@ -6571,6 +6572,7 @@ export namespace Prisma {
     abstract: string | null
     created_at: Date | null
     updated_at: Date | null
+    paper_url: string | null
   }
 
   export type PapersCountAggregateOutputType = {
@@ -6584,6 +6586,7 @@ export namespace Prisma {
     abstract: number
     created_at: number
     updated_at: number
+    paper_url: number
     _all: number
   }
 
@@ -6608,6 +6611,7 @@ export namespace Prisma {
     abstract?: true
     created_at?: true
     updated_at?: true
+    paper_url?: true
   }
 
   export type PapersMaxAggregateInputType = {
@@ -6620,6 +6624,7 @@ export namespace Prisma {
     abstract?: true
     created_at?: true
     updated_at?: true
+    paper_url?: true
   }
 
   export type PapersCountAggregateInputType = {
@@ -6633,6 +6638,7 @@ export namespace Prisma {
     abstract?: true
     created_at?: true
     updated_at?: true
+    paper_url?: true
     _all?: true
   }
 
@@ -6733,6 +6739,7 @@ export namespace Prisma {
     abstract: string | null
     created_at: Date | null
     updated_at: Date | null
+    paper_url: string | null
     _count: PapersCountAggregateOutputType | null
     _avg: PapersAvgAggregateOutputType | null
     _sum: PapersSumAggregateOutputType | null
@@ -6765,6 +6772,7 @@ export namespace Prisma {
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
+    paper_url?: boolean
     paper_metadata?: boolean | papers$paper_metadataArgs<ExtArgs>
     user_bookmarks?: boolean | papers$user_bookmarksArgs<ExtArgs>
     paper_bm25_index?: boolean | papers$paper_bm25_indexArgs<ExtArgs>
@@ -6783,6 +6791,7 @@ export namespace Prisma {
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
+    paper_url?: boolean
   }, ExtArgs["result"]["papers"]>
 
   export type papersSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6796,6 +6805,7 @@ export namespace Prisma {
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
+    paper_url?: boolean
   }, ExtArgs["result"]["papers"]>
 
   export type papersSelectScalar = {
@@ -6809,9 +6819,10 @@ export namespace Prisma {
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
+    paper_url?: boolean
   }
 
-  export type papersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"paper_id" | "title" | "author" | "year" | "department" | "keywords" | "course" | "abstract" | "created_at" | "updated_at", ExtArgs["result"]["papers"]>
+  export type papersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"paper_id" | "title" | "author" | "year" | "department" | "keywords" | "course" | "abstract" | "created_at" | "updated_at" | "paper_url", ExtArgs["result"]["papers"]>
   export type papersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     paper_metadata?: boolean | papers$paper_metadataArgs<ExtArgs>
     user_bookmarks?: boolean | papers$user_bookmarksArgs<ExtArgs>
@@ -6841,6 +6852,7 @@ export namespace Prisma {
       abstract: string | null
       created_at: Date | null
       updated_at: Date | null
+      paper_url: string | null
     }, ExtArgs["result"]["papers"]>
     composites: {}
   }
@@ -7278,6 +7290,7 @@ export namespace Prisma {
     readonly abstract: FieldRef<"papers", 'String'>
     readonly created_at: FieldRef<"papers", 'DateTime'>
     readonly updated_at: FieldRef<"papers", 'DateTime'>
+    readonly paper_url: FieldRef<"papers", 'String'>
   }
     
 
@@ -15400,7 +15413,8 @@ export namespace Prisma {
     course: 'course',
     abstract: 'abstract',
     created_at: 'created_at',
-    updated_at: 'updated_at'
+    updated_at: 'updated_at',
+    paper_url: 'paper_url'
   };
 
   export type PapersScalarFieldEnum = (typeof PapersScalarFieldEnum)[keyof typeof PapersScalarFieldEnum]
@@ -15885,6 +15899,7 @@ export namespace Prisma {
     abstract?: StringNullableFilter<"papers"> | string | null
     created_at?: DateTimeNullableFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"papers"> | Date | string | null
+    paper_url?: StringNullableFilter<"papers"> | string | null
     paper_metadata?: Paper_metadataListRelationFilter
     user_bookmarks?: User_bookmarksListRelationFilter
     paper_bm25_index?: Paper_bm25_indexListRelationFilter
@@ -15902,6 +15917,7 @@ export namespace Prisma {
     abstract?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
+    paper_url?: SortOrderInput | SortOrder
     paper_metadata?: paper_metadataOrderByRelationAggregateInput
     user_bookmarks?: user_bookmarksOrderByRelationAggregateInput
     paper_bm25_index?: paper_bm25_indexOrderByRelationAggregateInput
@@ -15922,6 +15938,7 @@ export namespace Prisma {
     abstract?: StringNullableFilter<"papers"> | string | null
     created_at?: DateTimeNullableFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"papers"> | Date | string | null
+    paper_url?: StringNullableFilter<"papers"> | string | null
     paper_metadata?: Paper_metadataListRelationFilter
     user_bookmarks?: User_bookmarksListRelationFilter
     paper_bm25_index?: Paper_bm25_indexListRelationFilter
@@ -15939,6 +15956,7 @@ export namespace Prisma {
     abstract?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
+    paper_url?: SortOrderInput | SortOrder
     _count?: papersCountOrderByAggregateInput
     _avg?: papersAvgOrderByAggregateInput
     _max?: papersMaxOrderByAggregateInput
@@ -15960,6 +15978,7 @@ export namespace Prisma {
     abstract?: StringNullableWithAggregatesFilter<"papers"> | string | null
     created_at?: DateTimeNullableWithAggregatesFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableWithAggregatesFilter<"papers"> | Date | string | null
+    paper_url?: StringNullableWithAggregatesFilter<"papers"> | string | null
   }
 
   export type paper_metadataWhereInput = {
@@ -16631,6 +16650,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
     paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexCreateNestedManyWithoutPapersInput
@@ -16648,6 +16668,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
     paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexUncheckedCreateNestedManyWithoutPapersInput
@@ -16664,6 +16685,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUpdateManyWithoutPapersNestedInput
@@ -16681,6 +16703,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUncheckedUpdateManyWithoutPapersNestedInput
@@ -16698,6 +16721,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
   }
 
   export type papersUpdateManyMutationInput = {
@@ -16710,6 +16734,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type papersUncheckedUpdateManyInput = {
@@ -16723,6 +16748,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type paper_metadataCreateInput = {
@@ -17516,6 +17542,7 @@ export namespace Prisma {
     abstract?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    paper_url?: SortOrder
   }
 
   export type papersAvgOrderByAggregateInput = {
@@ -17533,6 +17560,7 @@ export namespace Prisma {
     abstract?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    paper_url?: SortOrder
   }
 
   export type papersMinOrderByAggregateInput = {
@@ -17545,6 +17573,7 @@ export namespace Prisma {
     abstract?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    paper_url?: SortOrder
   }
 
   export type papersSumOrderByAggregateInput = {
@@ -19362,6 +19391,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexCreateNestedManyWithoutPapersInput
     term_score?: term_scoreCreateNestedManyWithoutPapersInput
@@ -19378,6 +19408,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexUncheckedCreateNestedManyWithoutPapersInput
     term_score?: term_scoreUncheckedCreateNestedManyWithoutPapersInput
@@ -19409,6 +19440,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUpdateManyWithoutPapersNestedInput
@@ -19425,6 +19457,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUncheckedUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUncheckedUpdateManyWithoutPapersNestedInput
@@ -19440,6 +19473,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
     paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexCreateNestedManyWithoutPapersInput
     term_score?: term_scoreCreateNestedManyWithoutPapersInput
@@ -19456,6 +19490,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
     paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexUncheckedCreateNestedManyWithoutPapersInput
     term_score?: term_scoreUncheckedCreateNestedManyWithoutPapersInput
@@ -19523,6 +19558,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUpdateManyWithoutPapersNestedInput
@@ -19539,6 +19575,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUncheckedUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUncheckedUpdateManyWithoutPapersNestedInput
@@ -19596,6 +19633,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
     paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
     term_score?: term_scoreCreateNestedManyWithoutPapersInput
@@ -19612,6 +19650,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
     paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
     term_score?: term_scoreUncheckedCreateNestedManyWithoutPapersInput
@@ -19643,6 +19682,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUpdateManyWithoutPapersNestedInput
@@ -19659,6 +19699,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUncheckedUpdateManyWithoutPapersNestedInput
@@ -19674,6 +19715,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
     paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexCreateNestedManyWithoutPapersInput
@@ -19690,6 +19732,7 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    paper_url?: string | null
     paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexUncheckedCreateNestedManyWithoutPapersInput
@@ -19721,6 +19764,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUpdateManyWithoutPapersNestedInput
@@ -19737,6 +19781,7 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUncheckedUpdateManyWithoutPapersNestedInput

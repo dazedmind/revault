@@ -1,9 +1,11 @@
-// app/api/papers/[paper_id]/route.ts
-
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma' // adjust this path to your prisma client
+import { prisma } from '@/lib/prisma'
+import type { NextRequest } from 'next/server'
 
-export async function GET(req: Request, { params }: { params: { paper_id: string } }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { paper_id: string } }
+) {
   const { paper_id } = params;
 
   try {
