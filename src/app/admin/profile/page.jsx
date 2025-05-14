@@ -95,8 +95,8 @@ export default function AdminProfile() {
         <div>Failed to load profile.</div>
       )}
 
-      <main className="flex flex-col px-40 dark:bg-primary  h-full">
-        <div className="flex gap-4 my-10">
+      <main className="flex flex-col dark:bg-secondary px-40 h-full">
+        <div className="flex gap-4 my-10 ">
           <div className=" dark:bg-card-foreground border-2 border-white-5 p-4 w-82 rounded-md">
             <p className="font-bold text-xl">Information Technology</p>
             <p>Total No. of Papers</p>
@@ -110,11 +110,11 @@ export default function AdminProfile() {
           </div>
         </div>
 
-        <div>
+        <div className="">
           <h1 className="text-2xl font-bold mb-4">Manage Published Papers</h1>
 
           {/* Published Paper Controls */}
-          <div className="flex justify-between">
+          <div className="flex justify-between ">
             <div className="flex gap-4">
               <SearchInput placeholder="Search paper" />
               <button className="bg-teal p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">

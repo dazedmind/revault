@@ -250,7 +250,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\allen\\Desktop\\revault\\src\\generated\\prisma",
+      "value": "C:\\Users\\Matthew Jacob\\Desktop\\SIA\\revault\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -264,7 +264,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\allen\\Desktop\\revault\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Matthew Jacob\\Desktop\\SIA\\revault\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -282,7 +282,11 @@ const config = {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
+<<<<<<< HEAD
         "value": "postgresql://postgres:Jalen123@localhost:5432/revault"
+=======
+        "value": "postgresql://postgres:root@localhost:5432/revault"
+>>>>>>> b771323 (Add theming and fix error in user's profile page)
       }
     }
   },

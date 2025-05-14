@@ -119,19 +119,25 @@ const DocsCard = (props) => {
 
   const truncateText = (text, maxWords = 48) => {
     if (!text) return "No description available";
-    const words = text.split(' ');
+    const words = text.split(" ");
     if (words.length > maxWords) {
-      return words.slice(0, maxWords).join(' ') + '...';
+      return words.slice(0, maxWords).join(" ") + "...";
     }
     return text;
   };
-  
+
   if (loading) {
     return <DocsLoader message="Loading Recent Papers" />;
   }
 
   return (
+<<<<<<< HEAD
     <div className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:p-6 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
+=======
+    <div
+      className={`w-9xl flex align-middle items-center gap-2 p-6 px-8 rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}
+    >
+>>>>>>> b771323 (Add theming and fix error in user's profile page)
       <div className="w-52">
         <a href={props.link}>
           <Image src={props.img} alt="Project" className="hidden md:flex w-full h-full" />
@@ -155,7 +161,13 @@ const DocsCard = (props) => {
             <p className="text-white text-md italic">No tags available</p>
           )}
         </div>
+<<<<<<< HEAD
         <p className='text-sm line-clamp-4 md:text-justify dark:text-white-75'>{truncateText(props.description)}</p>
+=======
+        <p className="text-sm line-clamp-4 text-justify dark:text-card">
+          {truncateText(props.description)}
+        </p>
+>>>>>>> b771323 (Add theming and fix error in user's profile page)
         <div className="mt-6 flex flex-row items-center justify-between gap-4">
           {/* Left Side Buttons */}
           <span className="flex gap-4">
