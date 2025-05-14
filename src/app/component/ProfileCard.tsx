@@ -39,7 +39,7 @@ export const ProfileCard = ({
           <Link
             href={` ${position === "Librarian" || position === "Head Librarian" ? `/admin/settings/general/edit-profile` : `/settings/general/edit-profile`} `}
           >
-            <button className="py-2 px-4 outline-2 outline-white-50 rounded-md cursor-pointer dark:bg-secondary hover:bg-white-50 hover:text-midnight">
+            <button className="py-2 px-4 outline-2 outline-white-50 rounded-md cursor-pointer dark:bg-none hover:bg-white-50 hover:text-midnight">
               Edit Profile
             </button>
           </Link>

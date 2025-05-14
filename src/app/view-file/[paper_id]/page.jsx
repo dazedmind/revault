@@ -217,9 +217,9 @@ function ViewFile() {
                   </div>
 
                   <div className="flex flex-col gap-1">
-                            <p className="text-lg">
-                              <strong>Authors:</strong>
-                            </p>
+                    <p className="text-lg">
+                      <strong>Authors:</strong>
+                    </p>
                     <div className="flex flex-row gap-3 items-center my-4 flex-wrap">
                         {paper.author &&
                             paper.author

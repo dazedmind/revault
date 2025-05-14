@@ -128,9 +128,7 @@ const DocsCard = (props) => {
   }
 
   return (
-    <div
-      className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:p-6 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}
-    >
+    <div className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:p-6 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
       <div className="w-52">
         <a href={props.link}>
           <Image
@@ -145,6 +143,16 @@ const DocsCard = (props) => {
         <h3 className="text-md md:text-xl font-bold">{props.title}</h3>
         <div className="flex gap-2 flex-wrap overflow-hidden mt-2">
           {/* Mapping over tags */}
+          {props.year && (
+            <p className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm">
+              {props.year}
+            </p>
+          )}
+          {props.department && (
+            <p className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm">
+              {props.department}
+            </p>
+          )}
           {props.tags && props.tags.length > 0 ? (
             props.tags.map((tag, index) => (
               <p
@@ -157,7 +165,9 @@ const DocsCard = (props) => {
           ) : (
             <p className="text-white text-md italic">No tags available</p>
           )}
+
         </div>
+
         <p className="text-sm line-clamp-4 text-justify dark:text-card">
           {truncateText(props.description)}
         </p>

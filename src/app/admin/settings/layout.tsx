@@ -4,7 +4,7 @@ import { useState } from "react";
 import AdminNavBar from "../components/AdminNavBar";
 import SettingsList from "../components/SettingsSideBar";
 import ProtectedRoute from "../../component/ProtectedRoute";
-import { Activity, Info, Paintbrush, Settings, User } from "lucide-react";
+import { Activity, Info, Settings, SunMoon, User } from "lucide-react";
 
 export default function SettingsLayout({
   children,
@@ -17,7 +17,7 @@ export default function SettingsLayout({
     {
       category: "General",
       labels: ["Edit Profile", "Change Password", "Appearance"],
-      icon: [<User />, <Settings />, <Paintbrush />]
+      icon: [<User />, <Settings />, <SunMoon />  ]
     },
     {
       category: "Security",
@@ -44,7 +44,7 @@ export default function SettingsLayout({
                   labels={setting.labels}
                   categoryClassName="text-2xl font-bold mb-3"
                   ulClassName=""
-                  labelClassName="pl-4 p-3 text-lg text-normal cursor-pointer"
+                  labelClassName="pl-4 p-3 text-lg text-normal cursor-pointer m-2"
                   icon={setting.icon}
                 />
               ))}

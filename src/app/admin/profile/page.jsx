@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -35,10 +36,15 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import DocsCardUser from "../components/DocsCardUser";
+import document from "../../img/document.png";
+import StatsCard from "../components/StatsCard";
 
 export default function AdminProfile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userType, setUserType] = useState(null);
+  const [papers, setPapers] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -73,6 +79,53 @@ export default function AdminProfile() {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    async function init() {
+      // 1. Auth check (simplified)
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        return router.push("/login");
+      }
+      // you can re-use your decode(token) here…
+
+      // 2. Fetch recent papers
+      console.log("▶️ fetching /api/recent");
+      try {
+        const res = await fetch("/api/recent", { cache: "no-store" });
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("raw /api/recent response:", text);
+          throw new Error(res.statusText);
+        }
+        const data = await res.json();
+        setPapers(
+          data.map((paper) => ({
+            ...paper,
+            title: paper.title.replace(/"/g, ""),
+            author: paper.author.replace(/"/g, ""),
+            keywords: Array.isArray(paper.keywords)
+              ? paper.keywords.flatMap((k) =>
+                  k.split(",").map((item) => item.trim()),
+                )
+              : [],
+            tags: Array.isArray(paper.tags)
+              ? paper.tags.flatMap((t) =>
+                  t.split(",").map((item) => item.trim()),
+                )
+              : [],
+            abstract: paper.abstract.replace(/"/g, ""),
+          })),
+        );
+      } catch (err) {
+        console.error("failed to load papers:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    init();
+  }, [router]);
+
   if (loading) return <div>Loading profile...</div>;
 
   return (
@@ -93,17 +146,21 @@ export default function AdminProfile() {
 
       <main className="flex flex-col dark:bg-secondary px-40 h-full">
         <div className="flex gap-4 my-10 ">
-          <div className=" dark:bg-card-foreground border-2 border-white-5 p-4 w-82 rounded-md">
-            <p className="font-bold text-xl">Information Technology</p>
-            <p>Total No. of Papers</p>
-            <p className="font-bold text-5xl mt-2">120</p>
-          </div>
-
-          <div className="dark:bg-card-foreground  border-2 border-white-5 p-4 w-82 rounded-md">
-            <p className="font-bold text-xl">Computer Science</p>
-            <p>Total No. of Papers</p>
-            <p className="font-bold text-5xl mt-2">134</p>
-          </div>
+          <StatsCard  
+          department="Information Technology" 
+          description="Total Number of Papers" 
+          totalPapers={120} 
+          />
+          <StatsCard 
+          department="Computer Science" 
+          description="Total Number of Papers" 
+          totalPapers={134} 
+          />
+          <StatsCard 
+          department="Usage Statistics" 
+          description="Total Number of Users" 
+          totalPapers={134} 
+          />
         </div>
 
         <div className="">
@@ -202,7 +259,23 @@ export default function AdminProfile() {
           </div>
 
           <div className="p-2 border-2 border-white-5 bg-card-foreground rounded-md mt-4 mb-4">
-            <DocsCardUser />
+          {papers.length > 0 ? (
+            papers.map((paper) => (
+              <DocsCardUser
+                key={paper.paper_id}
+                img={document}
+                title={paper.title || "Untitled"}
+                abstract={paper.abstract || "No abstract available"}
+                // tags={paper.keywords || []}
+                author={paper.author || "No author available"}
+                department={paper.department || "No department available"}
+                year={paper.year || "No year available"}
+                paper_id={paper.paper_id}
+              />
+            ))
+          ) : (
+            <p>No papers found.</p>
+          )}
 
             {/* divider */}
             <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4"></div>

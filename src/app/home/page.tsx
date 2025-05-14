@@ -300,8 +300,10 @@ export default function Home() {
                 title={paper.title || "Untitled"}
                 description={paper.abstract || "No abstract available"}
                 tags={paper.keywords || []}
+                department={paper.department || "No department available"}
                 paper_id={paper.paper_id}
                 viewFromAdmin={userType === "librarian"}
+                year={paper.year || "No year available"}
               />
             ))
           ) : (

@@ -4,7 +4,7 @@ import { useState } from "react";
 import NavBar from "../component/NavBar";
 import SettingsList from "../component/SettingsSideBar";
 import ProtectedRoute from "../component/ProtectedRoute";
-import { User, Paintbrush, Settings, Info } from "lucide-react";
+import { User, Settings, Info, SunMoon } from "lucide-react";
 
 export default function SettingsLayout({
   children,
@@ -17,7 +17,7 @@ export default function SettingsLayout({
     {
       category: "General",
       labels: ["Edit Profile", "Change Password", "Appearance", "About Revault"],
-      icon: [<User />, <Settings />, <Paintbrush />, <Info />]
+      icon: [<User />, <Settings />, <SunMoon />, <Info />]
     },
   ];
 
@@ -40,7 +40,7 @@ export default function SettingsLayout({
                   icon={setting.icon}
                   categoryClassName="text-2xl font-bold mb-3"
                   ulClassName=""
-                  labelClassName="pl-4 p-3 text-lg text-normal cursor-pointer"
+                  labelClassName="pl-4 p-3 text-lg text-normal cursor-pointer m-2"
                 />
               ))}
             </aside>

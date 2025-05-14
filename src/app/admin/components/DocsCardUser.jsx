@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FaBookOpen, FaTrash, FaPen } from "react-icons/fa";
-import document from "@/public/document.png";
+import { CircleUser } from "lucide-react";
 
 const DocsCardUser = (props) => {
     const [papers, setPapers] = useState([]);
@@ -49,39 +49,78 @@ const DocsCardUser = (props) => {
      
       }, [router]);
     
+      const truncateText = (text, maxWords = 40) => {
+        if (!text) return "No description available";
+        const words = text.split(" ");
+        if (words.length > maxWords) {
+          return words.slice(0, maxWords).join(" ") + "...";
+        }
+        return text;
+      };
+
+      const truncateAuthor = (text, maxWords = 24) => {
+        if (!text) return "No description available";
+        const words = text.split(" ");
+        if (words.length > maxWords) {
+          return words.slice(0, maxWords).join(" ") + "...";
+        }
+        return text;
+      };
+
       if (loading) {
         return <DocsLoader message="Loading Recent Papers" />;
       }
     return (
     <div>
         <div className="flex justify-between gap-4 p-4">
-              <div className="flex gap-4">
-                <Image src={document} alt="document" className="w-24" />
-                <span>
-                  <h1 className="text-xl font-bold">
-                    {props.title}
-                  </h1>
-                  <p className="text-sm">
-                    {props.abstract}
-                  </p>
-                  <p className="text-sm mt-2 text-gray-600">
-                    {props.author}
-                  </p>
-                </span>
+              <div className="flex items-start  gap-4">
+                <div className="w-40">
+                  <a href={props.link}>
+                    <Image
+                      src={props.img}
+                      alt="Project"
+                      className="hidden md:flex w-full h-full"
+                    />
+                  </a>
+                </div>
+
+                <div className="w-full">
+                  {/* <Image src={document} alt="document" className="w-24" /> */}
+                  <span className="flex flex-col">
+                    <h1 className="text-xl font-bold mb-2">
+                      {props.title}
+                    </h1>
+
+                    <p className="text-sm italic">
+                      {truncateAuthor(props.author)}
+                    </p>
+
+                    <p className="text-sm py-2 line-clamp-4 text-justify dark:text-card">
+                      {truncateText(props.abstract)}
+                    </p>
+                    
+                    <span className="flex gap-2">
+                      <p className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm">
+                        {props.department}
+                      </p>
+                      <p className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm">
+                        {props.year}
+                      </p>
+                    </span>
+                  </span>
+                </div>
               </div>
 
               <span className="flex items-center gap-2">
-                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-4 flex items-center rounded-lg cursor-pointer text-2xl">
+                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-4 flex items-center gap-2 rounded-lg cursor-pointer text-lg">
                   {" "}
-                  <FaBookOpen />{" "}
+                  <FaBookOpen />
                 </button>
-                <button className="bg-red-warning rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaTrash />{" "}
+                <button className="flex items-center gap-2 bg-red-warning rounded-md p-4 text-lg cursor-pointer">
+                  <FaTrash />
                 </button>
-                <button className="bg-dusk rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaPen />{" "}
+                <button className="flex items-center gap-2 bg-dusk rounded-md p-4 text-lg cursor-pointer">
+                  <FaPen />
                 </button>
               </span>
             </div>
