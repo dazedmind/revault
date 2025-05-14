@@ -3,13 +3,8 @@ import React from "react";
 import AdminNavBar from "../components/AdminNavBar";
 import { ProfileCard } from "../../component/ProfileCard";
 import { SearchInput } from "../../component/SearchInput";
-import Image from "next/image";
-import document from "../../img/document.png";
 import avatar from "../../img/user.png";
 import {
-  FaTrash,
-  FaPen,
-  FaBookOpen,
   FaPlus,
   FaFilter,
   FaMagnifyingGlass,
@@ -39,6 +34,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import DocsCardUser from "../components/DocsCardUser";
 
 export default function AdminProfile() {
   const [profile, setProfile] = useState(null);
@@ -206,187 +202,7 @@ export default function AdminProfile() {
           </div>
 
           <div className="p-2 border-2 border-white-5 bg-card-foreground rounded-md mt-4 mb-4">
-            <div className="flex justify-between gap-4 p-4">
-              <div className="flex gap-4">
-                <Image src={document} alt="document" className="w-24" />
-                <span>
-                  <h1 className="text-xl font-bold">
-                    ReVault: A Version-Controlled Cloud Repository with SEO
-                    Metadata Tagging for Archiving Thesis Works of PLM CISTM
-                    Students
-                  </h1>
-                  <p className="text-sm">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris blandit ex imperdiet, tristique erat non, luctus
-                    justo. In at facilisis metus. Donec volutpat nisi magna, sit
-                    amet dignissim neque imperdiet sit amet.
-                  </p>
-                </span>
-              </div>
-
-              <span className="flex items-center gap-2">
-                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-4 flex items-center rounded-lg cursor-pointer text-2xl">
-                  {" "}
-                  <FaBookOpen />{" "}
-                </button>
-                <button className="bg-red-warning rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaTrash />{" "}
-                </button>
-                <button className="bg-dusk text-white rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaPen />{" "}
-                </button>
-              </span>
-            </div>
-
-            {/* divider */}
-            <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4"></div>
-
-            <div className="flex justify-between gap-4 p-4">
-              <div className="flex gap-4">
-                <Image src={document} alt="document" className="w-24" />
-                <span>
-                  <h1 className="text-xl font-bold">
-                    ReVault: A Version-Controlled Cloud Repository with SEO
-                    Metadata Tagging for Archiving Thesis Works of PLM CISTM
-                    Students
-                  </h1>
-                  <p className="text-sm">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris blandit ex imperdiet, tristique erat non, luctus
-                    justo. In at facilisis metus. Donec volutpat nisi magna, sit
-                    amet dignissim neque imperdiet sit amet.
-                  </p>
-                </span>
-              </div>
-
-              <span className="flex items-center gap-2">
-                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-4 flex items-center rounded-lg cursor-pointer text-2xl">
-                  {" "}
-                  <FaBookOpen />{" "}
-                </button>
-                <button className="bg-red-warning rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaTrash />{" "}
-                </button>
-                <button className="bg-dusk rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaPen />{" "}
-                </button>
-              </span>
-            </div>
-
-            {/* divider */}
-            <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4"></div>
-
-            <div className="flex justify-between gap-4 p-4">
-              <div className="flex gap-4">
-                <Image src={document} alt="document" className="w-24" />
-                <span>
-                  <h1 className="text-xl font-bold">
-                    ReVault: A Version-Controlled Cloud Repository with SEO
-                    Metadata Tagging for Archiving Thesis Works of PLM CISTM
-                    Students
-                  </h1>
-                  <p className="text-sm">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris blandit ex imperdiet, tristique erat non, luctus
-                    justo. In at facilisis metus. Donec volutpat nisi magna, sit
-                    amet dignissim neque imperdiet sit amet.
-                  </p>
-                </span>
-              </div>
-
-              <span className="flex items-center gap-2">
-                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-4 flex items-center rounded-lg cursor-pointer text-2xl">
-                  {" "}
-                  <FaBookOpen />{" "}
-                </button>
-                <button className="bg-red-warning rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaTrash />{" "}
-                </button>
-                <button className="bg-dusk rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaPen />{" "}
-                </button>
-              </span>
-            </div>
-
-            {/* divider */}
-            <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4"></div>
-
-            <div className="flex justify-between gap-4 p-4">
-              <div className="flex gap-4">
-                <Image src={document} alt="document" className="w-24" />
-                <span>
-                  <h1 className="text-xl font-bold">
-                    ReVault: A Version-Controlled Cloud Repository with SEO
-                    Metadata Tagging for Archiving Thesis Works of PLM CISTM
-                    Students
-                  </h1>
-                  <p className="text-sm">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris blandit ex imperdiet, tristique erat non, luctus
-                    justo. In at facilisis metus. Donec volutpat nisi magna, sit
-                    amet dignissim neque imperdiet sit amet.
-                  </p>
-                </span>
-              </div>
-
-              <span className="flex items-center gap-2">
-                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-4 flex items-center rounded-lg cursor-pointer text-2xl">
-                  {" "}
-                  <FaBookOpen />{" "}
-                </button>
-                <button className="bg-red-warning rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaTrash />{" "}
-                </button>
-                <button className="bg-dusk rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaPen />{" "}
-                </button>
-              </span>
-            </div>
-
-            {/* divider */}
-            <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4"></div>
-
-            <div className="flex justify-between gap-4 p-4">
-              <div className="flex gap-4">
-                <Image src={document} alt="document" className="w-24" />
-                <span>
-                  <h1 className="text-xl font-bold">
-                    ReVault: A Version-Controlled Cloud Repository with SEO
-                    Metadata Tagging for Archiving Thesis Works of PLM CISTM
-                    Students
-                  </h1>
-                  <p className="text-sm">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris blandit ex imperdiet, tristique erat non, luctus
-                    justo. In at facilisis metus. Donec volutpat nisi magna, sit
-                    amet dignissim neque imperdiet sit amet.
-                  </p>
-                </span>
-              </div>
-
-              <span className="flex items-center gap-2">
-                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-4 flex items-center rounded-lg cursor-pointer text-2xl">
-                  {" "}
-                  <FaBookOpen />{" "}
-                </button>
-                <button className="bg-red-warning rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaTrash />{" "}
-                </button>
-                <button className="bg-dusk rounded-md p-4 text-2xl cursor-pointer">
-                  {" "}
-                  <FaPen />{" "}
-                </button>
-              </span>
-            </div>
+            <DocsCardUser />
 
             {/* divider */}
             <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4"></div>
