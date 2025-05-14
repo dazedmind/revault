@@ -115,10 +115,6 @@ const UploadFile = () => {
           title = firstLine.trim();
         }
       }
-<<<<<<< HEAD
-=======
-
->>>>>>> b771323 (Add theming and fix error in user's profile page)
       // setTitle(title);
 
       // Step 4: Author Extraction and Fix Accents
@@ -134,18 +130,10 @@ const UploadFile = () => {
 
       // Step 5: Set States
 
-<<<<<<< HEAD
-  
-      const response = await fetch('/api/extract', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: sanitized, rawText })
-=======
       const response = await fetch("/api/extract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: sanitized }),
->>>>>>> b771323 (Add theming and fix error in user's profile page)
+        body: JSON.stringify({ text: sanitized, rawText }),
       });
 
       // const jsonString = await response.text(); // first get raw text
@@ -153,13 +141,8 @@ const UploadFile = () => {
       const result = await response.json();
 
       // Log the full response to debug
-<<<<<<< HEAD
-      console.log('Full API Response:', result);
-      setKeywords(result.tfidfKeywords ?? []);
-
-=======
       console.log("Full API Response:", result);
->>>>>>> b771323 (Add theming and fix error in user's profile page)
+      setKeywords(result.tfidfKeywords ?? []);
 
       // Access properties safely (optional chaining + nullish coalescing)
       console.log("Title:", result?.extractedTitle ?? "No title found");
@@ -310,14 +293,16 @@ const UploadFile = () => {
               type="text"
               className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0 dark:bg-secondary"
             /> */}
-            <div className='flex flex-row gap-2'>
+            <div className="flex flex-row gap-2">
               {keywords.map((kw, idx) => (
-                  <span key={idx} className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm">
-                    {kw}
-                  </span>
-                ))}
+                <span
+                  key={idx}
+                  className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm"
+                >
+                  {kw}
+                </span>
+              ))}
             </div>
-           
           </span>
 
           <span className="flex flex-col gap-2">
