@@ -97,43 +97,44 @@ const EditProfilePage = () => {
     return <div>Profile not found or failed to load.</div>;
   }
   return (
-    <div className={`flex flex-col w-auto mr-10 ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 pb-10 rounded-xl border-1 border-white-5`}>
+    <div className={`flex flex-col w-auto mr-10 ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mb-8 rounded-xl border-1 border-white-5`}>
       <h1 className="text-2xl ml-1">Edit Profile</h1>
       {/* divider */}
       <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
       
-      <div className="flex gap-100 flex-row-reverse justify-between">
+      <div className="flex flex-col justify-between">
         <div className="relative w-full mt-5">
-        <div className=" relative w-[124px] h-[124px] group m-4">
-            {/* Image */}
-            <Image
-              src={preview || profile?.users?.profile_picture || avatar} // fallback to default
-              alt="Avatar"
-              width={124}
-              height={124}
-              className="w-full h-full object-cover rounded-full"
-            />
-
-            {/* Hover overlay with camera icon */}
-            <div className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
-                <Camera className="text-white w-6 h-6" />
-              </div>
-
-              {/* File input */}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="absolute inset-0 opacity-0 cursor-pointer"
+        <div className="flex flex-col md:flex-row items-center ">
+            <div className="relative w-[124px] h-[124px] group m-4">
+              {/* Image */}
+              <Image
+                src={preview || profile?.users?.profile_picture || avatar} // fallback to default
+                alt="Avatar"
+                width={124}
+                height={124}
+                className="w-full h-full object-cover rounded-full"
               />
+
+              {/* Hover overlay with camera icon */}
+              <div className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
+                  <Camera className="text-white w-6 h-6" />
+                </div>
+
+                {/* File input */}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+            </div>
+            <span>
+              <p className="ml-5 text-teal">Select Profile Picture</p>
+              <p className="ml-5 text-sm">Accepts: JPG, PNG, JPEG</p>
+              <p className="ml-5 text-sm">Max size: 1MB</p>
+            </span>
           </div>
-            <Button
-              onClick={handleSaveChanges}
-              className="absolute bottom-0 right-30 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white"
-            >
-              Save Changes
-            </Button>
-          </div>
+        </div>
 
         <div className="w-full">
           {/* Input Fields from InputField.tsx */}
@@ -145,20 +146,22 @@ const EditProfilePage = () => {
             placeholder={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
             value={`${profile.users.first_name || ""} ${profile.users.last_name || ""}`}
             onChange={() => {}}
-            inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
-            labelClassName="ml-5"
+            inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
+            labelClassName="md:ml-5"
+            disabled={false}
           />
 
           <InputField
             containerClassName="pt-4"
             label="Employee ID"
-            type="number"
+            type="text"
             name="employeeID"
             placeholder={`${profile.employee_id || ""}`}
             value={`${profile.employee_id || ""}`}
             onChange={() => {}}
-            inputClassName="w-sm ml-5 h-14 dark:bg-secondary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            labelClassName="ml-5"
+            inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
+            labelClassName="md:ml-5"
+            disabled={false}
           />
 
           <span className="relative">
@@ -170,29 +173,24 @@ const EditProfilePage = () => {
               placeholder={`${profile.users.email || ""}`}
               value={`${profile.users.email || ""}`}
               onChange={() => {}}
-              inputClassName="w-sm ml-5 h-14 dark:bg-secondary"
-              labelClassName="ml-5"
+              inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
+              labelClassName="md:ml-5"
               disabled={false}
             />
-
-          
           </span>
         </div>
-      </div>
-      <h1 className="text-2xl ml-1 mt-10">Manage Linked Accounts</h1>
 
-      {/* divider */}
-      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
-
-      <div className="w-3xl outline-2  p-5 ml-5 rounded-md flex justify-between mt-5 dark:bg-secondary">
-        <div className="flex flex-row justify-center items-center gap-2">
-          <FaMicrosoft />
-          <p className="text-white-100 text-base font-normal">Microsoft</p>
-        </div>
-        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white w-[100px]">
-          Link
-        </Button>
+         
+        <span className="mt-5 md:m-5">
+          <Button
+            onClick={handleSaveChanges}
+            className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white"
+          >
+            Save Changes
+          </Button>
+        </span>
       </div>
+  
       <Toaster />
 
     </div>

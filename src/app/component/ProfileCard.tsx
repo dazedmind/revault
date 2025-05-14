@@ -20,7 +20,7 @@ export const ProfileCard = ({
               alt="user profile"
               width={100}
               height={100}
-              className="w-18 md:w-28 rounded-full"
+              className="w-28 rounded-full"
             />
           </div>
           <div>

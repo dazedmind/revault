@@ -30,7 +30,7 @@ export default function SettingsLayout({
           </nav>
 
           <div className="flex flex-col md:flex-row min-h-screen dark:bg-secondary gap-8">
-            <aside className="w-auto md:min-h-screen md:pl-17 mt-10 ml-5">
+            <aside className="w-auto md:min-h-screen md:pl-17 mt-10 ml-5 md:ml-0">
               {/* <h1 className="text-4xl font-bold">System Settings</h1> */}
               {settingsData.map((setting, index) => (
                 <SettingsList

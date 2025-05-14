@@ -13,7 +13,7 @@ const AppearanceSettings = () => {
   if (!mounted) return null;
 
   return (
-    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} mr-10 p-6 rounded-xl border-1 border-white-5`}>
+    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} mr-10 p-6 mb-10 rounded-xl border-1 border-white-5`}>
       <h1 className="text-2xl ml-1">Appearance</h1>
       {/* divider */}
       <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
