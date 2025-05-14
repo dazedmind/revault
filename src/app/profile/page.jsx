@@ -2,13 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import NavBar from '../component/NavBar'
 import {ProfileCard} from '../component/ProfileCard';
-import Link from 'next/link';
 import document from "../img/document.png"
 import DocsCard from '../component/DocsCard';
 import ProtectedRoute from '../component/ProtectedRoute';
 import LoadingScreen from '../component/LoadingScreen';
-import { Sprout } from 'lucide-react';
-import Image from 'next/image';
+import avatar from "../img/user.png";
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);

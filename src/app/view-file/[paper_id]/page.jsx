@@ -12,6 +12,7 @@ import { useTheme } from "next-themes";
 import { useParams } from 'next/navigation';
 import { Bookmark, Info, Moon, SunMedium } from "lucide-react";
 import LoadingScreen from "@/app/component/LoadingScreen";
+import { Toaster, toast } from "sonner";
 
 export const decode = (token) => {
   try {
@@ -43,6 +44,33 @@ function ViewFile() {
 
   const [selectedPaperIndex, setSelectedPaperIndex] = useState(null);
   const { paper_id } = useParams(); // grab it from URL
+
+  const handleBookmark = async (paperId) => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      alert("You're not logged in.");
+      return;
+    }
+  
+    try {
+      const res = await fetch(`/api/bookmark/${paperId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ paper_id: paperId }),
+      });
+  
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to bookmark");
+  
+      toast.success(data.message || "Paper Bookmarked successfully.");
+    } catch (err) {
+      console.error("Bookmark error:", err);
+      alert("An error occurred while bookmarking.");
+    }
+  };
 
   useEffect(() => {
     const checkAuth = () => {
@@ -280,6 +308,7 @@ function ViewFile() {
               <FileMenuButton
                 icon={<Bookmark className="text-xl text-teal" />}
                 label="Add to Bookmark"
+                onClick={() => handleBookmark(paper_id)}
               />
             </aside>
 
@@ -347,6 +376,7 @@ function ViewFile() {
           </div>
         </main>
       </ProtectedRoute>
+      <Toaster />
     </div>
   );
 }
