@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 const SettingsList = ({
   category,
   labels,
+  icon, 
   categoryClassName = "",
   ulClassName = "",
   labelClassName = "text-white-75",
@@ -44,7 +45,8 @@ const SettingsList = ({
               isActive && theme === 'light' ? "text-teal font-bold bg-tertiary rounded-md" : ""
             } ${ isActive && theme === 'dark' ? 'bg-darker font-bold text-teal rounded-md' : ''}`}
             >
-              <Link href={fullPath} prefetch={true}>
+              <Link className="flex items-center gap-2" href={fullPath} prefetch={true}>
+                {icon[index]}
                 {label}
               </Link>
             </li>

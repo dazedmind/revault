@@ -1,17 +1,29 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 
 const SettingsList = ({
   category,
   labels,
+  icon, 
   categoryClassName = "",
   ulClassName = "",
   labelClassName = "text-white-75",
 }) => {
   const pathname = usePathname();
+  const [isLightTheme, setIsLightTheme] = useState(false);
   const { theme, setTheme } = useTheme();
+  useEffect(() => {
+    const theme = localStorage.getItem("theme");
+    if (theme === "light") {
+      setIsLightTheme(true);
+    } else {
+      setIsLightTheme(false);
+    }
+  }, []);
+
   const slugify = (text: string) =>
     text.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-");
 
@@ -21,7 +33,7 @@ const SettingsList = ({
     <div>
       <h1 className={categoryClassName}>{category}</h1>
       <ul className={ulClassName}>
-        {labels.map((label, index) => {
+      {labels.map((label, index) => {
           const path = slugify(label);
           const fullPath = `/settings/${categoryPath}/${path}`;
           const isActive = pathname === fullPath;
@@ -33,7 +45,8 @@ const SettingsList = ({
               isActive && theme === 'light' ? "text-teal font-bold bg-tertiary rounded-md" : ""
             } ${ isActive && theme === 'dark' ? 'bg-darker font-bold text-teal rounded-md' : ''}`}
             >
-              <Link href={fullPath} prefetch={true}>
+              <Link className="flex items-center gap-2" href={fullPath} prefetch={true}>
+                {icon[index]}
                 {label}
               </Link>
             </li>
