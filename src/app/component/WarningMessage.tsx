@@ -5,10 +5,10 @@ const WarningMessage = ({
 }) => {
   return (
     <div
-      className={`flex items-center gap-4 h-12 mt-2 bg-teal-dark p-6 py-8 rounded-md ${containerClassName}`}
+      className={`flex items-center gap-4 h-12 mt-2 bg-teal-dark p-4 rounded-md ${containerClassName}`}
     >
       {/* Icon Container */}
-      <div className="flex justify-center items-center">
+      <div className="hidden md:flex justify-center items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="17"

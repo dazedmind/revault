@@ -18,7 +18,7 @@ const AppearanceSettings = () => {
       {/* divider */}
       <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
 
-      <div className="flex flex-row gap-5 m-5">
+      <div className="flex flex-col md:flex-row gap-5 m-5">
         <div className={`flex flex-col justify-center items-center`}>
           <button
             className={`flex flex-col items-center justify-center py-3 px-6 ${theme === 'light' ? 'outline-2 outline-white-5 outline-offset-4 bg-white-50 text-midnight' : 'bg-white-50 text-midnight'} w-3xs h-32 rounded-lg cursor-pointer`}

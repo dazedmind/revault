@@ -131,15 +131,15 @@ const DocsCard = (props) => {
   }
 
   return (
-    <div className={`w-9xl flex align-middle items-center gap-2 p-6 px-8 rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
+    <div className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:p-6 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
       <div className="w-52">
         <a href={props.link}>
-          <Image src={props.img} alt="Project" className="w-full h-full" />
+          <Image src={props.img} alt="Project" className="hidden md:flex w-full h-full" />
         </a>
       </div>
 
       <div className="w-full flex flex-col p-4 gap-1 items-start relative">
-        <h3 className="text-xl font-bold">{props.title}</h3>
+        <h3 className="text-md md:text-xl font-bold">{props.title}</h3>
         <div className="flex gap-2 flex-wrap overflow-hidden mt-2">
           {/* Mapping over tags */}
           {props.tags && props.tags.length > 0 ? (
@@ -157,7 +157,7 @@ const DocsCard = (props) => {
             <p className="text-white text-md italic">No tags available</p>
           )}
         </div>
-        <p className='text-sm line-clamp-4 text-justify dark:text-white-75'>{truncateText(props.description)}</p>
+        <p className='text-sm line-clamp-4 md:text-justify dark:text-white-75'>{truncateText(props.description)}</p>
         <div className="mt-6 flex flex-row items-center justify-between gap-4">
           {/* Left Side Buttons */}
           <span className="flex gap-4">
@@ -170,7 +170,7 @@ const DocsCard = (props) => {
               {viewFromAdmin ? (
                 <button
                   onClick={() => router.push('/upload')}
-                  className="flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-dusk"
+                  className="transition-all duration-300flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-dusk"
                 >
                   <Pencil />
                 </button>
@@ -178,16 +178,16 @@ const DocsCard = (props) => {
                 savedFromProfile ? (
                   <button
                     onClick={() => handleUnbookmark(paper_id)}
-                    className="flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-red-warning-fg"
+                    className="transition-all duration-300 flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-red-warning-fg"
                   >
-                    <BookmarkX /> Unsave
+                    <BookmarkX /> <span className="hidden md:flex">Unsave</span>
                   </button>
                 ) : (
                   <button
                     onClick={() => handleBookmark(paper_id)}
-                    className="flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer dark:hover:text-midnight dark:hover:bg-white-50"
+                    className="transition-all duration-300 flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer hover:bg-dusk"
                   >
-                    <Bookmark /> Bookmark
+                    <Bookmark /> <span className="hidden md:flex">Bookmark</span>
                   </button>
                 )
               )}

@@ -64,6 +64,7 @@ model papers {
   abstract       String?
   created_at     DateTime?
   updated_at     DateTime?
+  paper_url      String?
   paper_metadata paper_metadata[]
   user_bookmarks user_bookmarks[]
   paper_bm25_index paper_bm25_index[]

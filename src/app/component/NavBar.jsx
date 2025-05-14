@@ -74,8 +74,10 @@ export default function NavBar() {
             ReVault
           </Link>
           
-          <Image src={icon} className="md:hidden w-14" alt="revault-icon" />
-
+          <Link href="/home">
+            <Image src={icon} className="md:hidden w-14" alt="revault-icon" />
+          </Link>
+          
           <SearchInput placeholder="Search paper" />
         </div>
         <ul className="flex flex-row items-center gap-8 text-lg">

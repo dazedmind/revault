@@ -41,7 +41,7 @@ const SettingsList = ({
           return (
             <li
             key={index}
-            className={`${labelClassName} cursor-pointer hover:text-teal ${
+            className={`${labelClassName} w-80 md:w-auto cursor-pointer hover:text-teal ${
               isActive && theme === 'light' ? "text-teal font-bold bg-tertiary rounded-md" : ""
             } ${ isActive && theme === 'dark' ? 'bg-darker font-bold text-teal rounded-md' : ''}`}
             >

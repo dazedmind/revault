@@ -29,8 +29,8 @@ const ChangePassword = () => {
         type="password"
         name="oldPassword"
         placeholder="Enter Old Password"
-        inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
-        labelClassName="ml-5"
+        inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
+        labelClassName="md:ml-5"
         disabled={false}
         value={undefined}
         onChange={undefined}
@@ -42,8 +42,8 @@ const ChangePassword = () => {
         type="password"
         name="newPassword"
         placeholder="Enter New Password"
-        inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
-        labelClassName="ml-5"
+        inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
+        labelClassName="md:ml-5"
         disabled={false}
         value={undefined}
         onChange={undefined}
@@ -55,20 +55,20 @@ const ChangePassword = () => {
         type="password"
         name="confirmNewPassword"
         placeholder="Confirm New Password"
-        inputClassName="w-sm ml-5 h-14 mt-1 dark:bg-secondary"
-        labelClassName="ml-5"
+        inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
+        labelClassName="md:ml-5"
         disabled={false}
         value={undefined}
         onChange={undefined}
       />
 
       <WarningMessage
-        containerClassName="w-xl ml-4.5 mt-5"
+        containerClassName="w-auto h-auto md:w-xl md:ml-4.5 mt-5"
         textClassName=""
         message="Password should be minimum of 9 Characters with combination of uppercase letters, lowercase letters, numbers, and symbols."
       />
       <span>
-        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white text-base p-6 ml-4.5 mt-5">
+        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white text-base p-6 md:ml-4.5 mt-5">
           Save Changes
         </Button>
       </span>

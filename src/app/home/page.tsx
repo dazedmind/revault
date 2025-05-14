@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/pagination";
 import LoadingScreen from "../component/LoadingScreen";
 import { Toaster } from "@/components/ui/sonner"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { FaFilter } from "react-icons/fa";
 
 
 export const decode = (token) => {
@@ -209,7 +212,86 @@ export default function Home() {
 
         <div className="flex flex-col w-full gap-5 md:mx-12 my-2 align-middle p-8">
           <h1 className="text-3xl font-bold">Recent Papers</h1>
+            {/* Filter button for mobile */}
+            <div className="flex md:hidden">
+            {/* Filter */}
+            <Popover>
+                    <PopoverTrigger className="cursor-pointer flex items-center gap-2">
+                      Filter <FaFilter />
+                    </PopoverTrigger>
+                    <PopoverContent className="bg-dark" align="start">
+                      <Select>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Sort by" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="title-asc">
+                              Paper Title (A-Z)
+                            </SelectItem>
+                            <SelectItem value="title-des">
+                              Paper Title (Z-A)
+                            </SelectItem>
+                            <SelectItem value="year-recent">
+                              Publish Year (Most recent)
+                            </SelectItem>
+                            <SelectItem value="year-oldest">
+                              Publish Year (Oldest)
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
 
+                      {/* divider */}
+                      <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-1"></div>
+
+                      <p className="text-lg">Department</p>
+                      <ul className="ml-1 flex flex-col gap-1">
+                        <li>
+                          <Checkbox id="it-courses" />
+                          <label htmlFor="it-courses">
+                            {" "}
+                            Information Technology
+                          </label>
+                        </li>
+                        <li>
+                          <Checkbox id="cs-courses" />
+                          <label htmlFor="cs-courses"> Computer Science</label>
+                        </li>
+                      </ul>
+                      {/* divider */}
+                      <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-2"></div>
+
+                      <p className="text-lg">Course</p>
+                      <ul className="ml-1 flex flex-col gap-1">
+                        <li>
+                          <Checkbox id="it-courses" />
+                          <label htmlFor="it-courses"> SIA</label>
+                        </li>
+                        <li>
+                          <Checkbox id="cs-courses" />
+                          <label htmlFor="cs-courses"> Capstone</label>
+                        </li>
+                        <li>
+                          <Checkbox id="cs-courses" />
+                          <label htmlFor="cs-courses"> CS Thesis Writing</label>
+                        </li>
+                        <li>
+                          <Checkbox id="cs-courses" />
+                          <label htmlFor="cs-courses"> Research Writing</label>
+                        </li>
+                      </ul>
+                      <span className="flex gap-2">
+                        <button className="bg-dusk p-2 mt-3 w-full rounded-sm cursor-pointer">
+                          Clear Filters
+                        </button>
+                        <button className="bg-teal p-2 mt-3 w-full rounded-sm cursor-pointer">
+                          Apply Filters
+                        </button>
+                      </span>
+                    </PopoverContent>
+                  </Popover>
+          </div>
           {papers.length > 0 ? (
             papers.map((paper) => (
               <DocsCard

@@ -94,20 +94,20 @@ const EditProfilePage = () => {
   return (
     <div className={`flex flex-col w-auto mr-10 ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 pb-10 rounded-xl border-1 border-white-5`}>
       <h1 className="text-2xl ml-1">Edit Profile</h1>
+      
       {/* divider */}
-
       <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
 
       {/* Warning message from WarningMessage.tsx */}
       <WarningMessage
-          containerClassName="w-full"
-          textClassName=" "
+        containerClassName="w-auto h-auto md:w-full"
+        textClassName=" "
           message="Contact your admin if you want to request to change your Student Information"
         />
 
       <div className="flex gap-100 flex-row-reverse justify-between">
         <div className="relative w-full mt-5">
-          <div className=" relative w-[124px] h-[124px] group m-4">
+          <div className="relative w-[124px] h-[124px] group m-4">
             {/* Image */}
             <Image
               src={preview || profile?.users?.profile_picture || avatar} // fallback to default
