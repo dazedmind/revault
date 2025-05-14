@@ -209,7 +209,7 @@ export default function FacultyForm() {
 
         {/* Warning message from WarningMessage.tsx */}
         <WarningMessage
-          containerClassName="col-span-2"
+          containerClassName="col-span-2 w-auto h-auto "
           textClassName=" "
           message="Password should be a minimum of 9 characters, including uppercase
             letters, lowercase letters, numbers, and symbols."

@@ -281,7 +281,7 @@ const config = {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://neondb_owner:npg_cEOf2doMSkh7@ep-dark-night-a1mhkbvi-pooler.ap-southeast-1.aws.neon.tech/revault?sslmode=require"
+        "value": "postgresql://postgres:Jalen123@localhost:5432/revault"
       }
     }
   },

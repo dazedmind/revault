@@ -1,5 +1,6 @@
 import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
+import { TfIdf } from 'natural';
 
 const openai = new OpenAI({
   apiKey: process.env.GROQ_API_KEY, // use your Groq key from env
@@ -8,7 +9,8 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { text } = await req.json();
+    const { text, rawText } = await req.json(); // ✅ Destructure both at once
+
 
     const prompt = `
 You're an expert at extracting structured metadata from research documents.
@@ -52,10 +54,38 @@ ${text}
     
     try {
       const parsed = JSON.parse(match[0]);
-      return NextResponse.json(parsed);
+      // 🔍 TF-IDF Keyword Extraction
+      const tfidf = new TfIdf();
+      tfidf.addDocument(rawText);
+
+      const terms = tfidf.listTerms(0);
+        // Custom stopwords (add more as needed)
+      const stopwords = [
+        'information', 'technology', 'research', 'using',
+        'pamantasan', 'lungsod', 'maynila', 'study',
+        'system', 'based', 'data', '2020', '2021', '2022', '2023', '2024', '2025',
+        'figure', 'table', 'figures', 'tables'
+      ];
+
+      const topKeywords = terms
+        .filter(term =>
+          term.term.length > 3 &&
+          !stopwords.includes(term.term.toLowerCase()) &&
+          !/^\d+$/.test(term.term) // remove pure numbers like 20252
+        )
+        .slice(0, 5); // top 10
+
+      // 🧠 Append keywords to response
+      const responseWithKeywords = {
+        ...parsed,
+        tfidfKeywords: topKeywords.map(t => t.term)
+      };
+ 
+      return NextResponse.json(responseWithKeywords);
     } catch (e) {
       return NextResponse.json({ error: 'Failed to parse LLM response as JSON' }, { status: 500 });
     }
+
   } catch (error: any) {
     console.error('Extraction error:', error);
     return NextResponse.json({ error: error.message || 'Extraction failed' }, { status: 500 });

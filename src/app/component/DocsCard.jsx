@@ -146,9 +146,7 @@ const DocsCard = (props) => {
             props.tags.map((tag, index) => (
               <p
                 key={index}
-                className={`flex text-white text-sm rounded-sm w-auto p-1 px-2 ${
-                  tagColors[tag] || "dark:bg-dusk-foreground" // Default to gray if no color found
-                }`}
+                className={`flex px-3 py-1 bg-teal/10 text-teal rounded-md text-sm`}
               >
                 {tag}
               </p>

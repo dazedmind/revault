@@ -264,7 +264,7 @@ function ViewFile() {
                           .map((keyword, keywordIndex) => (
                             <span 
                               key={keywordIndex} 
-                              className={`px-3 py-1 bg-dusk ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'} rounded-md text-sm m-1`}
+                              className={`px-3 py-1 bg-teal/10 text-teal rounded-md text-sm`}
                             >
                               {keyword}
                             </span>
@@ -358,7 +358,7 @@ function ViewFile() {
                           .map((keyword, keywordIndex) => (
                             <span 
                               key={keywordIndex} 
-                              className={`px-3 py-1 bg-dusk ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'} rounded-md text-sm m-1`}
+                              className={`px-3 py-1 bg-teal/10 text-teal rounded-md text-sm mr-2`}
                             >
                               {keyword}
                             </span>
