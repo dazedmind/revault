@@ -17,25 +17,8 @@ import ProtectedRoute from "../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 import { useParams } from 'next/navigation';
 
-export const decode = (token) => {
-  try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(""),
-    );
-    return JSON.parse(jsonPayload);
-  } catch (e) {
-    console.log("Error decoding token:", e.message);
-    return null;
-  }
-};
-
 function ViewFile() {
-  const { theme, setTheme } = useTheme("light");
+  const { theme, setTheme } = useTheme();
   const [showMetadata, setShowMetadata] = useState(false);
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -47,6 +30,23 @@ function ViewFile() {
 
   const [selectedPaperIndex, setSelectedPaperIndex] = useState(null);
   const { paper_id } = useParams(); // grab it from URL
+
+  const decode = (token: string) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(""),
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e: any) {
+      console.log("Error decoding token:", e.message);
+      return null;
+    }
+  };
 
   useEffect(() => {
     const checkAuth = () => {
@@ -135,7 +135,7 @@ function ViewFile() {
         const res = await fetch(`/api/paper/${paper_id}`); // Example endpoint
         if (!res.ok) throw new Error('Failed to fetch paper');
         const data = await res.json();
-        setPaper(data);
+        setPapers(data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -205,8 +205,8 @@ function ViewFile() {
                   </p>
                   <div>
                     <strong>Tags:</strong>{" "}
-                    {Array.isArray(papers.tags) ? (   
-                      papers.tags.map((tag, tagIndex) => (
+                    {Array.isArray(papers[0].tags) ? (   
+                      papers[0].tags.map((tag, tagIndex) => (
                         <span key={tagIndex} className="mr-2">
                         {tag}
                       </span>
@@ -221,39 +221,6 @@ function ViewFile() {
                 </div>
               </div>
             )}
-{/* 
-            {papers.map((paper, paperIndex) => (
-              <div key={paperIndex}>
-                <h2>Paper {paperIndex + 1}</h2>
-                <div>
-                  <strong>Title:</strong> {paper.title}
-                </div>
-                <div>
-                  <strong>Author:</strong> {paper.author}
-                </div>
-                <div>
-                  <strong>Tags:</strong>{" "}
-                  {Array.isArray(paper.tags) ? (
-                    paper.tags.map((tag, tagIndex) => (
-                      <span key={tagIndex} className="mr-2">
-                        {tag} (Tag Index: {tagIndex})
-                      </span>
-                    ))
-                  ) : (
-                    <span>No tags available</span>
-                  )}
-                </div>
-                <button
-                  className="mt-2 p-2 bg-teal-500 text-white rounded"
-                  onClick={() => {
-                    setSelectedPaperIndex(paperIndex);
-                    setShowMetadata(true);
-                  }}
-                >
-                  View Metadata
-                </button>
-              </div>
-            ))} */}
 
             <aside className="flex flex-col w-72 h-auto dark:bg-secondary p-8">
               <h1 className="text-2xl font-bold">File Menu</h1>
@@ -283,6 +250,7 @@ function ViewFile() {
               <FileMenuButton
                 icon={<FaBookmark className="text-xl text-teal" />}
                 label="Add to Bookmark"
+                onClick={() => {}}
               />
             </aside>
 
