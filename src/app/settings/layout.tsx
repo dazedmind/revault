@@ -17,7 +17,7 @@ export default function SettingsLayout({
     {
       category: "General",
       labels: ["Edit Profile", "Change Password", "Appearance", "About Revault"],
-      icon: [<User />, <Settings />, <SunMoon />, <Info />]
+      icon: [<User key="user" />, <Settings key="settings" />, <SunMoon key="sunmoon" />, <Info key="info" />]
     },
   ];
 

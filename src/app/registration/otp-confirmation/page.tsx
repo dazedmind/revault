@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { generateOTP } from "@/lib/generateOtp"; // Make sure this exists
 import { useSearchParams, useRouter } from "next/navigation";
 
@@ -27,7 +27,7 @@ const OTP = () => {
 
   const [userEmail, setUserEmail] = useState(emailFromQuery || "");
 
-  const handleSendOTP = async () => {
+  const handleSendOTP = useCallback(async () => {
     const code = generateOTP();
     setGeneratedOTP(code);
     setIsSent(true);
@@ -40,7 +40,7 @@ const OTP = () => {
       },
       body: JSON.stringify({ email: userEmail, otp: code, role: role }),
     });
-  };
+  }, [userEmail, role]);
 
   const handleConfirm = async () => {
     const res = await fetch("/api/verify-otp", {
@@ -96,7 +96,7 @@ const OTP = () => {
 
   useEffect(() => {
     handleSendOTP(); // auto-send on mount
-  }, []);
+  }, [handleSendOTP]);
 
   return (
     <div className="flex-grow flex justify-center">

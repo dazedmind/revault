@@ -167,7 +167,7 @@ function ViewFile() {
     }
 
     if (paper_id) fetchPaper();
-  }, [paper_id]);
+  }, [paper_id, router]);
   
   if (loading) {
     return (

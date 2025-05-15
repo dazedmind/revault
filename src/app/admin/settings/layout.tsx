@@ -17,12 +17,12 @@ export default function SettingsLayout({
     {
       category: "General",
       labels: ["Edit Profile", "Change Password", "Appearance"],
-      icon: [<User />, <Settings />, <SunMoon />  ]
+      icon: [<User key="user" />, <Settings key="settings" />, <SunMoon key="sunmoon" />]
     },
     {
       category: "Security",
       labels: ["Manage Users", "Activity Logs", "About Revault"],
-      icon: [<User />, <Activity />, <Info />]
+      icon: [<User key="user2" />, <Activity key="activity" />, <Info key="info" />]
     },
   ];
 
