@@ -4,9 +4,10 @@ import type { NextRequest } from 'next/server'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { paper_id: string } }
+  { params } : { params: Promise<{ paper_id: string }> }
+
 ) {
-  const { paper_id } = params;
+  const { paper_id } = await params;
 
   try {
     const paper = await prisma.papers.findUnique({
