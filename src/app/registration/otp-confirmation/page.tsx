@@ -156,7 +156,7 @@ const OTP = () => {
               Account Successfully Created!
             </h2>
             <p className="text-white-50 mb-6">
-              You can now proceed to complete your registration.
+              You can now log in to your account.
             </p>
             <button
               className="px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
