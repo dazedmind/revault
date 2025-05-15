@@ -14,25 +14,8 @@ import { Bookmark, Info, Moon, SunMedium } from "lucide-react";
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
 
-export const decode = (token) => {
-  try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(""),
-    );
-    return JSON.parse(jsonPayload);
-  } catch (e) {
-    console.log("Error decoding token:", e.message);
-    return null;
-  }
-};
-
 function ViewFile() {
-  const { theme, setTheme } = useTheme("light");
+  const { theme, setTheme } = useTheme();
   const [showMetadata, setShowMetadata] = useState(false);
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,6 +28,23 @@ function ViewFile() {
   const [selectedPaperIndex, setSelectedPaperIndex] = useState(null);
   const { paper_id } = useParams(); // grab it from URL
 
+  const decode = (token: string) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(""),
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e: any) {
+      console.log("Error decoding token:", e.message);
+      return null;
+    }
+  };
+  
   const handleBookmark = async (paperId) => {
     const token = localStorage.getItem('authToken');
     if (!token) {
