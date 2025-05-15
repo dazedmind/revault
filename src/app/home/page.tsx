@@ -22,23 +22,6 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { FaFilter } from "react-icons/fa";
 
 
-export const decode = (token) => {
-  try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(""),
-    );
-    return JSON.parse(jsonPayload);
-  } catch (e) {
-    console.log("Error decoding token:", e.message);
-    return null;
-  }
-};
-
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +29,23 @@ export default function Home() {
   const [papers, setPapers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const decode = (token: string) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(""),
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e: any) {
+      console.log("Error decoding token:", e.message);
+      return null;
+    }
+  };
 
   useEffect(() => {
     const checkAuth = () => {
