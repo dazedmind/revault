@@ -18,7 +18,7 @@ const ChangePassword = () => {
   }
 
   return (
-    <div className={`flex flex-col pb-10 w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mb-8 mr-10 rounded-xl border-1 border-white-5`}>
+    <div className={`flex flex-col pb-10 w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mb-8 rounded-xl border-1 border-white-5`}>
       <h1 className="text-2xl ml-1">Change Password</h1>
       {/* divider */}
       <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>

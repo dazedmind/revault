@@ -45,7 +45,7 @@ export default function SettingsLayout({
               ))}
             </aside>
 
-            <main className="flex-1 mt-0 md:mt-10 pl-4 md:min-h-screen w-auto dark:bg-secondary">
+            <main className="flex-1 mt-0 md:mt-10 px-6 md:min-h-screen w-auto dark:bg-secondary">
               {children}
             </main>
           </div>

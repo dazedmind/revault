@@ -10,7 +10,7 @@ import FileMenuButton from "../../component/FileMenuButton";
 import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 import { useParams } from 'next/navigation';
-import { Bookmark, Info, Moon, SunMedium } from "lucide-react";
+import { Bookmark, Download, Info, Link, Moon, SunMedium, Archive } from "lucide-react"; 
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
 
@@ -27,6 +27,8 @@ function ViewFile() {
 
   const [selectedPaperIndex, setSelectedPaperIndex] = useState(null);
   const { paper_id } = useParams(); // grab it from URL
+
+  const [viewFromAdmin, setViewFromAdmin] = useState(null);
 
   const decode = (token: string) => {
     try {
@@ -81,18 +83,24 @@ function ViewFile() {
         window.location.href = "/login";      
       }
 
+      if (storedUserType === "student" || storedUserType === "faculty") {
+        setViewFromAdmin(false);
+      } else if (storedUserType === "librarian") {
+        setViewFromAdmin(true);
+      }
+
       if (token) {
         try {
           const decoded = decode(token);
           const currentTime = Date.now() / 1000;
 
           if (decoded.exp > currentTime) {
-            setIsAuthenticated(true);  // ✅ Token is valid
-            setUserType(storedUserType); // Set the user type from localStorage
+            setIsAuthenticated(true);
+            setUserType(storedUserType);
           } else {
             alert("Token expired. Please log in again.");
             localStorage.removeItem("authToken");
-            localStorage.removeItem("userType"); // Also remove userType
+            localStorage.removeItem("userType");
             setIsAuthenticated(false);
             router.push("/login");
           }
@@ -100,7 +108,7 @@ function ViewFile() {
           alert("Invalid token. Please log in again.");
           console.error("Error decoding token:", error);
           localStorage.removeItem("authToken");
-          localStorage.removeItem("userType"); // Also remove userType
+          localStorage.removeItem("userType");
           setIsAuthenticated(false);
           router.push("/login");
         }
@@ -113,60 +121,49 @@ function ViewFile() {
 
     checkAuth();
 
-    async function init() {
-      // 1. Auth check (simplified)
-      const token = localStorage.getItem("authToken");
-      if (!token) {
-        return router.push("/login");
-      }
-      // you can re-use your decode(token) here…
-
-      // 2. Fetch recent papers
-      console.log("▶️ fetching /api/recent");
-      try {
-        const res = await fetch("/api/recent", { cache: "no-store" });
-        if (!res.ok) {
-          const text = await res.text();
-          console.error("raw /api/recent response:", text);
-          throw new Error(res.statusText);
-        }
-        const data = await res.json();
-        setPaper(
-          data.map((paper) => ({
-            ...paper,
-            title: paper.title.replace(/"/g, ""),
-            author: paper.author.replace(/"/g, ""),
-            keywords: Array.isArray(paper.keywords) 
-            ? paper.keywords.flatMap(k => k.split(',').map(item => item.trim()))
-            : [],
-            course: paper.course.replace(/"/g, ""),
-            department: paper.department.replace(/"/g, ""),
-            abstract: paper.abstract.replace(/"/g, ""),
-          })),
-        );
-      } catch (err) {
-        console.error("failed to load papers:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    init();
-
     async function fetchPaper() {
       try {
-        const res = await fetch(`/api/paper/${paper_id}`); // Example endpoint
-        if (!res.ok) throw new Error('Failed to fetch paper');
+        console.log("Fetching paper with ID:", paper_id);
+        const res = await fetch(`/api/paper/${paper_id}`, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
+        
+        if (!res.ok) {
+          throw new Error(`Failed to fetch paper: ${res.statusText}`);
+        }
+        
         const data = await res.json();
-        setPaper(data);
+        console.log("Fetched paper data:", data);
+        
+        if (!data) {
+          throw new Error('No paper data received');
+        }
+
+        setPaper({
+          ...data,
+          title: data.title?.replace(/"/g, "") || "",
+          author: data.author?.replace(/"/g, "") || "",
+          keywords: Array.isArray(data.keywords) 
+            ? data.keywords.flatMap(k => k.split(',').map(item => item.trim()))
+            : [],
+          course: data.course?.replace(/"/g, "") || "",
+          department: data.department?.replace(/"/g, "") || "",
+          abstract: data.abstract?.replace(/"/g, "") || "",
+        });
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching paper:", err);
+        toast.error("Failed to load paper data");
       } finally {
         setLoading(false);
       }
     }
 
-    if (paper_id) fetchPaper();
+    if (paper_id) {
+      fetchPaper();
+    }
   }, [paper_id, router]);
   
   if (loading) {
@@ -179,8 +176,8 @@ function ViewFile() {
       {userType === "librarian" ? <AdminNavBar /> : <NavBar />}
 
       <ProtectedRoute>
-        <main className="flex gap-6 h-auto justify-center">
-          <div className="flex gap-6 relative">
+        <main className="flex flex-col-reverse md:flex-row h-auto justify-center">
+          <div className="flex flex-col md:flex-row gap-6 relative">
             {showMetadata && (
               <div 
                 className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
@@ -282,60 +279,87 @@ function ViewFile() {
                 </p>{" "}
               </div>
             </div>
+            
+            {/* File Menu and Document View */}
+            <div className="flex flex-col md:flex-row">
+              <aside className="flex flex-row md:flex-col justify-center md:justify-start gap-4 md:gap-0 w-auto md:w-72 h-auto dark:bg-secondary p-8">
+                <h1 className="text-2xl font-bold  hidden md:block">File Menu</h1>
+      
+                <FileMenuButton
+                  icon={<Info className="text-xl text-teal" />}
+                  label="View Metadata"
+                  onClick={() => setShowMetadata(!showMetadata)}
+                />
 
-            <aside className="flex flex-col w-72 h-auto dark:bg-secondary p-8">
-              <h1 className="text-2xl font-bold">File Menu</h1>
+                <FileMenuButton
+                  icon={
+                    theme === "dark" ? (
+                      <SunMedium className="text-xl text-teal" />
+                    ) : (
+                      <Moon className="text-xl text-teal" />
+                    )
+                  }
+                  label={
+                    theme === "dark" ? "Toggle Light Mode" : "Toggle Dark Mode"
+                  }
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                />
 
-              <FileMenuButton
-                icon={<Info className="text-xl text-teal" />}
-                label="View Metadata"
-                onClick={() => setShowMetadata(!showMetadata)}
-              />
+                {viewFromAdmin && (
+                  <>
+                    <FileMenuButton
+                      icon={<Download className="text-xl text-teal" />}
+                      label="Download"
+                      onClick={() => {}}
+                    />
+                    <FileMenuButton
+                      icon={<Link className="text-xl text-teal" />}
+                      label="Cite Paper"
+                      onClick={() => {}}
+                    />
+                    <FileMenuButton
+                      icon={<Archive className="text-xl text-teal" />}
+                      label="Archive"
+                      onClick={() => {}}
+                    />
+                  </>
+                )}
 
-              <FileMenuButton
-                icon={
-                  theme === "dark" ? (
-                    <SunMedium className="text-xl text-teal" />
-                  ) : (
-                    <Moon className="text-xl text-teal" />
-                  )
-                }
-                label={
-                  theme === "dark" ? "Toggle Light Mode" : "Toggle Dark Mode"
-                }
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              />
-              <FileMenuButton
-                icon={<Bookmark className="text-xl text-teal" />}
-                label="Add to Bookmark"
-                onClick={() => handleBookmark(paper_id)}
-              />
-            </aside>
+                {!viewFromAdmin && (
+                  <FileMenuButton
+                    icon={<Bookmark className="text-xl text-teal" />}
+                    label="Add to Bookmark"
+                    onClick={() => handleBookmark(paper_id)}
+                  />
+                )}
 
-            <div className="Document ">
-              <object
-                data="/sample.pdf"
-                type="application/pdf"
-                width="100%"
-                height="100%"
-                className="h-screen w-3xl"
-              >
-                <p>
-                  Alternative text - include a link{" "}
-                  <a href="http://africau.edu/images/default/sample.pdf">
-                    to the PDF!
-                  </a>
-                </p>
-              </object>
+              </aside>
+
+              <div className="Document ">
+                  <object
+                    data="/sample.pdf"
+                    type="application/pdf"
+                    width="100%"
+                    height="100%"
+                    className="h-screen w-screen md:w-3xl"
+                  >
+                    <p>
+                      Document is currently not available.{" "}
+                      <a href="http://africau.edu/images/default/sample.pdf">
+                        View PDF
+                      </a>
+                    </p>
+                  </object>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="p-6 w-1/3 relative">
+          <div className="p-6 w-auto md:w-1/3 relative">
             <p className="text-2xl font-bold mb-2">
                 {paper.title}
             </p>
-{/* 
-            <div className="flex flex-row gap-3 items-center my-4 flex-wrap">
+
+            {/* <div className="flex flex-row gap-3 items-center my-4 flex-wrap">
 
                 {paper.author &&
                     paper.author

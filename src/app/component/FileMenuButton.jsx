@@ -8,7 +8,7 @@ function FileMenuButton({ icon, label, onClick }) {
         className="flex gap-2 items-center cursor-pointer"
       >
         <div className="dark:bg-card-foreground rounded-md p-2">{icon}</div>
-        <p>{label}</p>
+        <p className="hidden md:block">{label}</p>
       </button>
     </div>
   );

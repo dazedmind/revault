@@ -55,6 +55,24 @@ export default function Profile() {
         });
 
         const data = await res.json();
+        setBookmarks(
+          data.map((paper) => ({
+            ...paper,
+            title: paper.title.replace(/"/g, ""),
+            author: paper.author.replace(/"/g, ""),
+            keywords: Array.isArray(paper.keywords)
+              ? paper.keywords.flatMap((k) =>
+                  k.split(",").map((item) => item.trim()),
+                )
+              : [],
+            tags: Array.isArray(paper.tags)
+              ? paper.tags.flatMap((t) =>
+                  t.split(",").map((item) => item.trim()),
+                )
+              : [],
+            abstract: paper.abstract.replace(/"/g, ""),
+          })),
+        );
         if (!res.ok) {
           console.error(
             "Failed to fetch bookmarks:",
@@ -62,8 +80,6 @@ export default function Profile() {
           );
           return;
         }
-
-        setBookmarks(data);
       } catch (err) {
         console.error("Error fetching bookmarks:", err);
       }
@@ -83,7 +99,7 @@ export default function Profile() {
         {profile ? (
           <ProfileCard
             name={`${profile.users.first_name} ${profile.users.last_name}`}
-            profile_picture={profile?.users?.profile_picture || avatar}
+            profile_picture={ avatar}
             number={
               profile.role === "student"
                 ? profile.student_num

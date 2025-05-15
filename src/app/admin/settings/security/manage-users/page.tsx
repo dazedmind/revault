@@ -23,7 +23,7 @@ const ManageUserSettings = () => {
   if (!mounted) return null;
 
   return (
-    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} mr-10 p-6 mb-8 rounded-xl border-1 border-white-5`}>
+    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mb-8 rounded-xl border-1 border-white-5`}>
       <div className="flex justify-between w-auto ">
         <h1 className="text-2xl ml-1">Manage Users</h1>
         <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">

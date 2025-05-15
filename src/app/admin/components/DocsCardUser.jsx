@@ -4,8 +4,8 @@ import DocsLoader from "../../component/DocsLoader";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { FaBookOpen, FaTrash, FaPen } from "react-icons/fa";
-import { CircleUser } from "lucide-react";
+import { FaBookOpen, FaPen } from "react-icons/fa";
+import { Archive, Eye, PencilLine } from "lucide-react";
 
 const DocsCardUser = (props) => {
     const [papers, setPapers] = useState([]);
@@ -72,9 +72,9 @@ const DocsCardUser = (props) => {
       }
     return (
     <div>
-        <div className="flex justify-between gap-4 p-4">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4">
               <div className="flex items-start  gap-4">
-                <div className="w-40">
+                <div className="md:w-40">
                   <a href={props.link}>
                     <Image
                       src={props.img}
@@ -95,11 +95,11 @@ const DocsCardUser = (props) => {
                       {truncateAuthor(props.author)}
                     </p>
 
-                    <p className="text-sm py-2 line-clamp-4 text-justify dark:text-card">
+                    <p className="hidden md:block text-sm py-2 line-clamp-4 text-justify dark:text-card">
                       {truncateText(props.abstract)}
                     </p>
                     
-                    <span className="flex gap-2">
+                    <span className="flex gap-2 py-2 md:py-0">
                       <p className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm">
                         {props.department}
                       </p>
@@ -111,19 +111,20 @@ const DocsCardUser = (props) => {
                 </div>
               </div>
 
-              <span className="flex items-center gap-2">
-                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-4 flex items-center gap-2 rounded-lg cursor-pointer text-lg">
+              <span className="flex md:flex-col gap-2 w-full md:w-auto">
+                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br px-4 py-3 flex items-center justify-center gap-2 rounded-lg cursor-pointer text-md flex-1 md:flex-none">
                   {" "}
-                  <FaBookOpen />
+                  <Eye /> 
                 </button>
-                <button className="flex items-center gap-2 bg-red-warning rounded-md p-4 text-lg cursor-pointer">
-                  <FaTrash />
+                <button className="flex items-center justify-center gap-2 bg-white-5 rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none">
+                  <Archive />
                 </button>
-                <button className="flex items-center gap-2 bg-dusk rounded-md p-4 text-lg cursor-pointer">
-                  <FaPen />
+                <button className="flex items-center justify-center gap-2 bg-dusk rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none">
+                  <PencilLine /> 
                 </button>
               </span>
             </div>
+            
     </div>
   )
 }

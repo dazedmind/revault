@@ -97,7 +97,7 @@ const EditProfilePage = () => {
     return <div>Profile not found or failed to load.</div>;
   }
   return (
-    <div className={`flex flex-col w-auto mr-10 ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mb-8 rounded-xl border-1 border-white-5`}>
+    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mb-8 rounded-xl border-1 border-white-5`}>
       <h1 className="text-2xl ml-1">Edit Profile</h1>
       {/* divider */}
       <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>

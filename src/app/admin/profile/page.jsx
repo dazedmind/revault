@@ -144,8 +144,8 @@ export default function AdminProfile() {
         <div>Failed to load profile.</div>
       )}
 
-      <main className="flex flex-col dark:bg-secondary px-40 h-full">
-        <div className="flex gap-4 my-10 ">
+      <main className="flex flex-col dark:bg-secondary px-4 md:px-40 h-full">
+        <div className="flex flex-col mx-auto md:mx-0 md:flex-row gap-4 my-10 ">
           <StatsCard  
           department="Information Technology" 
           description="Total Number of Papers" 
@@ -260,18 +260,21 @@ export default function AdminProfile() {
 
           <div className="p-2 border-2 border-white-5 bg-card-foreground rounded-md mt-4 mb-4">
           {papers.length > 0 ? (
-            papers.map((paper) => (
-              <DocsCardUser
-                key={paper.paper_id}
-                img={document}
-                title={paper.title || "Untitled"}
-                abstract={paper.abstract || "No abstract available"}
-                // tags={paper.keywords || []}
-                author={paper.author || "No author available"}
-                department={paper.department || "No department available"}
-                year={paper.year || "No year available"}
-                paper_id={paper.paper_id}
-              />
+            papers.map((paper, index) => (
+              <React.Fragment key={paper.paper_id}>
+                <DocsCardUser
+                  img={document}
+                  title={paper.title || "Untitled"}
+                  abstract={paper.abstract || "No abstract available"}
+                  author={paper.author || "No author available"}
+                  department={paper.department || "No department available"}
+                  year={paper.year || "No year available"}
+                  paper_id={paper.paper_id}
+                />
+                {index < papers.length - 1 && (
+                  <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4"></div>
+                )}
+              </React.Fragment>
             ))
           ) : (
             <p>No papers found.</p>

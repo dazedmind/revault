@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { redirect, useRouter } from "next/navigation";
-import { Bookmark, BookmarkX, Eye, Pen, Pencil } from "lucide-react";
+import { Bookmark, BookmarkX, Eye, PencilLine } from "lucide-react";
 import DocsLoader from "./DocsLoader";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
@@ -128,7 +128,7 @@ const DocsCard = (props) => {
   }
 
   return (
-    <div className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:p-6 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
+    <div className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-2 md:p-4 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
       <div className="w-52">
         <a href={props.link}>
           <Image
@@ -171,7 +171,7 @@ const DocsCard = (props) => {
         <p className="text-sm line-clamp-4 text-justify dark:text-card">
           {truncateText(props.description)}
         </p>
-        <div className="mt-6 flex flex-row items-center justify-between gap-4">
+        <div className="mt-2 flex flex-row items-center justify-between gap-4">
           {/* Left Side Buttons */}
           <span className="flex gap-4">
             <Link href={`/view-file/${props.paper_id}`}>
@@ -183,9 +183,9 @@ const DocsCard = (props) => {
             {viewFromAdmin ? (
               <button
                 onClick={() => router.push("/upload")}
-                className="transition-all duration-300flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-dusk"
+                className="transition-all duration-300 flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-dusk"
               >
-                <Pencil />
+                <PencilLine />  <span className="">Edit</span>
               </button>
             ) : savedFromProfile ? (
               <button

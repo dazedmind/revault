@@ -84,7 +84,7 @@ export default function NavBar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Image
-                src={profile?.users?.profile_picture || avatar}
+                src={`/public/${profile?.users?.profile_picture || avatar}`}
                 className="w-10 h-10 rounded-full cursor-pointer border-midnight"
                 alt="User profile picture"
                 width={100}

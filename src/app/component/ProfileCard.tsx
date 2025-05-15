@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import avatar from "../img/user.png";
 
 export const ProfileCard = ({
   name,
@@ -16,7 +17,7 @@ export const ProfileCard = ({
         <div className="flex flex-col md:flex-row align-middle text-center md:text-start items-center justify-between gap-2 md:gap-6">
           <div>
             <Image
-              src={profile_picture}
+              src={profile_picture || avatar}
               alt="user profile"
               width={100}
               height={100}
