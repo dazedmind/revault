@@ -6,26 +6,36 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import { generateOTP } from "@/lib/generateOtp"; // Make sure this exists
 import { useSearchParams, useRouter } from "next/navigation";
 
-const OTP = () => {
-  // const [userEmail, setUserEmail] = useState("j********@plm.edu.ph"); // Replace or fetch from localStorage/cookie/session
+function OTPContent() {
   const [otp, setOtp] = useState("");
   const [generatedOTP, setGeneratedOTP] = useState("");
   const [isSent, setIsSent] = useState(false);
   const [timer, setTimer] = useState(30);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showFailureModal, setShowFailureModal] = useState(false);
-  const role = localStorage.getItem("userType") || "";
+  const [role, setRole] = useState("");
+  const [userEmail, setUserEmail] = useState("");
 
   const searchParams = useSearchParams();
   const router = useRouter();
   const emailFromQuery = searchParams.get("email");
 
-  const [userEmail, setUserEmail] = useState(emailFromQuery || "");
+  useEffect(() => {
+    // Move localStorage access to useEffect
+    const storedRole = localStorage.getItem("userType") || "";
+    setRole(storedRole);
+    
+    const savedEmail = localStorage.getItem("regEmail");
+    if (savedEmail) {
+      setUserEmail(savedEmail);
+    } else if (emailFromQuery) {
+      setUserEmail(emailFromQuery);
+    }
+  }, [emailFromQuery]);
 
   const handleSendOTP = useCallback(async () => {
     const code = generateOTP();
@@ -52,31 +62,30 @@ const OTP = () => {
     if (res.ok) {
       const result = await res.json();
       if (result.verified) {
-        // 🔥 STEP 1: Retrieve saved form data from localStorage
-        const regRole = localStorage.getItem("userType"); // Assuming it's stored as a string
+        // Move localStorage access inside useEffect
+        const regRole = localStorage.getItem("userType");
         const regData = JSON.parse(localStorage.getItem("regForm") || "{}");
 
-        // 🔥 STEP 2: Send data to our new API route
         regData.role = regRole;
 
         const saveRes = await fetch("/api/save-user", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(regData), // ✅ Just send one object
+          body: JSON.stringify(regData),
         });
 
         if (saveRes.ok) {
           localStorage.removeItem("regForm");
           localStorage.removeItem("regEmail");
-          setShowSuccessModal(true); // Show the success modal
+          setShowSuccessModal(true);
         } else {
           alert("Something went wrong saving info.");
         }
       } else {
-        setShowFailureModal(true); // Show the success modal
+        setShowFailureModal(true);
       }
     } else {
-      setShowFailureModal(true); // Show the success modal
+      setShowFailureModal(true);
     }
   };
 
@@ -86,17 +95,6 @@ const OTP = () => {
       return () => clearInterval(interval);
     }
   }, [isSent, timer]);
-
-  useEffect(() => {
-    const savedEmail = localStorage.getItem("regEmail");
-    if (savedEmail) {
-      setUserEmail(savedEmail);
-    }
-  }, []);
-
-  useEffect(() => {
-    handleSendOTP(); // auto-send on mount
-  }, [handleSendOTP]);
 
   return (
     <div className="flex-grow flex justify-center">
@@ -186,6 +184,12 @@ const OTP = () => {
       )}
     </div>
   );
-};
+}
 
-export default OTP;
+export default function OTP() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OTPContent />
+    </Suspense>
+  );
+}
