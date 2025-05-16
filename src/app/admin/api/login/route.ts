@@ -59,7 +59,7 @@ export async function POST(req: Request) {
       await prisma.activity_logs.create({
         data: {
           employee_id: librarian.employee_id,
-          user_id: userRecord.user_id,
+          user_id: parseInt(userRecord.user_id),
           name: userRecord.first_name,
           activity: `Logged in`,
           activity_type: activity_type.LOGIN,

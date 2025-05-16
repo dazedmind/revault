@@ -56,17 +56,24 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user }) {
       // Only log admin logins, if needed
       try {
-        await prisma.activity_logs.create({
-          data: {
-            user_id: parseInt(user.id),
-            name: user.name ?? "Unknown",
-            activity: `Logged in`,
-            activity_type: "LOGIN" as const,
-            user_agent: "",
-            ip_address: "",
-            status: "success"
-          },
+        const librarian = await prisma.librarian.findUnique({
+          where: { user_id: parseInt(user.id) }
         });
+
+        if (librarian) {
+          await prisma.activity_logs.create({
+            data: {
+              user_id: parseInt(user.id),
+              employee_id: librarian.employee_id,
+              name: user.name ?? "Unknown",
+              activity: `Logged in`,
+              activity_type: "LOGIN" as const,
+              user_agent: "",
+              ip_address: "",
+              status: "success"
+            } as any
+          });
+        }
       } catch (err) {
         console.error("Failed to log login activity:", err);
       }
