@@ -30,7 +30,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // useAntiCopy();
+  useAntiCopy();
 
   const decode = (token: string) => {
     try {
