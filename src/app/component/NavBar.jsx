@@ -24,18 +24,17 @@ export default function NavBar() {
   const [mounted, setMounted] = useState(false);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const fetchProfile = async () => {
-
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) return;
-  
+
       try {
-        const res = await fetch('/api/profile', {
-          method: 'GET',
+        const res = await fetch("/api/profile", {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,21 +42,24 @@ export default function NavBar() {
         const data = await res.json(); // <-- move this here regardless of res.ok
 
         if (!res.ok) {
-          console.error("Failed to fetch profile:", data?.error || res.statusText);
+          console.error(
+            "Failed to fetch profile:",
+            data?.error || res.statusText,
+          );
           return;
         }
-  
+
         setProfile(data);
       } catch (err) {
-        console.error('Error fetching profile:', err);
+        console.error("Error fetching profile:", err);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchProfile();
   }, []);
-  
+
   if (loading) return <LoadingScreen />;
 
   if (!mounted) return null;
@@ -73,18 +75,18 @@ export default function NavBar() {
             <Image src={icon} className="w-14" alt="revault-icon" />
             ReVault
           </Link>
-          
+
           <Link href="/home">
             <Image src={icon} className="md:hidden w-14" alt="revault-icon" />
           </Link>
-          
+
           <SearchInput placeholder="Search paper" />
         </div>
         <ul className="flex flex-row items-center gap-8 text-lg">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Image
-                src={`/public/${profile?.users?.profile_picture || avatar}`}
+                src={profile?.users?.profile_picture || avatar}
                 className="w-10 h-10 rounded-full cursor-pointer border-midnight"
                 alt="User profile picture"
                 width={100}
