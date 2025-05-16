@@ -6,11 +6,13 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FaBookOpen, FaPen } from "react-icons/fa";
 import { Archive, Eye, PencilLine } from "lucide-react";
+import { useTheme } from 'next-themes'
 
 const DocsCardUser = (props) => {
     const [papers, setPapers] = useState([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const { theme } = useTheme()
 
     useEffect(() => {
         async function init() {
@@ -100,10 +102,10 @@ const DocsCardUser = (props) => {
                     </p>
                     
                     <span className="flex gap-2 py-2 md:py-0">
-                      <p className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm">
+                      <p className="px-3 py-1 bg-teal/10 text-teal font-bold rounded-md text-sm">
                         {props.department}
                       </p>
-                      <p className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm">
+                      <p className="px-3 py-1 bg-teal/10 text-teal font-bold rounded-md text-sm">
                         {props.year}
                       </p>
                     </span>
@@ -116,10 +118,10 @@ const DocsCardUser = (props) => {
                   {" "}
                   <Eye /> 
                 </button>
-                <button className="flex items-center justify-center gap-2 bg-white-5 rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none">
+                <button className={`flex items-center justify-center gap-2 ${theme == "light" ? "bg-mustard-warning-fg" : "bg-mustard-warning"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
                   <Archive />
                 </button>
-                <button className="flex items-center justify-center gap-2 bg-dusk rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none">
+                <button className={`flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
                   <PencilLine /> 
                 </button>
               </span>

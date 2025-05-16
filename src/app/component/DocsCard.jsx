@@ -171,11 +171,10 @@ const DocsCard = (props) => {
         <p className="text-sm line-clamp-4 text-justify dark:text-card">
           {truncateText(props.description)}
         </p>
-        <div className="mt-2 flex flex-row items-center justify-between gap-4">
+        <div className="mt-2 w-full flex flex-row gap-2 sm:gap-4">
           {/* Left Side Buttons */}
-          <span className="flex gap-4">
-            <Link href={`/view-file/${props.paper_id}`}>
-              <button className="transition-all duration-300 flex flex-row items-center gap-2 px-5 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:brightness-120 rounded-lg cursor-pointer">
+            <Link href={`/view-file/${props.paper_id}`} className="w-full md:w-auto">
+              <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:brightness-120 rounded-lg cursor-pointer">
                 <Eye />
                 Read
               </button>
@@ -183,26 +182,25 @@ const DocsCard = (props) => {
             {viewFromAdmin ? (
               <button
                 onClick={() => router.push("/upload")}
-                className="transition-all duration-300 flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-dusk"
+                className="w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-dusk"
               >
-                <PencilLine />  <span className="">Edit</span>
+                <PencilLine />  <span className="hidden md:flex">Edit</span>
               </button>
             ) : savedFromProfile ? (
               <button
                 onClick={() => handleUnbookmark(paper_id)}
-                className="transition-all duration-300 flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-red-warning-fg"
+                className="w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-red-warning-fg"
               >
                 <BookmarkX /> <span className="hidden md:flex">Unsave</span>
               </button>
             ) : (
               <button
                 onClick={() => handleBookmark(paper_id)}
-                className="transition-all duration-300 flex flex-row items-center align-middle gap-2 px-4 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer hover:bg-dusk"
+                className="w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer hover:bg-dusk"
               >
                 <Bookmark /> <span className="hidden md:flex">Bookmark</span>
               </button>
             )}
-          </span>
         </div>
       </div>
     </div>

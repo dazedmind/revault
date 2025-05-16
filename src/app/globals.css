@@ -19,7 +19,7 @@
   --white-50: #c3c3c3;
   --white-75: #d9d9d9;
   --white-5: #404040;
-  --mustard-warning: #cca628;
+  --mustard-warning: #f3e47c;
   --purple-highlight: #963098;
   --background: oklch(1 0 0);
   --navbar: oklch(1 0 0);
@@ -78,7 +78,8 @@
   --color-white-5: #404040;
   --color-red-warning: var(--red-warning);
   --color-red-warning-fg: #a52424;
-  --color-mustard-warning: #cca628;
+  --color-mustard-warning: #8F8749;
+  --color-mustard-warning-fg: #CFC369;
   --color-purple-highlight: #963098;
   --color-teal: #01b783;
   --color-teal-dark: var(--teal-dark);

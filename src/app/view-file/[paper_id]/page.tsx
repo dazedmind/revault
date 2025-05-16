@@ -357,7 +357,7 @@ function ViewFile() {
               </div>
             </div>
 
-          <div className="p-6 w-auto md:w-1/3 relative">
+          <div className="p-8 w-auto md:w-1/3 relative">
             <p className="text-2xl font-bold mb-2">
                 {paper.title}
             </p>
@@ -374,6 +374,12 @@ function ViewFile() {
                         </div>
                 ))}
             </div> */}
+            <div className=" my-2 flex-row gap-2">
+              <h1>{paper.author}  </h1>
+              {/* <h1>Department: {paper.department}  </h1>
+              <h1>Course: {paper.course}  </h1>
+              <h1>Year: {paper.year}  </h1> */}
+            </div>
 
             {Array.isArray(paper.keywords) ? (   
                         paper.keywords
@@ -394,8 +400,8 @@ function ViewFile() {
                         <span className="text-white-25">No keywords available</span>
               )}
 
-            <div className={`dark:bg-card-foreground border-2 ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6 rounded-md mt-4`}>
-              <h1 className="text-xl font-bold">Abstract.md </h1>
+            <div className={`text-sm dark:bg-card-foreground border-2 ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6 rounded-md mt-4`}>
+              <h1 className="text-xl font-bold">Abstract </h1>
               <p>
                 {paper.abstract}
               </p>

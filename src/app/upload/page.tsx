@@ -193,15 +193,15 @@ const UploadFile = () => {
   return (
     <div className="bg-midnight dark:bg-secondary">
       <AdminNavBar />
-      <main className="p-8 mx-12">
+      <main className="p-8 md:mx-12">
         <div>
           <h1 className="font-bold text-3xl mb-6">Upload Research Paper</h1>
         </div>
 
-        <div>
+        <div className="flex flex-row">
           <input
             type="file"
-            className="p-10 px-40 border-2 border-dashed border-teal rounded-md dark:bg-secondary"
+            className="p-4 w-full md:w-4xl md:p-10 md:px-60 border-2 border-dashed border-teal rounded-md dark:bg-secondary"
             accept="application/pdf"
             onChange={extractText}
             name="file-input"
@@ -253,7 +253,7 @@ const UploadFile = () => {
               </span>
             </div>
             <textarea
-              className={`p-4 bg-midnight border rounded-md w-4xl outline-0 dark:bg-secondary ${
+              className={` w-auto p-4 bg-midnight border rounded-md md:w-4xl outline-0 dark:bg-secondary ${
                 isEditingTitle
                   ? "border-teal cursor-text"
                   : "border-white-5 cursor-default"
@@ -265,7 +265,7 @@ const UploadFile = () => {
           </span>
 
           <span className="flex flex-col gap-2">
-            <span className="flex flex-row justify-between w-4xl gap-2">
+            <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
               <h3 className="text-md font-medium text-teal">Authors:</h3>
               <button
                 onClick={() => setIsEditingAuthors(!isEditingAuthors)}
@@ -276,7 +276,7 @@ const UploadFile = () => {
             </span>
             <input
               type="text"
-              className={`p-4 bg-midnight border rounded-md w-4xl outline-0 dark:bg-secondary ${
+              className={`p-4 bg-midnight border rounded-md w-full md:w-4xl outline-0 dark:bg-secondary ${
                 isEditingAuthors
                   ? "border-teal cursor-text"
                   : "border-white-5 cursor-default"
@@ -289,11 +289,7 @@ const UploadFile = () => {
 
           <span className="flex flex-col gap-2">
             <h3 className="text-md font-medium text-teal">Keywords:</h3>
-            {/* <input
-              type="text"
-              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0 dark:bg-secondary"
-            /> */}
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row flex-wrap gap-2">
               {keywords.map((kw, idx) => (
                 <span
                   key={idx}
@@ -305,6 +301,8 @@ const UploadFile = () => {
             </div>
           </span>
 
+
+          <div className="flex flex-col md:flex-row gap-4">
           <span className="flex flex-col gap-2">
             <div className="flex flex-col flex-grow">
               <Label className="text-md font-medium text-teal mb-2 dark:bg-secondary">
@@ -315,7 +313,7 @@ const UploadFile = () => {
                 value={department}
                 onValueChange={setDepartment}
               >
-                <SelectTrigger className="w-4xl p-7 px-4 text-md dark:bg-secondary">
+                <SelectTrigger className="w-full md:w-xs p-7 px-4 text-md dark:bg-secondary">
                   <SelectValue placeholder="Select paper department " />
                 </SelectTrigger>
                 <SelectContent>
@@ -331,15 +329,13 @@ const UploadFile = () => {
               </Select>
             </div>
           </span>
-
-          <div className="flex flex-row gap-4">
             <span className="flex flex-col gap-2">
               <div className="flex flex-col flex-grow">
                 <Label className="text-md font-medium text-teal mb-2">
                   Course:
                 </Label>
                 <Select name="program" value={course} onValueChange={setCourse}>
-                  <SelectTrigger className="w-md p-7 px-4 text-md dark:bg-secondary">
+                  <SelectTrigger className="w-auto md:w-xs p-7 px-4 text-md dark:bg-secondary">
                     <SelectValue placeholder="Select course" />
                   </SelectTrigger>
                   <SelectContent>
@@ -366,14 +362,14 @@ const UploadFile = () => {
               <h3 className="text-md font-medium text-teal">Year:</h3>
               <input
                 type="text"
-                className="p-4 bg-midnight border border-white-5 rounded-md w-md outline-0 dark:bg-secondary"
+                className="p-4 bg-midnight border border-white-5 rounded-md w-auto md:w-xxs outline-0 dark:bg-secondary"
                 value={year}
               />
             </span>
           </div>
 
           <span className="flex flex-col gap-2">
-            <span className="flex flex-row justify-between w-4xl gap-2">
+            <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
               <h3 className="text-md font-medium text-teal">Abstract:</h3>
               <button
                 onClick={() => setIsEditingAbstract(!isEditingAbstract)}
@@ -383,7 +379,7 @@ const UploadFile = () => {
               </button>
             </span>{" "}
             <textarea
-              className={`p-4 bg-midnight border rounded-md w-4xl h-64 outline-0 dark:bg-secondary ${
+              className={`p-4 bg-midnight border rounded-md w-auto md:w-4xl h-64 outline-0 dark:bg-secondary ${
                 isEditingAbstract
                   ? "border-teal cursor-text"
                   : "border-white-5 cursor-default"
@@ -398,7 +394,7 @@ const UploadFile = () => {
         {/* <Upload /> */}
       </main>
 
-      <div className="flex justify-between items-center bg-darker p-12 px-24 border-t-2 border-dashed border-white-5 dark:bg-primary">
+      <div className="flex justify-between items-center bg-darker p-4 md:p-12 md:px-24 border-t-2 border-dashed border-white-5 dark:bg-primary">
         <span className="flex flex-col gap-2">
           <div className="flex flex-row mt-4">
             <input type="checkbox" />

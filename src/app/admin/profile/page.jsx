@@ -4,42 +4,20 @@ import AdminNavBar from "../components/AdminNavBar";
 import { ProfileCard } from "../../component/ProfileCard";
 import { SearchInput } from "../../component/SearchInput";
 import avatar from "../../img/user.png";
-import {
-  FaPlus,
-  FaFilter,
-  FaMagnifyingGlass,
-} from "react-icons/fa6";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { FaPlus, FaFilter, FaMagnifyingGlass } from "react-icons/fa6";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious} from "@/components/ui/pagination";
 import DocsCardUser from "../components/DocsCardUser";
 import document from "../../img/document.png";
 import StatsCard from "../components/StatsCard";
+import { useTheme } from 'next-themes'
 
 export default function AdminProfile() {
+  const { theme } = useTheme()
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userType, setUserType] = useState(null);
@@ -254,11 +232,11 @@ export default function AdminProfile() {
 
             {/* Upload Paper Button */}
             <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-              <FaPlus /> Upload Paper
+              <FaPlus /> <p className="hidden md:block">Upload Paper</p>
             </button>
           </div>
 
-          <div className="p-2 border-2 border-white-5 bg-card-foreground rounded-md mt-4 mb-4">
+          <div className={`p-2 md:p-4 border-2 border-white-5 bg-white-100 rounded-md mt-4 mb-4 ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
           {papers.length > 0 ? (
             papers.map((paper, index) => (
               <React.Fragment key={paper.paper_id}>
@@ -272,7 +250,7 @@ export default function AdminProfile() {
                   paper_id={paper.paper_id}
                 />
                 {index < papers.length - 1 && (
-                  <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4"></div>
+                  <div className={`bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4 ${theme == "light" ? "bg-white-50" : "bg-white-5"}`}></div>
                 )}
               </React.Fragment>
             ))
@@ -281,7 +259,7 @@ export default function AdminProfile() {
           )}
 
             {/* divider */}
-            <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4"></div>
+            <div className={`bg-dusk h-0.5 w-auto mb-2 mt-2 mx-4 ${theme == "light" ? "bg-white-50" : "bg-white-5"}`}></div>
 
             <Pagination>
               <PaginationContent>

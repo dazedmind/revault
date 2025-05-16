@@ -13,7 +13,7 @@ const AboutRevault = () => {
         <p>All rights reserved.</p>
         <p>© 2025 Revault</p>
         <p>Developed by: Keyboard Warriors</p>
-        <p>Version 1.1.0-alpha</p>
+        <p>Version 1.2.0-alpha</p>
       </div>
 
   </div>;
