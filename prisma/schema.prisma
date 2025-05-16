@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
-  output   = "../node_modules/.prisma/client"
+  output   = "../src/generated/prisma"
+  // output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -24,6 +24,7 @@ model users {
   students       students?
   librarian      librarian?
   user_bookmarks user_bookmarks[]
+  activity_logs activity_logs[]
 }
 
 model faculty {
@@ -123,14 +124,20 @@ model term_score {
 }
 
 model activity_logs {
-  employee_id Int    @id
-  user_id     Int
+  act_id          Int       @id @default(autoincrement()) 
+  employee_id     Int 
+  user_id         Int
   name        String
   activity    String
-  created_at  DateTime
-
-  librarian   librarian @relation(fields: [user_id], references: [employee_id], onDelete: Cascade)
+  created_at  DateTime  @default(now())
+  activity_type activity_type?
+  user_agent  String?
+  ip_address  String?
+  status      String?
+  librarian   librarian @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+  users       users     @relation(fields: [user_id], references: [user_id])
 }
+
 
 model global_stats {
   id             Int      @id @default(autoincrement())
@@ -138,3 +145,18 @@ model global_stats {
   avg_doc_length Float
   updated_at     DateTime @updatedAt
 }
+
+enum activity_type {
+  LOGIN
+  LOGOUT
+  VIEW_DOCUMENT
+  DOWNLOAD_DOCUMENT
+  CHANGE_PASSWORD
+  ADD_USER
+  DELETE_USER
+  MODIFY_USER
+  DELETE_DOCUMENT
+  UPDATE_DOCUMENT
+  UPLOAD_DOCUMENT
+}
+

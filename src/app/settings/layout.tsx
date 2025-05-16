@@ -5,6 +5,8 @@ import NavBar from "../component/NavBar";
 import SettingsList from "../component/SettingsSideBar";
 import ProtectedRoute from "../component/ProtectedRoute";
 import { User, Settings, Info, SunMoon } from "lucide-react";
+import { Toaster } from "sonner";
+import useAntiCopy from "../hooks/useAntiCopy";
 
 export default function SettingsLayout({
   children,
@@ -12,6 +14,8 @@ export default function SettingsLayout({
   children: React.ReactNode;
 }) {
   const [activeLabel, setActiveLabel] = useState("Edit Profile");
+
+  useAntiCopy();
 
   const settingsData = [
     {
@@ -51,6 +55,7 @@ export default function SettingsLayout({
           </div>
         </ProtectedRoute>
       </div>
+      <Toaster />
     </div>
   );
 }

@@ -7,10 +7,14 @@ import LogInInputField from "../component/LogInInputField";
 import { Button } from "@/components/ui/button";
 import { LogInCheckBox } from "../component/LogInCheckBox";
 import { FaMicrosoft } from "react-icons/fa6";
+import useAntiCopy from "../hooks/useAntiCopy";
+import { Toaster } from "sonner";
 
 const LogIn = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  useAntiCopy();
 
   const [formData, setFormData] = useState({
     idNumber: "",
@@ -178,6 +182,8 @@ const LogIn = () => {
           </div>
         </div>
       )}
+
+      <Toaster />
     </div>
   );
 };

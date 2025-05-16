@@ -20,7 +20,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FaFilter } from "react-icons/fa";
-
+import useAntiCopy from "../hooks/useAntiCopy";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -30,6 +30,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  useAntiCopy();
   const decode = (token: string) => {
     try {
       const base64Url = token.split(".")[1];

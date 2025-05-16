@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { activity_type } from "@prisma/client"; // ⬅️ import the enum
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -52,6 +53,27 @@ export async function POST(req: Request) {
     SECRET_KEY,
     { expiresIn: "2h" },
   );
+
+    // ✅ Save login activity log
+    try {
+      await prisma.activity_logs.create({
+        data: {
+          employee_id: librarian.employee_id,
+          user_id: userRecord.user_id,
+          name: userRecord.first_name,
+          activity: `Logged in`,
+          activity_type: activity_type.LOGIN,
+          user_agent: req.headers.get('user-agent') || '',
+          ip_address: req.headers.get('x-forwarded-for') || '',
+          status: "success",
+          created_at: new Date(),
+        },
+      });
+      console.log("Login activity log saved");
+    } catch (err) {
+      console.error("Failed to log login activity:", err);
+      // Optional: don't block login on log failure
+    }
 
   const headers = new Headers();
   headers.append(

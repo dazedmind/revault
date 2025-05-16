@@ -13,6 +13,7 @@ import { useParams } from 'next/navigation';
 import { Bookmark, Download, Info, Link, Moon, SunMedium, Archive } from "lucide-react"; 
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
+import useAntiCopy from "../../hooks/useAntiCopy";
 
 function ViewFile() {
   const { theme, setTheme } = useTheme();
@@ -29,6 +30,8 @@ function ViewFile() {
   const { paper_id } = useParams(); // grab it from URL
 
   const [viewFromAdmin, setViewFromAdmin] = useState(null);
+
+  useAntiCopy();
 
   const decode = (token: string) => {
     try {

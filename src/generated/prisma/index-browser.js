@@ -212,11 +212,16 @@ exports.Prisma.Term_scoreScalarFieldEnum = {
 };
 
 exports.Prisma.Activity_logsScalarFieldEnum = {
+  act_id: 'act_id',
   employee_id: 'employee_id',
   user_id: 'user_id',
   name: 'name',
   activity: 'activity',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  activity_type: 'activity_type',
+  user_agent: 'user_agent',
+  ip_address: 'ip_address',
+  status: 'status'
 };
 
 exports.Prisma.Global_statsScalarFieldEnum = {
@@ -250,7 +255,19 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-
+exports.activity_type = exports.$Enums.activity_type = {
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT',
+  VIEW_DOCUMENT: 'VIEW_DOCUMENT',
+  DOWNLOAD_DOCUMENT: 'DOWNLOAD_DOCUMENT',
+  CHANGE_PASSWORD: 'CHANGE_PASSWORD',
+  ADD_USER: 'ADD_USER',
+  DELETE_USER: 'DELETE_USER',
+  MODIFY_USER: 'MODIFY_USER',
+  DELETE_DOCUMENT: 'DELETE_DOCUMENT',
+  UPDATE_DOCUMENT: 'UPDATE_DOCUMENT',
+  UPLOAD_DOCUMENT: 'UPLOAD_DOCUMENT'
+};
 
 exports.Prisma.ModelName = {
   users: 'users',
