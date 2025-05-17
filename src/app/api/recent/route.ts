@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const recentPapers = await prisma.papers.findMany({
-      orderBy: { created_at: "desc" },
+      orderBy: { year: "desc" },
       take: 5,
     });
     // return as JSON!
