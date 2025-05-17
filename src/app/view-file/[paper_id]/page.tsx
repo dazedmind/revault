@@ -31,7 +31,7 @@ function ViewFile() {
 
   const [viewFromAdmin, setViewFromAdmin] = useState(null);
 
-  useAntiCopy();
+  // useAntiCopy();
 
   const decode = (token: string) => {
     try {
@@ -189,14 +189,14 @@ function ViewFile() {
             )}
 
             <div 
-              className={`fixed top-0 left-0 w-full md:w-[800px] h-screen z-50 p-10 shadow-lg 
+              className={`fixed top-0 left-0 w-full md:w-[800px] h-screen z-50 p-4 md:p-10 shadow-lg 
                 transform transition-transform duration-300 ease-in-out
                 ${showMetadata ? 'translate-x-0' : '-translate-x-full'}
                 dark:bg-card-foreground overflow-y-auto`}
             >
               <span className="flex items-center text-center align-middle gap-2 justify-between mb-6">
-                <h2 className="text-3xl font-bold">
-                  Viewing Document Metadata
+                <h2 className="text-3xl p-4 md:p-0 font-bold">
+                  Viewing Metadata
                 </h2>
 
                 <button
@@ -208,7 +208,7 @@ function ViewFile() {
               </span>
 
               <div className={`border-2 ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-8 rounded-md`}>
-                <p className="font-bold text-2xl text-teal mb-6">Metadata</p>
+                <p className="font-bold text-2xl text-teal">Metadata</p>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <p className="text-lg">
@@ -311,18 +311,8 @@ function ViewFile() {
                 {viewFromAdmin && (
                   <>
                     <FileMenuButton
-                      icon={<Download className="text-xl text-teal" />}
-                      label="Download"
-                      onClick={() => {}}
-                    />
-                    <FileMenuButton
                       icon={<Link className="text-xl text-teal" />}
                       label="Cite Paper"
-                      onClick={() => {}}
-                    />
-                    <FileMenuButton
-                      icon={<Archive className="text-xl text-teal" />}
-                      label="Archive"
                       onClick={() => {}}
                     />
                   </>
@@ -335,7 +325,6 @@ function ViewFile() {
                     onClick={() => handleBookmark(paper_id)}
                   />
                 )}
-
               </aside>
 
               <div className="Document ">
@@ -358,30 +347,16 @@ function ViewFile() {
             </div>
 
           <div className="p-8 w-auto md:w-1/3 relative">
-            <p className="text-2xl font-bold mb-2">
+            <p className="text-xl font-bold mb-2">
                 {paper.title}
             </p>
 
-            {/* <div className="flex flex-row gap-3 items-center my-4 flex-wrap">
-
-                {paper.author &&
-                    paper.author
-                    .split(/\s{2,}/)  // Split by two or more spaces
-                    .map((author, index) => (
-                        <div key={index} className="flex flex-row gap-2 items-center">
-                        <Image src={avatar} className="w-8 rounded-full" alt={`author-${index}`} />
-                        <p>{author.trim()}</p>
-                        </div>
-                ))}
-            </div> */}
             <div className=" my-2 flex-row gap-2">
-              <h1>{paper.author}  </h1>
-              {/* <h1>Department: {paper.department}  </h1>
-              <h1>Course: {paper.course}  </h1>
-              <h1>Year: {paper.year}  </h1> */}
+              <h1 className="text-sm">{paper.author}  </h1>
             </div>
-
-            {Array.isArray(paper.keywords) ? (   
+              
+            <div className="flex flex-wrap gap-2">
+              {Array.isArray(paper.keywords) ? (   
                         paper.keywords
                           .flatMap(keyword => 
                             keyword.split(/[,\s]+/) // Split by comma or whitespace
@@ -399,8 +374,9 @@ function ViewFile() {
                       ) : (   
                         <span className="text-white-25">No keywords available</span>
               )}
+            </div>
 
-            <div className={`text-sm dark:bg-card-foreground border-2 ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6 rounded-md mt-4`}>
+            <div className={`text-sm dark:bg-card-foreground border-2 ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-4 rounded-md mt-6`}>
               <h1 className="text-xl font-bold">Abstract </h1>
               <p>
                 {paper.abstract}
