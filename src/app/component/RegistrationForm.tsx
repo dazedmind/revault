@@ -4,20 +4,18 @@ import { useEffect, useState } from "react";
 import InputField from "./InputField";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import WarningMessage from "./WarningMessage";
 
 export default function Form() {
   const [role, setRole] = useState("student");
+  const [errors, setErrors] = useState({
+    email: "",
+    studentNumber: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   useEffect(() => {
     const storedRole = localStorage.getItem("userType");
@@ -43,10 +41,66 @@ export default function Form() {
       ...prevData,
       [name]: value,
     }));
+
+    // Clear errors when field is being edited
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ""
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    // Email validation - must be @plm.edu.ph or @gmail.com
+    if (!formData.email.endsWith("@plm.edu.ph") && !formData.email.endsWith("@gmail.com")) {
+      newErrors.email = "Email must end with @plm.edu.ph or @gmail.com";
+      isValid = false;
+    } else {
+      newErrors.email = "";
+    }
+
+    // Student number validation - must start with 20
+    const studentNumberRegex = /^2\d{9}$/;
+    if (!studentNumberRegex.test(formData.studentNumber)) {
+      newErrors.studentNumber = "Student number must start with 20";
+      isValid = false;
+    } else {
+      newErrors.studentNumber = "";
+    }
+
+    // Password validation - min 9 chars, with upper, lower, number, symbol
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{9,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      newErrors.password = "Password must have at least 9 characters, including uppercase, lowercase, numbers, and symbols";
+      isValid = false;
+    } else {
+      newErrors.password = "";
+    }
+
+    // Confirm password validation
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+      isValid = false;
+    } else {
+      newErrors.confirmPassword = "";
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleNext = async (e) => {
     e.preventDefault();
+
+    // Validate form before proceeding
+    if (!validateForm()) {
+      return; // Stop execution if validation fails
+    }
+
     // Send OTP before navigating to confirmation
     try {
       const res = await fetch("/api/send-otp", {
@@ -152,38 +206,51 @@ export default function Form() {
         </h1>
         <div className="bg-dusk h-0.5 w-full col-span-2"></div>
 
-        <InputField
-          label="Student Number"
-          type="text"
-          name="studentNumber"
-          value={formData.studentNumber}
-          onChange={handleChange}
-          placeholder="202512345"
-          inputClassName="w-full"
-          disabled={false}
-        />
-
-        <div className="flex flex-col flex-grow">
-          <Label className="text-sm text-gray-300 mb-1">Course</Label>
-          <Select
-            name="program"
-            value={selectedProgram}
-            onValueChange={setSelectedProgram}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select your course" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="Computer Science">
-                  Computer Science
-                </SelectItem>
-                <SelectItem value="Information Technology">
-                  Information Technology
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+        {/* Student Number and Course in a single row */}
+        <div className="col-span-2 grid grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <InputField
+              label="Student Number"
+              type="text"
+              name="studentNumber"
+              value={formData.studentNumber}
+              onChange={handleChange}
+              placeholder="202512345"
+              inputClassName="w-full"
+              disabled={false}
+            />
+          </div>
+          <div className="flex flex-col">
+            <Label className="text-sm text-gray-300 mb-1">Course</Label>
+            <Select
+              name="program"
+              value={selectedProgram}
+              onValueChange={setSelectedProgram}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select your course" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectGroup>
+                  <SelectItem value="Computer Science">
+                    Computer Science
+                  </SelectItem>
+                  <SelectItem value="Information Technology">
+                    Information Technology
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          {errors.studentNumber && (
+            <div className="col-span-2">
+              <WarningMessage
+                containerClassName="w-auto h-auto"
+                textClassName="text-red-500"
+                message={errors.studentNumber}
+              />
+            </div>
+          )}
         </div>
 
         <InputField
@@ -196,6 +263,15 @@ export default function Form() {
           inputClassName="w-full"
           disabled={false}
         />
+        {errors.email && (
+          <div className="col-span-2">
+            <WarningMessage
+              containerClassName="w-auto h-auto mt-1"
+              textClassName="text-red-500"
+              message={errors.email}
+            />
+          </div>
+        )}
 
         <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">
           Password
@@ -227,12 +303,19 @@ export default function Form() {
             inputClassName="w-full"
             disabled={false}
           />
+          {errors.confirmPassword && (
+            <WarningMessage
+              containerClassName="w-auto h-auto mt-1"
+              textClassName="text-red-500"
+              message={errors.confirmPassword}
+            />
+          )}
         </div>
 
         {/* Warning message from WarningMessage.tsx */}
         <WarningMessage
-          containerClassName="col-span-2 w-auto h-auto "
-          textClassName=" "
+          containerClassName="col-span-2 w-auto h-auto"
+          textClassName=""
           message="Password should be a minimum of 9 characters, including uppercase
             letters, lowercase letters, numbers, and symbols."
         />

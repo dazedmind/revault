@@ -8,11 +8,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useRouter } from 'next/navigation'
 import WarningMessage from "./WarningMessage";
 
-
-// FOR FACULTY REGISTRATION FORM
-// This is the form that will be used for faculty registration. It includes fields for first name, middle name, last name, employee number, department, email address, and password. The form also includes a button to send an OTP to the user's email address.
 export default function FacultyForm() {
-  const [role, setRole] = useState("student");
+  const [role, setRole] = useState("faculty");
+  const [errors, setErrors] = useState({
+    email: "",
+    employeeID: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   useEffect(() => {
     const storedRole = localStorage.getItem("userType");
@@ -38,52 +41,89 @@ export default function FacultyForm() {
       ...prevData,
       [name]: value
     }));
+
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ""
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    // Employee ID validation - must be 10 digits
+    const employeeIDRegex = /^\d{10}$/;
+    if (!employeeIDRegex.test(formData.employeeID)) {
+      newErrors.employeeID = "Employee ID must be 10 digits";
+      isValid = false;
+    } else {
+      newErrors.employeeID = "";
+    }
+
+    // Email validation - must be @plm.edu.ph
+    if (!formData.email.endsWith("@plm.edu.ph")) {
+      newErrors.email = "Email must end with @plm.edu.ph";
+      isValid = false;
+    } else {
+      newErrors.email = "";
+    }
+
+    // Password validation - min 9 chars, with upper, lower, number, symbol
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{9,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      newErrors.password = "Password must have at least 9 characters, including uppercase, lowercase, numbers, and symbols";
+      isValid = false;
+    } else {
+      newErrors.password = "";
+    }
+
+    // Confirm password validation
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+      isValid = false;
+    } else {
+      newErrors.confirmPassword = "";
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleNext = async (e) => {
     e.preventDefault(); 
-      // Send OTP before navigating to confirmation
-      try {
-        const res = await fetch('/api/send-otp', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email: formData.email }),
-        });
 
-        const result = await res.json();
+    if (!validateForm()) {
+      return;
+    }
 
-        if (result.success) {
-          localStorage.setItem("regEmail", formData.email);
-          localStorage.setItem("regForm", JSON.stringify({
-            ...formData,
-            department: selectedDepartment,
-          }));
-          router.push("/registration/otp-confirmation");
-        } else {
-          alert("Failed to send OTP. Try again.");
-        }
-      } catch (err) {
-        console.error("OTP Send Error:", err);
-        alert("Something went wrong while sending OTP.");
+    try {
+      const res = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: formData.email }),
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        localStorage.setItem("regEmail", formData.email);
+        localStorage.setItem("regForm", JSON.stringify({
+          ...formData,
+          department: selectedDepartment,
+        }));
+        router.push("/registration/otp-confirmation");
+      } else {
+        alert("Failed to send OTP. Try again.");
       }
-
-    // Check if the form data is properly populated
-    console.log("Form Data: ", formData);  // For debugging
-    console.log("Selected Deperatment: ", selectedDepartment);
-    
-    const query = new URLSearchParams({
-      firstName: formData.firstName || '',
-      middleName: formData.middleName || '',
-      lastName: formData.lastName || '',
-      ext: formData.ext || '',
-      employeeID: formData.employeeID || '',
-      department: selectedDepartment || '',
-      email: formData.email || '',
-      password: formData.password || '',
-      confirmPassword: formData.confirmPassword || '',
-    }).toString();    
+    } catch (err) {
+      console.error("OTP Send Error:", err);
+      alert("Something went wrong while sending OTP.");
+    }
   };
 
   return (
@@ -140,30 +180,46 @@ export default function FacultyForm() {
         <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">Employee Information</h1>
         <div className="bg-dusk h-0.5 w-full col-span-2"></div>
 
-        <InputField
-          label="Employee Number"
-          type="text"
-          name="employeeID"
-          value={formData.employeeID}
-          onChange={handleChange}
-          placeholder="1023456"
-          inputClassName="w-full"
-          disabled={false}
-        />
-
-        <div className="flex flex-col flex-grow">
-          <Label className="text-sm text-gray-300 mb-1">Department</Label>
-          <Select name="department" value={selectedDepartment} onValueChange={setSelectedDepartment}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select your department" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="Computer Science">Computer Science Department</SelectItem>
-                <SelectItem value="Information Technology">Information Technology Department</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+        <div className="col-span-2 grid grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <InputField
+              label="Employee ID"
+              type="text"
+              name="employeeID"
+              value={formData.employeeID}
+              onChange={handleChange}
+              placeholder="1023456710"
+              inputClassName="w-full"
+              disabled={false}
+            />
+          </div>
+          <div className="flex flex-col">
+            <Label className="text-sm text-gray-300 mb-1">Department</Label>
+            <Select 
+              name="department" 
+              value={selectedDepartment} 
+              onValueChange={setSelectedDepartment}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select your department" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectGroup>
+                  <SelectItem value="Computer Science">Computer Science Department</SelectItem>
+                  <SelectItem value="Information Technology">Information Technology Department</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          {errors.employeeID && (
+            <div className="col-span-2">
+              <WarningMessage
+                containerClassName="w-auto h-auto mt-1"
+                textClassName="text-red-500"
+                message={errors.employeeID}
+              />
+            </div>
+          )}
         </div>
 
         <InputField
@@ -176,11 +232,19 @@ export default function FacultyForm() {
           inputClassName="w-full"
           disabled={false}
         />
+        {errors.email && (
+          <div className="col-span-2">
+            <WarningMessage
+              containerClassName="w-auto h-auto mt-1"
+              textClassName="text-red-500"
+              message={errors.email}
+            />
+          </div>
+        )}
 
         <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">Password</h1>
         <div className="bg-dusk h-0.5 w-full col-span-2"></div>
 
-        {/* Passwords */}
         <div className="col-span-2 w-full">
           <InputField
             label="Create Password"
@@ -196,21 +260,27 @@ export default function FacultyForm() {
 
         <div className="col-span-2 w-full">
           <InputField
-           label="Confirm Password"
-           type="password"
-           name="confirmPassword"
-           value={formData.confirmPassword}
-           onChange={handleChange}
-           placeholder="Confirm Password"
-           inputClassName="w-full"
-           disabled={false}
+            label="Confirm Password"
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            placeholder="Confirm Password"
+            inputClassName="w-full"
+            disabled={false}
           />
+          {errors.confirmPassword && (
+            <WarningMessage
+              containerClassName="w-auto h-auto mt-1"
+              textClassName="text-red-500"
+              message={errors.confirmPassword}
+            />
+          )}
         </div>
 
-        {/* Warning message from WarningMessage.tsx */}
         <WarningMessage
-          containerClassName="col-span-2 w-auto h-auto "
-          textClassName=" "
+          containerClassName="col-span-2 w-auto h-auto"
+          textClassName=""
           message="Password should be a minimum of 9 characters, including uppercase
             letters, lowercase letters, numbers, and symbols."
         />
