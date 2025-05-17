@@ -159,4 +159,3 @@ enum activity_type {
   UPDATE_DOCUMENT
   UPLOAD_DOCUMENT
 }
-
