@@ -258,7 +258,7 @@ const UploadFile = () => {
                   ? "border-teal cursor-text"
                   : "border-white-5 cursor-default"
               }`}
-              value={title}
+              defaultValue={title}
               onChange={(e) => setTitle(e.target.value)}
               readOnly={!isEditingTitle}
             />
@@ -281,7 +281,7 @@ const UploadFile = () => {
                   ? "border-teal cursor-text"
                   : "border-white-5 cursor-default"
               }`}
-              value={authors}
+              defaultValue={authors}
               onChange={(e) => setAuthors(e.target.value)}
               readOnly={!isEditingAuthors}
             />
@@ -309,7 +309,7 @@ const UploadFile = () => {
                 Department:
               </Label>
               <Select
-                name="program"
+                name="department"
                 value={department}
                 onValueChange={setDepartment}
               >
@@ -334,7 +334,11 @@ const UploadFile = () => {
                 <Label className="text-md font-medium text-teal mb-2">
                   Course:
                 </Label>
-                <Select name="program" value={course} onValueChange={setCourse}>
+                <Select 
+                  name="course" 
+                  value={course} 
+                  onValueChange={setCourse}
+                >
                   <SelectTrigger className="w-auto md:w-xs p-7 px-4 text-md dark:bg-secondary">
                     <SelectValue placeholder="Select course" />
                   </SelectTrigger>
@@ -363,7 +367,8 @@ const UploadFile = () => {
               <input
                 type="text"
                 className="p-4 bg-midnight border border-white-5 rounded-md w-auto md:w-xxs outline-0 dark:bg-secondary"
-                value={year}
+                defaultValue={year}
+                onChange={()=>{}}
               />
             </span>
           </div>
@@ -384,7 +389,7 @@ const UploadFile = () => {
                   ? "border-teal cursor-text"
                   : "border-white-5 cursor-default"
               }`}
-              value={fullText}
+              defaultValue={fullText}
               onChange={(e) => setFullText(e.target.value)}
               readOnly={!isEditingAbstract}
             />
