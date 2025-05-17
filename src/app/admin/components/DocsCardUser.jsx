@@ -7,12 +7,16 @@ import Image from "next/image";
 import { FaBookOpen, FaPen } from "react-icons/fa";
 import { Archive, Eye, PencilLine } from "lucide-react";
 import { useTheme } from 'next-themes'
+import Link from 'next/link';
 
 const DocsCardUser = (props) => {
     const [papers, setPapers] = useState([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const { theme } = useTheme()
+    const {
+      paper_id,
+    } = props;
 
     useEffect(() => {
         async function init() {
@@ -89,7 +93,7 @@ const DocsCardUser = (props) => {
                 <div className="w-full">
                   {/* <Image src={document} alt="document" className="w-24" /> */}
                   <span className="flex flex-col">
-                    <h1 className="text-xl font-bold mb-2">
+                    <h1 className="text-lg font-bold mb-2">
                       {props.title}
                     </h1>
 
@@ -114,16 +118,17 @@ const DocsCardUser = (props) => {
               </div>
 
               <span className="flex md:flex-col gap-2 w-full md:w-auto">
-                <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br px-4 py-3 flex items-center justify-center gap-2 rounded-lg cursor-pointer text-md flex-1 md:flex-none">
-                  {" "}
-                  <Eye /> 
-                </button>
-                <button className={`flex items-center justify-center gap-2 ${theme == "light" ? "bg-mustard-warning-fg" : "bg-mustard-warning"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
-                  <Archive />
-                </button>
+                <Link href={`/view-file/${paper_id}`}>
+                  <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br px-4 py-3 flex items-center justify-center gap-2 rounded-lg cursor-pointer text-md flex-1 md:flex-none">
+                    {" "}
+                    <Eye /> 
+                  </button>
+                </Link>
+                <Link href={`/edit-file/${paper_id}`}>
                 <button className={`flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
                   <PencilLine /> 
                 </button>
+                </Link>
               </span>
             </div>
             

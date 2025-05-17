@@ -60,6 +60,8 @@ export default function Profile() {
             ...paper,
             title: paper.title.replace(/"/g, ""),
             author: paper.author.replace(/"/g, ""),
+            department: paper.department.replace(/"/g, ""), 
+            year: String(paper.year).replace(/"/g, ""),
             keywords: Array.isArray(paper.keywords)
               ? paper.keywords.flatMap((k) =>
                   k.split(",").map((item) => item.trim()),
@@ -99,7 +101,7 @@ export default function Profile() {
         {profile ? (
           <ProfileCard
             name={`${profile.users.first_name} ${profile.users.last_name}`}
-            profile_picture={ avatar}
+            profile_picture={profile.users.profile_picture || avatar}
             number={
               profile.role === "student"
                 ? profile.student_num
@@ -129,6 +131,8 @@ export default function Profile() {
                     paper_id={paper.paper_id}
                     img={document} // or paper.image_url if available
                     title={paper.title}
+                    department={paper.department}
+                    year={paper.year}
                     description={paper.abstract || "No abstract available"}
                     tags={paper.tags || []}
                     savedFromProfile={true}
