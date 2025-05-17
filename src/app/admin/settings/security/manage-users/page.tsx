@@ -12,6 +12,7 @@ import user from "../../../../img/user.png";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
 
 const ManageUserSettings = () => {
   const { theme } = useTheme();
@@ -264,7 +265,7 @@ const ManageUserSettings = () => {
   if (!mounted) return null;
 
   return (
-    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} mr-10 p-6 rounded-xl border-1 border-white-5`}>
+    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 rounded-xl border-1 border-white-5`}>
       
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
@@ -594,7 +595,8 @@ const ManageUserSettings = () => {
         <button 
           onClick={handleAddLibrarian}
           className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-          Add Librarian
+          <span className="hidden md:block text-sm">Create New</span>
+          <Plus className="block md:hidden" />
         </button>
       </div>
 

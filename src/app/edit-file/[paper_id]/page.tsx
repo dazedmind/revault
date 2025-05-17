@@ -1,7 +1,7 @@
 "use client";
 import pdfToText from "react-pdftotext";
 import { useEffect, useRef, useState } from "react";
-import AdminNavBar from "../admin/components/AdminNavBar";
+import AdminNavBar from "@/app/admin/components/AdminNavBar";
 import {
   Select,
   SelectContent,
@@ -12,15 +12,11 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Trash } from "lucide-react";
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
 
-const UploadFile = () => {
-  const [title, setTitle] = useState("");
-  const [fullText, setFullText] = useState("");
-  const [authors, setAuthors] = useState(""); // Add authors state
-  const [course, setCourse] = useState("");
-  const [department, setDepartment] = useState("");
-  const [year, setYear] = useState("");
-  const [key, setKey] = useState(Date.now()); // forces re-render of input
+const EditFile = () => {
+
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -28,6 +24,65 @@ const UploadFile = () => {
   const ref = useRef<HTMLInputElement>(null);
   const [isEditingAbstract, setIsEditingAbstract] = useState(false);
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [paperData, setPaperData] = useState(null);
+  
+  const [title, setTitle] = useState(paperData?.title || '');
+  const [fullText, setFullText] = useState(paperData?.abstract || '');
+  const [authors, setAuthors] = useState(paperData?.authors || ''); // Add authors state
+  const [course, setCourse] = useState(paperData?.course || '');
+  const [department, setDepartment] = useState(paperData?.department || '');
+  const [year, setYear] = useState(paperData?.year || '');
+  const [key, setKey] = useState(Date.now()); // forces re-render of input
+  const params = useParams();
+  const paperId = params?.paper_id;
+
+
+  useEffect(() => {
+    async function fetchPaper() {
+      try {
+        console.log("Fetching paper with ID:", paperId);
+        const res = await fetch(`/api/paper/${paperId}`, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
+        
+        if (!res.ok) {
+          throw new Error(`Failed to fetch paper: ${res.statusText}`);
+        }
+        
+        const data = await res.json();
+        console.log("Fetched paper data:", data);
+        
+        if (!data) {
+          throw new Error('No paper data received');
+        }
+
+        setPaperData({
+          ...data,
+          title: data.title?.replace(/"/g, "") || "",
+          author: data.author?.replace(/"/g, "") || "",
+          keywords: Array.isArray(data.keywords) 
+            ? data.keywords.flatMap(k => k.split(',').map(item => item.trim()))
+            : [],
+          course: data.course?.replace(/"/g, "") || "",
+          department: data.department?.replace(/"/g, "") || "",
+          abstract: data.abstract?.replace(/"/g, "") || "",
+        });
+      } catch (err) {
+        console.error("Error fetching paper:", err);
+        toast.error("Failed to load paper data");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchPaper();
+  }, [paperId]);
+
+  
+
 
   function fixSplitAccents(text) {
     return (
@@ -80,13 +135,21 @@ const UploadFile = () => {
       // Step 2: Sanitize the text
       const sanitized = firstPageText.replace(/\s+/g, " ").trim();
 
-
       const response = await fetch("/api/extract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: sanitized, rawText }),
       });
 
+      if (!response.ok) {
+        const errorText = await response.text(); // <-- Will likely show HTML error
+        console.error("Error in extract API:", response.status, errorText);
+        return;
+      }
+      
+
+      // const jsonString = await response.text(); // first get raw text
+      // const result = JSON.parse(jsonString); // then parse it into object
       const result = await response.json();
 
       // Log the full response to debug
@@ -156,6 +219,7 @@ const UploadFile = () => {
             name="file-input"
             key={ref.current?.value}
             disabled={isLoading}
+            value={ref.current?.value}
           />
 
           <button
@@ -207,7 +271,7 @@ const UploadFile = () => {
                   ? "border-teal cursor-text"
                   : "border-white-5 cursor-default"
               }`}
-              defaultValue={title}
+              defaultValue={paperData?.title}
               onChange={(e) => setTitle(e.target.value)}
               readOnly={!isEditingTitle}
             />
@@ -230,7 +294,7 @@ const UploadFile = () => {
                   ? "border-teal cursor-text"
                   : "border-white-5 cursor-default"
               }`}
-              defaultValue={authors}
+              defaultValue={paperData?.author}
               onChange={(e) => setAuthors(e.target.value)}
               readOnly={!isEditingAuthors}
             />
@@ -244,6 +308,7 @@ const UploadFile = () => {
                   key={idx}
                   className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm"
                 >
+                  {paperData?.keywords[idx]}
                   {kw}
                 </span>
               ))}
@@ -259,7 +324,7 @@ const UploadFile = () => {
               </Label>
               <Select
                 name="department"
-                value={department}
+                value={paperData?.department}
                 onValueChange={setDepartment}
               >
                 <SelectTrigger className="w-full md:w-xs p-7 px-4 text-md dark:bg-secondary">
@@ -285,7 +350,7 @@ const UploadFile = () => {
                 </Label>
                 <Select 
                   name="course" 
-                  value={course} 
+                  value={paperData?.course} 
                   onValueChange={setCourse}
                 >
                   <SelectTrigger className="w-auto md:w-xs p-7 px-4 text-md dark:bg-secondary">
@@ -316,7 +381,7 @@ const UploadFile = () => {
               <input
                 type="text"
                 className="p-4 bg-midnight border border-white-5 rounded-md w-auto md:w-xxs outline-0 dark:bg-secondary"
-                defaultValue={year}
+                defaultValue={paperData?.year}
                 onChange={()=>{}}
               />
             </span>
@@ -338,7 +403,7 @@ const UploadFile = () => {
                   ? "border-teal cursor-text"
                   : "border-white-5 cursor-default"
               }`}
-              defaultValue={fullText}
+              defaultValue={paperData?.abstract}
               onChange={(e) => setFullText(e.target.value)}
               readOnly={!isEditingAbstract}
             />
@@ -370,4 +435,4 @@ const UploadFile = () => {
   );
 };
 
-export default UploadFile;
+export default EditFile;

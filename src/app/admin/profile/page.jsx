@@ -236,7 +236,7 @@ export default function AdminProfile() {
             </button>
           </div>
 
-          <div className={`p-2 md:p-4 border-2 border-white-5 bg-white-100 rounded-md mt-4 mb-4 ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
+          <div className={`p-2 md:p-4 border-2 border-white-5 bg-white-100 rounded-xl mt-4 mb-4 ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
           {papers.length > 0 ? (
             papers.map((paper, index) => (
               <React.Fragment key={paper.paper_id}>
