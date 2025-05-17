@@ -25,7 +25,9 @@ export async function GET(req: NextRequest) {
         title: b.papers.title,
         abstract: b.papers.abstract,
         tags: b.papers.keywords,
-        author: b.papers.author
+        author: b.papers.author,
+        department: b.papers.department,
+        year: b.papers.year,
       }));
 
     return NextResponse.json(formatted);

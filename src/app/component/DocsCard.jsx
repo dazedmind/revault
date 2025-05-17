@@ -134,13 +134,15 @@ const DocsCard = (props) => {
           <Image
             src={props.img}
             alt="Project"
-            className="hidden md:flex w-full h-full"
+            className="hidden py-4 md:flex w-full h-full"
           />
         </a>
       </div>
 
       <div className="w-full flex flex-col p-4 gap-1 items-start relative">
-        <h3 className="text-md md:text-xl font-bold">{props.title}</h3>
+        <h3 className="text-md md:text-lg font-bold">
+          {props.title}
+        </h3>
         <div className="flex gap-2 flex-wrap overflow-hidden mt-2">
           {/* Mapping over tags */}
           {props.year && (

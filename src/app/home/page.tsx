@@ -21,13 +21,14 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import useAntiCopy from "../hooks/useAntiCopy";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function HomePage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  useAntiCopy();
+  // useAntiCopy();
 
   // — UI state (mirrors URL)
   const [departments, setDepartments] = useState<string[]>([]);
@@ -125,10 +126,10 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex flex-row">
+    <main className="flex flex-col md:flex-row">
       {/* Sidebar (desktop) */}
-      <aside className="hidden md:flex w-96 p-8">
-        <div className="flex flex-col gap-6">
+      <aside className="hidden md:flex w-80 p-10">
+        <div className="flex flex-col gap-4">
           <h1 className="text-2xl font-bold">Filter Results</h1>
 
           <section>
@@ -158,27 +159,30 @@ export default function HomePage() {
                 <label htmlFor={`year-${y}`}>{y}</label>
               </div>
             ))}
-            <div className="flex gap-2 ml-2 mt-2">
-              <input
-                type="number"
-                placeholder="Start year"
-                value={startYear}
-                onChange={(e) => {
-                  setStartYear(e.target.value);
-                  if (e.target.value && endYear) setYears([]); // clear years if custom
-                }}
-                className="border p-1 rounded w-20"
-              />
-              <input
-                type="number"
-                placeholder="End year"
-                value={endYear}
-                onChange={(e) => {
-                  setEndYear(e.target.value);
-                  if (e.target.value && startYear) setYears([]); // clear years if custom
-                }}
-                className="border p-1 rounded w-20"
-              />
+            <div className="flex flex-col gap-2 ml-2 mt-2">
+              <p>Custom Range:</p>
+                <span className="flex gap-2">
+                  <input
+                    type="number"
+                  placeholder="Start year"
+                  value={startYear}
+                  onChange={(e) => {
+                    setStartYear(e.target.value);
+                    if (e.target.value && endYear) setYears([]); // clear years if custom
+                  }}
+                  className="border p-1 rounded-md text-sm w-20"
+                />
+                <input
+                  type="number"
+                  placeholder="End year"
+                  value={endYear}
+                  onChange={(e) => {
+                    setEndYear(e.target.value);
+                    if (e.target.value && startYear) setYears([]); // clear years if custom
+                  }}
+                  className="border p-1 rounded-md text-sm w-20"
+                />
+              </span>
             </div>
           </section>
 
@@ -199,41 +203,101 @@ export default function HomePage() {
           </section>
 
           <div className="flex gap-2 mt-4">
-            <button onClick={clearAllFilters} className="bg-dusk p-2 rounded">
+            <button onClick={clearAllFilters} className="bg-dusk hover:brightness-120 transition-all duration-300 p-2 rounded-md cursor-pointer">
               Clear Filters
             </button>
-            <button onClick={applyFilters} className="bg-teal p-2 rounded-md">
+            <button onClick={applyFilters} className="bg-teal hover:brightness-120 transition-all duration-300 p-2 rounded-md cursor-pointer">
               Apply Filters
             </button>
           </div>
         </div>
       </aside>
 
-      {/* Mobile filter popover */}
-      <div className="flex md:hidden px-4 mb-4">
-        <Popover>
-          <PopoverTrigger className="flex items-center gap-2 cursor-pointer">
-            Filter <FaFilter />
-          </PopoverTrigger>
-          <PopoverContent className="bg-dark" align="start">
-            <div className="flex flex-col gap-4 p-4">
-              <button onClick={clearAllFilters} className="bg-dusk p-2 rounded">
-                Clear
-              </button>
-              <button onClick={applyFilters} className="bg-teal p-2 rounded">
-                Apply
-              </button>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
 
       {/* Results area */}
       <div className="flex-1 p-8 flex flex-col gap-5">
         <h1 className="text-3xl font-bold">
           {hasFilters ? "Filtered Papers" : "Recent Papers"}
         </h1>
+     {/* Mobile filter popover */}
+     <div className="flex md:hidden px-4 mb-4">
+        <Popover>
+          <PopoverTrigger className="flex items-center gap-2 cursor-pointer">
+            Filter <FaFilter />
+          </PopoverTrigger>
+          <PopoverContent className="bg-dark" align="start">
+                      <Select>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Sort by" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="title-asc">
+                              Paper Title (A-Z)
+                            </SelectItem>
+                            <SelectItem value="title-des">
+                              Paper Title (Z-A)
+                            </SelectItem>
+                            <SelectItem value="year-recent">
+                              Publish Year (Most recent)
+                            </SelectItem>
+                            <SelectItem value="year-oldest">
+                              Publish Year (Oldest)
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
 
+                      {/* divider */}
+                      <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-1"></div>
+
+                      <p className="text-lg">Department</p>
+                      <ul className="ml-1 flex flex-col gap-1">
+                        <li>
+                          <Checkbox id="it-courses" />
+                          <label htmlFor="it-courses">
+                            {" "}
+                            Information Technology
+                          </label>
+                        </li>
+                        <li>
+                          <Checkbox id="cs-courses" />
+                          <label htmlFor="cs-courses"> Computer Science</label>
+                        </li>
+                      </ul>
+                      {/* divider */}
+                      <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-2"></div>
+
+                      <p className="text-lg">Course</p>
+                      <ul className="ml-1 flex flex-col gap-1">
+                        <li>
+                          <Checkbox id="it-courses" />
+                          <label htmlFor="it-courses"> SIA</label>
+                        </li>
+                        <li>
+                          <Checkbox id="cs-courses" />
+                          <label htmlFor="cs-courses"> Capstone</label>
+                        </li>
+                        <li>
+                          <Checkbox id="cs-courses" />
+                          <label htmlFor="cs-courses"> CS Thesis Writing</label>
+                        </li>
+                        <li>
+                          <Checkbox id="cs-courses" />
+                          <label htmlFor="cs-courses"> Research Writing</label>
+                        </li>
+                      </ul>
+                      <span className="flex gap-2">
+                        <button className="bg-dusk p-2 mt-3 w-full rounded-sm cursor-pointer">
+                          Clear Filters
+                        </button>
+                        <button className="bg-teal p-2 mt-3 w-full rounded-sm cursor-pointer">
+                          Apply Filters
+                        </button>
+                      </span>
+                    </PopoverContent>
+        </Popover>
+      </div>
         <PapersArea filters={appliedFilters} />
 
         <Pagination>

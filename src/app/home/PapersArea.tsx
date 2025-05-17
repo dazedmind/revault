@@ -17,6 +17,9 @@ interface Filters {
 export default function PapersArea({ filters }: { filters: Filters }) {
   const [papers, setPapers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userType, setUserType] = useState<string | null>(null);
+  
+  const storedUserType = localStorage.getItem("userType");
 
   useEffect(() => {
     async function load() {
@@ -36,7 +39,24 @@ export default function PapersArea({ filters }: { filters: Filters }) {
         const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) throw new Error(await res.text());
         const json = await res.json();
-        setPapers(json.items ?? json);
+        setPapers(
+          json.map((paper: any) => ({
+            ...paper,
+            title: paper.title.replace(/"/g, ""),
+            author: paper.author.replace(/"/g, ""),
+            keywords: Array.isArray(paper.keywords)
+              ? paper.keywords.flatMap((k) =>
+                  k.split(",").map((item) => item.trim()),
+                )
+              : [],
+            tags: Array.isArray(paper.tags)
+              ? paper.tags.flatMap((t) =>
+                  t.split(",").map((item) => item.trim()),
+                )
+              : [],
+            abstract: paper.abstract.replace(/"/g, ""),
+          })),
+        );
       } catch (err) {
         console.error("Error loading papers:", err);
         setPapers([]);
@@ -62,7 +82,7 @@ export default function PapersArea({ filters }: { filters: Filters }) {
           tags={paper.keywords || []}
           department={paper.department || "No department available"}
           paper_id={paper.paper_id}
-          viewFromAdmin={false}
+          viewFromAdmin={storedUserType === "librarian"}
           year={paper.year || "No year available"}
         />
       ))}
