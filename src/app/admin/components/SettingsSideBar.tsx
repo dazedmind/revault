@@ -41,9 +41,9 @@ const SettingsList = ({
           return (
             <li
             key={index}
-            className={`${labelClassName} w-80 md:w-auto cursor-pointer hover:text-teal ${
-              isActive && theme === 'light' ? "text-teal font-bold bg-tertiary rounded-md" : ""
-            } ${ isActive && theme === 'dark' ? 'bg-darker font-bold text-teal rounded-md' : ''}`}
+            className={`${labelClassName} w-80 md:w-auto cursor-pointer hover:text-gold ${
+              isActive && theme === 'light' ? "text-gold font-bold bg-tertiary rounded-md" : ""
+            } ${ isActive && theme === 'dark' ? 'bg-darker font-bold text-gold rounded-md' : ''}`}
             >
               <Link className="flex items-center gap-2" href={fullPath} prefetch={true}>
                 {icon[index]}

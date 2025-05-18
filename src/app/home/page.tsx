@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/pagination";
 import useAntiCopy from "../hooks/useAntiCopy";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useTheme } from "next-themes";
 
 export default function HomePage() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function HomePage() {
   const [startYear, setStartYear] = useState("");
   const [endYear, setEndYear] = useState("");
   const [courses, setCourses] = useState<string[]>([]);
+  const { theme } = useTheme();
 
   // — Applied filters for data fetch
   const [appliedFilters, setAppliedFilters] = useState({
@@ -130,10 +132,10 @@ export default function HomePage() {
       {/* Sidebar (desktop) */}
       <aside className="hidden md:flex w-80 p-10">
         <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-bold">Filter Results</h1>
+          <h1 className="text-2xl font-bold ">Filter Results</h1>
 
           <section>
-            <h2 className="font-bold text-teal">Program</h2>
+            <h2 className="font-bold text-gold">Program</h2>
             {["Information Technology", "Computer Science"].map((d) => (
               <div key={d} className="flex items-center gap-2 ml-2">
                 <Checkbox
@@ -147,7 +149,7 @@ export default function HomePage() {
           </section>
 
           <section>
-            <h2 className="font-bold text-teal">Publication Year</h2>
+            <h2 className="font-bold text-gold">Publication Year</h2>
             {["2025", "2024"].map((y) => (
               <div key={y} className="flex items-center gap-2 ml-2">
                 <Checkbox
@@ -160,7 +162,7 @@ export default function HomePage() {
               </div>
             ))}
             <div className="flex flex-col gap-2 ml-2 mt-2">
-              <p>Custom Range:</p>
+              <p className="text-sm">Custom Range:</p>
                 <span className="flex gap-2">
                   <input
                     type="number"
@@ -187,7 +189,7 @@ export default function HomePage() {
           </section>
 
           <section>
-            <h2 className="font-bold text-teal">Course</h2>
+            <h2 className="font-bold text-gold">Course</h2>
             {["SIA", "Capstone", "Research Writing", "CS Thesis Writing"].map(
               (c) => (
                 <div key={c} className="flex items-center gap-2 ml-2">
@@ -202,13 +204,14 @@ export default function HomePage() {
             )}
           </section>
 
-          <div className="flex gap-2 mt-4">
-            <button onClick={clearAllFilters} className="bg-dusk hover:brightness-120 transition-all duration-300 p-2 rounded-md cursor-pointer">
-              Clear Filters
-            </button>
-            <button onClick={applyFilters} className="bg-teal hover:brightness-120 transition-all duration-300 p-2 rounded-md cursor-pointer">
+          <div className="flex flex-col gap-2 mt-4">
+            <button onClick={applyFilters} className="bg-yale-blue hover:brightness-110 transition-all duration-300 p-2 rounded-md cursor-pointer">
               Apply Filters
             </button>
+            <button onClick={clearAllFilters} className={`${theme === "light" ? "border-white-5" : "border-white-50"} border transition-all duration-300 p-2 rounded-md cursor-pointer`}>
+              Clear Filters
+            </button>
+         
           </div>
         </div>
       </aside>
@@ -220,12 +223,12 @@ export default function HomePage() {
           {hasFilters ? "Filtered Papers" : "Recent Papers"}
         </h1>
      {/* Mobile filter popover */}
-     <div className="flex md:hidden px-4 mb-4">
+     <div className="flex md:hidden">
         <Popover>
           <PopoverTrigger className="flex items-center gap-2 cursor-pointer">
             Filter <FaFilter />
           </PopoverTrigger>
-          <PopoverContent className="bg-dark" align="start">
+          <PopoverContent className={`${theme === "light" ? "bg-accent border-white-50" : "bg-dusk border-white-5"}`} align="start">
                       <Select>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Sort by" />
@@ -288,10 +291,10 @@ export default function HomePage() {
                         </li>
                       </ul>
                       <span className="flex gap-2">
-                        <button className="bg-dusk p-2 mt-3 w-full rounded-sm cursor-pointer">
+                        <button className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} p-2 mt-3 w-full rounded-sm cursor-pointer`}>
                           Clear Filters
                         </button>
-                        <button className="bg-teal p-2 mt-3 w-full rounded-sm cursor-pointer">
+                        <button className="bg-gold p-2 mt-3 w-full rounded-sm cursor-pointer">
                           Apply Filters
                         </button>
                       </span>

@@ -150,7 +150,7 @@ const UploadFile = () => {
         <div className="flex flex-row">
           <input
             type="file"
-            className="p-4 w-full md:w-4xl md:p-10 md:px-60 border-2 border-dashed border-teal rounded-md dark:bg-secondary"
+            className="p-4 w-full md:w-4xl md:p-10 md:px-60 border-2 border-dashed border-gold rounded-md dark:bg-secondary"
             accept="application/pdf"
             onChange={extractText}
             name="file-input"
@@ -174,11 +174,11 @@ const UploadFile = () => {
           <div className="mt-4">
             <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
               <div
-                className="bg-teal h-2.5 rounded-full transition-all duration-300 ease-out"
+                className="bg-gold h-2.5 rounded-full transition-all duration-300 ease-out"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <p className="text-sm text-teal mt-2">
+            <p className="text-sm text-gold mt-2">
               {progress < 100
                 ? "Extracting text from PDF..."
                 : "Processing complete!"}
@@ -190,12 +190,12 @@ const UploadFile = () => {
           <span className="flex flex-col gap-2">
             <div className="flex justify-between items-center">
               <span className="flex flex-row justify-between w-4xl gap-2">
-                <h3 className="text-md font-medium text-teal">
+                <h3 className="text-md font-medium text-gold">
                   Research Title:
                 </h3>
                 <button
                   onClick={() => setIsEditingTitle(!isEditingTitle)}
-                  className="text-sm px-3 py-1 bg-teal/10 hover:bg-teal/20 text-teal rounded-md transition-colors"
+                  className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
                 >
                   {isEditingTitle ? "Save" : "Edit"}
                 </button>
@@ -204,7 +204,7 @@ const UploadFile = () => {
             <textarea
               className={` w-auto p-4 bg-midnight border rounded-md md:w-4xl outline-0 dark:bg-secondary ${
                 isEditingTitle
-                  ? "border-teal cursor-text"
+                  ? "border-gold cursor-text"
                   : "border-white-5 cursor-default"
               }`}
               defaultValue={title}
@@ -215,10 +215,10 @@ const UploadFile = () => {
 
           <span className="flex flex-col gap-2">
             <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
-              <h3 className="text-md font-medium text-teal">Authors:</h3>
+              <h3 className="text-md font-medium text-gold">Authors:</h3>
               <button
                 onClick={() => setIsEditingAuthors(!isEditingAuthors)}
-                className="text-sm px-3 py-1 bg-teal/10 hover:bg-teal/20 text-teal rounded-md transition-colors"
+                className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
               >
                 {isEditingAuthors ? "Save" : "Edit"}
               </button>
@@ -227,7 +227,7 @@ const UploadFile = () => {
               type="text"
               className={`p-4 bg-midnight border rounded-md w-full md:w-4xl outline-0 dark:bg-secondary ${
                 isEditingAuthors
-                  ? "border-teal cursor-text"
+                  ? "border-gold cursor-text"
                   : "border-white-5 cursor-default"
               }`}
               defaultValue={authors}
@@ -237,12 +237,12 @@ const UploadFile = () => {
           </span>
 
           <span className="flex flex-col gap-2">
-            <h3 className="text-md font-medium text-teal">Keywords:</h3>
+            <h3 className="text-md font-medium text-gold">Keywords:</h3>
             <div className="flex flex-row flex-wrap gap-2">
               {keywords.map((kw, idx) => (
                 <span
                   key={idx}
-                  className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm"
+                  className="px-3 py-1 bg-gold/10 text-gold rounded-md text-sm"
                 >
                   {kw}
                 </span>
@@ -254,7 +254,7 @@ const UploadFile = () => {
           <div className="flex flex-col md:flex-row gap-4">
           <span className="flex flex-col gap-2">
             <div className="flex flex-col flex-grow">
-              <Label className="text-md font-medium text-teal mb-2 dark:bg-secondary">
+              <Label className="text-md font-medium text-gold mb-2 dark:bg-secondary">
                 Department:
               </Label>
               <Select
@@ -280,7 +280,7 @@ const UploadFile = () => {
           </span>
             <span className="flex flex-col gap-2">
               <div className="flex flex-col flex-grow">
-                <Label className="text-md font-medium text-teal mb-2">
+                <Label className="text-md font-medium text-gold mb-2">
                   Course:
                 </Label>
                 <Select 
@@ -312,7 +312,7 @@ const UploadFile = () => {
             </span>
 
             <span className="flex flex-col gap-2">
-              <h3 className="text-md font-medium text-teal">Year:</h3>
+              <h3 className="text-md font-medium text-gold">Year:</h3>
               <input
                 type="text"
                 className="p-4 bg-midnight border border-white-5 rounded-md w-auto md:w-xxs outline-0 dark:bg-secondary"
@@ -324,10 +324,10 @@ const UploadFile = () => {
 
           <span className="flex flex-col gap-2">
             <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
-              <h3 className="text-md font-medium text-teal">Abstract:</h3>
+              <h3 className="text-md font-medium text-gold">Abstract:</h3>
               <button
                 onClick={() => setIsEditingAbstract(!isEditingAbstract)}
-                className="text-sm px-3 py-1 bg-teal/10 hover:bg-teal/20 text-teal rounded-md transition-colors"
+                className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
               >
                 {isEditingAbstract ? "Save" : "Edit"}
               </button>
@@ -335,7 +335,7 @@ const UploadFile = () => {
             <textarea
               className={`p-4 bg-midnight border rounded-md w-auto md:w-4xl h-64 outline-0 dark:bg-secondary ${
                 isEditingAbstract
-                  ? "border-teal cursor-text"
+                  ? "border-gold cursor-text"
                   : "border-white-5 cursor-default"
               }`}
               defaultValue={fullText}
@@ -348,20 +348,20 @@ const UploadFile = () => {
         {/* <Upload /> */}
       </main>
 
-      <div className="flex justify-between items-center bg-darker p-4 md:p-12 md:px-24 border-t-2 border-dashed border-white-5 dark:bg-primary">
-        <span className="flex flex-col gap-2">
-          <div className="flex flex-row mt-4">
+      <div className="flex flex-col md:flex-row justify-between items-center bg-darker p-7 md:p-12 md:px-24 border-t-2 border-dashed border-white-5 dark:bg-primary">
+        <span className="w-full flex flex-col justify-start items-start align-start gap-2">
+          <div className="flex flex-row my-4">
             <input type="checkbox" />
             <p className="font-inter text-sm ml-1">
-              By uploading your research paper, you agree to our{" "}
-              <span className="text-teal">Terms and Privacy Policy</span> and
+              By uploading, you agree to our{" "}
+              <span className="text-gold">Terms and Privacy Policy</span> and
               consent to its publication.
             </p>
           </div>
         </span>
 
-        <span>
-          <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-8 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+        <span className="w-full md:w-auto">
+          <button className="w-full md:w-auto text-center text-lg justify-center align-middle items-center bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br p-2 px-8 font-sans flex gap-2 rounded-md cursor-pointer">
             Upload
           </button>
         </span>
