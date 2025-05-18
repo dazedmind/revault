@@ -146,12 +146,12 @@ const DocsCard = (props) => {
         <div className="flex gap-2 flex-wrap overflow-hidden mt-2">
           {/* Mapping over tags */}
           {props.year && (
-            <p className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm">
+            <p className="px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm">
               {props.year}
             </p>
           )}
           {props.department && (
-            <p className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm">
+            <p className="px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm">
               {props.department}
             </p>
           )}
@@ -159,7 +159,7 @@ const DocsCard = (props) => {
             props.tags.map((tag, index) => (
               <p
                 key={index}
-                className={`flex px-3 py-1 bg-teal/10 text-teal rounded-md text-sm`}
+                className={`flex px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm`}
               >
                 {tag}
               </p>
@@ -176,29 +176,29 @@ const DocsCard = (props) => {
         <div className="mt-2 w-full flex flex-row gap-2 sm:gap-4">
           {/* Left Side Buttons */}
             <Link href={`/view-file/${props.paper_id}`} className="w-full md:w-auto">
-              <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:brightness-120 rounded-lg cursor-pointer">
-                <Eye />
+                <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-gold-fg to-gold hover:brightness-120 text-white rounded-lg cursor-pointer">
+                  <Eye />
                 Read
               </button>
             </Link>
             {viewFromAdmin ? (
               <button
                 onClick={() => router.push("/upload")}
-                className="w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-dusk"
+                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
               >
                 <PencilLine />  <span className="hidden md:flex">Edit</span>
               </button>
             ) : savedFromProfile ? (
               <button
                 onClick={() => handleUnbookmark(paper_id)}
-                className="w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 dark:bg-dusk-foreground text-white rounded-lg cursor-pointer hover:bg-red-warning-fg"
+                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 ${theme == "light" ? "bg-white-75" : "bg-dusk"} rounded-lg cursor-pointer hover:bg-red-warning-fg hover:text-white`}
               >
                 <BookmarkX /> <span className="hidden md:flex">Unsave</span>
               </button>
             ) : (
               <button
                 onClick={() => handleBookmark(paper_id)}
-                className="w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 dark:bg-dusk-foreground dark:text-white rounded-lg cursor-pointer hover:bg-dusk"
+                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 ${theme == "light" ? "bg-tertiary" : "bg-dusk"} rounded-lg cursor-pointer hover:brightness-105`}
               >
                 <Bookmark /> <span className="hidden md:flex">Bookmark</span>
               </button>

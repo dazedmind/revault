@@ -29,7 +29,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable} light`} suppressHydrationWarning>
       <body
           className={`${inter.variable} ${ibmPlexMono.variable} antialiased`}
       >

@@ -208,7 +208,7 @@ function ViewFile() {
               </span>
 
               <div className={`border-2 ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-8 rounded-md`}>
-                <p className="font-bold text-2xl text-teal">Metadata</p>
+                <p className="font-bold text-2xl text-gold">Metadata</p>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <p className="text-lg">
@@ -264,7 +264,7 @@ function ViewFile() {
                           .map((keyword, keywordIndex) => (
                             <span 
                               key={keywordIndex} 
-                              className={`px-3 py-1 bg-teal/10 text-teal rounded-md text-sm`}
+                              className={`px-3 py-1 bg-gold/10 text-gold rounded-md text-sm`}
                             >
                               {keyword}
                             </span>
@@ -276,7 +276,7 @@ function ViewFile() {
                   </div>
                 </div>
                 <br />
-                <p className="font-bold text-2xl text-teal">Abstract</p>
+                <p className="font-bold text-2xl text-gold">Abstract</p>
                 <p>
                   {paper.abstract}
                 </p>{" "}
@@ -289,7 +289,7 @@ function ViewFile() {
                 <h1 className="text-2xl font-bold  hidden md:block">File Menu</h1>
       
                 <FileMenuButton
-                  icon={<Info className="text-xl text-teal" />}
+                  icon={<Info className="text-xl text-gold" />}
                   label="View Metadata"
                   onClick={() => setShowMetadata(!showMetadata)}
                 />
@@ -297,9 +297,9 @@ function ViewFile() {
                 <FileMenuButton
                   icon={
                     theme === "dark" ? (
-                      <SunMedium className="text-xl text-teal" />
+                      <SunMedium className="text-xl text-gold" />
                     ) : (
-                      <Moon className="text-xl text-teal" />
+                      <Moon className="text-xl text-gold" />
                     )
                   }
                   label={
@@ -311,7 +311,7 @@ function ViewFile() {
                 {viewFromAdmin && (
                   <>
                     <FileMenuButton
-                      icon={<Link className="text-xl text-teal" />}
+                      icon={<Link className="text-xl text-gold" />}
                       label="Cite Paper"
                       onClick={() => {}}
                     />
@@ -320,7 +320,7 @@ function ViewFile() {
 
                 {!viewFromAdmin && (
                   <FileMenuButton
-                    icon={<Bookmark className="text-xl text-teal" />}
+                    icon={<Bookmark className="text-xl text-gold" />}
                     label="Add to Bookmark"
                     onClick={() => handleBookmark(paper_id)}
                   />
@@ -366,7 +366,7 @@ function ViewFile() {
                           .map((keyword, keywordIndex) => (
                             <span 
                               key={keywordIndex} 
-                              className={`px-3 py-1 bg-teal/10 text-teal rounded-md text-sm mr-2`}
+                              className={`px-3 py-1 bg-gold/10 text-gold rounded-md text-sm mr-2`}
                             >
                               {keyword}
                             </span>

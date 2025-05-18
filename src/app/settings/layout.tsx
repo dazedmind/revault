@@ -15,7 +15,7 @@ export default function SettingsLayout({
 }) {
   const [activeLabel, setActiveLabel] = useState("Edit Profile");
 
-  useAntiCopy();
+  // useAntiCopy();
 
   const settingsData = [
     {
@@ -27,7 +27,7 @@ export default function SettingsLayout({
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex flex-col bg-midnight">
+      <div className="flex flex-col ">
         <ProtectedRoute>
           <nav>
             <NavBar />

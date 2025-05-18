@@ -70,7 +70,7 @@ const ChangePassword = () => {
       />
       
       <span>
-        <Button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white text-base p-6 md:ml-4.5 mt-5">
+        <Button className="bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br font-inter cursor-pointer text-white text-base p-6 md:ml-4.5 mt-5">
           Save Changes
         </Button>
       </span>

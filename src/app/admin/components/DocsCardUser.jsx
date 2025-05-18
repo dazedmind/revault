@@ -106,26 +106,26 @@ const DocsCardUser = (props) => {
                     </p>
                     
                     <span className="flex gap-2 py-2 md:py-0">
-                      <p className="px-3 py-1 bg-teal/10 text-teal font-bold rounded-md text-sm">
-                        {props.department}
-                      </p>
-                      <p className="px-3 py-1 bg-teal/10 text-teal font-bold rounded-md text-sm">
+                      <p className="px-3 py-1 bg-gold/10 text-gold font-bold rounded-md text-sm">
                         {props.year}
+                      </p>
+                      <p className="px-3 py-1 bg-gold/10 text-gold font-bold rounded-md text-sm">
+                        {props.department}
                       </p>
                     </span>
                   </span>
                 </div>
               </div>
 
-              <span className="flex md:flex-col gap-2 w-full md:w-auto">
+              <span className="flex flex-col md:flex-col gap-2 w-full md:w-auto">
                 <Link href={`/view-file/${paper_id}`}>
-                  <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br px-4 py-3 flex items-center justify-center gap-2 rounded-lg cursor-pointer text-md flex-1 md:flex-none">
+                  <button className=" w-full md:w-auto bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 transition-all duration-300 px-4 py-3 flex items-center justify-center gap-2 rounded-lg cursor-pointer text-md flex-1 md:flex-none">
                     {" "}
                     <Eye /> 
                   </button>
                 </Link>
                 <Link href={`/edit-file/${paper_id}`}>
-                <button className={`flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
+                <button className={`w-full md:w-auto flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
                   <PencilLine /> 
                 </button>
                 </Link>

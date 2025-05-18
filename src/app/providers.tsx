@@ -16,8 +16,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     const body = document.body;
 
     if (isExcluded) {
-      body.classList.add("dark"); // force dark mode
+      body.classList.add("light");
     }
+    
   }, [pathname, isExcluded]);
 
   if (isExcluded) {
@@ -25,7 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       {children}
     </ThemeProvider>
   );

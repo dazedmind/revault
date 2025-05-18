@@ -95,12 +95,12 @@ export default function Form() {
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-midnight p-10 rounded-lg shadow-lg mb-20">
+    <div className="max-w-lg mx-auto bg-accent border-2 p-10 rounded-lg shadow-lg mb-20">
       <form onSubmit={handleNext} className="grid grid-cols-2 gap-4 min-w-0">
-        <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">
+        <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">
           Personal Information
         </h1>
-        <div className="bg-dusk h-0.5 w-full col-span-2"></div>
+        <div className="bg-white-50 h-0.5 w-full col-span-2"></div>
 
         <InputField
           label="First Name"
@@ -147,10 +147,10 @@ export default function Form() {
           disabled={false}
         />
 
-        <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">
+        <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">
           Student Information
         </h1>
-        <div className="bg-dusk h-0.5 w-full col-span-2"></div>
+        <div className="bg-white-50 h-0.5 w-full col-span-2"></div>
 
         <InputField
           label="Student Number"
@@ -164,7 +164,7 @@ export default function Form() {
         />
 
         <div className="flex flex-col flex-grow">
-          <Label className="text-sm text-gray-300 mb-1">Course</Label>
+          <Label className="text-sm mb-1">Course</Label>
           <Select
             name="program"
             value={selectedProgram}
@@ -197,10 +197,10 @@ export default function Form() {
           disabled={false}
         />
 
-        <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">
+        <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">
           Password
         </h1>
-        <div className="bg-dusk h-0.5 w-full col-span-2"></div>
+        <div className="bg-white-50 h-0.5 w-full col-span-2"></div>
 
         {/* Passwords */}
         <div className="col-span-2 w-full">
@@ -242,7 +242,7 @@ export default function Form() {
         <div className="col-span-2">
           <button
             onClick={handleNext}
-            className="block text-center w-full text-white py-2 rounded-md bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-lg font-bold"
+            className="block text-center w-full text-white py-2 rounded-md bg-gradient-to-r from-gold to-gold hover:bg-gradient-to-br font-inter cursor-pointer text-lg font-bold"
           >
             Next
           </button>

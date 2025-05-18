@@ -301,7 +301,7 @@ const ManageUserSettings = () => {
           <div className={`p-6 rounded-lg bg-dusk w-full max-w-md relative z-10`}>
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-medium mb-4 text-[#01B783]">Personal Information</h3>
+                <h3 className="text-lg font-medium mb-4 text-gold">Personal Information</h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Full Name</label>
@@ -350,7 +350,7 @@ const ManageUserSettings = () => {
 
              {/* Employee Information Section */}
               <div>
-                <h3 className="text-lg font-medium mb-4 text-[#01B783]">Employee Information</h3>
+                <h3 className="text-lg font-medium mb-4 text-gold">Employee Information</h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Employee ID</label>
@@ -396,7 +396,7 @@ const ManageUserSettings = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-medium mb-4 text-[#01B783]">Password</h3>
+                <h3 className="text-lg font-medium mb-4 text-gold">Password</h3>
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-2">Create Password</label>
                   <input
@@ -433,7 +433,7 @@ const ManageUserSettings = () => {
                 </button>
                 <button
                   onClick={handleSave}
-                  className="px-4 py-2 rounded-[12px] text-white transition-colors bg-[#01B783] hover:opacity-90"
+                  className="px-4 py-2 rounded-[12px] text-white transition-colors bg-gold hover:opacity-90"
                 >
                   Update User
                 </button>
@@ -449,7 +449,7 @@ const ManageUserSettings = () => {
           <div className={`p-6 rounded-lg bg-dusk w-full max-w-md relative z-10`}>
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-medium mb-4 text-[#01B783]">Personal Information</h3>
+                <h3 className="text-lg font-medium mb-4 text-gold">Personal Information</h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">First Name *</label>
@@ -498,7 +498,7 @@ const ManageUserSettings = () => {
 
               {/* Employee Information Section */}
               <div>
-                <h3 className="text-lg font-medium mb-4 text-[#01B783]">Employee Information</h3>
+                <h3 className="text-lg font-medium mb-4 text-gold">Employee Information</h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Employee ID *</label>
@@ -543,7 +543,7 @@ const ManageUserSettings = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-medium mb-4 text-[#01B783]">Password</h3>
+                <h3 className="text-lg font-medium mb-4 text-gold">Password</h3>
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-2">Create Password *</label>
                   <input
@@ -580,7 +580,7 @@ const ManageUserSettings = () => {
                 </button>
                 <button
                   onClick={handleAddUser}
-                  className="px-4 py-2 rounded-[12px] text-white transition-colors bg-[#01B783] hover:opacity-90"
+                  className="px-4 py-2 rounded-[12px] text-white transition-colors bg-gold hover:opacity-90"
                 >
                   Add User
                 </button>
@@ -594,7 +594,7 @@ const ManageUserSettings = () => {
         <h1 className="text-2xl ml-1">Manage Users</h1>
         <button 
           onClick={handleAddLibrarian}
-          className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+          className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
           <span className="hidden md:block text-sm">Create New</span>
           <Plus className="block md:hidden" />
         </button>
