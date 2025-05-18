@@ -9,8 +9,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ message = 'Loading...' })
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-midnight backdrop-blur-sm dark:bg-secondary">
       <div className="flex flex-col items-center gap-4">
-        <Loader2 className="h-10 w-10 animate-spin text-teal" />
-        <p className="text-teal text-lg">{message}</p>
+        <Loader2 className="h-10 w-10 animate-spin text-gold" />
+        <p className="text-gold text-lg">{message}</p>
       </div>
     </div>
     

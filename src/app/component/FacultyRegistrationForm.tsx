@@ -87,10 +87,10 @@ export default function FacultyForm() {
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-midnight p-10 rounded-lg shadow-lg mb-20">
+    <div className="max-w-lg mx-auto bg-accent border-2 p-10 rounded-lg shadow-lg mb-20">
       <form onSubmit={handleNext} className="grid grid-cols-2 gap-4 min-w-0">
-        <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">Personal Information</h1>
-        <div className="bg-dusk h-0.5 w-full col-span-2"></div>
+        <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">Personal Information</h1>
+        <div className="bg-white-75 h-0.5 w-full col-span-2"></div>
 
         <InputField
           label="First Name"
@@ -137,8 +137,8 @@ export default function FacultyForm() {
           disabled={false}
         />
 
-        <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">Employee Information</h1>
-        <div className="bg-dusk h-0.5 w-full col-span-2"></div>
+        <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">Employee Information</h1>
+        <div className="bg-white-75 h-0.5 w-full col-span-2"></div>
 
         <InputField
           label="Employee Number"
@@ -177,8 +177,8 @@ export default function FacultyForm() {
           disabled={false}
         />
 
-        <h1 className="col-span-2 font-mono text-teal font-bold text-2xl">Password</h1>
-        <div className="bg-dusk h-0.5 w-full col-span-2"></div>
+        <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">Password</h1>
+        <div className="bg-white-75 h-0.5 w-full col-span-2"></div>
 
         {/* Passwords */}
         <div className="col-span-2 w-full">
@@ -218,7 +218,7 @@ export default function FacultyForm() {
         <input type="hidden" id="role" name="role" value={role} />
 
         <div className="col-span-2">
-          <button onClick={handleNext} className="block text-center w-full text-white py-2 rounded-md bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-lg font-bold">Next</button>
+          <button onClick={handleNext} className="block text-center w-full text-white py-2 rounded-md bg-gradient-to-r from-gold to-gold hover:bg-gradient-to-br font-inter cursor-pointer text-lg font-bold">Next</button>
         </div>
       </form>
     </div>

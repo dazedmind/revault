@@ -8,9 +8,13 @@ const RegistrationLayout = ({ children }: { children: React.ReactNode }) => {
   // return (<RegistrationProvider>{children}</RegistrationProvider>;)
   return (
     <>
-      <Background imageUrl="/login-bg.png" />
-
-      <Header />
+      <div className="relative -z-10">
+        <Background imageUrl="/login-bg.png" />
+      </div>
+      
+      <div className="relative z-20">
+        <Header />
+      </div>
 
       <main>{children}</main>
     </>

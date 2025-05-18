@@ -35,6 +35,21 @@ function OTPContent() {
     } else if (emailFromQuery) {
       setUserEmail(emailFromQuery);
     }
+
+    // Generate initial OTP and start timer
+    const initialOTP = generateOTP();
+    setGeneratedOTP(initialOTP);
+    setIsSent(true);
+    setTimer(30);
+
+    // Send initial OTP
+    fetch("/api/send-otp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: savedEmail || emailFromQuery, otp: initialOTP, role: storedRole }),
+    });
   }, [emailFromQuery]);
 
   const handleSendOTP = useCallback(async () => {
@@ -99,7 +114,7 @@ function OTPContent() {
   return (
     <div className="flex-grow flex justify-center">
       <div className="flex flex-col items-center w-5xl mt-28">
-        <h1 className="text-teal text-5xl font-bold font-mono">
+        <h1 className="text-gold text-5xl font-bold font-mono">
           Check your email!
         </h1>
         <p className="text-xl text-center w-lg mt-3">
@@ -130,8 +145,8 @@ function OTPContent() {
             onClick={handleSendOTP}
             className={`px-4 py-2 rounded-lg ${
               timer > 0
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-dusk hover:bg-dusk-foreground text-white cursor-pointer"
+                ? " cursor-not-allowed"
+                : " border-2 border-gold hover:bg-gold transition-all text-gold duration-300 cursor-pointer"
             }`}
           >
             Resend OTP
@@ -140,7 +155,12 @@ function OTPContent() {
           <button
             type="button"
             onClick={handleConfirm}
-            className="font-bold w-sm h-14 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-sans cursor-pointer z-10 px-6 text-white"
+            disabled={otp.length !== 5}
+            className={`font-bold w-sm h-14 rounded-lg font-sans z-10 px-6 text-white ${
+              otp.length === 5
+                ? "bg-gradient-to-r from-gold to-gold hover:bg-gradient-to-br cursor-pointer"
+                : "bg-white-75 cursor-not-allowed"
+            }`}
           >
             Confirm
           </button>
@@ -149,15 +169,15 @@ function OTPContent() {
 
       {showSuccessModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-midnight rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
-            <h2 className="text-2xl font-bold text-teal mb-4">
+          <div className="bg-accent rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+            <h2 className="text-2xl font-bold text-gold mb-4">
               Account Successfully Created!
             </h2>
             <p className="text-white-50 mb-6">
               You can now log in to your account.
             </p>
             <button
-              className="px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
+              className="px-6 py-2 bg-gold hover:brightness-125 transition-all duration-300 text-white rounded-lg font-semibold"
               onClick={() => router.push("../login")}
             >
               Okay
@@ -168,13 +188,13 @@ function OTPContent() {
 
       {showFailureModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-midnight rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
-            <h2 className="text-2xl font-bold text-teal mb-4">OTP Incorrect</h2>
-            <p className="text-white-50 mb-6">
+          <div className="bg-accent rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+            <h2 className="text-2xl font-bold text-gold mb-4">OTP Incorrect</h2>
+            <p className=" mb-6">
               The OTP you entered is incorrect. Please try again.
             </p>
             <button
-              className="cursor-pointer px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
+              className="cursor-pointer px-6 py-2 bg-gold hover:brightness-125 transition-all duration-300 text-white rounded-lg font-semibold"
               onClick={() => setShowFailureModal(false)}
             >
               Okay
