@@ -14,7 +14,7 @@ const LogIn = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  useAntiCopy();
+  // useAntiCopy();
 
   const [formData, setFormData] = useState({
     idNumber: "",
@@ -77,19 +77,21 @@ const LogIn = () => {
   });
 
   return (
-    <div className="font-Inter h-screen w-screen overflow-hidden relative">
+    <div className="font-Inter h-screen w-screen bg-tertiary overflow-hidden relative">
       {/* Background with Blur using background component */}
       <Background imageUrl="/login-bg.png" />
 
       {/* Header using header component */}
-      <Header />
+      <div className="relative z-20">
+        <Header />
+      </div>
 
       {/* Main Content */}
       <main className="flex flex-row justify-center mt-20 md:mt-10 items-center relative z-10">
-        <div className="w-80 md:w-96 m-5 p-6 h-auto rounded-md outline-1 bg-midnight relative z-10">
+        <div className="w-80 md:w-96 m-5 p-6 h-auto rounded-md outline-1 bg-white relative z-10">
           {/* Title */}
           <div className="flex flex-col justify-center items-center">
-            <h1 className="text-4xl font-mono font-bold text-teal">ReVault</h1>
+            <h1 className="text-4xl font-mono font-bold text-gold">ReVault</h1>
           </div>
 
           {/* Form */}
@@ -114,10 +116,8 @@ const LogIn = () => {
               />
 
               {/* Remember Password & Forgot Password */}
-              <div className="flex flex-row justify-between items-center m-5 md:my-4 md:mx-1 mt-5">
-                <LogInCheckBox id="rememberMe" label="Remember password" />
-
-                <p className="font-inter text-teal text-xs text-align cursor-pointer">
+              <div className="flex flex-row justify-end items-end m-5 md:my-4 md:mx-1 mt-5">
+                <p className="font-inter text-gold font-bold text-xs text-align cursor-pointer">
                   Forgot Password?
                 </p>
               </div>
@@ -126,8 +126,7 @@ const LogIn = () => {
               <div className="flex flex-row justify-center mt-5">
                 <Button
                   type="submit"
-                  className="w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer font-bold text-md md:text-lg text-white
-                  "
+                  className="w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-[#8F8749] to-[#CFC369] hover:brightness-120 transition-all duration-300 font-inter cursor-pointer font-bold text-md md:text-lg text-white"
                 >
                   Log In
                 </Button>
@@ -141,7 +140,7 @@ const LogIn = () => {
               Don&#39;t have an account yet?{" "}
               <a
                 href="/registration/user-selection"
-                className="text-teal cursor-pointer"
+                className="text-gold font-bold cursor-pointer"
               >
                 Create account
               </a>
@@ -150,9 +149,9 @@ const LogIn = () => {
 
           {/* Divider */}
           <div className="flex flex-row justify-center items-center gap-2 text-base mt-5">
-            <div className="bg-dusk h-0.5 w-full"></div>
-            <p className="w-120 md:w-100">or Sign Up With</p>
-            <div className="bg-dusk h-0.5 w-full"></div>
+            <div className="bg-white-50 h-0.5 w-full"></div>
+            <p className="w-120 md:w-100 text-midnight">or Sign Up With</p>
+            <div className="bg-white-50 h-0.5 w-full"></div>
           </div>
 
           {/* Microsoft Login */}
@@ -170,11 +169,11 @@ const LogIn = () => {
 
       {showErrorModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-midnight rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
-            <h2 className="text-2xl font-bold text-teal mb-4">Login Failed</h2>
-            <p className="text-white-50 mb-6">{errorMessage}</p>
+          <div className="bg-accent border-2 rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+            <h2 className="text-2xl font-bold text-gold mb-4">Login Failed</h2>
+            <p className=" mb-6">{errorMessage}</p>
             <button
-              className="cursor-pointer px-6 py-2 bg-teal hover:bg-teal-600 text-white rounded-lg font-semibold"
+              className="cursor-pointer px-6 py-2 bg-gold hover:brightness-105 text-white rounded-lg font-semibold"
               onClick={() => setShowErrorModal(false)}
             >
               Okay

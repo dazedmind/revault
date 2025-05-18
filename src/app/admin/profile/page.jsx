@@ -15,6 +15,13 @@ import DocsCardUser from "../components/DocsCardUser";
 import document from "../../img/document.png";
 import StatsCard from "../components/StatsCard";
 import { useTheme } from 'next-themes'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 export default function AdminProfile() {
   const { theme } = useTheme()
@@ -123,22 +130,51 @@ export default function AdminProfile() {
       )}
 
       <main className="flex flex-col dark:bg-secondary px-4 md:px-40 h-full">
-        <div className="flex flex-col mx-auto md:mx-0 md:flex-row gap-4 my-10 ">
-          <StatsCard  
-          department="Information Technology" 
-          description="Total Number of Papers" 
-          totalPapers={120} 
-          />
-          <StatsCard 
-          department="Computer Science" 
-          description="Total Number of Papers" 
-          totalPapers={134} 
-          />
-          <StatsCard 
-          department="Usage Statistics" 
-          description="Total Number of Users" 
-          totalPapers={134} 
-          />
+        <Carousel className="md:hidden p-5 mb-5">
+          <h1 className="text-2xl font-bold mb-4">Usage Statistics</h1>
+          <CarouselContent>
+            <CarouselItem>
+              <StatsCard  
+                department="Information Technology" 
+                description="Total Number of Papers" 
+                totalPapers={120} 
+                />
+            </CarouselItem>
+            <CarouselItem>
+              <StatsCard 
+                department="Computer Science" 
+                description="Total Number of Papers" 
+                totalPapers={134} 
+                />
+            </CarouselItem>
+            <CarouselItem>
+              <StatsCard 
+                department="Usage Statistics" 
+                description="Total Number of Users" 
+                totalPapers={134} 
+                />
+            </CarouselItem>
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+        <div className="hidden md:flex flex-col mx-auto md:mx-0 md:flex-row gap-4 my-10 ">
+            <StatsCard 
+              department="Usage Statistics" 
+              description="Total Number of Users" 
+              totalPapers={134} 
+            />
+            <StatsCard 
+              department="Usage Statistics" 
+              description="Total Number of Users" 
+              totalPapers={134} 
+            />
+
+            <StatsCard 
+              department="Usage Statistics" 
+              description="Total Number of Users" 
+              totalPapers={134} 
+            />
         </div>
 
         <div className="">
@@ -148,90 +184,92 @@ export default function AdminProfile() {
           <div className="flex justify-between ">
             <div className="flex gap-4">
               <SearchInput placeholder="Search paper" />
-              <button className="bg-teal p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-                <FaMagnifyingGlass /> Search
+              <button className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+                <FaMagnifyingGlass /> 
+                <p className="hidden md:block">Search</p>
               </button>
-              {/* Filter */}
-              <Popover>
-                <PopoverTrigger className="cursor-pointer flex items-center gap-2">
-                  Filter <FaFilter />
-                </PopoverTrigger>
-                <PopoverContent className="bg-dark" align="start">
-                  <Select>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="title-asc">
-                          Paper Title (A-Z)
-                        </SelectItem>
-                        <SelectItem value="title-des">
-                          Paper Title (Z-A)
-                        </SelectItem>
-                        <SelectItem value="year-recent">
-                          Publish Year (Most recent)
-                        </SelectItem>
-                        <SelectItem value="year-oldest">
-                          Publish Year (Oldest)
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+              
+                {/* Filter */}
+                <Popover>
+                  <PopoverTrigger className="flex items-center gap-2 cursor-pointer">
+                    Filter <FaFilter />
+                  </PopoverTrigger>
+                  <PopoverContent className={`${theme === "light" ? "bg-accent border-white-50" : "bg-dusk border-white-5"}`} align="start">
+                              <Select>
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Sort by" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectGroup>
+                                    <SelectItem value="title-asc">
+                                      Paper Title (A-Z)
+                                    </SelectItem>
+                                    <SelectItem value="title-des">
+                                      Paper Title (Z-A)
+                                    </SelectItem>
+                                    <SelectItem value="year-recent">
+                                      Publish Year (Most recent)
+                                    </SelectItem>
+                                    <SelectItem value="year-oldest">
+                                      Publish Year (Oldest)
+                                    </SelectItem>
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
 
-                  {/* divider */}
-                  <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-1"></div>
+                              {/* divider */}
+                              <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-1"></div>
 
-                  <p className="text-lg">Department</p>
-                  <ul className="ml-1 flex flex-col gap-1">
-                    <li>
-                      <Checkbox id="it-courses" />
-                      <label htmlFor="it-courses">
-                        {" "}
-                        Information Technology
-                      </label>
-                    </li>
-                    <li>
-                      <Checkbox id="cs-courses" />
-                      <label htmlFor="cs-courses"> Computer Science</label>
-                    </li>
-                  </ul>
-                  {/* divider */}
-                  <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-2"></div>
+                              <p className="text-lg">Department</p>
+                              <ul className="ml-1 flex flex-col gap-1">
+                                <li>
+                                  <Checkbox id="it-courses" />
+                                  <label htmlFor="it-courses">
+                                    {" "}
+                                    Information Technology
+                                  </label>
+                                </li>
+                                <li>
+                                  <Checkbox id="cs-courses" />
+                                  <label htmlFor="cs-courses"> Computer Science</label>
+                                </li>
+                              </ul>
+                              {/* divider */}
+                              <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-2"></div>
 
-                  <p className="text-lg">Course</p>
-                  <ul className="ml-1 flex flex-col gap-1">
-                    <li>
-                      <Checkbox id="it-courses" />
-                      <label htmlFor="it-courses"> SIA</label>
-                    </li>
-                    <li>
-                      <Checkbox id="cs-courses" />
-                      <label htmlFor="cs-courses"> Capstone</label>
-                    </li>
-                    <li>
-                      <Checkbox id="cs-courses" />
-                      <label htmlFor="cs-courses"> CS Thesis Writing</label>
-                    </li>
-                    <li>
-                      <Checkbox id="cs-courses" />
-                      <label htmlFor="cs-courses"> Research Writing</label>
-                    </li>
-                  </ul>
-                  <span className="flex gap-2">
-                    <button className="bg-dusk p-2 mt-3 w-full rounded-sm cursor-pointer">
-                      Clear Filters
-                    </button>
-                    <button className="bg-teal p-2 mt-3 w-full rounded-sm cursor-pointer">
-                      Apply Filters
-                    </button>
-                  </span>
-                </PopoverContent>
-              </Popover>
+                              <p className="text-lg">Course</p>
+                              <ul className="ml-1 flex flex-col gap-1">
+                                <li>
+                                  <Checkbox id="it-courses" />
+                                  <label htmlFor="it-courses"> SIA</label>
+                                </li>
+                                <li>
+                                  <Checkbox id="cs-courses" />
+                                  <label htmlFor="cs-courses"> Capstone</label>
+                                </li>
+                                <li>
+                                  <Checkbox id="cs-courses" />
+                                  <label htmlFor="cs-courses"> CS Thesis Writing</label>
+                                </li>
+                                <li>
+                                  <Checkbox id="cs-courses" />
+                                  <label htmlFor="cs-courses"> Research Writing</label>
+                                </li>
+                              </ul>
+                              <span className="flex gap-2">
+                                <button className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} p-2 mt-3 w-full rounded-sm cursor-pointer`}>
+                                  Clear Filters
+                                </button>
+                                <button className="bg-gold p-2 mt-3 w-full rounded-sm cursor-pointer">
+                                  Apply Filters
+                                </button>
+                              </span>
+                            </PopoverContent>
+                  </Popover>
             </div>
 
             {/* Upload Paper Button */}
-            <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+            <button className="hidden md:flex bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 transition-all duration-300 p-2 px-4 font-sans items-center gap-2 rounded-lg cursor-pointer">
               <FaPlus /> <p className="hidden md:block">Upload Paper</p>
             </button>
           </div>

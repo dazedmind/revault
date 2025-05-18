@@ -132,7 +132,7 @@ const EditProfilePage = () => {
                 />
             </div>
             <span>
-              <p className="ml-5 text-teal">Select Profile Picture</p>
+              <p className="ml-5 text-gold">Select Profile Picture</p>
               <p className="ml-5 text-sm">Accepts: JPG, PNG, JPEG</p>
               <p className="ml-5 text-sm">Max size: 1MB</p>
             </span>
@@ -200,7 +200,7 @@ const EditProfilePage = () => {
         <span className="mt-5 md:m-5">
           <Button
             onClick={handleSaveChanges}
-            className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br font-inter cursor-pointer text-white"
+            className="bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br font-inter cursor-pointer text-white"
           >
             Save Changes
           </Button>
