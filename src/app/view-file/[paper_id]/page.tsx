@@ -192,7 +192,7 @@ function ViewFile() {
               className={`fixed top-0 left-0 w-full md:w-[800px] h-screen z-50 p-4 md:p-10 shadow-lg 
                 transform transition-transform duration-300 ease-in-out
                 ${showMetadata ? 'translate-x-0' : '-translate-x-full'}
-                dark:bg-card-foreground overflow-y-auto`}
+                dark:bg-accent overflow-y-auto`}
             >
               <span className="flex items-center text-center align-middle gap-2 justify-between mb-6">
                 <h2 className="text-3xl p-4 md:p-0 font-bold">
@@ -264,7 +264,7 @@ function ViewFile() {
                           .map((keyword, keywordIndex) => (
                             <span 
                               key={keywordIndex} 
-                              className={`px-3 py-1 bg-gold/10 text-gold rounded-md text-sm`}
+                              className={`px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm`}
                             >
                               {keyword}
                             </span>
@@ -289,7 +289,7 @@ function ViewFile() {
                 <h1 className="text-2xl font-bold  hidden md:block">File Menu</h1>
       
                 <FileMenuButton
-                  icon={<Info className="text-xl text-gold" />}
+                  icon={<Info className="text-xl text-yale-blue" />}
                   label="View Metadata"
                   onClick={() => setShowMetadata(!showMetadata)}
                 />
@@ -297,12 +297,12 @@ function ViewFile() {
                 <FileMenuButton
                   icon={
                     theme === "dark" ? (
-                      <SunMedium className="text-xl text-gold" />
+                      <SunMedium className="text-xl text-yale-blue" />
                     ) : (
-                      <Moon className="text-xl text-gold" />
+                      <Moon className="text-xl text-yale-blue" />
                     )
                   }
-                  label={
+                  label={ 
                     theme === "dark" ? "Toggle Light Mode" : "Toggle Dark Mode"
                   }
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -311,7 +311,7 @@ function ViewFile() {
                 {viewFromAdmin && (
                   <>
                     <FileMenuButton
-                      icon={<Link className="text-xl text-gold" />}
+                      icon={<Link className="text-xl text-yale-blue" />}
                       label="Cite Paper"
                       onClick={() => {}}
                     />
@@ -320,7 +320,7 @@ function ViewFile() {
 
                 {!viewFromAdmin && (
                   <FileMenuButton
-                    icon={<Bookmark className="text-xl text-gold" />}
+                    icon={<Bookmark className="text-xl text-yale-blue" />}
                     label="Add to Bookmark"
                     onClick={() => handleBookmark(paper_id)}
                   />
@@ -366,7 +366,7 @@ function ViewFile() {
                           .map((keyword, keywordIndex) => (
                             <span 
                               key={keywordIndex} 
-                              className={`px-3 py-1 bg-gold/10 text-gold rounded-md text-sm mr-2`}
+                              className={`px-3 py-1 bg-yale-blue/10 text-yale-blue  rounded-md text-sm mr-2`}
                             >
                               {keyword}
                             </span>

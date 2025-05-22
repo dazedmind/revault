@@ -7,6 +7,7 @@ import { Bookmark, BookmarkX, Eye, PencilLine } from "lucide-react";
 import DocsLoader from "./DocsLoader";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
+import { GoBookmarkSlash, GoPencil } from "react-icons/go";
 
 const tagColors = {
   IT: "bg-dusk",
@@ -186,14 +187,16 @@ const DocsCard = (props) => {
                 onClick={() => router.push("/upload")}
                 className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
               >
-                <PencilLine />  <span className="hidden md:flex">Edit</span>
+                <GoPencil className="text-xl"/>
+                <span className="hidden md:flex">Edit</span>
               </button>
             ) : savedFromProfile ? (
               <button
                 onClick={() => handleUnbookmark(paper_id)}
                 className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 ${theme == "light" ? "bg-white-75" : "bg-dusk"} rounded-lg cursor-pointer hover:bg-red-warning-fg hover:text-white`}
               >
-                <BookmarkX /> <span className="hidden md:flex">Unsave</span>
+                <GoBookmarkSlash className="text-xl" />
+                <span className="hidden md:flex">Unsave</span>
               </button>
             ) : (
               <button

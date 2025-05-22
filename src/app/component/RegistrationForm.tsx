@@ -95,7 +95,7 @@ export default function Form() {
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-accent border-2 p-10 rounded-lg shadow-lg mb-20">
+    <div className="max-w-lg mx-auto bg-accent border-2 p-6 md:p-10 rounded-lg shadow-lg mb-20">
       <form onSubmit={handleNext} className="grid grid-cols-2 gap-4 min-w-0">
         <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">
           Personal Information
@@ -103,7 +103,7 @@ export default function Form() {
         <div className="bg-white-50 h-0.5 w-full col-span-2"></div>
 
         <InputField
-          label="First Name"
+          label="First Name*"
           type="text"
           name="firstName"
           value={formData.firstName}
@@ -114,7 +114,7 @@ export default function Form() {
         />
 
         <InputField
-          label="Middle Name"
+          label="Middle Name*"
           type="text"
           name="middleName"
           value={formData.middleName}
@@ -125,7 +125,7 @@ export default function Form() {
         />
 
         <InputField
-          label="Last Name"
+          label="Last Name*"
           type="text"
           name="lastName"
           value={formData.lastName}
@@ -153,7 +153,7 @@ export default function Form() {
         <div className="bg-white-50 h-0.5 w-full col-span-2"></div>
 
         <InputField
-          label="Student Number"
+          label="Student Number*"
           type="text"
           name="studentNumber"
           value={formData.studentNumber}
@@ -187,7 +187,7 @@ export default function Form() {
         </div>
 
         <InputField
-          label="Email Address"
+          label="Email Address*"
           type="email"
           name="email"
           value={formData.email}
@@ -205,7 +205,7 @@ export default function Form() {
         {/* Passwords */}
         <div className="col-span-2 w-full">
           <InputField
-            label="Create Password"
+            label="Create Password*"
             type="password"
             name="password"
             value={formData.password}
@@ -218,7 +218,7 @@ export default function Form() {
 
         <div className="col-span-2 w-full">
           <InputField
-            label="Confirm Password"
+            label="Confirm Password*"
             type="password"
             name="confirmPassword"
             value={formData.confirmPassword}

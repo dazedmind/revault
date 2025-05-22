@@ -22,6 +22,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import ProfileLoader from "@/app/component/ProfileLoader";
 
 export default function AdminProfile() {
   const { theme } = useTheme()
@@ -111,7 +112,7 @@ export default function AdminProfile() {
     init();
   }, [router]);
 
-  if (loading) return <div>Loading profile...</div>;
+  if (loading) return <ProfileLoader />;
 
   return (
     <div>
@@ -218,7 +219,7 @@ export default function AdminProfile() {
                               </Select>
 
                               {/* divider */}
-                              <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-1"></div>
+                              <div className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} h-0.5 w-auto mb-2 mt-2 mx-1`}></div>
 
                               <p className="text-lg">Department</p>
                               <ul className="ml-1 flex flex-col gap-1">
@@ -235,7 +236,7 @@ export default function AdminProfile() {
                                 </li>
                               </ul>
                               {/* divider */}
-                              <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-2"></div>
+                              <div className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} h-0.5 w-auto mb-2 mt-2 mx-2`}></div>
 
                               <p className="text-lg">Course</p>
                               <ul className="ml-1 flex flex-col gap-1">
@@ -269,9 +270,9 @@ export default function AdminProfile() {
             </div>
 
             {/* Upload Paper Button */}
-            <button className="hidden md:flex bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 transition-all duration-300 p-2 px-4 font-sans items-center gap-2 rounded-lg cursor-pointer">
+            {/* <button className="hidden md:flex bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 transition-all duration-300 text-white p-2 px-4 font-sans items-center gap-2 rounded-lg cursor-pointer">
               <FaPlus /> <p className="hidden md:block">Upload Paper</p>
-            </button>
+            </button> */}
           </div>
 
           <div className={`p-2 md:p-4 border-2 border-white-5 bg-white-100 rounded-xl mt-4 mb-4 ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
