@@ -7,7 +7,7 @@ import { Bookmark, BookmarkX, Eye, PencilLine } from "lucide-react";
 import DocsLoader from "./DocsLoader";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
-import { GoBookmarkSlash, GoPencil } from "react-icons/go";
+import { GoBookmark, GoBookmarkSlash, GoEye, GoPencil } from "react-icons/go";
 
 const tagColors = {
   IT: "bg-dusk",
@@ -178,7 +178,7 @@ const DocsCard = (props) => {
           {/* Left Side Buttons */}
             <Link href={`/view-file/${props.paper_id}`} className="w-full md:w-auto">
                 <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-gold-fg to-gold hover:brightness-120 text-white rounded-lg cursor-pointer">
-                  <Eye />
+                  <GoEye className="text-xl" />
                 Read
               </button>
             </Link>
@@ -203,7 +203,7 @@ const DocsCard = (props) => {
                 onClick={() => handleBookmark(paper_id)}
                 className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 ${theme == "light" ? "bg-tertiary" : "bg-dusk"} rounded-lg cursor-pointer hover:brightness-105`}
               >
-                <Bookmark /> <span className="hidden md:flex">Bookmark</span>
+                <GoBookmark className="text-xl" /> <span className="hidden md:flex">Bookmark</span>
               </button>
             )}
         </div>

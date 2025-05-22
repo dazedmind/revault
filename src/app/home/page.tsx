@@ -252,7 +252,7 @@ export default function HomePage() {
                       </Select>
 
                       {/* divider */}
-                      <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-1"></div>
+                      <div className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} h-0.5 w-auto mb-2 mt-2 mx-1`}></div>
 
                       <p className="text-lg">Department</p>
                       <ul className="ml-1 flex flex-col gap-1">
@@ -269,7 +269,7 @@ export default function HomePage() {
                         </li>
                       </ul>
                       {/* divider */}
-                      <div className="bg-dusk h-0.5 w-auto mb-2 mt-2 mx-2"></div>
+                      <div className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} h-0.5 w-auto mb-2 mt-2 mx-2`}></div>
 
                       <p className="text-lg">Course</p>
                       <ul className="ml-1 flex flex-col gap-1">

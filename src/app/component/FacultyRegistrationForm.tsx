@@ -7,12 +7,20 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRouter } from 'next/navigation'
 import WarningMessage from "./WarningMessage";
+import { GoEye, GoEyeClosed } from "react-icons/go";
 
 
 // FOR FACULTY REGISTRATION FORM
 // This is the form that will be used for faculty registration. It includes fields for first name, middle name, last name, employee number, department, email address, and password. The form also includes a button to send an OTP to the user's email address.
 export default function FacultyForm() {
   const [role, setRole] = useState("student");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordRequirementsError, setPasswordRequirementsError] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [employeeNumberError, setEmployeeNumberError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
 
   useEffect(() => {
     const storedRole = localStorage.getItem("userType");
@@ -32,58 +40,143 @@ export default function FacultyForm() {
     confirmPassword: ""
   });
 
+  const validateEmployeeNumber = (number) => {
+    return /^\d{10}$/.test(number);
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@(plm\.edu\.ph|gmail\.com)$/;
+    return emailRegex.test(email);
+  };
+
+  // Check if all required fields are filled
+  useEffect(() => {
+    const requiredFields = {
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
+      employeeID: formData.employeeID.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+    };
+
+    const isAllFieldsFilled = Object.values(requiredFields).every(value => value !== "");
+    const isPasswordValid = validatePassword(formData.password);
+    const doPasswordsMatch = formData.password === formData.confirmPassword;
+    const isDepartmentSelected = selectedDepartment !== "";
+    const isEmployeeNumberValid = validateEmployeeNumber(formData.employeeID);
+    const isEmailValid = validateEmail(formData.email);
+
+    setIsFormValid(
+      isAllFieldsFilled && 
+      isPasswordValid && 
+      doPasswordsMatch && 
+      isDepartmentSelected && 
+      isEmployeeNumberValid && 
+      isEmailValid
+    );
+  }, [formData, selectedDepartment]);
+
+  const validatePassword = (password) => {
+    const hasMinLength = password.length >= 9;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return hasMinLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value
     }));
+
+    // Validate employee number
+    if (name === 'employeeID') {
+      setEmployeeNumberError(!validateEmployeeNumber(value));
+    }
+
+    // Validate email
+    if (name === 'email') {
+      setEmailError(!validateEmail(value));
+    }
+
+    // Check password match when either password field changes
+    if (name === 'password' || name === 'confirmPassword') {
+      const password = name === 'password' ? value : formData.password;
+      const confirmPassword = name === 'confirmPassword' ? value : formData.confirmPassword;
+      
+      if (password && confirmPassword) {
+        setPasswordError(password !== confirmPassword);
+      }
+
+      // Check password requirements when password field changes
+      if (name === 'password') {
+        setPasswordRequirementsError(!validatePassword(value));
+      }
+    }
   };
 
   const handleNext = async (e) => {
     e.preventDefault(); 
-      // Send OTP before navigating to confirmation
-      try {
-        const res = await fetch('/api/send-otp', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email: formData.email }),
-        });
 
-        const result = await res.json();
+    if (!isFormValid) {
+      return;
+    }
 
-        if (result.success) {
-          localStorage.setItem("regEmail", formData.email);
-          localStorage.setItem("regForm", JSON.stringify({
-            ...formData,
-            department: selectedDepartment,
-          }));
-          router.push("/registration/otp-confirmation");
-        } else {
-          alert("Failed to send OTP. Try again.");
-        }
-      } catch (err) {
-        console.error("OTP Send Error:", err);
-        alert("Something went wrong while sending OTP.");
+    // Check if passwords match before proceeding
+    if (formData.password !== formData.confirmPassword) {
+      setPasswordError(true);
+      return;
+    }
+
+    // Check password requirements
+    if (!validatePassword(formData.password)) {
+      setPasswordRequirementsError(true);
+      return;
+    }
+
+    // Check employee number format
+    if (!validateEmployeeNumber(formData.employeeID)) {
+      setEmployeeNumberError(true);
+      return;
+    }
+
+    // Check email format
+    if (!validateEmail(formData.email)) {
+      setEmailError(true);
+      return;
+    }
+
+    // Send OTP before navigating to confirmation
+    try {
+      const res = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: formData.email }),
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        localStorage.setItem("regEmail", formData.email);
+        localStorage.setItem("regForm", JSON.stringify({
+          ...formData,
+          department: selectedDepartment,
+        }));
+        router.push("/registration/otp-confirmation");
+      } else {
+        alert("Failed to send OTP. Try again.");
       }
-
-    // Check if the form data is properly populated
-    console.log("Form Data: ", formData);  // For debugging
-    console.log("Selected Deperatment: ", selectedDepartment);
-    
-    const query = new URLSearchParams({
-      firstName: formData.firstName || '',
-      middleName: formData.middleName || '',
-      lastName: formData.lastName || '',
-      ext: formData.ext || '',
-      employeeID: formData.employeeID || '',
-      department: selectedDepartment || '',
-      email: formData.email || '',
-      password: formData.password || '',
-      confirmPassword: formData.confirmPassword || '',
-    }).toString();    
+    } catch (err) {
+      console.error("OTP Send Error:", err);
+      alert("Something went wrong while sending OTP.");
+    }
   };
 
   return (
@@ -104,7 +197,7 @@ export default function FacultyForm() {
         />
 
         <InputField
-          label="Middle Name*"
+          label="Middle Name"
           type="text"
           name="middleName"
           value={formData.middleName}
@@ -112,6 +205,7 @@ export default function FacultyForm() {
           placeholder="Protacio"
           inputClassName="w-full"
           disabled={false}
+          required={false}
         />
 
         <InputField
@@ -146,7 +240,7 @@ export default function FacultyForm() {
           name="employeeID"
           value={formData.employeeID}
           onChange={handleChange}
-          placeholder="1023456"
+          placeholder="1023456789"
           inputClassName="w-full"
           disabled={false}
         />
@@ -177,48 +271,98 @@ export default function FacultyForm() {
           disabled={false}
         />
 
+        {employeeNumberError && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-red-500"
+            message="Employee number must be 10 digits."
+          />
+        )}
+
+        {emailError && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-red-500"
+            message="Email must be a valid PLM email (@plm.edu.ph) or Gmail address (@gmail.com)."
+          />
+        )}
+
         <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">Password</h1>
         <div className="bg-white-75 h-0.5 w-full col-span-2"></div>
 
         {/* Passwords */}
-        <div className="col-span-2 w-full">
+        <div className="col-span-2 w-full relative">
           <InputField
             label="Create Password*"
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter Password"
-            inputClassName="w-full"
+            inputClassName="w-full pr-10"
             disabled={false}
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className=" absolute right-3 bottom-1/5 -translate-y-50% text-gray-500 hover:text-gray-700"
+          >
+            {showPassword ? <GoEyeClosed size={15} /> : <GoEye size={15} />}
+          </button>
         </div>
 
-        <div className="col-span-2 w-full">
+        <div className="col-span-2 w-full relative">
           <InputField
            label="Confirm Password*"
-           type="password"
+           type={showConfirmPassword ? "text" : "password"}
            name="confirmPassword"
            value={formData.confirmPassword}
            onChange={handleChange}
            placeholder="Confirm Password"
-           inputClassName="w-full"
+           inputClassName="w-full pr-10"
            disabled={false}
           />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className=" absolute right-3 bottom-1/5 -translate-y-50% text-gray-500 hover:text-gray-700"
+          >
+            {showConfirmPassword ? <GoEyeClosed size={15} /> : <GoEye size={15} />}
+          </button>
         </div>
 
-        {/* Warning message from WarningMessage.tsx */}
-        <WarningMessage
-          containerClassName="col-span-2 w-auto h-auto "
-          textClassName=" "
-          message="Password should be a minimum of 9 characters, including uppercase
-            letters, lowercase letters, numbers, and symbols."
-        />
+        {/* Password requirements error */}
+        {passwordRequirementsError && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-red-500"
+            message="Password must be at least 9 characters long and include uppercase letters, lowercase letters, numbers, and symbols."
+          />
+        )}
+
+        {/* Password match warning */}
+        {passwordError && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-red-500"
+            message="Passwords does not match."
+          />
+        )}
 
         <input type="hidden" id="role" name="role" value={role} />
 
         <div className="col-span-2">
-          <button onClick={handleNext} className="block text-center w-full text-white py-2 rounded-md bg-gradient-to-r from-gold to-gold hover:bg-gradient-to-br font-inter cursor-pointer text-lg font-bold">Next</button>
+          <button
+            onClick={handleNext}
+            disabled={!isFormValid}
+            className={`block text-center w-full text-white mt-4 py-2 rounded-md font-inter text-lg font-bold ${
+              isFormValid 
+                ? "bg-gradient-to-r from-gold to-gold hover:bg-gradient-to-br cursor-pointer" 
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+          >
+            Next
+          </button>
         </div>
       </form>
     </div>

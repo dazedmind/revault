@@ -84,7 +84,7 @@ const AdminLogin = () => {
       </div>
 
       {/* Main Content */}
-      <main className="flex flex-col mt-30 items-center relative z-10">
+      <main className="flex flex-col mt-20 items-center relative z-10">
       <div className={`w-80 md:w-96 m-5 p-6 h-auto rounded-md outline-1 bg-white relative z-10`}>
           <span className="absolute -top-10 -left-1 ">
               <Link href="/login" className="flex items-center gap-1 text-gold"><FaChevronLeft/> Back to regular sign in</Link>
@@ -94,7 +94,7 @@ const AdminLogin = () => {
           <div className="flex flex-col justify-center items-center">
             <h1 className="text-4xl font-mono font-bold text-gold">ReVault</h1>
 
-            <div className="text-center bg-gradient-to-r from-gold-fg to-gold my-2 w-auto px-2 rounded-md">
+            <div className="text-center bg-gradient-to-r from-gold-fg to-gold my-2 w-auto px-2 ">
               <h1 className="text-2xl font-mono font-bold text-white">
                 for Librarian
               </h1>
@@ -123,9 +123,8 @@ const AdminLogin = () => {
               />
 
               {/* Remember Password & Forgot Password */}
-              <div className="flex flex-row justify-between items-center m-5 md:my-4 md:mx-1 mt-5">
-
-                <p className="font-inter text-gold text-xs text-align cursor-pointer">
+              <div className="flex flex-row justify-end items-end m-5 md:my-4 md:mx-1 mt-5">
+                <p className="font-inter text-gold font-bold text-xs text-align cursor-pointer">
                   Forgot Password?
                 </p>
               </div>
