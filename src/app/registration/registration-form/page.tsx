@@ -21,7 +21,7 @@ const RegistrationPage = () => {
 
         {userType === "student" && <Form />}
         {userType === "faculty" && <FacultyForm />}
-        {!userType && <p className="ml-8 mt-4 text-red-500">User type not selected.</p>}
+        {/* {!userType && <p className="ml-8 mt-4 text-red-500">User type not selected.</p>} */}
       </div>
     </div>
   );

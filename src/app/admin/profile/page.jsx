@@ -130,7 +130,7 @@ export default function AdminProfile() {
         <div>Failed to load profile.</div>
       )}
 
-      <main className="flex flex-col dark:bg-secondary px-4 md:px-40 h-full">
+      <main className="flex flex-col dark:bg-secondary px-8 md:px-40 h-full">
         <Carousel className="md:hidden p-5 mb-5">
           <h1 className="text-2xl font-bold mb-4">Usage Statistics</h1>
           <CarouselContent>
@@ -161,20 +161,26 @@ export default function AdminProfile() {
         </Carousel>
         <div className="hidden md:flex flex-col mx-auto md:mx-0 md:flex-row gap-4 my-10 ">
             <StatsCard 
-              department="Usage Statistics" 
-              description="Total Number of Users" 
-              totalPapers={134} 
+              department="Information Technology" 
+              description="Total Number of Papers" 
+              totalPapers={120} 
             />
             <StatsCard 
-              department="Usage Statistics" 
-              description="Total Number of Users" 
+              department="Computer Science" 
+              description="Total Number of Papers" 
               totalPapers={134} 
             />
 
             <StatsCard 
               department="Usage Statistics" 
               description="Total Number of Users" 
-              totalPapers={134} 
+              totalPapers={512} 
+            />
+
+            <StatsCard 
+              department="Uploaded Papers" 
+              description="Total Number of Papers" 
+              totalPapers={512} 
             />
         </div>
 
