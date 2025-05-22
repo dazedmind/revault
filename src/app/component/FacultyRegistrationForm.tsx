@@ -87,13 +87,13 @@ export default function FacultyForm() {
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-accent border-2 p-10 rounded-lg shadow-lg mb-20">
+    <div className="max-w-lg mx-auto bg-accent border-2 p-6 md:p-10 rounded-lg shadow-lg mb-20">
       <form onSubmit={handleNext} className="grid grid-cols-2 gap-4 min-w-0">
         <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">Personal Information</h1>
         <div className="bg-white-75 h-0.5 w-full col-span-2"></div>
 
         <InputField
-          label="First Name"
+          label="First Name*"
           type="text"
           name="firstName"
           value={formData.firstName}
@@ -104,7 +104,7 @@ export default function FacultyForm() {
         />
 
         <InputField
-          label="Middle Name"
+          label="Middle Name*"
           type="text"
           name="middleName"
           value={formData.middleName}
@@ -115,7 +115,7 @@ export default function FacultyForm() {
         />
 
         <InputField
-          label="Last Name"
+          label="Last Name*"
           type="text"
           name="lastName"
           value={formData.lastName}
@@ -141,7 +141,7 @@ export default function FacultyForm() {
         <div className="bg-white-75 h-0.5 w-full col-span-2"></div>
 
         <InputField
-          label="Employee Number"
+          label="Employee Number*"
           type="text"
           name="employeeID"
           value={formData.employeeID}
@@ -152,7 +152,7 @@ export default function FacultyForm() {
         />
 
         <div className="flex flex-col flex-grow">
-          <Label className="text-sm text-gray-300 mb-1">Department</Label>
+          <Label className="text-sm mb-1">Department*</Label>
           <Select name="department" value={selectedDepartment} onValueChange={setSelectedDepartment}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select your department" />
@@ -167,7 +167,7 @@ export default function FacultyForm() {
         </div>
 
         <InputField
-          label="Email Address"
+          label="Email Address*"
           type="email"
           name="email"
           value={formData.email}
@@ -183,7 +183,7 @@ export default function FacultyForm() {
         {/* Passwords */}
         <div className="col-span-2 w-full">
           <InputField
-            label="Create Password"
+            label="Create Password*"
             type="password"
             name="password"
             value={formData.password}
@@ -196,7 +196,7 @@ export default function FacultyForm() {
 
         <div className="col-span-2 w-full">
           <InputField
-           label="Confirm Password"
+           label="Confirm Password*"
            type="password"
            name="confirmPassword"
            value={formData.confirmPassword}

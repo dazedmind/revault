@@ -88,7 +88,7 @@ const LogIn = () => {
 
       {/* Main Content */}
       <main className="flex flex-row justify-center mt-20 md:mt-10 items-center relative z-10">
-        <div className="w-80 md:w-96 m-5 p-6 h-auto rounded-md outline-1 bg-white relative z-10">
+        <div className="w-80 md:w-96 m-5 p-6 h-auto rounded-xl outline-1 bg-white relative z-10">
           {/* Title */}
           <div className="flex flex-col justify-center items-center">
             <h1 className="text-4xl font-mono font-bold text-gold">ReVault</h1>
@@ -147,23 +147,6 @@ const LogIn = () => {
             </p>
           </div>
 
-          {/* Divider */}
-          <div className="flex flex-row justify-center items-center gap-2 text-base mt-5">
-            <div className="bg-white-50 h-0.5 w-full"></div>
-            <p className="w-120 md:w-100 text-midnight">or Sign Up With</p>
-            <div className="bg-white-50 h-0.5 w-full"></div>
-          </div>
-
-          {/* Microsoft Login */}
-          <div className="flex flex-row justify-center mt-4">
-            <button
-              type="button"
-              className="bg-white-75 w-xs h-12 text-midnight rounded-lg cursor-pointer font-sans font-extrabold flex flex-row justify-center items-center mt-2 gap-2 relative z-10"
-            >
-              <FaMicrosoft className="text-2xl" />
-              Microsoft
-            </button>
-          </div>
         </div>
       </main>
 

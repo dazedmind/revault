@@ -205,7 +205,7 @@ export default function HomePage() {
           </section>
 
           <div className="flex flex-col gap-2 mt-4">
-            <button onClick={applyFilters} className="bg-yale-blue hover:brightness-110 transition-all duration-300 p-2 rounded-md cursor-pointer">
+            <button onClick={applyFilters} className="bg-yale-blue/50 hover:brightness-110 transition-all duration-300 p-2 rounded-md cursor-pointer">
               Apply Filters
             </button>
             <button onClick={clearAllFilters} className={`${theme === "light" ? "border-white-5" : "border-white-50"} border transition-all duration-300 p-2 rounded-md cursor-pointer`}>

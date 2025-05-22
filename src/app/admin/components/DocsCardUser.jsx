@@ -4,10 +4,10 @@ import DocsLoader from "../../component/DocsLoader";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { FaBookOpen, FaPen } from "react-icons/fa";
-import { Archive, Eye, PencilLine } from "lucide-react";
+import { Eye } from "lucide-react";
 import { useTheme } from 'next-themes'
 import Link from 'next/link';
+import { GoPencil } from "react-icons/go";
 
 const DocsCardUser = (props) => {
     const [papers, setPapers] = useState([]);
@@ -119,14 +119,15 @@ const DocsCardUser = (props) => {
 
               <span className="flex flex-col md:flex-col gap-2 w-full md:w-auto">
                 <Link href={`/view-file/${paper_id}`}>
-                  <button className=" w-full md:w-auto bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 transition-all duration-300 px-4 py-3 flex items-center justify-center gap-2 rounded-lg cursor-pointer text-md flex-1 md:flex-none">
+                  <button className=" w-full md:w-auto bg-gradient-to-r from-gold to-gold-fg hover:brightness-120  text-white transition-all duration-300 px-4 py-3 flex items-center justify-center gap-2 rounded-lg cursor-pointer text-md flex-1 md:flex-none">
                     {" "}
-                    <Eye /> 
+                    <Eye /> View
                   </button>
                 </Link>
                 <Link href={`/edit-file/${paper_id}`}>
-                <button className={`w-full md:w-auto flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
-                  <PencilLine /> 
+                <button className={`w-full md:w-full flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
+                  <GoPencil className="text-xl"/>
+                  Edit
                 </button>
                 </Link>
               </span>
