@@ -87,7 +87,7 @@ const LogIn = () => {
       </div>
 
       {/* Main Content */}
-      <main className="flex flex-row justify-center mt-20 md:mt-10 items-center relative z-10">
+      <main className="flex flex-row justify-center mt-20 items-center relative z-10">
         <div className="w-80 md:w-96 m-5 p-6 h-auto rounded-xl outline-1 bg-white relative z-10">
           {/* Title */}
           <div className="flex flex-col justify-center items-center">
