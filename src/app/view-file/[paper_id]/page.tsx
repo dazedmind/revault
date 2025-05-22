@@ -14,6 +14,7 @@ import { Bookmark, Download, Info, Link, Moon, SunMedium, Archive } from "lucide
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
 import useAntiCopy from "../../hooks/useAntiCopy";
+import { GoBookmark, GoInfo, GoMoon, GoSun } from "react-icons/go";
 
 function ViewFile() {
   const { theme, setTheme } = useTheme();
@@ -285,11 +286,11 @@ function ViewFile() {
             
             {/* File Menu and Document View */}
             <div className="flex flex-col md:flex-row">
-              <aside className="flex flex-row md:flex-col justify-center md:justify-start gap-4 md:gap-0 w-auto md:w-72 h-auto dark:bg-secondary p-8">
+              <aside className="flex flex-row md:flex-col justify-end md:justify-start gap-4 md:gap-0 w-auto md:w-72 h-auto dark:bg-secondary p-8 pt-4">
                 <h1 className="text-2xl font-bold  hidden md:block">File Menu</h1>
       
                 <FileMenuButton
-                  icon={<Info className="text-xl text-yale-blue" />}
+                  icon={<GoInfo className="text-3xl text-yale-blue" />}
                   label="View Metadata"
                   onClick={() => setShowMetadata(!showMetadata)}
                 />
@@ -297,9 +298,9 @@ function ViewFile() {
                 <FileMenuButton
                   icon={
                     theme === "dark" ? (
-                      <SunMedium className="text-xl text-yale-blue" />
+                      <GoSun className="text-3xl text-yale-blue" />
                     ) : (
-                      <Moon className="text-xl text-yale-blue" />
+                      <GoMoon className="text-3xl text-yale-blue" />
                     )
                   }
                   label={ 
@@ -311,7 +312,7 @@ function ViewFile() {
                 {viewFromAdmin && (
                   <>
                     <FileMenuButton
-                      icon={<Link className="text-xl text-yale-blue" />}
+                      icon={<Link className="text-3xl text-yale-blue" />}
                       label="Cite Paper"
                       onClick={() => {}}
                     />
@@ -320,7 +321,7 @@ function ViewFile() {
 
                 {!viewFromAdmin && (
                   <FileMenuButton
-                    icon={<Bookmark className="text-xl text-yale-blue" />}
+                    icon={<GoBookmark className="text-3xl text-yale-blue" />}
                     label="Add to Bookmark"
                     onClick={() => handleBookmark(paper_id)}
                   />
@@ -346,7 +347,7 @@ function ViewFile() {
               </div>
             </div>
 
-          <div className="p-8 w-auto md:w-1/3 relative">
+          <div className="p-8 pb-0 w-auto md:w-1/3 relative">
             <p className="text-xl font-bold mb-2">
                 {paper.title}
             </p>
