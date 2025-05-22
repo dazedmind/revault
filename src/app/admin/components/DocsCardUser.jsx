@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Eye } from "lucide-react";
 import { useTheme } from 'next-themes'
 import Link from 'next/link';
-import { GoPencil } from "react-icons/go";
+import { GoEye, GoPencil } from "react-icons/go";
 
 const DocsCardUser = (props) => {
     const [papers, setPapers] = useState([]);
@@ -79,7 +79,7 @@ const DocsCardUser = (props) => {
     return (
     <div>
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4">
-              <div className="flex items-start  gap-4">
+              <div className="flex items-start md:gap-4">
                 <div className="md:w-40">
                   <a href={props.link}>
                     <Image
@@ -121,7 +121,7 @@ const DocsCardUser = (props) => {
                 <Link href={`/view-file/${paper_id}`}>
                   <button className=" w-full md:w-auto bg-gradient-to-r from-gold to-gold-fg hover:brightness-120  text-white transition-all duration-300 px-4 py-3 flex items-center justify-center gap-2 rounded-lg cursor-pointer text-md flex-1 md:flex-none">
                     {" "}
-                    <Eye /> View
+                    <GoEye className="text-xl" /> View
                   </button>
                 </Link>
                 <Link href={`/edit-file/${paper_id}`}>
