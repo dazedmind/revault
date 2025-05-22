@@ -194,13 +194,13 @@ function ViewFile() {
                 ${showMetadata ? 'translate-x-0' : '-translate-x-full'}
                 dark:bg-accent overflow-y-auto`}
             >
-              <span className="flex items-center text-center align-middle gap-2 justify-between mb-6">
+              <span className="flex items-center text-center align-middle gap-2 justify-between mb-2 md:mb-6">
                 <h2 className="text-3xl p-4 md:p-0 font-bold">
-                  Viewing Metadata
+                  Metadata
                 </h2>
 
                 <button
-                  className="text-2xl px-4 rounded-md cursor-pointer hover:bg-dusk/20 transition-colors duration-200"
+                  className="text-2xl px-4 rounded-md cursor-pointer transition-colors duration-200"
                   onClick={() => setShowMetadata(false)}
                 >
                   <FaChevronLeft />

@@ -15,10 +15,19 @@ import {
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import WarningMessage from "./WarningMessage";
+import { GoEye } from "react-icons/go";
+import { GoEyeClosed } from "react-icons/go";
 
 export default function Form() {
   const [role, setRole] = useState("student");
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordRequirementsError, setPasswordRequirementsError] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [studentNumberError, setStudentNumberError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  
   useEffect(() => {
     const storedRole = localStorage.getItem("userType");
     if (storedRole) setRole(storedRole);
@@ -37,16 +46,117 @@ export default function Form() {
     confirmPassword: "",
   });
 
+  const validateStudentNumber = (number) => {
+    return /^2\d{8}$/.test(number);
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@(plm\.edu\.ph|gmail\.com)$/;
+    return emailRegex.test(email);
+  };
+
+  // Check if all required fields are filled
+  useEffect(() => {
+    const requiredFields = {
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
+      studentNumber: formData.studentNumber.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+    };
+
+    const isAllFieldsFilled = Object.values(requiredFields).every(value => value !== "");
+    const isPasswordValid = validatePassword(formData.password);
+    const doPasswordsMatch = formData.password === formData.confirmPassword;
+    const isProgramSelected = selectedProgram !== "";
+    const isStudentNumberValid = validateStudentNumber(formData.studentNumber);
+    const isEmailValid = validateEmail(formData.email);
+
+    setIsFormValid(
+      isAllFieldsFilled && 
+      isPasswordValid && 
+      doPasswordsMatch && 
+      isProgramSelected && 
+      isStudentNumberValid && 
+      isEmailValid
+    );
+  }, [formData, selectedProgram]);
+
+  const validatePassword = (password) => {
+    const hasMinLength = password.length >= 9;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return hasMinLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+
+    // Validate student number
+    if (name === 'studentNumber') {
+      setStudentNumberError(!validateStudentNumber(value));
+    }
+
+    // Validate email
+    if (name === 'email') {
+      setEmailError(!validateEmail(value));
+    }
+
+    // Check password match when either password field changes
+    if (name === 'password' || name === 'confirmPassword') {
+      const password = name === 'password' ? value : formData.password;
+      const confirmPassword = name === 'confirmPassword' ? value : formData.confirmPassword;
+      
+      if (password && confirmPassword) {
+        setPasswordError(password !== confirmPassword);
+      }
+
+      // Check password requirements when password field changes
+      if (name === 'password') {
+        setPasswordRequirementsError(!validatePassword(value));
+      }
+    }
   };
 
   const handleNext = async (e) => {
     e.preventDefault();
+    
+    if (!isFormValid) {
+      return;
+    }
+
+    // Check if passwords match before proceeding
+    if (formData.password !== formData.confirmPassword) {
+      setPasswordError(true);
+      return;
+    }
+
+    // Check password requirements
+    if (!validatePassword(formData.password)) {
+      setPasswordRequirementsError(true);
+      return;
+    }
+
+    // Check student number format
+    if (!validateStudentNumber(formData.studentNumber)) {
+      setStudentNumberError(true);
+      return;
+    }
+
+    // Check email format
+    if (!validateEmail(formData.email)) {
+      setEmailError(true);
+      return;
+    }
+
     // Send OTP before navigating to confirmation
     try {
       const res = await fetch("/api/send-otp", {
@@ -114,7 +224,7 @@ export default function Form() {
         />
 
         <InputField
-          label="Middle Name*"
+          label="Middle Name"
           type="text"
           name="middleName"
           value={formData.middleName}
@@ -122,6 +232,7 @@ export default function Form() {
           placeholder="Protacio"
           inputClassName="w-full"
           disabled={false}
+          required={false}
         />
 
         <InputField
@@ -164,7 +275,7 @@ export default function Form() {
         />
 
         <div className="flex flex-col flex-grow">
-          <Label className="text-sm mb-1">Course</Label>
+          <Label className="text-sm mb-1">Course*</Label>
           <Select
             name="program"
             value={selectedProgram}
@@ -197,52 +308,98 @@ export default function Form() {
           disabled={false}
         />
 
+        {studentNumberError && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-red-500"
+            message="Student number must be 9 digits and start with 2."
+          />
+        )}
+
+        {emailError && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-red-500"
+            message="Email must be a valid PLM email (@plm.edu.ph) or Gmail address (@gmail.com)."
+          />
+        )}
+
+
         <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">
           Password
         </h1>
         <div className="bg-white-50 h-0.5 w-full col-span-2"></div>
 
         {/* Passwords */}
-        <div className="col-span-2 w-full">
+        <div className="col-span-2 w-full relative">
           <InputField
             label="Create Password*"
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter Password"
-            inputClassName="w-full"
+            inputClassName="w-full pr-10"
             disabled={false}
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 bottom-1/5 -translate-y-50% text-gray-500 hover:text-gray-700"
+          >
+            {showPassword ? <GoEyeClosed size={15} /> : <GoEye size={15} />}
+          </button>
         </div>
 
-        <div className="col-span-2 w-full">
+        <div className="col-span-2 w-full relative">
           <InputField
-            label="Confirm Password*"
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            placeholder="Confirm Password"
-            inputClassName="w-full"
-            disabled={false}
+           label="Confirm Password*"
+           type={showConfirmPassword ? "text" : "password"}
+           name="confirmPassword"
+           value={formData.confirmPassword}
+           onChange={handleChange}
+           placeholder="Confirm Password"
+           inputClassName="w-full pr-10"
+           disabled={false}
           />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 bottom-1/5 -translate-y-50% text-gray-500 hover:text-gray-700"
+          >
+            {showConfirmPassword ? <GoEyeClosed size={15} /> : <GoEye size={15} />}
+          </button>
         </div>
 
-        {/* Warning message from WarningMessage.tsx */}
-        <WarningMessage
-          containerClassName="col-span-2 w-auto h-auto "
-          textClassName=" "
-          message="Password should be a minimum of 9 characters, including uppercase
-            letters, lowercase letters, numbers, and symbols."
-        />
+        {/* Password requirements error */}
+        {passwordRequirementsError && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-red-500"
+            message="Password must be at least 9 characters long and include uppercase letters, lowercase letters, numbers, and symbols."
+          />
+        )}
+
+        {/* Password match warning */}
+        {passwordError && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-red-500"
+            message="Passwords does not match."
+          />
+        )}
 
         <input type="hidden" id="role" name="role" value={role} />
 
         <div className="col-span-2">
           <button
             onClick={handleNext}
-            className="block text-center w-full text-white py-2 rounded-md bg-gradient-to-r from-gold to-gold hover:bg-gradient-to-br font-inter cursor-pointer text-lg font-bold"
+            disabled={!isFormValid}
+            className={`block text-center w-full text-white py-2 mt-4 rounded-md font-inter text-lg font-bold ${
+              isFormValid 
+                ? "bg-gradient-to-r from-gold to-gold hover:bg-gradient-to-br cursor-pointer" 
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
           >
             Next
           </button>
