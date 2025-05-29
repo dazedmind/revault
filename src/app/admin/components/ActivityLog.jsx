@@ -30,6 +30,11 @@ const ActivityLog = ({ name, activity, time, ip_address, act_type, act_status })
              </div>
              <div>
                 <p className="text-white-100 text-base font-normal">
+                    {user}
+                </p>
+             </div>
+             <div>
+                <p className="text-white-100 text-base font-normal">
                 {ip_address}
                 </p>
              </div>

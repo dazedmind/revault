@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Trash } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const UploadFile = () => {
   const [title, setTitle] = useState("");
   const [fullText, setFullText] = useState("");
-  const [authors, setAuthors] = useState(""); // Add authors state
+  const [author, setAuthor] = useState(""); // Add authors state
   const [course, setCourse] = useState("");
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
@@ -28,6 +29,8 @@ const UploadFile = () => {
   const ref = useRef<HTMLInputElement>(null);
   const [isEditingAbstract, setIsEditingAbstract] = useState(false);
   const [keywords, setKeywords] = useState<string[]>([]);
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const { theme } = useTheme();
 
   function fixSplitAccents(text) {
     return (
@@ -42,6 +45,42 @@ const UploadFile = () => {
         .replace(/([A-Za-z])\s*ú\s*([A-Za-z])/gi, "$1ú$2")
     );
   }
+
+  const handleUpload = async () => {
+    try {
+      const payload = {
+        title,
+        author,
+        abstract: fullText,
+        course,
+        department,
+        year,
+        keywords,
+      };
+  
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert("Upload successful!");
+        handleClearFile();
+        // Optionally: clear the form or redirect
+      } else {
+        alert("Upload failed: " + result.message);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("An unexpected error occurred.");
+    }
+  };
+
 
   // Add progress animation function
   const startProgressAnimation = () => {
@@ -80,7 +119,6 @@ const UploadFile = () => {
       // Step 2: Sanitize the text
       const sanitized = firstPageText.replace(/\s+/g, " ").trim();
 
-
       const response = await fetch("/api/extract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -101,12 +139,11 @@ const UploadFile = () => {
         "Department:",
         result?.extractedDepartment ?? "No department found",
       );
-      console.log("Year:", result?.extractedYear ?? "No year found");
 
       // Update state
       if (result) {
         setTitle(result.extractedTitle ?? "");
-        setAuthors(result.extractedAuthor ?? "");
+        setAuthor(result.extractedAuthor ?? "");
         setFullText(result.extractedAbstract ?? "");
         setCourse(result.extractedCourse ?? ""); // Check for typos (extracted vs extrated)
         setDepartment(result.extractedDepartment ?? "");
@@ -126,7 +163,7 @@ const UploadFile = () => {
     }
     setTitle(""); // Clear the detected title
     setFullText(""); // Clear the extracted text
-    setAuthors(""); // Clear the authors
+    setAuthor(""); // Clear the authors
     setCourse("");
     setDepartment("");
     setYear("");
@@ -160,7 +197,7 @@ const UploadFile = () => {
 
           <button
             onClick={handleClearFile}
-            className="ml-4 px-4 py-4 cursor-pointer bg-dusk hover:bg-red-warning text-white rounded-md"
+            className={`ml-4 px-4 py-4 cursor-pointer ${theme == "light" ? "bg-tertiary" : "bg-dusk"} transition-all duration-300 hover:bg-red-warning hover:text-white hover:border-none rounded-md hover:shadow-lg`}
             disabled={isLoading}
           >
             <Trash className="w-6 h-6" />
@@ -207,8 +244,8 @@ const UploadFile = () => {
                   ? "border-gold cursor-text"
                   : "border-white-5 cursor-default"
               }`}
-              defaultValue={title}
-              onChange={(e) => setTitle(e.target.value)}
+              defaultValue={title.toUpperCase()}
+              onChange={(e) => setTitle(e.target.value.toUpperCase())}
               readOnly={!isEditingTitle}
             />
           </span>
@@ -230,8 +267,8 @@ const UploadFile = () => {
                   ? "border-gold cursor-text"
                   : "border-white-5 cursor-default"
               }`}
-              defaultValue={authors}
-              onChange={(e) => setAuthors(e.target.value)}
+              defaultValue={author}
+              onChange={(e) => setAuthor(e.target.value)}
               readOnly={!isEditingAuthors}
             />
           </span>
@@ -262,7 +299,7 @@ const UploadFile = () => {
                 value={department}
                 onValueChange={setDepartment}
               >
-                <SelectTrigger className="w-full md:w-xs p-7 px-4 text-md dark:bg-secondary">
+                <SelectTrigger className="w-full md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
                   <SelectValue placeholder="Select paper department " />
                 </SelectTrigger>
                 <SelectContent>
@@ -288,7 +325,7 @@ const UploadFile = () => {
                   value={course} 
                   onValueChange={setCourse}
                 >
-                  <SelectTrigger className="w-auto md:w-xs p-7 px-4 text-md dark:bg-secondary">
+                  <SelectTrigger className="w-auto md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
                     <SelectValue placeholder="Select course" />
                   </SelectTrigger>
                   <SelectContent>
@@ -317,7 +354,7 @@ const UploadFile = () => {
                 type="text"
                 className="p-4 bg-midnight border border-white-5 rounded-md w-auto md:w-xxs outline-0 dark:bg-secondary"
                 defaultValue={year}
-                onChange={()=>{}}
+                onChange={(e)=>{setYear(e.target.value)}}
               />
             </span>
           </div>
@@ -333,6 +370,9 @@ const UploadFile = () => {
               </button>
             </span>{" "}
             <textarea
+              ref={(el) => {
+                if (el) el.style.height = el.scrollHeight + "px";
+              }}
               className={`p-4 bg-midnight border rounded-md w-auto md:w-4xl h-64 outline-0 dark:bg-secondary ${
                 isEditingAbstract
                   ? "border-gold cursor-text"
@@ -351,7 +391,11 @@ const UploadFile = () => {
       <div className="flex flex-col md:flex-row justify-between items-center bg-darker p-7 md:p-12 md:px-24 border-t-2 border-dashed border-white-5 dark:bg-primary">
         <span className="w-full flex flex-col justify-start items-start align-start gap-2">
           <div className="flex flex-row my-4">
-            <input type="checkbox" />
+            <input 
+              type="checkbox" 
+              checked={isTermsAccepted}
+              onChange={(e) => setIsTermsAccepted(e.target.checked)}
+            />
             <p className="font-inter text-sm ml-1">
               By uploading, you agree to our{" "}
               <span className="text-gold">Terms and Privacy Policy</span> and
@@ -361,7 +405,10 @@ const UploadFile = () => {
         </span>
 
         <span className="w-full md:w-auto">
-          <button className="w-full md:w-auto text-center text-lg justify-center align-middle items-center bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br p-2 px-8 font-sans flex gap-2 rounded-md cursor-pointer">
+          <button 
+            onClick={handleUpload}
+            disabled={isLoading || !title || !author || !course || !department || !year || !isTermsAccepted}
+            className="w-full md:w-auto text-center text-lg justify-center align-middle items-center bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br p-2 px-8 font-sans flex gap-2 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 ease-out">
             Upload
           </button>
         </span>
