@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       Given the following raw text from a research paper, extract:
 
       1. The Title (Must be in the format of Title of the paper (Title of the paper must be in uppercase)),
-      2. The Author(s) (Usually, followed by the word "by" just extract the names only and separate by comma. Format: Surname, First Name, Middle Name),
+      2. The Author(s) (Usually, followed by the word "by" just extract the names only and separate by comma. Format: Surname, Initials (APA Format)),
       3. The Abstract. (Get the first paragraph of the abstract or the first 6 sentences.)
       4. The Course Subject. (Strictly follow the format of: SIA, Capstone, Compiler Design, Research Writing. If none just write "Cannot Determine")
       5. The Department. (Information Technology, Computer Science)
