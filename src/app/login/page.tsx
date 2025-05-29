@@ -103,7 +103,7 @@ const LogIn = () => {
                 name="idNumber"
                 value={formData.idNumber}
                 onChange={handleChange}
-                className="w-20 md:w-xs"
+                className="w-60 md:w-xs"
               />
 
               <LogInInputField

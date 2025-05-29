@@ -1,6 +1,7 @@
 import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
-import { TfIdf } from 'natural';
+// import { TfIdf } from 'natural';
+import { TfIdf } from '@/lib/tfidf';
 
 // Validate API key
 if (!process.env.GROQ_API_KEY) {
@@ -27,10 +28,10 @@ export async function POST(req: Request) {
       You're an expert at extracting structured metadata from research documents.
       Given the following raw text from a research paper, extract:
 
-      1. The Title (Must be in the format of: Title: Title of the paper),
-      2. The Author(s) (Usually, followed by the word "by" just extract the names only.),
-      3. The Abstract.
-      4. The Course. (Strictly follow the format of: SIA, Capstone, Compiler Design, Research Writing. If none just write "Cannot Determine")
+      1. The Title (Must be in the format of Title of the paper (Title of the paper must be in uppercase)),
+      2. The Author(s) (Usually, followed by the word "by" just extract the names only and separate by comma. Format: Surname, First Name, Middle Name),
+      3. The Abstract. (Get the first paragraph of the abstract or the first 6 sentences.)
+      4. The Course Subject. (Strictly follow the format of: SIA, Capstone, Compiler Design, Research Writing. If none just write "Cannot Determine")
       5. The Department. (Information Technology, Computer Science)
       6. The Year (must be in the format of YYYY)
 
@@ -78,7 +79,7 @@ export async function POST(req: Request) {
         'information', 'technology', 'research', 'using',
         'pamantasan', 'lungsod', 'maynila', 'study',
         'system', 'based', 'data', '2020', '2021', '2022', '2023', '2024', '2025',
-        'figure', 'table', 'figures', 'tables'
+        'figure', 'table', 'figures', 'tables', 'will', 'user', 'page', 'book'
       ];
 
       const topKeywords = terms
@@ -94,7 +95,7 @@ export async function POST(req: Request) {
         ...parsed,
         tfidfKeywords: topKeywords.map(t => t.term)
       };
- 
+
       return NextResponse.json(responseWithKeywords);
     } catch (e) {
       console.error('JSON parsing error:', e);
