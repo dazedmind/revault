@@ -16088,10 +16088,10 @@ export namespace Prisma {
 
   export type papersWhereUniqueInput = Prisma.AtLeast<{
     paper_id?: number
+    title?: string
     AND?: papersWhereInput | papersWhereInput[]
     OR?: papersWhereInput[]
     NOT?: papersWhereInput | papersWhereInput[]
-    title?: StringNullableFilter<"papers"> | string | null
     author?: StringNullableFilter<"papers"> | string | null
     year?: IntNullableFilter<"papers"> | number | null
     department?: StringNullableFilter<"papers"> | string | null
@@ -16105,7 +16105,7 @@ export namespace Prisma {
     user_bookmarks?: User_bookmarksListRelationFilter
     paper_bm25_index?: Paper_bm25_indexListRelationFilter
     term_score?: Term_scoreListRelationFilter
-  }, "paper_id">
+  }, "paper_id" | "title">
 
   export type papersOrderByWithAggregationInput = {
     paper_id?: SortOrder
