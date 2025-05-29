@@ -56,7 +56,7 @@ model librarian {
 
 model papers {
   paper_id       Int              @id @default(autoincrement())
-  title          String?
+  title          String?          @unique
   author         String?
   year           Int?
   department     String?

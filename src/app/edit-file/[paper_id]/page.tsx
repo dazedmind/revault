@@ -213,7 +213,7 @@ const EditFile = () => {
         <div className="flex flex-row">
           <input
             type="file"
-            className="p-4 w-full md:w-4xl md:p-10 md:px-60 border-2 border-dashed border-teal rounded-md dark:bg-secondary"
+            className="p-4 w-full md:w-4xl md:p-10 md:px-60 border-2 border-dashed border-gold rounded-md dark:bg-secondary"
             accept="application/pdf"
             onChange={extractText}
             name="file-input"
@@ -238,11 +238,11 @@ const EditFile = () => {
           <div className="mt-4">
             <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
               <div
-                className="bg-teal h-2.5 rounded-full transition-all duration-300 ease-out"
+                className="bg-gold h-2.5 rounded-full transition-all duration-300 ease-out"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <p className="text-sm text-teal mt-2">
+            <p className="text-sm text-gold mt-2">
               {progress < 100
                 ? "Extracting text from PDF..."
                 : "Processing complete!"}
@@ -254,12 +254,12 @@ const EditFile = () => {
           <span className="flex flex-col gap-2">
             <div className="flex justify-between items-center">
               <span className="flex flex-row justify-between w-4xl gap-2">
-                <h3 className="text-md font-medium text-teal">
+                <h3 className="text-md font-medium text-gold">
                   Research Title:
                 </h3>
                 <button
                   onClick={() => setIsEditingTitle(!isEditingTitle)}
-                  className="text-sm px-3 py-1 bg-teal/10 hover:bg-teal/20 text-teal rounded-md transition-colors"
+                  className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
                 >
                   {isEditingTitle ? "Save" : "Edit"}
                 </button>
@@ -268,7 +268,7 @@ const EditFile = () => {
             <textarea
               className={` w-auto p-4 bg-midnight border rounded-md md:w-4xl outline-0 dark:bg-secondary ${
                 isEditingTitle
-                  ? "border-teal cursor-text"
+                  ? "border-gold cursor-text"
                   : "border-white-5 cursor-default"
               }`}
               defaultValue={paperData?.title}
@@ -279,10 +279,10 @@ const EditFile = () => {
 
           <span className="flex flex-col gap-2">
             <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
-              <h3 className="text-md font-medium text-teal">Authors:</h3>
+              <h3 className="text-md font-medium text-gold">Authors:</h3>
               <button
                 onClick={() => setIsEditingAuthors(!isEditingAuthors)}
-                className="text-sm px-3 py-1 bg-teal/10 hover:bg-teal/20 text-teal rounded-md transition-colors"
+                className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
               >
                 {isEditingAuthors ? "Save" : "Edit"}
               </button>
@@ -291,7 +291,7 @@ const EditFile = () => {
               type="text"
               className={`p-4 bg-midnight border rounded-md w-full md:w-4xl outline-0 dark:bg-secondary ${
                 isEditingAuthors
-                  ? "border-teal cursor-text"
+                  ? "border-gold cursor-text"
                   : "border-white-5 cursor-default"
               }`}
               defaultValue={paperData?.author}
@@ -301,12 +301,12 @@ const EditFile = () => {
           </span>
 
           <span className="flex flex-col gap-2">
-            <h3 className="text-md font-medium text-teal">Keywords:</h3>
+            <h3 className="text-md font-medium text-gold">Keywords:</h3>
             <div className="flex flex-row flex-wrap gap-2">
               {keywords.map((kw, idx) => (
                 <span
                   key={idx}
-                  className="px-3 py-1 bg-teal/10 text-teal rounded-md text-sm"
+                  className="px-3 py-1 bg-gold/10 text-gold rounded-md text-sm"
                 >
                   {paperData?.keywords[idx]}
                   {kw}
@@ -319,7 +319,7 @@ const EditFile = () => {
           <div className="flex flex-col md:flex-row gap-4">
           <span className="flex flex-col gap-2">
             <div className="flex flex-col flex-grow">
-              <Label className="text-md font-medium text-teal mb-2 dark:bg-secondary">
+              <Label className="text-md font-medium text-gold mb-2 dark:bg-secondary">
                 Department:
               </Label>
               <Select
@@ -345,7 +345,7 @@ const EditFile = () => {
           </span>
             <span className="flex flex-col gap-2">
               <div className="flex flex-col flex-grow">
-                <Label className="text-md font-medium text-teal mb-2">
+                <Label className="text-md font-medium text-gold mb-2">
                   Course:
                 </Label>
                 <Select 
@@ -377,7 +377,7 @@ const EditFile = () => {
             </span>
 
             <span className="flex flex-col gap-2">
-              <h3 className="text-md font-medium text-teal">Year:</h3>
+              <h3 className="text-md font-medium text-gold">Year:</h3>
               <input
                 type="text"
                 className="p-4 bg-midnight border border-white-5 rounded-md w-auto md:w-xxs outline-0 dark:bg-secondary"
@@ -389,10 +389,10 @@ const EditFile = () => {
 
           <span className="flex flex-col gap-2">
             <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
-              <h3 className="text-md font-medium text-teal">Abstract:</h3>
+              <h3 className="text-md font-medium text-gold">Abstract:</h3>
               <button
                 onClick={() => setIsEditingAbstract(!isEditingAbstract)}
-                className="text-sm px-3 py-1 bg-teal/10 hover:bg-teal/20 text-teal rounded-md transition-colors"
+                className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
               >
                 {isEditingAbstract ? "Save" : "Edit"}
               </button>
@@ -419,15 +419,18 @@ const EditFile = () => {
             <input type="checkbox" />
             <p className="font-inter text-sm ml-1">
               By uploading your research paper, you agree to our{" "}
-              <span className="text-teal">Terms and Privacy Policy</span> and
+              <span className="text-gold">Terms and Privacy Policy</span> and
               consent to its publication.
             </p>
           </div>
         </span>
 
-        <span>
-          <button className="bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br p-2 px-8 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-            Upload
+        <span className="flex flex-row gap-2">
+          <button className="bg-accent p-2 px-8 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+            Cancel
+          </button>
+          <button className="bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br p-2 px-8 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+            Save Changes
           </button>
         </span>
       </div>

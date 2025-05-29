@@ -377,9 +377,15 @@ function ViewFile() {
               )}
             </div>
 
-            <div className={`text-sm dark:bg-card-foreground border-2 ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-4 rounded-md mt-6`}>
-              <h1 className="text-xl font-bold">Abstract </h1>
-              <p>
+            <div className={`
+              [&::-webkit-scrollbar]:w-2
+              [&::-webkit-scrollbar-track]:rounded-full
+              [&::-webkit-scrollbar-track]:bg-card-foreground
+              [&::-webkit-scrollbar-thumb]:rounded-full
+              [&::-webkit-scrollbar-thumb]:bg-tertiary
+              h-[400px] scrollbar-hide text-sm dark:bg-card-foreground border-2 ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-4 text-justify rounded-md mt-6 overflow-y-auto`}>
+              <h1 className="text-xl font-bold mb-2">Abstract</h1>
+              <p className="whitespace-pre-wrap">
                 {paper.abstract}
               </p>
             </div>

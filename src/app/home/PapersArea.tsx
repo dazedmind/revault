@@ -78,6 +78,7 @@ export default function PapersArea({ filters }: { filters: Filters }) {
           key={paper.paper_id}
           img={document}
           title={paper.title || "Untitled"}
+          author={paper.author || "No author available"}
           description={paper.abstract || "No abstract available"}
           tags={paper.keywords || []}
           department={paper.department || "No department available"}
