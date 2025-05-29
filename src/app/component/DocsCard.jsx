@@ -124,6 +124,15 @@ const DocsCard = (props) => {
     return text;
   };
 
+  const truncateAuthor = (text, maxWords = 20, maxChars = 20) => {
+    if (!text) return "No description available";
+    const words = text.split(" ");
+    if (words.length > maxChars) {
+      return words.slice(0, maxChars).join(" ") + "...";
+    }
+    return text;
+  };
+
   if (loading) {
     return <DocsLoader message="Loading Recent Papers" />;
   }
@@ -144,6 +153,9 @@ const DocsCard = (props) => {
         <h3 className="text-md md:text-lg font-bold">
           {props.title}
         </h3>
+        <p className="text-sm text-gray-500">
+          {truncateAuthor(props.author)}
+        </p>
         <div className="flex gap-2 flex-wrap overflow-hidden mt-2">
           {/* Mapping over tags */}
           {props.year && (
@@ -177,7 +189,7 @@ const DocsCard = (props) => {
         <div className="mt-2 w-full flex flex-row gap-2 sm:gap-4">
           {/* Left Side Buttons */}
             <Link href={`/view-file/${props.paper_id}`} className="w-full md:w-auto">
-                <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-gold-fg to-gold hover:brightness-120 text-white rounded-lg cursor-pointer">
+                <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-2 bg-gradient-to-r from-gold-fg to-gold hover:brightness-120 text-white rounded-lg cursor-pointer">
                   <GoEye className="text-xl" />
                 Read
               </button>
@@ -185,7 +197,7 @@ const DocsCard = (props) => {
             {viewFromAdmin ? (
               <button
                 onClick={() => router.push("/upload")}
-                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
+                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
               >
                 <GoPencil className="text-xl"/>
                 <span className="hidden md:flex">Edit</span>
@@ -193,7 +205,7 @@ const DocsCard = (props) => {
             ) : savedFromProfile ? (
               <button
                 onClick={() => handleUnbookmark(paper_id)}
-                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 ${theme == "light" ? "bg-white-75" : "bg-dusk"} rounded-lg cursor-pointer hover:bg-red-warning-fg hover:text-white`}
+                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"} rounded-lg cursor-pointer hover:bg-red-warning-fg hover:text-white`}
               >
                 <GoBookmarkSlash className="text-xl" />
                 <span className="hidden md:flex">Unsave</span>
@@ -201,7 +213,7 @@ const DocsCard = (props) => {
             ) : (
               <button
                 onClick={() => handleBookmark(paper_id)}
-                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-3 ${theme == "light" ? "bg-tertiary" : "bg-dusk"} rounded-lg cursor-pointer hover:brightness-105`}
+                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-tertiary" : "bg-dusk"} rounded-lg cursor-pointer hover:brightness-105`}
               >
                 <GoBookmark className="text-xl" /> <span className="hidden md:flex">Bookmark</span>
               </button>
