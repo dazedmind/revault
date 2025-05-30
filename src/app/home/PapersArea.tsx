@@ -12,6 +12,7 @@ interface Filters {
   start?: string;
   end?: string;
   course?: string[];
+  sort?: string;
 }
 
 export default function PapersArea({ filters }: { filters: Filters }) {
@@ -33,6 +34,7 @@ export default function PapersArea({ filters }: { filters: Filters }) {
         qp.set("start", filters.start);
         qp.set("end", filters.end);
       }
+      if (filters.sort) qp.set("sort", filters.sort);
 
       const url = qp.toString() ? `/api/papers?${qp}` : `/api/recent`;
       try {
