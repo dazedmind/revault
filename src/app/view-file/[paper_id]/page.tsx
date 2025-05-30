@@ -14,7 +14,7 @@ import { Bookmark, Download, Info, Link, Moon, SunMedium, Archive } from "lucide
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
 import useAntiCopy from "../../hooks/useAntiCopy";
-import { GoBookmark, GoInfo, GoMoon, GoSun } from "react-icons/go";
+import { GoBookmark, GoBookmarkSlash, GoInfo, GoMoon, GoSun } from "react-icons/go";
 
 function ViewFile() {
   const { theme, setTheme } = useTheme();
@@ -26,6 +26,7 @@ function ViewFile() {
 
   const [paper, setPaper] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   const [selectedPaperIndex, setSelectedPaperIndex] = useState(null);
   const { paper_id } = useParams(); // grab it from URL
@@ -50,11 +51,38 @@ function ViewFile() {
       return null;
     }
   };
+
+  const handleUnbookmark = async (paperId) => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      toast.error("You're not logged in.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/bookmark/${paperId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to unbookmark");
+
+      toast.success(data.message || "Bookmark removed.");
+      setIsBookmarked(false);
+      router.refresh();
+    } catch (err) {
+      console.error("Unbookmark error:", err);
+      toast.error("An error occurred while removing the bookmark.");
+    }
+  };
   
   const handleBookmark = async (paperId) => {
     const token = localStorage.getItem('authToken');
     if (!token) {
-      alert("You're not logged in.");
+      toast.error("You're not logged in.");
       return;
     }
   
@@ -72,9 +100,30 @@ function ViewFile() {
       if (!res.ok) throw new Error(data?.error || "Failed to bookmark");
   
       toast.success(data.message || "Paper Bookmarked successfully.");
+      setIsBookmarked(true);
     } catch (err) {
       console.error("Bookmark error:", err);
-      alert("An error occurred while bookmarking.");
+      toast.error("An error occurred while bookmarking.");
+    }
+  };
+
+  const checkBookmarkStatus = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`/api/bookmark/check/${paper_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        setIsBookmarked(data.isBookmarked);
+      }
+    } catch (error) {
+      console.error("Error checking bookmark status:", error);
     }
   };
 
@@ -128,10 +177,12 @@ function ViewFile() {
     async function fetchPaper() {
       try {
         console.log("Fetching paper with ID:", paper_id);
+        const token = localStorage.getItem('authToken');
         const res = await fetch(`/api/paper/${paper_id}`, {
           cache: 'no-store',
           headers: {
-            'Cache-Control': 'no-cache'
+            'Cache-Control': 'no-cache',
+            ...(token && { Authorization: `Bearer ${token}` })
           }
         });
         
@@ -157,6 +208,9 @@ function ViewFile() {
           department: data.department?.replace(/"/g, "") || "",
           abstract: data.abstract?.replace(/"/g, "") || "",
         });
+
+        // Check bookmark status after paper data is loaded
+        await checkBookmarkStatus();
       } catch (err) {
         console.error("Error fetching paper:", err);
         toast.error("Failed to load paper data");
@@ -224,11 +278,11 @@ function ViewFile() {
                     <div className="flex flex-row gap-3 items-center my-4 flex-wrap">
                         {paper.author &&
                             paper.author
-                            .split(/\s{2,}/)  // Split by two or more spaces
+                            .split('.,')  // Split by period followed by comma
                             .map((author, index) => (
                                 <div key={index} className="flex flex-row gap-2 items-center">
                                 <Image src={avatar} className="w-8 rounded-full" alt={`author-${index}`} />
-                                <p>{author.trim()}</p>
+                                <p>{author.trim() + (index < paper.author.split('.,').length - 1 ? '.' : '')}</p>
                                 </div>
                         ))}
                     </div>
@@ -320,12 +374,24 @@ function ViewFile() {
                 )}
 
                 {!viewFromAdmin && (
-                  <FileMenuButton
-                    icon={<GoBookmark className="text-3xl text-yale-blue" />}
-                    label="Add to Bookmark"
-                    onClick={() => handleBookmark(paper_id)}
-                  />
+                  <>
+                    {isBookmarked ? (
+                      <FileMenuButton
+                        icon={<GoBookmarkSlash className="text-3xl text-yale-blue" />}
+                        label="Remove Bookmark"
+                        onClick={() => handleUnbookmark(paper_id)}
+                      />
+                    ) : (
+                      <FileMenuButton
+                        icon={<GoBookmark className="text-3xl text-yale-blue" />}
+                        label="Add to Bookmark"
+                        onClick={() => handleBookmark(paper_id)}
+                      />
+                    )}
+                  </>
                 )}
+
+                
               </aside>
 
               <div className="Document ">
