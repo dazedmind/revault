@@ -330,7 +330,7 @@ function ViewFile() {
 
               <div className="Document ">
                   <object
-                    data="/sample.pdf"
+                    data="/sample.pdf#toolbar=0"
                     type="application/pdf"
                     width="100%"
                     height="100%"

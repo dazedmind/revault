@@ -13,6 +13,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Trash } from "lucide-react";
 import { useTheme } from "next-themes";
+import { toast, Toaster } from "sonner";
 
 const UploadFile = () => {
   const [title, setTitle] = useState("");
@@ -69,15 +70,18 @@ const UploadFile = () => {
       const result = await response.json();
   
       if (response.ok) {
-        alert("Upload successful!");
+        toast.success("Upload successful!");
         handleClearFile();
-        // Optionally: clear the form or redirect
       } else {
-        alert("Upload failed: " + result.message);
+        if (result.code === 'P2002') {
+          toast.error("A paper with this title already exists. Please use a different title.");
+        } else {
+          toast.error(result.message || "Upload failed. Please try again.");
+        }
       }
     } catch (error) {
       console.error("Upload error:", error);
-      alert("An unexpected error occurred.");
+      toast.error("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -102,9 +106,14 @@ const UploadFile = () => {
     }, interval);
   };
 
+  const [pdfUrl, setPdfUrl] = useState("");
+
+
   async function extractText(event) {
     const file = event.target.files[0];
     if (!file || file.type !== "application/pdf") return;
+
+    setPdfUrl(URL.createObjectURL(file)); // 👈 This line enables the preview
 
     try {
       setIsLoading(true);
@@ -157,6 +166,27 @@ const UploadFile = () => {
     }
   }
 
+  const handleSaveTitle = () => {
+    setIsEditingTitle(false);
+    if (!title) {
+      setTitle("");
+    }
+  };
+
+  const handleSaveAuthors = () => {
+    setIsEditingAuthors(false);
+    if (!author) {
+      setAuthor("");
+    }
+  };
+
+  const handleSaveAbstract = () => {
+    setIsEditingAbstract(false);
+    if (!fullText) {
+      setFullText("");
+    }
+  };
+
   const handleClearFile = () => {
     if (ref.current) {
       ref.current.value = ""; // Clear the file input
@@ -167,7 +197,13 @@ const UploadFile = () => {
     setCourse("");
     setDepartment("");
     setYear("");
+    setKeywords([]); // Clear keywords
     setKey(Date.now()); // Update key to force re-render
+    setPdfUrl("");
+    setIsEditingTitle(false);
+    setIsEditingAuthors(false);
+    setIsEditingAbstract(false);
+    setIsTermsAccepted(false);
   };
 
   const [mounted, setMounted] = useState(false);
@@ -179,214 +215,225 @@ const UploadFile = () => {
   return (
     <div className="bg-midnight dark:bg-secondary">
       <AdminNavBar />
-      <main className="p-8 md:mx-12">
-        <div>
-          <h1 className="font-bold text-3xl mb-6">Upload Research Paper</h1>
-        </div>
-
-        <div className="flex flex-row">
-          <input
-            type="file"
-            className="p-4 w-full md:w-4xl md:p-10 md:px-60 border-2 border-dashed border-gold rounded-md dark:bg-secondary"
-            accept="application/pdf"
-            onChange={extractText}
-            name="file-input"
-            key={ref.current?.value}
-            disabled={isLoading}
-          />
-
-          <button
-            onClick={handleClearFile}
-            className={`ml-4 px-4 py-4 cursor-pointer ${theme == "light" ? "bg-tertiary" : "bg-dusk"} transition-all duration-300 hover:bg-red-warning hover:text-white hover:border-none rounded-md hover:shadow-lg`}
-            disabled={isLoading}
-          >
-            <Trash className="w-6 h-6" />
-          </button>
-        </div>
-        <label htmlFor="file-input" className="text-sm text-white-50">
-          File type: .pdf and .tiff only (Maximum file size: 15MB)
-        </label>
-
-        {isLoading && (
-          <div className="mt-4">
-            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
-              <div
-                className="bg-gold h-2.5 rounded-full transition-all duration-300 ease-out"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-            <p className="text-sm text-gold mt-2">
-              {progress < 100
-                ? "Extracting text from PDF..."
-                : "Processing complete!"}
-            </p>
+      <div className="flex flex-col md:flex-row">
+        <main className="p-8 md:mx-12">
+          <div>
+            <h1 className="font-bold text-3xl mb-6">Upload Research Paper</h1>
           </div>
-        )}
 
-        <div className="flex flex-col gap-8 mt-8">
-          <span className="flex flex-col gap-2">
-            <div className="flex justify-between items-center">
-              <span className="flex flex-row justify-between w-4xl gap-2">
-                <h3 className="text-md font-medium text-gold">
-                  Research Title:
-                </h3>
+          <div className="flex flex-row">
+            <input
+              type="file"
+              className="p-4 w-full md:w-4xl md:p-10 md:px-60 border-2 border-dashed border-gold rounded-md dark:bg-secondary"
+              accept="application/pdf"
+              onChange={extractText}
+              name="file-input"
+              key={ref.current?.value}
+              disabled={isLoading}
+            />
+
+            <button
+              onClick={handleClearFile}
+              className={`ml-4 px-4 py-4 cursor-pointer ${theme == "light" ? "bg-tertiary" : "bg-dusk"} transition-all duration-300 hover:bg-red-warning hover:text-white hover:border-none rounded-md hover:shadow-lg`}
+              disabled={isLoading}
+            >
+              <Trash className="w-6 h-6" />
+            </button>
+
+    
+          </div>
+          <label htmlFor="file-input" className="text-sm text-white-50">
+            File type: .pdf and .tiff only (Maximum file size: 15MB)
+          </label>
+
+          {isLoading && (
+            <div className="mt-4">
+              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
+                <div
+                  className="bg-gold h-2.5 rounded-full transition-all duration-300 ease-out"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+              <p className="text-sm text-gold mt-2">
+                {progress < 100
+                  ? "Extracting text from PDF..."
+                  : "Processing complete!"}
+              </p>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-8 mt-8">
+            <span className="flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <span className="flex flex-row justify-between w-4xl gap-2">
+                  <h3 className="text-md font-medium text-gold">
+                    Research Title:
+                  </h3>
+                  <button
+                    onClick={() => isEditingTitle ? handleSaveTitle() : setIsEditingTitle(true)}
+                    className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
+                  >
+                    {isEditingTitle ? "Save" : "Edit"}
+                  </button>
+                </span>
+              </div>
+              <textarea
+                className={` w-auto p-4 bg-midnight border rounded-md md:w-4xl outline-0 dark:bg-secondary ${
+                  isEditingTitle
+                    ? "border-gold cursor-text"
+                    : "border-white-5 cursor-default"
+                }`}
+                defaultValue={title.toUpperCase()}
+                onChange={(e) => setTitle(e.target.value.toUpperCase())}
+                readOnly={!isEditingTitle}
+              />
+            </span>
+
+            <span className="flex flex-col gap-2">
+              <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
+                <h3 className="text-md font-medium text-gold">Authors:</h3>
                 <button
-                  onClick={() => setIsEditingTitle(!isEditingTitle)}
+                  onClick={() => isEditingAuthors ? handleSaveAuthors() : setIsEditingAuthors(true)}
                   className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
                 >
-                  {isEditingTitle ? "Save" : "Edit"}
+                  {isEditingAuthors ? "Save" : "Edit"}
                 </button>
               </span>
-            </div>
-            <textarea
-              className={` w-auto p-4 bg-midnight border rounded-md md:w-4xl outline-0 dark:bg-secondary ${
-                isEditingTitle
-                  ? "border-gold cursor-text"
-                  : "border-white-5 cursor-default"
-              }`}
-              defaultValue={title.toUpperCase()}
-              onChange={(e) => setTitle(e.target.value.toUpperCase())}
-              readOnly={!isEditingTitle}
-            />
-          </span>
-
-          <span className="flex flex-col gap-2">
-            <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
-              <h3 className="text-md font-medium text-gold">Authors:</h3>
-              <button
-                onClick={() => setIsEditingAuthors(!isEditingAuthors)}
-                className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
-              >
-                {isEditingAuthors ? "Save" : "Edit"}
-              </button>
+              <input
+                type="text"
+                className={`p-4 bg-midnight border rounded-md w-full md:w-4xl outline-0 dark:bg-secondary ${
+                  isEditingAuthors
+                    ? "border-gold cursor-text"
+                    : "border-white-5 cursor-default"
+                }`}
+                defaultValue={author}
+                onChange={(e) => setAuthor(e.target.value)}
+                readOnly={!isEditingAuthors}
+              />
             </span>
-            <input
-              type="text"
-              className={`p-4 bg-midnight border rounded-md w-full md:w-4xl outline-0 dark:bg-secondary ${
-                isEditingAuthors
-                  ? "border-gold cursor-text"
-                  : "border-white-5 cursor-default"
-              }`}
-              defaultValue={author}
-              onChange={(e) => setAuthor(e.target.value)}
-              readOnly={!isEditingAuthors}
-            />
-          </span>
 
-          <span className="flex flex-col gap-2">
-            <h3 className="text-md font-medium text-gold">Keywords:</h3>
-            <div className="flex flex-row flex-wrap gap-2">
-              {keywords.map((kw, idx) => (
-                <span
-                  key={idx}
-                  className="px-3 py-1 bg-gold/10 text-gold rounded-md text-sm"
-                >
-                  {kw}
-                </span>
-              ))}
-            </div>
-          </span>
+            <span className="flex flex-col gap-2">
+              <h3 className="text-md font-medium text-gold">Keywords:</h3>
+              <div className="flex flex-row flex-wrap gap-2">
+                {keywords.map((kw, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 bg-gold/10 text-gold rounded-md text-sm"
+                  >
+                    {kw}
+                  </span>
+                ))}
+              </div>
+            </span>
 
 
-          <div className="flex flex-col md:flex-row gap-4">
-          <span className="flex flex-col gap-2">
-            <div className="flex flex-col flex-grow">
-              <Label className="text-md font-medium text-gold mb-2 dark:bg-secondary">
-                Department:
-              </Label>
-              <Select
-                name="department"
-                value={department}
-                onValueChange={setDepartment}
-              >
-                <SelectTrigger className="w-full md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
-                  <SelectValue placeholder="Select paper department " />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem className="p-4" value="Computer Science">
-                      Computer Science
-                    </SelectItem>
-                    <SelectItem className="p-4" value="Information Technology">
-                      Information Technology
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-          </span>
+            <div className="flex flex-col md:flex-row gap-4">
             <span className="flex flex-col gap-2">
               <div className="flex flex-col flex-grow">
-                <Label className="text-md font-medium text-gold mb-2">
-                  Course:
+                <Label className="text-md font-medium text-gold mb-2 dark:bg-secondary">
+                  Department:
                 </Label>
-                <Select 
-                  name="course" 
-                  value={course} 
-                  onValueChange={setCourse}
+                <Select
+                  name="department"
+                  value={department}
+                  onValueChange={setDepartment}
                 >
-                  <SelectTrigger className="w-auto md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
-                    <SelectValue placeholder="Select course" />
+                  <SelectTrigger className="w-full md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
+                    <SelectValue placeholder="Select paper department " />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem className="p-4" value="SIA">
-                        SIA
+                      <SelectItem className="p-4" value="Computer Science">
+                        Computer Science
                       </SelectItem>
-                      <SelectItem className="p-4" value="Capstone">
-                        Capstone
-                      </SelectItem>
-                      <SelectItem className="p-4" value="Compiler Design">
-                        Compiler Design
-                      </SelectItem>
-                      <SelectItem className="p-4" value="CS Thesis Writing">
-                        CS Thesis Writing
+                      <SelectItem className="p-4" value="Information Technology">
+                        Information Technology
                       </SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
               </div>
             </span>
+              <span className="flex flex-col gap-2">
+                <div className="flex flex-col flex-grow">
+                  <Label className="text-md font-medium text-gold mb-2">
+                    Course:
+                  </Label>
+                  <Select 
+                    name="course" 
+                    value={course} 
+                    onValueChange={setCourse}
+                  >
+                    <SelectTrigger className="w-auto md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
+                      <SelectValue placeholder="Select course" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem className="p-4" value="SIA">
+                          SIA
+                        </SelectItem>
+                        <SelectItem className="p-4" value="Capstone">
+                          Capstone
+                        </SelectItem>
+                        <SelectItem className="p-4" value="Compiler Design">
+                          Compiler Design
+                        </SelectItem>
+                        <SelectItem className="p-4" value="CS Thesis Writing">
+                          CS Thesis Writing
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </span>
+
+              <span className="flex flex-col gap-2">
+                <h3 className="text-md font-medium text-gold">Year:</h3>
+                <input
+                  type="text"
+                  className="p-4 bg-midnight border border-white-5 rounded-md w-auto md:w-xxs outline-0 dark:bg-secondary"
+                  defaultValue={year}
+                  onChange={(e)=>{setYear(e.target.value)}}
+                />
+              </span>
+            </div>
 
             <span className="flex flex-col gap-2">
-              <h3 className="text-md font-medium text-gold">Year:</h3>
-              <input
-                type="text"
-                className="p-4 bg-midnight border border-white-5 rounded-md w-auto md:w-xxs outline-0 dark:bg-secondary"
-                defaultValue={year}
-                onChange={(e)=>{setYear(e.target.value)}}
+              <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
+                <h3 className="text-md font-medium text-gold">Abstract:</h3>
+                <button
+                  onClick={() => isEditingAbstract ? handleSaveAbstract() : setIsEditingAbstract(true)}
+                  className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
+                >
+                  {isEditingAbstract ? "Save" : "Edit"}
+                </button>
+              </span>{" "}
+              <textarea
+                className={`p-4 bg-midnight border rounded-md w-auto md:w-4xl h-64 outline-0 dark:bg-secondary ${
+                  isEditingAbstract
+                    ? "border-gold cursor-text"
+                    : "border-white-5 cursor-default"
+                }`}
+                defaultValue={fullText}
+                onChange={(e) => setFullText(e.target.value)}
+                readOnly={!isEditingAbstract}
               />
             </span>
           </div>
+          {/* <Upload /> */}
+        </main>
 
-          <span className="flex flex-col gap-2">
-            <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
-              <h3 className="text-md font-medium text-gold">Abstract:</h3>
-              <button
-                onClick={() => setIsEditingAbstract(!isEditingAbstract)}
-                className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
-              >
-                {isEditingAbstract ? "Save" : "Edit"}
-              </button>
-            </span>{" "}
-            <textarea
-              ref={(el) => {
-                if (el) el.style.height = el.scrollHeight + "px";
-              }}
-              className={`p-4 bg-midnight border rounded-md w-auto md:w-4xl h-64 outline-0 dark:bg-secondary ${
-                isEditingAbstract
-                  ? "border-gold cursor-text"
-                  : "border-white-5 cursor-default"
-              }`}
-              defaultValue={fullText}
-              onChange={(e) => setFullText(e.target.value)}
-              readOnly={!isEditingAbstract}
-            />
-          </span>
-        </div>
-
-        {/* <Upload /> */}
-      </main>
+        {pdfUrl && (
+              <div className="flex flex-col mx-12 m-10 md:mx-0 md:mt-10">
+                <h3 className="text-md font-medium text-gold mb-2">PDF Preview:</h3>
+                <iframe
+                  src={`${pdfUrl}#toolbar=0`}
+                  title="PDF Preview"
+                  className="w-xs h-dvh border rounded-md"
+                ></iframe>
+              </div>
+            )}
+      </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center bg-darker p-7 md:p-12 md:px-24 border-t-2 border-dashed border-white-5 dark:bg-primary">
         <span className="w-full flex flex-col justify-start items-start align-start gap-2">
@@ -413,6 +460,7 @@ const UploadFile = () => {
           </button>
         </span>
       </div>
+      <Toaster />
     </div>
   );
 };

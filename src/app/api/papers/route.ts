@@ -16,6 +16,7 @@ export async function GET(request: Request) {
     const startParam = qp.get("start"); // e.g. "2020"
     const endParam = qp.get("end"); // e.g. "2022"
     const pageParam = parseInt(qp.get("page") || "1", 10);
+    const sortParam = qp.get("sort") || "recent"; // Get sort parameter
 
     // Pagination settings
     const take = 5; // 5 items per page
@@ -65,13 +66,38 @@ export async function GET(request: Request) {
     // Final where object
     const where = andFilters.length > 0 ? { AND: andFilters } : {};
 
+    // Determine sort order
+    let orderBy: any = {};
+    switch (sortParam) {
+      case "recent":
+        orderBy = { created_at: "desc" };
+        break;
+      case "oldest":
+        orderBy = { created_at: "asc" };
+        break;
+      case "title-asc":
+        orderBy = { title: "asc" };
+        break;
+      case "title-desc":
+        orderBy = { title: "desc" };
+        break;
+      case "year-recent":
+        orderBy = { year: "desc" };
+        break;
+      case "year-oldest":
+        orderBy = { year: "asc" };
+        break;
+      default:
+        orderBy = { created_at: "desc" };
+    }
+
     // Count total matching
     const totalCount = await prisma.papers.count({ where });
 
     // Fetch paginated items
     const items = await prisma.papers.findMany({
       where,
-      orderBy: { created_at: "desc" },
+      orderBy,
       skip,
       take,
     });
