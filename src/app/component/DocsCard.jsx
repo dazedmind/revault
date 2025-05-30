@@ -17,13 +17,34 @@ const tagColors = {
 const DocsCard = (props) => {
   const [papers, setPapers] = useState();
   const [loading, setLoading] = useState(true);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const router = useRouter();
   const { theme, setTheme } = useTheme("light");
   const {
     paper_id,
-    savedFromProfile = false, // 👈 default is false unless passed explicitly
+    savedFromProfile = false,
     viewFromAdmin = false,
   } = props;
+
+  const checkBookmarkStatus = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`/api/bookmark/check/${paper_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        setIsBookmarked(data.isBookmarked);
+      }
+    } catch (error) {
+      console.error("Error checking bookmark status:", error);
+    }
+  };
 
   const handleUnbookmark = async (paperId) => {
     const token = localStorage.getItem("authToken");
@@ -44,9 +65,8 @@ const DocsCard = (props) => {
       if (!res.ok) throw new Error(data?.error || "Failed to unbookmark");
 
       toast.success(data.message || "Bookmark removed.");
-
-      router.refresh(); // Optionally refresh the view
-      window.location.reload();
+      setIsBookmarked(false);
+      router.refresh();
     } catch (err) {
       console.error("Unbookmark error:", err);
       toast.error("An error occurred while removing the bookmark.");
@@ -56,12 +76,12 @@ const DocsCard = (props) => {
   const handleBookmark = async (paperId) => {
     const token = localStorage.getItem("authToken");
     if (!token) {
-      alert("You're not logged in.");
+      toast.error("You're not logged in.");
       return;
     }
 
     try {
-      const res = await fetch("/api/bookmark", {
+      const res = await fetch(`/api/bookmark/${paperId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,9 +94,10 @@ const DocsCard = (props) => {
       if (!res.ok) throw new Error(data?.error || "Failed to bookmark");
 
       toast.success(data.message || "Paper Bookmarked successfully.");
+      setIsBookmarked(true);
     } catch (err) {
       console.error("Bookmark error:", err);
-      alert("An error occurred while bookmarking.");
+      toast.error("An error occurred while bookmarking.");
     }
   };
 
@@ -87,7 +108,9 @@ const DocsCard = (props) => {
       if (!token) {
         return router.push("/login");
       }
-      // you can re-use your decode(token) here…
+
+      // Check bookmark status
+      await checkBookmarkStatus();
 
       // 2. Fetch recent papers
       console.log("▶️ fetching /api/recent");
@@ -113,7 +136,7 @@ const DocsCard = (props) => {
     }
 
     init();
-  }, [router]);
+  }, [router, paper_id]);
 
   const truncateText = (text, maxWords = 48) => {
     if (!text) return "No description available";
@@ -187,37 +210,41 @@ const DocsCard = (props) => {
           {truncateText(props.description)}
         </p>
         <div className="mt-2 w-full flex flex-row gap-2 sm:gap-4">
-          {/* Left Side Buttons */}
-            <Link href={`/view-file/${props.paper_id}`} className="w-full md:w-auto">
-                <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-2 bg-gradient-to-r from-gold-fg to-gold hover:brightness-120 text-white rounded-lg cursor-pointer">
-                  <GoEye className="text-xl" />
-                Read
-              </button>
-            </Link>
-            {viewFromAdmin ? (
-              <button
-                onClick={() => router.push("/upload")}
-                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
-              >
-                <GoPencil className="text-xl"/>
-                <span className="hidden md:flex">Edit</span>
-              </button>
-            ) : savedFromProfile ? (
-              <button
-                onClick={() => handleUnbookmark(paper_id)}
-                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"} rounded-lg cursor-pointer hover:bg-red-warning-fg hover:text-white`}
-              >
-                <GoBookmarkSlash className="text-xl" />
-                <span className="hidden md:flex">Unsave</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => handleBookmark(paper_id)}
-                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-tertiary" : "bg-dusk"} rounded-lg cursor-pointer hover:brightness-105`}
-              >
-                <GoBookmark className="text-xl" /> <span className="hidden md:flex">Bookmark</span>
-              </button>
-            )}
+          <Link href={`/view-file/${props.paper_id}`} className="w-full md:w-auto">
+            <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-2 bg-gradient-to-r from-gold-fg to-gold hover:brightness-120 text-white rounded-lg cursor-pointer">
+              <GoEye className="text-xl" />
+              Read
+            </button>
+          </Link>
+          {viewFromAdmin ? (
+            <button
+              onClick={() => router.push("/upload")}
+              className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
+            >
+              <GoPencil className="text-xl"/>
+              <span className="hidden md:flex">Edit</span>
+            </button>
+          ) : (
+            <>
+              {isBookmarked ? (
+                <button
+                  onClick={() => handleUnbookmark(paper_id)}
+                  className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"} rounded-lg cursor-pointer hover:bg-red-warning-fg hover:text-white`}
+                >
+                  <GoBookmarkSlash className="text-xl" />
+                  <span className="hidden md:flex">Unsave</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleBookmark(paper_id)}
+                  className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-tertiary" : "bg-dusk"} rounded-lg cursor-pointer hover:brightness-105`}
+                >
+                  <GoBookmark className="text-xl" /> 
+                  <span className="hidden md:flex">Bookmark</span>
+                </button>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
