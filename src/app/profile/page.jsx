@@ -131,6 +131,7 @@ export default function Profile() {
                     paper_id={paper.paper_id}
                     img={document} // or paper.image_url if available
                     title={paper.title}
+                    author={paper.author}
                     department={paper.department}
                     year={paper.year}
                     description={paper.abstract || "No abstract available"}
