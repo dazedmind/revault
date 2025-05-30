@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Upload API Error:", error);
     return NextResponse.json(
-      { success: false, message: "Something went wrong" },
+      { success: false, message: "Paper already exists" },
       { status: 500 }
     );
   }
