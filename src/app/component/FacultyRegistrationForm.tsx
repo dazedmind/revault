@@ -305,7 +305,7 @@ export default function FacultyForm() {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className=" absolute right-3 bottom-1/5 -translate-y-50% text-gray-500 hover:text-gray-700"
+            className=" absolute right-3 bottom-1/5 -translate-y-50% text-gray-500 hover:text-gray-700 cursor-pointer"
           >
             {showPassword ? <GoEyeClosed size={15} /> : <GoEye size={15} />}
           </button>
@@ -325,7 +325,7 @@ export default function FacultyForm() {
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className=" absolute right-3 bottom-1/5 -translate-y-50% text-gray-500 hover:text-gray-700"
+            className=" absolute right-3 bottom-1/5 -translate-y-50% text-gray-500 hover:text-gray-700 cursor-pointer"
           >
             {showConfirmPassword ? <GoEyeClosed size={15} /> : <GoEye size={15} />}
           </button>

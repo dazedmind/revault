@@ -8,10 +8,13 @@ import { Button } from "@/components/ui/button";
 import { LogInCheckBox } from "../../component/LogInCheckBox";
 import Link from "next/link";
 import { FaChevronLeft } from "react-icons/fa6";
+import { GoEyeClosed } from "react-icons/go";
+import { GoEye } from "react-icons/go";
 
 const AdminLogin = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     idNumber: "",
@@ -113,14 +116,23 @@ const AdminLogin = () => {
                 className="w-68 md:w-xs"
               />
 
-              <LogInInputField
-                label="Password"
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-68 md:w-xs"
-              />
+              <div className="col-span-2 w-full relative">
+                <LogInInputField
+                  label="Password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-68 md:w-xs"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-1/8 md:right-3 bottom-1/3 -translate-y-50% text-gray-500 hover:text-gray-700 cursor-pointer"
+                >
+                  {showPassword ? <GoEyeClosed size={15} /> : <GoEye size={15} />}
+                </button>
+              </div>
 
               {/* Remember Password & Forgot Password */}
               <div className="flex flex-row justify-end items-end m-5 md:my-4 md:mx-1 mt-5">
