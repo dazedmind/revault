@@ -7,8 +7,9 @@ import icon from "../img/revault-icon.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { LogOut, Settings, User } from "lucide-react";
+import { LogOut, Settings, User, SunMoon } from "lucide-react";
 import LoadingScreen from "./LoadingScreen";
+import { useTheme } from "next-themes";
 
 import {
   DropdownMenu,
@@ -24,6 +25,7 @@ export default function NavBar() {
   const [mounted, setMounted] = useState(false);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => setMounted(true), []);
 
@@ -103,6 +105,10 @@ export default function NavBar() {
                 <DropdownMenuItem>
                   <Settings />
                   <Link href="/settings">Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                  <SunMoon className="h-4 w-4" />
+                  <span className="cursor-pointer">{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
