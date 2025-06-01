@@ -18,6 +18,7 @@ const DocsCard = (props) => {
   const [papers, setPapers] = useState();
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [bookmarkCount, setBookmarkCount] = useState(0);
   const router = useRouter();
   const { theme, setTheme } = useTheme("light");
   const {
@@ -46,6 +47,18 @@ const DocsCard = (props) => {
     }
   };
 
+  const fetchBookmarkCount = async () => {
+    try {
+      const res = await fetch(`/api/bookmark/count/${paper_id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setBookmarkCount(data.count);
+      }
+    } catch (error) {
+      console.error("Error fetching bookmark count:", error);
+    }
+  };
+
   const handleUnbookmark = async (paperId) => {
     const token = localStorage.getItem("authToken");
     if (!token) {
@@ -66,6 +79,7 @@ const DocsCard = (props) => {
 
       toast.success(data.message || "Bookmark removed.");
       setIsBookmarked(false);
+      setBookmarkCount(prev => Math.max(0, prev - 1));
       router.refresh();
     } catch (err) {
       console.error("Unbookmark error:", err);
@@ -95,6 +109,7 @@ const DocsCard = (props) => {
 
       toast.success(data.message || "Paper Bookmarked successfully.");
       setIsBookmarked(true);
+      setBookmarkCount(prev => prev + 1);
     } catch (err) {
       console.error("Bookmark error:", err);
       toast.error("An error occurred while bookmarking.");
@@ -109,8 +124,9 @@ const DocsCard = (props) => {
         return router.push("/login");
       }
 
-      // Check bookmark status
+      // Check bookmark status and count
       await checkBookmarkStatus();
+      await fetchBookmarkCount();
 
       // 2. Fetch recent papers
       console.log("▶️ fetching /api/recent");
@@ -161,18 +177,18 @@ const DocsCard = (props) => {
   }
 
   return (
-    <div className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-2 md:p-4 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
-      <div className="w-52">
+    <div className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
+      <div className="w-52 hidden md:block">
         <a href={props.link}>
           <Image
             src={props.img}
             alt="Project"
-            className="hidden py-4 md:flex w-full h-full"
+            className="py-4 w-full h-full"
           />
         </a>
       </div>
 
-      <div className="w-full flex flex-col p-4 gap-1 items-start relative">
+      <div className="w-full flex flex-col p-2 gap-1 items-start relative">
         <h3 className="text-md md:text-lg font-bold">
           {props.title}
         </h3>
@@ -209,42 +225,50 @@ const DocsCard = (props) => {
         <p className="text-sm line-clamp-4 text-justify dark:text-card">
           {truncateText(props.description)}
         </p>
-        <div className="mt-2 w-full flex flex-row gap-2 sm:gap-4">
-          <Link href={`/view-file/${props.paper_id}`} className="w-full md:w-auto">
-            <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-2 bg-gradient-to-r from-gold-fg to-gold hover:brightness-120 text-white rounded-lg cursor-pointer">
-              <GoEye className="text-xl" />
-              Read
-            </button>
-          </Link>
-          {viewFromAdmin ? (
-            <button
-              onClick={() => router.push("/upload")}
-              className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
-            >
-              <GoPencil className="text-xl"/>
-              <span className="hidden md:flex">Edit</span>
-            </button>
-          ) : (
-            <>
-              {isBookmarked ? (
-                <button
-                  onClick={() => handleUnbookmark(paper_id)}
-                  className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"} rounded-lg cursor-pointer hover:bg-red-warning-fg hover:text-white`}
-                >
-                  <GoBookmarkSlash className="text-xl" />
-                  <span className="hidden md:flex">Unsave</span>
-                </button>
-              ) : (
-                <button
-                  onClick={() => handleBookmark(paper_id)}
-                  className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-tertiary" : "bg-dusk"} rounded-lg cursor-pointer hover:brightness-105`}
-                >
-                  <GoBookmark className="text-xl" /> 
-                  <span className="hidden md:flex">Bookmark</span>
-                </button>
-              )}
-            </>
-          )}
+
+        <div className="flex flex-row justify-between w-full">
+          <div className="mt-2 w-full flex flex-row gap-2 items-center">
+            <Link href={`/view-file/${props.paper_id}`} className="w-full md:w-auto">
+              <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-2 bg-gradient-to-r from-gold-fg to-gold hover:brightness-120 text-white rounded-lg cursor-pointer">
+                <GoEye className="text-xl" />
+                Read
+              </button>
+            </Link>
+            {viewFromAdmin ? (
+              <button
+                onClick={() => router.push("/upload")}
+                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
+              >
+                <GoPencil className="text-xl"/>
+                <span className="hidden md:flex">Edit</span>
+              </button>
+            ) : (
+              <>
+                {isBookmarked ? (
+                  <button
+                    onClick={() => handleUnbookmark(paper_id)}
+                    className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-3 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"} rounded-lg cursor-pointer hover:bg-red-warning-fg hover:text-white`}
+                  >
+                    <GoBookmarkSlash className="text-xl" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleBookmark(paper_id)}
+                    className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-3 py-2 ${theme == "light" ? "bg-tertiary" : "bg-dusk"} rounded-lg cursor-pointer hover:brightness-105`}
+                  >
+                    <GoBookmark className="text-xl" />
+                  </button>
+                )}
+             
+              </>
+            )}
+          </div>
+
+          {/* <span className={`text-sm ${theme === "light" ? "text-gray-600" : "text-gray-300"} hidden md:flex items-center align-middle flex-row gap-1`}>
+                  <p>{bookmarkCount} </p>
+                  <p>{bookmarkCount === 1 ? "bookmark" : "bookmarks"}</p>
+          </span> */}
+  
         </div>
       </div>
     </div>
