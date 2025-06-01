@@ -36,6 +36,8 @@ export default function PapersArea({ filters }: { filters: Filters }) {
       }
       if (filters.sort) qp.set("sort", filters.sort);
 
+      const stripQuotes = (str: string) => str.replace(/^"|"$/g, "");
+
       const url = qp.toString() ? `/api/papers?${qp}` : `/api/recent`;
       try {
         const res = await fetch(url, { cache: "no-store" });
@@ -44,8 +46,8 @@ export default function PapersArea({ filters }: { filters: Filters }) {
         setPapers(
           json.map((paper: any) => ({
             ...paper,
-            title: paper.title.replace(/"/g, ""),
-            author: paper.author.replace(/"/g, ""),
+            title: stripQuotes(paper.title),
+            author: stripQuotes(paper.author),
             keywords: Array.isArray(paper.keywords)
               ? paper.keywords.flatMap((k) =>
                   k.split(",").map((item) => item.trim()),
@@ -56,7 +58,7 @@ export default function PapersArea({ filters }: { filters: Filters }) {
                   t.split(",").map((item) => item.trim()),
                 )
               : [],
-            abstract: paper.abstract.replace(/"/g, ""),
+            abstract: stripQuotes(paper.abstract),
           })),
         );
       } catch (err) {
