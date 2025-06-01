@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { logout } from "../../utils/auth";
 import { useEffect, useState } from "react";
-import { LogOut, Settings, User } from "lucide-react";
+import { LogOut, Settings, User, SunMoon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,12 +17,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import LoadingScreen from "@/app/component/LoadingScreen";
+import { useTheme } from "next-themes";
 
 export default function AdminNavBar() {
   const [mounted, setMounted] = useState(false);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+  const { theme, setTheme } = useTheme();
+
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
@@ -104,6 +106,10 @@ export default function AdminNavBar() {
                   <Link href="/admin/settings/general/edit-profile">
                     Settings
                   </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                  <SunMoon className="h-4 w-4" />
+                  <span className="cursor-pointer">{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
