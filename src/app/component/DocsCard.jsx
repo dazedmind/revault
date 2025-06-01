@@ -195,31 +195,32 @@ const DocsCard = (props) => {
         <p className="text-sm text-gray-500">
           {truncateAuthor(props.author)}
         </p>
-        <div className="flex gap-2 flex-wrap overflow-hidden mt-2">
-          {/* Mapping over tags */}
-          {props.year && (
-            <p className="px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm">
-              {props.year}
-            </p>
-          )}
-          {props.department && (
-            <p className="px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm">
-              {props.department}
-            </p>
-          )}
-          {props.tags && props.tags.length > 0 ? (
-            props.tags.map((tag, index) => (
-              <p
-                key={index}
-                className={`flex px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm`}
-              >
-                {tag}
+        <div className="w-full overflow-x-auto scrollbar-none">
+          <div className="flex gap-2 whitespace-nowrap pb-2 mt-2 min-w-0">
+            {/* Mapping over tags */}
+            {props.year && (
+              <p className="px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm flex-shrink-0">
+                {props.year}
               </p>
-            ))
-          ) : (
-            <p className="text-white text-md italic">No tags available</p>
-          )}
-
+            )}
+            {props.department && (
+              <p className="px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm flex-shrink-0">
+                {props.department}
+              </p>
+            )}
+            {props.tags && props.tags.length > 0 ? (
+              props.tags.map((tag, index) => (
+                <p
+                  key={index}
+                  className={`px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm flex-shrink-0`}
+                >
+                  {tag}
+                </p>
+              ))
+            ) : (
+              <p className="text-white text-md italic flex-shrink-0">No tags available</p>
+            )}
+          </div>
         </div>
 
         <p className="text-sm line-clamp-4 text-justify dark:text-card">
