@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import NavBar from "../component/NavBar";
 import { ProfileCard } from "../component/ProfileCard";
 import document from "../img/document.png";
+import noBookmarks from "../img/bird.png";
 import DocsCard from "../component/DocsCard";
 import ProtectedRoute from "../component/ProtectedRoute";
 import LoadingScreen from "../component/LoadingScreen";
 import avatar from "../img/user.png";
+import Image from "next/image";
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -118,7 +120,7 @@ export default function Profile() {
           <div>Failed to load profile.</div>
         )}
 
-        <main className="dark:bg-secondary">
+        <main className="dark:bg-secondary h-fit-content">
           <div className="flex flex-col gap-5 md:mx-24 align-middle">
             <div className="flex flex-col w-full gap-5 my-6 align-middle p-8">
               <div className="flex flex-row justify-between align-middle items-center">
@@ -141,7 +143,10 @@ export default function Profile() {
                 ))
               ) : (
                 <>
-                  <p className="text-white text-xl italic">No bookmarks yet.</p>
+                  <div className="flex flex-col justify-center items-center my-15">
+                    <Image src={noBookmarks} alt="No bookmarks yet" className="w-40 h-40" />
+                    <p className="text-center text-xl mt-5">No bookmarks yet.</p>
+                  </div>
                 </>
               )}
             </div>

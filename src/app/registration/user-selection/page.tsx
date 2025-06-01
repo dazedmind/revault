@@ -21,7 +21,7 @@ const UserSelection = () => {
             onClick={handleUserTypeSelection.bind(null, "student")}
             className={`w-xs h-48 bg-accent border-2 rounded-lg hover:bg-white hover:shadow-lg transition-all duration-300 flex flex-col justify-center items-center p-6 cursor-pointer`}
           >
-            <PiStudentBold className="size-12 mb-2" />
+            <PiStudentBold className="size-14 mb-2 text-gold-fg" />
 
             {/* Main heading */}
             <p className="text-xl font-bold text-center text-gold leading-tight mb-1">
@@ -30,7 +30,7 @@ const UserSelection = () => {
 
             {/* Sub-text */}
             <p className="text-sm text-center w-[244px] leading-tight whitespace-normal break-words">
-              I&apos;m a student of Pamantasan ng Lungsod ng Maynila
+              I am a student of Pamantasan ng Lungsod ng Maynila
             </p>
           </button>
 
@@ -38,7 +38,7 @@ const UserSelection = () => {
             onClick={handleUserTypeSelection.bind(null, "faculty")}
             className="w-xs h-48 bg-accent border-2 rounded-lg hover:bg-white hover:shadow-lg transition-all duration-300 flex flex-col justify-center items-center p-6 cursor-pointer"
           >
-            <FaChalkboardTeacher className="size-12 mb-2" />
+            <FaChalkboardTeacher className="size-14 mb-2 text-gold-fg" />
 
             {/* Main heading */}
             <p className="text-xl font-bold text-center text-gold leading-tight mb-1">
@@ -47,7 +47,7 @@ const UserSelection = () => {
 
             {/* Sub-text */}
             <p className="text-sm text-center w-[244px] leading-tight whitespace-normal break-words">
-              I&apos;m a faculty member of Pamantasan ng Lungsod ng Maynila
+              I am a faculty member of Pamantasan ng Lungsod ng Maynila
             </p>
           </button>
         </div>

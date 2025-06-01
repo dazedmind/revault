@@ -35,10 +35,10 @@ const AboutRevault = () => {
               <div className="flex flex-row gap-4 items-center">
                 <Image src={avatar} className="rounded-full" alt="Durante" width={40} height={40} />
                 <span>
-                  <h3 className="text-lg font-bold text-yale-blue">Durante, KC D.</h3>
+                  <h3 className="text-lg font-bold text-midnight">Durante, KC D.</h3>
                   <span className="flex flex-row flex-wrap gap-2">
-                    <p className=" rounded-md text-xs p-2 w-fit bg-yale-blue/20 text-yale-blue">Programmer</p>
-                    <p className=" rounded-md text-xs p-2 w-fit bg-gold/20 text-gold-fg">Documentation Member</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-yale-blue/10 text-yale-blue">Programmer</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">Documentation Member</p>
                   </span>
                 </span>
              
@@ -46,38 +46,38 @@ const AboutRevault = () => {
               <div className="flex flex-row gap-4 items-center">
                 <Image src={avatar} className="rounded-full" alt="Durante" width={40} height={40} />
                 <span>
-                  <h3 className="text-lg font-bold text-yale-blue">Lastra, Kristhia Cayle F.</h3>
+                  <h3 className="text-lg font-bold text-midnight">Lastra, Kristhia Cayle F.</h3>
                   <span className="flex flex-row gap-2">
-                    <p className=" rounded-md text-xs p-2 w-fit bg-green-500/20 text-green-600">Team Leader</p>
-                    <p className=" rounded-md text-xs p-2 w-fit bg-gold/20 text-gold-fg">Documentation Head</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-green-500/10 text-green-600">Team Leader</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">Documentation Head</p>
                   </span>
                 </span>
               </div>
               <div className="flex flex-row gap-4 items-center">
                 <Image src={avatar} className="rounded-full" alt="Durante" width={40} height={40} />
                 <span>
-                  <h3 className="text-lg font-bold text-yale-blue">Insigne, Matthew Jacob B.</h3>
+                  <h3 className="text-lg font-bold text-midnight">Insigne, Matthew Jacob B.</h3>
                   <span className="flex flex-row gap-2">
-                    <p className=" rounded-md text-xs p-2 w-fit bg-yale-blue/20 text-yale-blue">Programmer</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-yale-blue/10 text-yale-blue">System Programmer</p>
                   </span>
                 </span>
               </div>
               <div className="flex flex-row gap-4 items-center">
                 <Image src={avatar} className="rounded-full" alt="Durante" width={40} height={40} />
                 <span>
-                  <h3 className="text-lg font-bold text-yale-blue">Valeña, John Allen Troy E.</h3>
+                  <h3 className="text-lg font-bold text-midnight">Valeña, John Allen Troy E.</h3>
                   <span className="flex flex-row gap-2">
-                    <p className=" rounded-md text-xs p-2 w-fit bg-yale-blue/20 text-yale-blue">Lead Developer</p>
-                    <p className=" rounded-md text-xs p-2 w-fit bg-purple-highlight/20 text-purple-highlight">System Designer</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-yale-blue/10 text-yale-blue">Lead Developer</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-purple-highlight/10 text-purple-highlight">System Designer</p>
                   </span>
                 </span>
               </div>
               <div className="flex flex-row gap-4 items-center">
                 <Image src={avatar} className="rounded-full" alt="Durante" width={40} height={40} />
                 <span>
-                  <h3 className="text-lg font-bold text-yale-blue">Yacub, Jetthro Karl C.</h3>
+                  <h3 className="text-lg font-bold text-midnight">Yacub, Jetthro Karl C.</h3>
                   <span className="flex flex-row gap-2">
-                    <p className=" rounded-md text-xs p-2 w-fit bg-gold/20 text-gold-fg">Documentation Member</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">Documentation Member</p>
                   </span>
                 </span>
               </div>
