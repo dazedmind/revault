@@ -21,23 +21,19 @@ const DocsCard = (props) => {
   const [bookmarkCount, setBookmarkCount] = useState(0);
   const router = useRouter();
   const { theme, setTheme } = useTheme("light");
-  const {
-    paper_id,
-    savedFromProfile = false,
-    viewFromAdmin = false,
-  } = props;
+  const { paper_id, savedFromProfile = false, viewFromAdmin = false } = props;
 
   const checkBookmarkStatus = async () => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (!token) return;
 
     try {
       const res = await fetch(`/api/bookmark/check/${paper_id}`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       if (res.ok) {
         const data = await res.json();
         setIsBookmarked(data.isBookmarked);
@@ -79,7 +75,7 @@ const DocsCard = (props) => {
 
       toast.success(data.message || "Bookmark removed.");
       setIsBookmarked(false);
-      setBookmarkCount(prev => Math.max(0, prev - 1));
+      setBookmarkCount((prev) => Math.max(0, prev - 1));
       router.refresh();
     } catch (err) {
       console.error("Unbookmark error:", err);
@@ -109,7 +105,7 @@ const DocsCard = (props) => {
 
       toast.success(data.message || "Paper Bookmarked successfully.");
       setIsBookmarked(true);
-      setBookmarkCount(prev => prev + 1);
+      setBookmarkCount((prev) => prev + 1);
     } catch (err) {
       console.error("Bookmark error:", err);
       toast.error("An error occurred while bookmarking.");
@@ -177,24 +173,18 @@ const DocsCard = (props) => {
   }
 
   return (
-    <div className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}>
+    <div
+      className={`w-9xl flex flex-col md:flex-row align-middle items-center gap-2 p-4 md:px-8  rounded-xl border border-dusk dark:bg-primary ${theme == "light" ? "border-white-50" : "border-white-5"}`}
+    >
       <div className="w-52 hidden md:block">
         <a href={props.link}>
-          <Image
-            src={props.img}
-            alt="Project"
-            className="py-4 w-full h-full"
-          />
+          <Image src={props.img} alt="Project" className="py-4 w-full h-full" />
         </a>
       </div>
 
       <div className="w-full flex flex-col p-2 gap-1 items-start relative">
-        <h3 className="text-md md:text-lg font-bold">
-          {props.title}
-        </h3>
-        <p className="text-sm text-gray-500">
-          {truncateAuthor(props.author)}
-        </p>
+        <h3 className="text-md md:text-lg font-bold">{props.title}</h3>
+        <p className="text-sm text-gray-500">{truncateAuthor(props.author)}</p>
         <div className="w-full overflow-x-auto scrollbar-none">
           <div className="flex gap-2 whitespace-nowrap pb-2 mt-2 min-w-0">
             {/* Mapping over tags */}
@@ -218,7 +208,9 @@ const DocsCard = (props) => {
                 </p>
               ))
             ) : (
-              <p className="text-white text-md italic flex-shrink-0">No tags available</p>
+              <p className="text-white text-md italic flex-shrink-0">
+                No tags available
+              </p>
             )}
           </div>
         </div>
@@ -229,7 +221,10 @@ const DocsCard = (props) => {
 
         <div className="flex flex-row justify-between w-full">
           <div className="mt-2 w-full flex flex-row gap-2 items-center">
-            <Link href={`/view-file/${props.paper_id}`} className="w-full md:w-auto">
+            <Link
+              href={`/view-file/${props.paper_id}`}
+              className="w-full md:w-auto"
+            >
               <button className="w-full md:w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-5 py-2 bg-gradient-to-r from-gold-fg to-gold hover:brightness-120 text-white rounded-lg cursor-pointer">
                 <GoEye className="text-xl" />
                 Read
@@ -240,7 +235,7 @@ const DocsCard = (props) => {
                 onClick={() => router.push("/upload")}
                 className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
               >
-                <GoPencil className="text-xl"/>
+                <GoPencil className="text-xl" />
                 <span className="hidden md:flex">Edit</span>
               </button>
             ) : (
@@ -260,7 +255,6 @@ const DocsCard = (props) => {
                     <GoBookmark className="text-xl" />
                   </button>
                 )}
-             
               </>
             )}
           </div>
@@ -269,7 +263,6 @@ const DocsCard = (props) => {
                   <p>{bookmarkCount} </p>
                   <p>{bookmarkCount === 1 ? "bookmark" : "bookmarks"}</p>
           </span> */}
-  
         </div>
       </div>
     </div>
