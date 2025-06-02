@@ -10,6 +10,7 @@ import FileMenuButton from "../../component/FileMenuButton";
 import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 import { useParams } from "next/navigation";
+<<<<<<< HEAD
 import {
   User,
   BookOpen,
@@ -17,6 +18,9 @@ import {
   Tag,
   Building2,
 } from "lucide-react";
+=======
+import { Link } from "lucide-react";
+>>>>>>> f4e31b3 (Add minor ui fixes)
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
 import {
@@ -299,6 +303,7 @@ function ViewFile() {
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <p className="text-lg">
+<<<<<<< HEAD
                       <strong>Paper ID: </strong>
                       {paper.paper_id}
                     </p>
@@ -308,6 +313,10 @@ function ViewFile() {
                     <p className="text-lg">
                       <strong>Paper Title: </strong>
                       {paper.title}
+=======
+                      <strong>Title:</strong>
+                      {paper.id} {paper.title}
+>>>>>>> f4e31b3 (Add minor ui fixes)
                     </p>
                   </div>
 
@@ -434,7 +443,11 @@ function ViewFile() {
                       {isBookmarked ? (
                         <FileMenuButton
                           icon={
+<<<<<<< HEAD
                             <GoBookmarkSlash className="text-2xl text-yale-blue" />
+=======
+                            <GoBookmarkSlash className="text-3xl text-yale-blue" />
+>>>>>>> f4e31b3 (Add minor ui fixes)
                           }
                           label="Remove Bookmark"
                           onClick={() => handleUnbookmark(paper_id)}
@@ -442,7 +455,11 @@ function ViewFile() {
                       ) : (
                         <FileMenuButton
                           icon={
+<<<<<<< HEAD
                             <GoBookmark className="text-2xl text-yale-blue" />
+=======
+                            <GoBookmark className="text-3xl text-yale-blue" />
+>>>>>>> f4e31b3 (Add minor ui fixes)
                           }
                           label="Add to Bookmark"
                           onClick={() => handleBookmark(paper_id)}

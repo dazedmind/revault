@@ -377,6 +377,28 @@ const handleUpload = async () => {
       className={`min-h-screen ${theme === "light" ? "bg-secondary" : "bg-midnight"}`}
     >
       <AdminNavBar />
+<<<<<<< HEAD
+=======
+      <div className="flex flex-col md:flex-row">
+        <main className="p-8 md:mx-12">
+          <div>
+            <h1 className="font-bold text-3xl mb-6">Upload Research Paper</h1>
+          </div>
+          <div className="flex flex-row">
+            <label
+              htmlFor="uploadFile1"
+              className=" text-slate-500 font-semibold text-base rounded w-full h-42 flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-gold-fg mx-auto hover:border-gold transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-11 mb-3 fill-gray-500"
+                viewBox="0 0 32 32"
+              >
+                <path d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z" />
+                <path d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z" />
+              </svg>
+              <span>Upload file</span>
+>>>>>>> f4e31b3 (Add minor ui fixes)
 
       {/* Hero Section */}
       <div
@@ -838,6 +860,7 @@ const handleUpload = async () => {
                   no clerical mistakes.
                 </span>
               </p>
+<<<<<<< HEAD
             </div>
 
             <button
@@ -848,6 +871,33 @@ const handleUpload = async () => {
                   ? "bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 hover:shadow-lg shadow-gold"
                   : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"
               }`}
+=======
+            </label>
+
+            <button
+              onClick={handleClearFile}
+              className={`ml-4 px-4 py-4 cursor-pointer ${theme == "light" ? "bg-tertiary" : "bg-dusk"} transition-all duration-300 hover:bg-red-warning hover:text-white hover:border-none rounded-md hover:shadow-lg`}
+              disabled={isLoading}
+            >
+              <Trash className="w-6 h-6" />
+            </button>
+          </div>
+          {/* <div className="flex flex-row">
+            <input
+              type="file"
+              className="p-4 w-full md:w-4xl md:p-10 md:px-60 border-2 border-dashed border-gold rounded-md dark:bg-secondary"
+              accept="application/pdf"
+              onChange={extractText}
+              name="file-input"
+              key={ref.current?.value}
+              disabled={isLoading}
+            />
+
+            <button
+              onClick={handleClearFile}
+              className={`ml-4 px-4 py-4 cursor-pointer ${theme == "light" ? "bg-tertiary" : "bg-dusk"} transition-all duration-300 hover:bg-red-warning hover:text-white hover:border-none rounded-md hover:shadow-lg`}
+              disabled={isLoading}
+>>>>>>> f4e31b3 (Add minor ui fixes)
             >
               {isLoading ? (
                 <>
