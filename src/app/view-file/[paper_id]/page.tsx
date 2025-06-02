@@ -9,8 +9,8 @@ import { FaChevronLeft } from "react-icons/fa6";
 import FileMenuButton from "../../component/FileMenuButton";
 import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
-import { useParams } from 'next/navigation';
-import { Link } from "lucide-react"; 
+import { useParams } from "next/navigation";
+import { Link } from "lucide-react";
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
 import useAntiCopy from "../../hooks/useAntiCopy";
@@ -114,7 +114,7 @@ function ViewFile() {
   };
 
   const checkBookmarkStatus = useCallback(async () => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (!token) return;
 
     try {
@@ -231,13 +231,19 @@ function ViewFile() {
       fetchPaper();
     }
   }, [paper_id, router, checkBookmarkStatus]);
-  
+
   if (loading) {
     return <LoadingScreen />;
   }
   return (
     <div className="dark:bg-secondary h-auto">
-      {userType === "LIBRARIAN" || userType === "ASSISTANT" || userType === "ADMIN" ? <AdminNavBar /> : <NavBar />}
+      {userType === "LIBRARIAN" ||
+      userType === "ASSISTANT" ||
+      userType === "ADMIN" ? (
+        <AdminNavBar />
+      ) : (
+        <NavBar />
+      )}
 
       <ProtectedRoute>
         <main className="flex flex-col-reverse md:flex-row h-auto justify-center">
@@ -273,7 +279,8 @@ function ViewFile() {
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <p className="text-lg">
-                      <strong>Title:</strong> {paper.title}
+                      <strong>Title:</strong>
+                      {paper.id} {paper.title}
                     </p>
                   </div>
 
@@ -395,27 +402,29 @@ function ViewFile() {
                   </>
                 )}
 
-                {!viewFromAdmin && userType !== "ADMIN" && userType !== "ASSISTANT" && (
-                  <>
-                    {isBookmarked ? (
-                      <FileMenuButton
-                        icon={
-                          <GoBookmarkSlash className="text-3xl text-yale-blue" />
-                        }
-                        label="Remove Bookmark"
-                        onClick={() => handleUnbookmark(paper_id)}
-                      />
-                    ) : (
-                      <FileMenuButton
-                        icon={
-                          <GoBookmark className="text-3xl text-yale-blue" />
-                        }
-                        label="Add to Bookmark"
-                        onClick={() => handleBookmark(paper_id)}
-                      />
-                    )}
-                  </>
-                )}
+                {!viewFromAdmin &&
+                  userType !== "ADMIN" &&
+                  userType !== "ASSISTANT" && (
+                    <>
+                      {isBookmarked ? (
+                        <FileMenuButton
+                          icon={
+                            <GoBookmarkSlash className="text-3xl text-yale-blue" />
+                          }
+                          label="Remove Bookmark"
+                          onClick={() => handleUnbookmark(paper_id)}
+                        />
+                      ) : (
+                        <FileMenuButton
+                          icon={
+                            <GoBookmark className="text-3xl text-yale-blue" />
+                          }
+                          label="Add to Bookmark"
+                          onClick={() => handleBookmark(paper_id)}
+                        />
+                      )}
+                    </>
+                  )}
               </aside>
 
               <div className="Document ">
