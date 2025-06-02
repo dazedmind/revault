@@ -9,8 +9,17 @@ import { FaChevronLeft } from "react-icons/fa6";
 import FileMenuButton from "../../component/FileMenuButton";
 import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
-import { useParams } from 'next/navigation';
-import { Link, Download, ExternalLink, User, BookOpen, Calendar, Tag, Building2 } from "lucide-react"; 
+import { useParams } from "next/navigation";
+import {
+  Link,
+  Download,
+  ExternalLink,
+  User,
+  BookOpen,
+  Calendar,
+  Tag,
+  Building2,
+} from "lucide-react";
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
 import useAntiCopy from "../../hooks/useAntiCopy";
@@ -115,7 +124,7 @@ function ViewFile() {
   };
 
   const checkBookmarkStatus = useCallback(async () => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (!token) return;
 
     try {
@@ -137,13 +146,13 @@ function ViewFile() {
   // Get the dynamic PDF URL
   const getPdfUrl = () => {
     if (!paper) return null;
-    
+
     // Priority order for PDF URL:
     // 1. paper_url from database
     // 2. file_path from database
     // 3. API endpoint for download
     // 4. Fallback to sample PDF
-    
+
     if (paper.paper_url) {
       return paper.paper_url;
     } else if (paper.file_path) {
@@ -260,7 +269,7 @@ function ViewFile() {
     setPdfError(true);
     toast.error("Failed to load PDF. The file may not be available.");
   };
-  
+
   if (loading) {
     return <LoadingScreen />;
   }
@@ -271,20 +280,25 @@ function ViewFile() {
 
   return (
     <div className="dark:bg-secondary h-auto">
-      {userType === "LIBRARIAN" || userType === "ASSISTANT" || userType === "ADMIN" ? <AdminNavBar /> : <NavBar />}
+      {userType === "LIBRARIAN" ||
+      userType === "ASSISTANT" ||
+      userType === "ADMIN" ? (
+        <AdminNavBar />
+      ) : (
+        <NavBar />
+      )}
 
       <ProtectedRoute>
         <span>
           <p className="flex flex-col text-xl md:text-2xl font-bold bg-gold text-white p-6">
             {paper.title}
-            <span className="flex gap-2 items-center text-sm font-normal text-gold-fg"><User className="w-4 h-4"/>{paper.author}</span>
-            
+            <span className="flex gap-2 items-center text-sm font-normal text-gold-fg">
+              <User className="w-4 h-4" />
+              {paper.author}
+            </span>
           </p>
-
-          
         </span>
         <main className="flex flex-col-reverse md:flex-row h-auto justify-center">
-          
           <div className="flex flex-col md:flex-row gap-6 relative">
             {showMetadata && (
               <div
@@ -317,7 +331,8 @@ function ViewFile() {
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <p className="text-lg">
-                      <strong>Title:</strong> {paper.title}
+                      <strong>Title:</strong>
+                      {paper.id} {paper.title}
                     </p>
                   </div>
 
@@ -439,27 +454,29 @@ function ViewFile() {
                   </>
                 )}
 
-                {!viewFromAdmin && userType !== "ADMIN" && userType !== "ASSISTANT" && (
-                  <>
-                    {isBookmarked ? (
-                      <FileMenuButton
-                        icon={
-                          <GoBookmarkSlash className="text-2xl text-yale-blue" />
-                        }
-                        label="Remove Bookmark"
-                        onClick={() => handleUnbookmark(paper_id)}
-                      />
-                    ) : (
-                      <FileMenuButton
-                        icon={
-                          <GoBookmark className="text-2xl text-yale-blue" />
-                        }
-                        label="Add to Bookmark"
-                        onClick={() => handleBookmark(paper_id)}
-                      />
-                    )}
-                  </>
-                )}
+                {!viewFromAdmin &&
+                  userType !== "ADMIN" &&
+                  userType !== "ASSISTANT" && (
+                    <>
+                      {isBookmarked ? (
+                        <FileMenuButton
+                          icon={
+                            <GoBookmarkSlash className="text-2xl text-yale-blue" />
+                          }
+                          label="Remove Bookmark"
+                          onClick={() => handleUnbookmark(paper_id)}
+                        />
+                      ) : (
+                        <FileMenuButton
+                          icon={
+                            <GoBookmark className="text-2xl text-yale-blue" />
+                          }
+                          label="Add to Bookmark"
+                          onClick={() => handleBookmark(paper_id)}
+                        />
+                      )}
+                    </>
+                  )}
               </aside>
 
               <div className="Document">
@@ -478,13 +495,13 @@ function ViewFile() {
                         <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
                           <Download className="w-8 h-8 text-red-600 dark:text-red-400" />
                         </div>
-                        <h3 className="text-lg font-semibold mb-2">PDF Viewer Not Supported</h3>
+                        <h3 className="text-lg font-semibold mb-2">
+                          PDF Viewer Not Supported
+                        </h3>
                         <p className="text-gray-600 dark:text-gray-400 mb-4">
                           Your browser doesn't support inline PDF viewing.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                 
-                        </div>
+                        <div className="flex flex-col sm:flex-row gap-2 justify-center"></div>
                       </div>
                     </div>
                   </object>
@@ -497,9 +514,12 @@ function ViewFile() {
                           <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
                             <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
                           </div>
-                          <h3 className="text-lg font-semibold mb-2">PDF Not Available</h3>
+                          <h3 className="text-lg font-semibold mb-2">
+                            PDF Not Available
+                          </h3>
                           <p className="text-gray-600 dark:text-gray-400 mb-4">
-                            The PDF file could not be loaded. It may have been moved or deleted.
+                            The PDF file could not be loaded. It may have been
+                            moved or deleted.
                           </p>
                         </>
                       ) : (
@@ -507,7 +527,9 @@ function ViewFile() {
                           <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Download className="w-8 h-8 text-gray-500" />
                           </div>
-                          <h3 className="text-lg font-semibold mb-2">No PDF File Available</h3>
+                          <h3 className="text-lg font-semibold mb-2">
+                            No PDF File Available
+                          </h3>
                           <p className="text-gray-600 dark:text-gray-400 mb-4">
                             This document doesn't have an associated PDF file.
                           </p>
@@ -539,61 +561,56 @@ function ViewFile() {
             </div>
           </div>
 
+          <div className="p-8 pt-2 pb-0 relative">
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 my-4">
+              <Building2 className="w-4 h-4 hidden md:block" />
+              <span className="text-sm">{paper.department}</span>
 
+              <Calendar className="w-4 h-4 hidden md:block" />
+              <span className="text-sm">{paper.year}</span>
 
-        <div className="p-8 pt-2 pb-0 relative">
-             
+              <BookOpen className="w-4 h-4 hidden md:block" />
+              <span className="text-sm">{paper.course}</span>
+            </div>
 
-              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 my-4">
-                <Building2 className="w-4 h-4 hidden md:block" />
-                  <span className="text-sm">{paper.department}</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-sm text-gray-600 dark:text-gray-400">Tags:</p>
+              {Array.isArray(paper.keywords) ? (
+                paper.keywords
+                  .flatMap(
+                    (keyword) =>
+                      keyword
+                        .split(/[,\s]+/) // Split by comma or whitespace
+                        .map((word) => word.trim()) // Trim whitespace
+                        .filter((word) => word.length > 0), // Remove empty strings
+                  )
+                  .map((keyword, keywordIndex) => (
+                    <span
+                      key={keywordIndex}
+                      className={`flex gap-1 items-center px-3 py-1 bg-yale-blue/10 text-yale-blue  rounded-md text-sm`}
+                    >
+                      <Tag className="w-3 h-3" />
+                      {keyword}
+                    </span>
+                  ))
+              ) : (
+                <span className="text-white-25">No keywords available</span>
+              )}
+            </div>
 
-                  <Calendar className="w-4 h-4 hidden md:block" />
-                  <span className="text-sm">{paper.year}</span>
-
-                  <BookOpen className="w-4 h-4 hidden md:block" />
-                  <span className="text-sm">{paper.course}</span>
-              </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm text-gray-600 dark:text-gray-400">Tags:</p>
-            {Array.isArray(paper.keywords) ? (
-              paper.keywords
-                .flatMap(
-                  (keyword) =>
-                    keyword
-                      .split(/[,\s]+/) // Split by comma or whitespace
-                      .map((word) => word.trim()) // Trim whitespace
-                      .filter((word) => word.length > 0), // Remove empty strings
-                )
-                .map((keyword, keywordIndex) => (
-                  <span
-                    key={keywordIndex}
-                    className={`flex gap-1 items-center px-3 py-1 bg-yale-blue/10 text-yale-blue  rounded-md text-sm`}
-                  >
-                    <Tag className="w-3 h-3" />
-                    {keyword}
-                  </span>
-                ))
-            ) : (
-              <span className="text-white-25">No keywords available</span>
-            )}
-          </div>
-
-          <div
-            className={`
+            <div
+              className={`
             [&::-webkit-scrollbar]:w-2
             [&::-webkit-scrollbar-track]:rounded-full
             [&::-webkit-scrollbar-track]:bg-card-foreground
             [&::-webkit-scrollbar-thumb]:rounded-full
             [&::-webkit-scrollbar-thumb]:bg-tertiary
             h-[400px] scrollbar-hide text-sm  border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 text-justify rounded-md mt-6 overflow-y-auto`}
-          >
-            <h1 className="text-xl font-bold mb-2">Abstract</h1>
-            <p className="whitespace-pre-wrap">{paper.abstract}</p>
+            >
+              <h1 className="text-xl font-bold mb-2">Abstract</h1>
+              <p className="whitespace-pre-wrap">{paper.abstract}</p>
+            </div>
           </div>
-        </div>
-         
         </main>
       </ProtectedRoute>
       <Toaster />
