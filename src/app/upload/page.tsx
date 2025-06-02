@@ -66,138 +66,147 @@ const UploadFile = () => {
   }
 
   // Replace your handleUpload function with this:
-const uploadFileInChunks = async (file: File, metadata: any) => {
-  const CHUNK_SIZE = 1024 * 1024 * 2; // 2MB chunks (safe for Vercel)
-  const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-  const uploadId = Date.now().toString();
+  const uploadFileInChunks = async (file: File, metadata: any) => {
+    const CHUNK_SIZE = 1024 * 1024 * 2; // 2MB chunks (safe for Vercel)
+    const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+    const uploadId = Date.now().toString();
 
-  console.log(`📦 Starting chunked upload: ${totalChunks} chunks of ${CHUNK_SIZE} bytes each`);
-  setIsChunkedUpload(true);
-  setUploadProgress(0);
-
-  try {
-    for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-      const start = chunkIndex * CHUNK_SIZE;
-      const end = Math.min(start + CHUNK_SIZE, file.size);
-      const chunk = file.slice(start, end);
-
-      console.log(`📤 Uploading chunk ${chunkIndex + 1}/${totalChunks} (${chunk.size} bytes)`);
-
-      const formData = new FormData();
-      formData.append('chunk', chunk);
-      formData.append('chunkIndex', chunkIndex.toString());
-      formData.append('totalChunks', totalChunks.toString());
-      formData.append('uploadId', uploadId);
-      formData.append('fileName', file.name);
-      
-      // Add metadata only on the last chunk to avoid duplication
-      if (chunkIndex === totalChunks - 1) {
-        Object.keys(metadata).forEach(key => {
-          if (metadata[key] !== null && metadata[key] !== undefined) {
-            formData.append(key, metadata[key]);
-          }
-        });
-      }
-
-      const response = await fetch('/api/upload-chunk', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || `Chunk ${chunkIndex + 1} upload failed`);
-      }
-
-      // Update progress
-      const progress = ((chunkIndex + 1) / totalChunks) * 100;
-      setUploadProgress(progress);
-      console.log(`✅ Chunk ${chunkIndex + 1}/${totalChunks} uploaded (${progress.toFixed(1)}%)`);
-
-      // Small delay to prevent overwhelming the server
-      if (chunkIndex < totalChunks - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    }
-
-    return { success: true, message: "File uploaded successfully!" };
-  } catch (error) {
-    console.error("❌ Chunked upload failed:", error);
-    throw error;
-  } finally {
-    setIsChunkedUpload(false);
+    console.log(
+      `📦 Starting chunked upload: ${totalChunks} chunks of ${CHUNK_SIZE} bytes each`,
+    );
+    setIsChunkedUpload(true);
     setUploadProgress(0);
-  }
-};
 
-const handleUpload = async () => {
-  if (!selectedFile) {
-    toast.error("Please select a PDF file first.");
-    return;
-  }
+    try {
+      for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+        const start = chunkIndex * CHUNK_SIZE;
+        const end = Math.min(start + CHUNK_SIZE, file.size);
+        const chunk = file.slice(start, end);
 
-  // Validate required fields
-  if (!title || !author || !course || !department || !year) {
-    toast.error("Please fill in all required fields.");
-    return;
-  }
+        console.log(
+          `📤 Uploading chunk ${chunkIndex + 1}/${totalChunks} (${chunk.size} bytes)`,
+        );
 
-  try {
-    setIsLoading(true);
-    
-    const metadata = {
-      title,
-      author,
-      abstract: fullText,
-      course,
-      department,
-      year,
-      keywords: JSON.stringify(keywords)
-    };
+        const formData = new FormData();
+        formData.append("chunk", chunk);
+        formData.append("chunkIndex", chunkIndex.toString());
+        formData.append("totalChunks", totalChunks.toString());
+        formData.append("uploadId", uploadId);
+        formData.append("fileName", file.name);
 
-    console.log("📤 Starting upload with metadata:");
-    console.log("File:", selectedFile.name, selectedFile.size, "bytes");
-    console.log("Title:", title);
+        // Add metadata only on the last chunk to avoid duplication
+        if (chunkIndex === totalChunks - 1) {
+          Object.keys(metadata).forEach((key) => {
+            if (metadata[key] !== null && metadata[key] !== undefined) {
+              formData.append(key, metadata[key]);
+            }
+          });
+        }
 
-    // Use chunked upload for files larger than 3MB, regular upload for smaller files
-    if (selectedFile.size > 3 * 1024 * 1024) {
-      console.log("📦 File is large, using chunked upload");
-      await uploadFileInChunks(selectedFile, metadata);
-    } else {
-      console.log("📄 File is small, using regular upload");
-      // Fallback to regular upload for small files
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      Object.keys(metadata).forEach(key => {
-        formData.append(key, metadata[key]);
-      });
+        const response = await fetch("/api/upload-chunk", {
+          method: "POST",
+          body: formData,
+        });
 
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
+        const result = await response.json();
 
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message || "Upload failed");
+        if (!response.ok) {
+          throw new Error(
+            result.message || `Chunk ${chunkIndex + 1} upload failed`,
+          );
+        }
+
+        // Update progress
+        const progress = ((chunkIndex + 1) / totalChunks) * 100;
+        setUploadProgress(progress);
+        console.log(
+          `✅ Chunk ${chunkIndex + 1}/${totalChunks} uploaded (${progress.toFixed(1)}%)`,
+        );
+
+        // Small delay to prevent overwhelming the server
+        if (chunkIndex < totalChunks - 1) {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
       }
+
+      return { success: true, message: "File uploaded successfully!" };
+    } catch (error) {
+      console.error("❌ Chunked upload failed:", error);
+      throw error;
+    } finally {
+      setIsChunkedUpload(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.error("Please select a PDF file first.");
+      return;
     }
 
-    toast.success("Upload successful!");
-    handleClearFile();
-
-  } catch (error: any) {
-    console.error("Upload error:", error);
-    if (error.message?.includes("P2002")) {
-      toast.error("A paper with this title already exists. Please use a different title.");
-    } else {
-      toast.error(error.message || "Upload failed. Please try again.");
+    // Validate required fields
+    if (!title || !author || !course || !department || !year) {
+      toast.error("Please fill in all required fields.");
+      return;
     }
-  } finally {
-    setIsLoading(false);
-  }
-};
+
+    try {
+      setIsLoading(true);
+
+      const metadata = {
+        title,
+        author,
+        abstract: fullText,
+        course,
+        department,
+        year,
+        keywords: JSON.stringify(keywords),
+      };
+
+      console.log("📤 Starting upload with metadata:");
+      console.log("File:", selectedFile.name, selectedFile.size, "bytes");
+      console.log("Title:", title);
+
+      // Use chunked upload for files larger than 3MB, regular upload for smaller files
+      if (selectedFile.size > 3 * 1024 * 1024) {
+        console.log("📦 File is large, using chunked upload");
+        await uploadFileInChunks(selectedFile, metadata);
+      } else {
+        console.log("📄 File is small, using regular upload");
+        // Fallback to regular upload for small files
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        Object.keys(metadata).forEach((key) => {
+          formData.append(key, metadata[key]);
+        });
+
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message || "Upload failed");
+        }
+      }
+
+      toast.success("Upload successful!");
+      handleClearFile();
+    } catch (error: any) {
+      console.error("Upload error:", error);
+      if (error.message?.includes("P2002")) {
+        toast.error(
+          "A paper with this title already exists. Please use a different title.",
+        );
+      } else {
+        toast.error(error.message || "Upload failed. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const startProgressAnimation = () => {
     setProgress(0);
@@ -377,28 +386,6 @@ const handleUpload = async () => {
       className={`min-h-screen ${theme === "light" ? "bg-secondary" : "bg-midnight"}`}
     >
       <AdminNavBar />
-<<<<<<< HEAD
-=======
-      <div className="flex flex-col md:flex-row">
-        <main className="p-8 md:mx-12">
-          <div>
-            <h1 className="font-bold text-3xl mb-6">Upload Research Paper</h1>
-          </div>
-          <div className="flex flex-row">
-            <label
-              htmlFor="uploadFile1"
-              className=" text-slate-500 font-semibold text-base rounded w-full h-42 flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-gold-fg mx-auto hover:border-gold transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-11 mb-3 fill-gray-500"
-                viewBox="0 0 32 32"
-              >
-                <path d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z" />
-                <path d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z" />
-              </svg>
-              <span>Upload file</span>
->>>>>>> f4e31b3 (Add minor ui fixes)
 
       {/* Hero Section */}
       <div
@@ -518,19 +505,18 @@ const handleUpload = async () => {
                   <div className="flex items-center gap-3">
                     <div className="animate-spin w-5 h-5 border-2 border-gold border-t-transparent rounded-full"></div>
                     <span className="text-sm font-medium text-gold">
-                      {isChunkedUpload 
+                      {isChunkedUpload
                         ? `Uploading chunks... ${uploadProgress.toFixed(1)}%`
                         : progress < 100
-                        ? "Extracting text from PDF..."
-                        : "Processing complete!"
-                      }
+                          ? "Extracting text from PDF..."
+                          : "Processing complete!"}
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                     <div
                       className="bg-gradient-to-r from-gold to-gold-fg h-full rounded-full transition-all duration-300 ease-out"
-                      style={{ 
-                        width: `${isChunkedUpload ? uploadProgress : progress}%` 
+                      style={{
+                        width: `${isChunkedUpload ? uploadProgress : progress}%`,
                       }}
                     />
                   </div>
@@ -860,7 +846,6 @@ const handleUpload = async () => {
                   no clerical mistakes.
                 </span>
               </p>
-<<<<<<< HEAD
             </div>
 
             <button
@@ -871,33 +856,6 @@ const handleUpload = async () => {
                   ? "bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 hover:shadow-lg shadow-gold"
                   : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"
               }`}
-=======
-            </label>
-
-            <button
-              onClick={handleClearFile}
-              className={`ml-4 px-4 py-4 cursor-pointer ${theme == "light" ? "bg-tertiary" : "bg-dusk"} transition-all duration-300 hover:bg-red-warning hover:text-white hover:border-none rounded-md hover:shadow-lg`}
-              disabled={isLoading}
-            >
-              <Trash className="w-6 h-6" />
-            </button>
-          </div>
-          {/* <div className="flex flex-row">
-            <input
-              type="file"
-              className="p-4 w-full md:w-4xl md:p-10 md:px-60 border-2 border-dashed border-gold rounded-md dark:bg-secondary"
-              accept="application/pdf"
-              onChange={extractText}
-              name="file-input"
-              key={ref.current?.value}
-              disabled={isLoading}
-            />
-
-            <button
-              onClick={handleClearFile}
-              className={`ml-4 px-4 py-4 cursor-pointer ${theme == "light" ? "bg-tertiary" : "bg-dusk"} transition-all duration-300 hover:bg-red-warning hover:text-white hover:border-none rounded-md hover:shadow-lg`}
-              disabled={isLoading}
->>>>>>> f4e31b3 (Add minor ui fixes)
             >
               {isLoading ? (
                 <>
