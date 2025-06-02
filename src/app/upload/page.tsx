@@ -149,65 +149,82 @@ const UploadFile = () => {
   async function extractText(event) {
     const file = event.target.files[0];
     if (!file || file.type !== "application/pdf") return;
-  
+
     // Store the file for later upload
     setSelectedFile(file);
     setPdfUrl(URL.createObjectURL(file));
-  
+
     try {
       setIsLoading(true);
       startProgressAnimation();
-      
-      console.log('📄 Processing file:', file.name, 'Size:', file.size, 'bytes');
-      
+
+      console.log(
+        "📄 Processing file:",
+        file.name,
+        "Size:",
+        file.size,
+        "bytes",
+      );
+
       const rawText = await pdfToText(file);
-      console.log('📊 Extracted text length:', rawText.length, 'characters');
-  
+      console.log("📊 Extracted text length:", rawText.length, "characters");
+
       // Check if the file might be too large for processing
       if (rawText.length > 100000) {
-        console.log('⚠️ Large document detected, may take longer to process...');
+        console.log(
+          "⚠️ Large document detected, may take longer to process...",
+        );
         toast.info("Large document detected. Processing may take a moment...", {
-          duration: 3000
+          duration: 3000,
         });
       }
-  
+
       const firstPageEnd = rawText.toLowerCase().indexOf("table of contents");
       const firstPageText =
         firstPageEnd !== -1 ? rawText.substring(0, firstPageEnd) : rawText;
-  
+
       const sanitized = firstPageText.replace(/\s+/g, " ").trim();
-  
-      console.log('🚀 Sending to extraction API...');
+
+      console.log("🚀 Sending to extraction API...");
       const response = await fetch("/api/extract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: sanitized, rawText }),
       });
-  
+
       const result = await response.json();
       console.log("📨 API Response status:", response.status);
-  
+
       if (!response.ok) {
-        console.error('❌ API Error:', result);
-        
-        if (result.code === 'DOCUMENT_TOO_LARGE') {
-          toast.error("Document is too large for automatic processing. Please try with a smaller file or fill in the details manually.", {
-            duration: 6000
-          });
+        console.error("❌ API Error:", result);
+
+        if (result.code === "DOCUMENT_TOO_LARGE") {
+          toast.error(
+            "Document is too large for automatic processing. Please try with a smaller file or fill in the details manually.",
+            {
+              duration: 6000,
+            },
+          );
           return; // Don't clear the form, let user fill manually
-        } else if (result.code === 413){
-          toast.error("File too large! Please select a smaller file (max 50MB)");
+        } else if (result.code === 413) {
+          toast.error(
+            "File too large! Please select a smaller file (max 50MB)",
+          );
         } else {
-          toast.error(result.error || "Failed to extract document information. You can fill in the details manually.", {
-            duration: 4000
-          });
+          toast.error(
+            result.error ||
+              "Failed to extract document information. You can fill in the details manually.",
+            {
+              duration: 4000,
+            },
+          );
           return; // Don't clear the form
         }
       }
-  
+
       console.log("✅ Extraction successful:", result);
       setKeywords(result.tfidfKeywords ?? []);
-  
+
       if (result) {
         setTitle(result.extractedTitle ?? "");
         setAuthor(result.extractedAuthor ?? "");
@@ -215,16 +232,19 @@ const UploadFile = () => {
         setCourse(result.extractedCourse ?? "");
         setDepartment(result.extractedDepartment ?? "");
         setYear(result.extractedYear ?? "");
-        
+
         toast.success("Document information extracted successfully!", {
-          duration: 3000
+          duration: 3000,
         });
       }
     } catch (error) {
       console.error("❌ Error extracting text:", error);
-      toast.error("Failed to process document. You can fill in the details manually.", {
-        duration: 4000
-      });
+      toast.error(
+        "Failed to process document. You can fill in the details manually.",
+        {
+          duration: 4000,
+        },
+      );
     } finally {
       setIsLoading(false);
       setProgress(100);
@@ -353,7 +373,8 @@ const UploadFile = () => {
                             PDF Uploaded Successfully
                           </p>
                           <p className="text-sm text-green-600 dark:text-green-500">
-                            {selectedFile && `${selectedFile.name} (${(selectedFile.size / 1024 / 1024).toFixed(1)} MB)`}
+                            {selectedFile &&
+                              `${selectedFile.name} (${(selectedFile.size / 1024 / 1024).toFixed(1)} MB)`}
                           </p>
                           <p className="text-xs text-green-600 dark:text-green-500">
                             Ready for processing
@@ -376,7 +397,8 @@ const UploadFile = () => {
                           </p>
                         </div>
                         <div className="text-xs text-gray-400 dark:text-gray-500">
-                          PDF only • Max 30MB • Larger files may take longer to process
+                          PDF only • Max 30MB • Larger files may take longer to
+                          process
                         </div>
                       </div>
                     )}
@@ -586,16 +608,16 @@ const UploadFile = () => {
                             <SelectItem className="p-3" value="SIA">
                               SIA
                             </SelectItem>
-                            <SelectItem className="p-3" value="Capstone Project">
+                            <SelectItem
+                              className="p-3"
+                              value="Capstone Project"
+                            >
                               Capstone Project
                             </SelectItem>
                             <SelectItem className="p-3" value="Compiler Design">
                               Compiler Design
                             </SelectItem>
-                            <SelectItem
-                              className="p-3"
-                              value="Thesis Writing"
-                            >
+                            <SelectItem className="p-3" value="Thesis Writing">
                               Thesis Writing
                             </SelectItem>
                           </SelectGroup>
@@ -732,7 +754,8 @@ const UploadFile = () => {
                 className="mt-1 md:mt-0 w-4 h-4 text-gold focus:ring-gold border-white-5 rounded"
               />
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                I ensure the accuracy of the information above and that it contains 
+                I ensure the accuracy of the information above and that it
+                contains
                 <span className="ml-1 text-gold font-medium ">
                   no clerical mistakes.
                 </span>
