@@ -29,7 +29,7 @@ const ManageUserSettings = () => {
       lastName: "Dela Cruz",
       extension: "Jr.",
       employeeId: "1023456",
-      userAccess: "Librarian"
+      userAccess: "Librarian",
     },
     {
       id: 2,
@@ -42,7 +42,7 @@ const ManageUserSettings = () => {
       lastName: "Santos",
       extension: "",
       employeeId: "1023456",
-      userAccess: "Librarian"
+      userAccess: "Librarian",
     },
     {
       id: 3,
@@ -55,7 +55,7 @@ const ManageUserSettings = () => {
       lastName: "Burgos",
       extension: "",
       employeeId: "1023456",
-      userAccess: "Librarian"
+      userAccess: "Librarian",
     },
     {
       id: 4,
@@ -68,8 +68,8 @@ const ManageUserSettings = () => {
       lastName: "Bonifacio",
       extension: "",
       employeeId: "1023456",
-      userAccess: "Admin"
-    }
+      userAccess: "Admin",
+    },
   ]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
@@ -90,11 +90,11 @@ const ManageUserSettings = () => {
     employeeId: "",
     email: "",
     userAccess: "Librarian",
-    status: "Active"
+    status: "Active",
   });
   const [newUserPasswords, setNewUserPasswords] = useState({
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [newUserPasswordError, setNewUserPasswordError] = useState("");
 
@@ -114,7 +114,7 @@ const ManageUserSettings = () => {
 
   const confirmDelete = () => {
     if (userToDelete) {
-      setUsers(users.filter(user => user.id !== userToDelete));
+      setUsers(users.filter((user) => user.id !== userToDelete));
     }
     setShowDeleteModal(false);
     setUserToDelete(null);
@@ -129,7 +129,7 @@ const ManageUserSettings = () => {
     const { name, value } = e.target;
     setCurrentUser({
       ...currentUser,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -137,7 +137,7 @@ const ManageUserSettings = () => {
     const { name, value } = e.target;
     setPasswords({
       ...passwords,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -153,14 +153,14 @@ const ManageUserSettings = () => {
       }
     }
 
-    const updatedUsers = users.map(user => {
+    const updatedUsers = users.map((user) => {
       if (user.id === currentUser.id) {
-        const updatedName = `${currentUser.fullName} ${currentUser.lastName}${currentUser.extension ? ' ' + currentUser.extension : ''}`;
-        
+        const updatedName = `${currentUser.fullName} ${currentUser.lastName}${currentUser.extension ? " " + currentUser.extension : ""}`;
+
         return {
           ...currentUser,
           name: updatedName,
-          role: currentUser.userAccess
+          role: currentUser.userAccess,
         };
       }
       return user;
@@ -188,11 +188,11 @@ const ManageUserSettings = () => {
       employeeId: "",
       email: "",
       userAccess: "Librarian",
-      status: "Active"
+      status: "Active",
     });
     setNewUserPasswords({
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
     });
     setNewUserPasswordError("");
   };
@@ -201,7 +201,7 @@ const ManageUserSettings = () => {
     const { name, value } = e.target;
     setNewUser({
       ...newUser,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -209,13 +209,18 @@ const ManageUserSettings = () => {
     const { name, value } = e.target;
     setNewUserPasswords({
       ...newUserPasswords,
-      [name]: value
+      [name]: value,
     });
   };
 
   const handleAddUser = () => {
     // Validate required fields
-    if (!newUser.fullName || !newUser.lastName || !newUser.email || !newUser.employeeId) {
+    if (
+      !newUser.fullName ||
+      !newUser.lastName ||
+      !newUser.email ||
+      !newUser.employeeId
+    ) {
       setNewUserPasswordError("Please fill in all required fields");
       return;
     }
@@ -237,11 +242,11 @@ const ManageUserSettings = () => {
     }
 
     // Create new user name from form fields
-    const name = `${newUser.fullName} ${newUser.lastName}${newUser.extension ? ' ' + newUser.extension : ''}`;
-    
+    const name = `${newUser.fullName} ${newUser.lastName}${newUser.extension ? " " + newUser.extension : ""}`;
+
     // Generate a new unique ID (simple implementation)
-    const newId = Math.max(...users.map(user => user.id)) + 1;
-    
+    const newId = Math.max(...users.map((user) => user.id)) + 1;
+
     // Add new user to the users array
     const userToAdd = {
       id: newId,
@@ -254,9 +259,9 @@ const ManageUserSettings = () => {
       lastName: newUser.lastName,
       extension: newUser.extension,
       employeeId: newUser.employeeId,
-      userAccess: newUser.userAccess
+      userAccess: newUser.userAccess,
     };
-    
+
     setUsers([...users, userToAdd]);
     setShowAddModal(false);
     resetNewUserForm();
@@ -265,26 +270,31 @@ const ManageUserSettings = () => {
   if (!mounted) return null;
 
   return (
-    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 rounded-xl border-1 border-white-5`}>
-      
+    <div
+      className={`flex flex-col w-auto ${theme === "light" ? "bg-secondary border-white-50" : "bg-midnight"} p-6 rounded-xl border-1 border-white-5`}
+    >
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-          <div className={`p-6 rounded-lg ${theme === 'light' ? 'bg-white' : 'bg-dusk'} w-96 shadow-xl border ${theme === 'light' ? 'border-gray-200' : 'border-gray-700'} pointer-events-auto`}>
+          <div
+            className={`p-6 rounded-lg ${theme === "light" ? "bg-white" : "bg-dusk"} w-96 shadow-xl border ${theme === "light" ? "border-gray-200" : "border-gray-700"} pointer-events-auto`}
+          >
             <div className="text-center mb-6">
-              <h2 className="text-xl font-semibold">Are you sure you want to delete this user?</h2>
+              <h2 className="text-xl font-semibold">
+                Are you sure you want to delete this user?
+              </h2>
             </div>
             <div className="text-center mb-6 text-sm text-gray-500">
               This action cannot be undone
             </div>
             <div className="flex justify-center gap-4">
-              <button 
+              <button
                 onClick={cancelDelete}
                 className="px-4 py-2 rounded-md border border-gray-300 hover:bg-opacity-10 hover:bg-gray-600 transition-colors"
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={confirmDelete}
                 className="px-4 py-2 rounded-md bg-red-warning text-white hover:bg-red-700 transition-colors"
               >
@@ -298,13 +308,19 @@ const ManageUserSettings = () => {
       {/* Edit User Modal */}
       {showEditModal && currentUser && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className={`p-6 rounded-lg bg-dusk w-full max-w-md relative z-10`}>
+          <div
+            className={`p-6 rounded-lg bg-dusk w-full max-w-md relative z-10`}
+          >
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-medium mb-4 text-gold">Personal Information</h3>
+                <h3 className="text-lg font-medium mb-4 text-gold">
+                  Personal Information
+                </h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Full Name</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Full Name
+                    </label>
                     <input
                       type="text"
                       name="fullName"
@@ -314,7 +330,9 @@ const ManageUserSettings = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Middle Name</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Middle Name
+                    </label>
                     <input
                       type="text"
                       name="middleName"
@@ -326,7 +344,9 @@ const ManageUserSettings = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Last Name</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Last Name
+                    </label>
                     <input
                       type="text"
                       name="lastName"
@@ -336,7 +356,9 @@ const ManageUserSettings = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Ext. (e.g. III, Sr.)</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Ext. (e.g. III, Sr.)
+                    </label>
                     <input
                       type="text"
                       name="extension"
@@ -348,12 +370,16 @@ const ManageUserSettings = () => {
                 </div>
               </div>
 
-             {/* Employee Information Section */}
+              {/* Employee Information Section */}
               <div>
-                <h3 className="text-lg font-medium mb-4 text-gold">Employee Information</h3>
+                <h3 className="text-lg font-medium mb-4 text-gold">
+                  Employee Information
+                </h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Employee ID</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Employee ID
+                    </label>
                     <input
                       type="text"
                       name="employeeId"
@@ -363,7 +389,9 @@ const ManageUserSettings = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">User Access</label>
+                    <label className="block text-sm font-medium mb-2">
+                      User Access
+                    </label>
                     <div className="relative">
                       <select
                         name="userAccess"
@@ -371,12 +399,17 @@ const ManageUserSettings = () => {
                         onChange={handleInputChange}
                         className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px] pr-8 appearance-none"
                       >
-                        <option>Librarian</option>
+                        <option>Librarian-in-charge</option>
+                        <option>Admin Assistant</option>
                         <option>Admin</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                        <svg
+                          className="fill-current h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                         </svg>
                       </div>
                     </div>
@@ -384,7 +417,9 @@ const ManageUserSettings = () => {
                 </div>
                 {/* Moved Email Address Here */}
                 <div>
-                  <label className="block text-sm font-medium mb-2">Email Address</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -398,7 +433,9 @@ const ManageUserSettings = () => {
               <div>
                 <h3 className="text-lg font-medium mb-4 text-gold">Password</h3>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">Create Password</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Create Password
+                  </label>
                   <input
                     type="password"
                     name="newPassword"
@@ -409,7 +446,9 @@ const ManageUserSettings = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Confirm Password</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Confirm Password
+                  </label>
                   <input
                     type="password"
                     name="confirmPassword"
@@ -446,13 +485,19 @@ const ManageUserSettings = () => {
       {/* Add Librarian Modal - Modified to match the Edit Modal style */}
       {showAddModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className={`p-6 rounded-lg bg-dusk w-full max-w-md relative z-10`}>
+          <div
+            className={`p-6 rounded-lg bg-dusk w-full max-w-md relative z-10`}
+          >
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-medium mb-4 text-gold">Personal Information</h3>
+                <h3 className="text-lg font-medium mb-4 text-gold">
+                  Personal Information
+                </h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">First Name *</label>
+                    <label className="block text-sm font-medium mb-2">
+                      First Name *
+                    </label>
                     <input
                       type="text"
                       name="fullName"
@@ -462,7 +507,9 @@ const ManageUserSettings = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Middle Name</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Middle Name
+                    </label>
                     <input
                       type="text"
                       name="middleName"
@@ -474,7 +521,9 @@ const ManageUserSettings = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Last Name *</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Last Name *
+                    </label>
                     <input
                       type="text"
                       name="lastName"
@@ -484,7 +533,9 @@ const ManageUserSettings = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Ext. (e.g. III, Sr.)</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Ext. (e.g. III, Sr.)
+                    </label>
                     <input
                       type="text"
                       name="extension"
@@ -498,10 +549,14 @@ const ManageUserSettings = () => {
 
               {/* Employee Information Section */}
               <div>
-                <h3 className="text-lg font-medium mb-4 text-gold">Employee Information</h3>
+                <h3 className="text-lg font-medium mb-4 text-gold">
+                  Employee Information
+                </h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Employee ID *</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Employee ID *
+                    </label>
                     <input
                       type="text"
                       name="employeeId"
@@ -511,7 +566,9 @@ const ManageUserSettings = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">User Access</label>
+                    <label className="block text-sm font-medium mb-2">
+                      User Access
+                    </label>
                     <div className="relative">
                       <select
                         name="userAccess"
@@ -519,19 +576,26 @@ const ManageUserSettings = () => {
                         onChange={handleNewUserInputChange}
                         className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px] pr-8 appearance-none"
                       >
-                        <option>Librarian</option>
+                        <option>Librarian-in-Charge</option>
+                        <option>Admin Assistant</option>
                         <option>Admin</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                        <svg
+                          className="fill-current h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                         </svg>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Email Address *</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Email Address *
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -545,7 +609,9 @@ const ManageUserSettings = () => {
               <div>
                 <h3 className="text-lg font-medium mb-4 text-gold">Password</h3>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">Create Password *</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Create Password *
+                  </label>
                   <input
                     type="password"
                     name="password"
@@ -556,7 +622,9 @@ const ManageUserSettings = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Confirm Password *</label>
+                  <label className="block text-sm font-medium mb-2">
+                    Confirm Password *
+                  </label>
                   <input
                     type="password"
                     name="confirmPassword"
@@ -567,7 +635,9 @@ const ManageUserSettings = () => {
                   />
                 </div>
                 {newUserPasswordError && (
-                  <p className="text-red-500 text-sm mt-2">{newUserPasswordError}</p>
+                  <p className="text-red-500 text-sm mt-2">
+                    {newUserPasswordError}
+                  </p>
                 )}
               </div>
 
@@ -592,15 +662,18 @@ const ManageUserSettings = () => {
 
       <div className="flex justify-between w-auto">
         <h1 className="text-2xl ml-1">Manage Users</h1>
-        <button 
+        <button
           onClick={handleAddLibrarian}
-          className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+          className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer"
+        >
           <span className="hidden md:block text-sm">Create New</span>
           <Plus className="block md:hidden" />
         </button>
       </div>
 
-      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
+      <div
+        className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-dusk"}`}
+      ></div>
 
       <Table>
         <TableHeader>
@@ -627,25 +700,35 @@ const ManageUserSettings = () => {
                   />
                 </div>
               </TableCell>
-              <TableCell className="py-3 align-middle">{userData.name}</TableCell>
-              <TableCell className="py-3 align-middle">{userData.email}</TableCell>
-              <TableCell className="py-3 align-middle">{userData.role}</TableCell>
               <TableCell className="py-3 align-middle">
-                <span className={`px-2 py-1 rounded-full text-xs ${
-                  userData.status === "Active" ? "bg-green-500/20 text-green-500" : "bg-red-500/20 text-red-500"
-                }`}>
+                {userData.name}
+              </TableCell>
+              <TableCell className="py-3 align-middle">
+                {userData.email}
+              </TableCell>
+              <TableCell className="py-3 align-middle">
+                {userData.role}
+              </TableCell>
+              <TableCell className="py-3 align-middle">
+                <span
+                  className={`px-2 py-1 rounded-full text-xs ${
+                    userData.status === "Active"
+                      ? "bg-green-500/20 text-green-500"
+                      : "bg-red-500/20 text-red-500"
+                  }`}
+                >
                   {userData.status}
                 </span>
               </TableCell>
               <TableCell className="py-3 align-middle">
                 <div className="flex gap-2 justify-center">
-                  <button 
+                  <button
                     onClick={() => handleDeleteClick(userData.id)}
                     className="cursor-pointer bg-red-warning text-white p-2 rounded-md hover:bg-red-700"
                   >
                     <FaTrash />
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleEditClick(userData)}
                     className="cursor-pointer bg-dusk text-white p-2 rounded-md hover:bg-blue-700"
                   >

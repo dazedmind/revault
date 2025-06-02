@@ -1,8 +1,24 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { Table,TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import InputField from "@/app/component/InputField";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 interface Activity {
   name: string;
   activity: string;
@@ -34,25 +50,65 @@ const ActivityLogSettings = () => {
 
   return (
     <div
-      className={`flex flex-col w-auto ${
-        theme === "light" ? "bg-secondary border-white-50" : "bg-midnight"
-      } p-6 mb-8 rounded-xl border-1 border-white-5`}
+      className=" flex flex-col w-auto p-6 mb-8 rounded-xl border-1 border-white-5" // className={`flex flex-col w-auto ${
+      //   theme === "light" ? "bg-secondary border-white-50" : "bg-midnight"
+      // } p-6 mb-8 rounded-xl border-1 border-white-5`}
     >
       <h1 className="text-2xl ml-1">Activity Logs</h1>
 
       <div
-        className={`h-0.5 w-auto my-4 ${
-          theme === "light" ? "bg-white-50" : "bg-dusk"
-        }`}
+        className="h-0.5 w-auto my-4 "
+        // className={`h-0.5 w-auto my-4 ${
+        //   theme === "light" ? "bg-white-50" : "bg-dusk"
+        // }`}
       ></div>
+      <div className="flex flex-row items-end space-x-8 mb-6 overflow-visible">
+        {/* Username Filter */}
+        <div className="flex flex-col">
+          <Label className="text-sm  mb-1">User name</Label>
+          <Select>
+            <SelectTrigger className="w-64 dark:bg-primary">
+              <SelectValue placeholder="Choose a team member" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {/* …map your real user list here… */}
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="alice">Alice</SelectItem>
+                <SelectItem value="bob">Bob</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Event Type Filter */}
+        <div className="flex flex-col">
+          <Label className="text-sm  mb-1">Event type</Label>
+          <Select>
+            <SelectTrigger className="w-48 dark:bg-primary">
+              <SelectValue placeholder="All" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="login">Login</SelectItem>
+                <SelectItem value="update">Update</SelectItem>
+                <SelectItem value="logout">Logout</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
       <Table>
-        <TableHeader className={`${theme === "light" ? "bg-white-50" : "bg-dusk"} rounded-md`}>
+        <TableHeader
+          className={`${theme === "light" ? "bg-white-50" : "bg-dusk"} rounded-md`}
+        >
           <TableRow>
             <TableCell className="w-50">Date & Time</TableCell>
             <TableCell>User</TableCell>
             <TableCell>Action</TableCell>
-            <TableCell>Activity Type</TableCell>
+            <TableCell>Event</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>IP Address</TableCell>
           </TableRow>
@@ -78,7 +134,7 @@ const ActivityLogSettings = () => {
           ))}
         </TableBody>
       </Table>
-      
+
       {/* {logs.length > 0 ? (
         logs.map((log, index) => (
           <ActivityLog
