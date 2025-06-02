@@ -58,7 +58,7 @@ const UploadFile = () => {
         year,
         keywords,
       };
-  
+
       const response = await fetch("/api/upload", {
         method: "POST",
         headers: {
@@ -66,15 +66,17 @@ const UploadFile = () => {
         },
         body: JSON.stringify(payload),
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
         toast.success("Upload successful!");
         handleClearFile();
       } else {
-        if (result.code === 'P2002') {
-          toast.error("A paper with this title already exists. Please use a different title.");
+        if (result.code === "P2002") {
+          toast.error(
+            "A paper with this title already exists. Please use a different title.",
+          );
         } else {
           toast.error(result.message || "Upload failed. Please try again.");
         }
@@ -84,7 +86,6 @@ const UploadFile = () => {
       toast.error("An unexpected error occurred. Please try again.");
     }
   };
-
 
   // Add progress animation function
   const startProgressAnimation = () => {
@@ -107,7 +108,6 @@ const UploadFile = () => {
   };
 
   const [pdfUrl, setPdfUrl] = useState("");
-
 
   async function extractText(event) {
     const file = event.target.files[0];
@@ -239,8 +239,6 @@ const UploadFile = () => {
             >
               <Trash className="w-6 h-6" />
             </button>
-
-    
           </div>
           <label htmlFor="file-input" className="text-sm text-white-50">
             File type: .pdf and .tiff only (Maximum file size: 15MB)
@@ -270,7 +268,11 @@ const UploadFile = () => {
                     Research Title:
                   </h3>
                   <button
-                    onClick={() => isEditingTitle ? handleSaveTitle() : setIsEditingTitle(true)}
+                    onClick={() =>
+                      isEditingTitle
+                        ? handleSaveTitle()
+                        : setIsEditingTitle(true)
+                    }
                     className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
                   >
                     {isEditingTitle ? "Save" : "Edit"}
@@ -293,7 +295,11 @@ const UploadFile = () => {
               <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
                 <h3 className="text-md font-medium text-gold">Authors:</h3>
                 <button
-                  onClick={() => isEditingAuthors ? handleSaveAuthors() : setIsEditingAuthors(true)}
+                  onClick={() =>
+                    isEditingAuthors
+                      ? handleSaveAuthors()
+                      : setIsEditingAuthors(true)
+                  }
                   className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
                 >
                   {isEditingAuthors ? "Save" : "Edit"}
@@ -326,42 +332,44 @@ const UploadFile = () => {
               </div>
             </span>
 
-
             <div className="flex flex-col md:flex-row gap-4">
-            <span className="flex flex-col gap-2">
-              <div className="flex flex-col flex-grow">
-                <Label className="text-md font-medium text-gold mb-2 dark:bg-secondary">
-                  Department:
-                </Label>
-                <Select
-                  name="department"
-                  value={department}
-                  onValueChange={setDepartment}
-                >
-                  <SelectTrigger className="w-full md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
-                    <SelectValue placeholder="Select paper department " />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem className="p-4" value="Computer Science">
-                        Computer Science
-                      </SelectItem>
-                      <SelectItem className="p-4" value="Information Technology">
-                        Information Technology
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            </span>
+              <span className="flex flex-col gap-2">
+                <div className="flex flex-col flex-grow">
+                  <Label className="text-md font-medium text-gold mb-2 dark:bg-secondary">
+                    Department:
+                  </Label>
+                  <Select
+                    name="department"
+                    value={department}
+                    onValueChange={setDepartment}
+                  >
+                    <SelectTrigger className="w-full md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
+                      <SelectValue placeholder="Select paper department " />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem className="p-4" value="Computer Science">
+                          Computer Science
+                        </SelectItem>
+                        <SelectItem
+                          className="p-4"
+                          value="Information Technology"
+                        >
+                          Information Technology
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </span>
               <span className="flex flex-col gap-2">
                 <div className="flex flex-col flex-grow">
                   <Label className="text-md font-medium text-gold mb-2">
                     Course:
                   </Label>
-                  <Select 
-                    name="course" 
-                    value={course} 
+                  <Select
+                    name="course"
+                    value={course}
                     onValueChange={setCourse}
                   >
                     <SelectTrigger className="w-auto md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
@@ -393,7 +401,9 @@ const UploadFile = () => {
                   type="text"
                   className="p-4 bg-midnight border border-white-5 rounded-md w-auto md:w-xxs outline-0 dark:bg-secondary"
                   defaultValue={year}
-                  onChange={(e)=>{setYear(e.target.value)}}
+                  onChange={(e) => {
+                    setYear(e.target.value);
+                  }}
                 />
               </span>
             </div>
@@ -402,7 +412,11 @@ const UploadFile = () => {
               <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
                 <h3 className="text-md font-medium text-gold">Abstract:</h3>
                 <button
-                  onClick={() => isEditingAbstract ? handleSaveAbstract() : setIsEditingAbstract(true)}
+                  onClick={() =>
+                    isEditingAbstract
+                      ? handleSaveAbstract()
+                      : setIsEditingAbstract(true)
+                  }
                   className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
                 >
                   {isEditingAbstract ? "Save" : "Edit"}
@@ -424,22 +438,22 @@ const UploadFile = () => {
         </main>
 
         {pdfUrl && (
-              <div className="flex flex-col mx-12 m-10 md:mx-0 md:mt-10">
-                <h3 className="text-md font-medium text-gold mb-2">PDF Preview:</h3>
-                <iframe
-                  src={`${pdfUrl}#toolbar=0`}
-                  title="PDF Preview"
-                  className="w-xs h-dvh border rounded-md"
-                ></iframe>
-              </div>
-            )}
+          <div className="flex flex-col mx-12 m-10 md:mx-0 md:mt-10">
+            <h3 className="text-md font-medium text-gold mb-2">PDF Preview:</h3>
+            <iframe
+              src={`${pdfUrl}#toolbar=0`}
+              title="PDF Preview"
+              className="w-xs h-dvh border rounded-md"
+            ></iframe>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-center bg-darker p-7 md:p-12 md:px-24 border-t-2 border-dashed border-white-5 dark:bg-primary">
         <span className="w-full flex flex-col justify-start items-start align-start gap-2">
           <div className="flex flex-row my-4">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={isTermsAccepted}
               onChange={(e) => setIsTermsAccepted(e.target.checked)}
             />
@@ -452,10 +466,19 @@ const UploadFile = () => {
         </span>
 
         <span className="w-full md:w-auto">
-          <button 
+          <button
             onClick={handleUpload}
-            disabled={isLoading || !title || !author || !course || !department || !year || !isTermsAccepted}
-            className="w-full md:w-auto text-center text-lg justify-center align-middle items-center bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br p-2 px-8 font-sans flex gap-2 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 ease-out">
+            disabled={
+              isLoading ||
+              !title ||
+              !author ||
+              !course ||
+              !department ||
+              !year ||
+              !isTermsAccepted
+            }
+            className="w-full md:w-auto text-center text-lg justify-center align-middle items-center bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br p-2 px-8 font-sans flex gap-2 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 ease-out"
+          >
             Upload
           </button>
         </span>
