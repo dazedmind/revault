@@ -32,6 +32,7 @@ export async function GET(req: Request) {
           users: {
             ...user.users,
             user_id: user.users.user_id.toString(),
+            name: user.users.first_name + " " + user.users.last_name,
           },
         };
       }
@@ -48,6 +49,7 @@ export async function GET(req: Request) {
           users: {
             ...user.users,
             user_id: user.users.user_id.toString(),
+            name: user.users.first_name + " " + user.users.last_name,
           },
         };
       }

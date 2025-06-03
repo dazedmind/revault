@@ -106,10 +106,14 @@ export default function AdminNavBar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <User />
-                  <Link href="/admin/profile">Profile</Link>
+                <DropdownMenuItem className="p-2 pr-5">
+                  <Image src={avatar} alt="User profile picture" width={30} height={30} className="rounded-full"/>
+                  <Link href="/admin/profile">
+                    {profile.users.name}
+                  </Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+
                 <DropdownMenuItem>
                   <Settings />
                   <Link href="/admin/settings/general/edit-profile">

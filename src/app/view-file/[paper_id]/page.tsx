@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import NavBar from "../../component/NavBar";
 import AdminNavBar from "../../admin/components/AdminNavBar";
@@ -107,7 +107,7 @@ function ViewFile() {
     }
   };
 
-  const checkBookmarkStatus = async () => {
+  const checkBookmarkStatus = useCallback(async () => {
     const token = localStorage.getItem('authToken');
     if (!token) return;
 
@@ -125,7 +125,7 @@ function ViewFile() {
     } catch (error) {
       console.error("Error checking bookmark status:", error);
     }
-  };
+  }, [paper_id]);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -222,7 +222,7 @@ function ViewFile() {
     if (paper_id) {
       fetchPaper();
     }
-  }, [paper_id, router]);
+  }, [paper_id, router, checkBookmarkStatus]);
   
   if (loading) {
     return (
