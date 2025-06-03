@@ -8,6 +8,7 @@ import Link from "next/link";
 import { logout } from "../../utils/auth";
 import { useEffect, useState } from "react";
 import { LogOut, Settings, User, SunMoon } from "lucide-react";
+import { LogOut, Settings, User, SunMoon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { useTheme } from "next-themes";
+import { useTheme } from "next-themes";
 
 export default function AdminNavBar() {
   const [mounted, setMounted] = useState(false);
@@ -25,17 +27,18 @@ export default function AdminNavBar() {
   const [loading, setLoading] = useState(true);
   const { theme, setTheme } = useTheme();
 
+  const { theme, setTheme } = useTheme();
+
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const fetchProfile = async () => {
-
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) return;
-  
+
       try {
-        const res = await fetch('/admin/api/profile', {
-          method: 'GET',
+        const res = await fetch("/admin/api/profile", {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,28 +46,31 @@ export default function AdminNavBar() {
         const data = await res.json(); // <-- move this here regardless of res.ok
 
         if (!res.ok) {
-          console.error("Failed to fetch profile:", data?.error || res.statusText);
+          console.error(
+            "Failed to fetch profile:",
+            data?.error || res.statusText,
+          );
           return;
         }
-  
+
         setProfile(data);
       } catch (err) {
-        console.error('Error fetching profile:', err);
+        console.error("Error fetching profile:", err);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchProfile();
   }, []);
-  
+
   if (loading) return <LoadingScreen />;
 
   if (!mounted) return null;
   return (
     <>
       <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-8 px-10 md:px-16 dark:bg-primary">
-      <div className="flex align-middle items-center gap-10">
+        <div className="flex align-middle items-center gap-10">
           <Link
             href="/home"
             className="hidden md:flex gap-4 font-bold text-3xl text-gold"
@@ -72,7 +78,7 @@ export default function AdminNavBar() {
             <Image src={icon} className="w-14" alt="revault-icon" />
             ReVault
           </Link>
-          
+
           <Link href="/home">
             <Image src={icon} className="md:hidden w-14" alt="revault-icon" />
           </Link>
@@ -80,14 +86,23 @@ export default function AdminNavBar() {
           <SearchInput placeholder="Search paper" />
         </div>
         <ul className="flex flex-row items-center gap-8 text-lg">
-          <Link href="/upload">
-            <button className="bg-gradient-to-r from-gold to-gold-fg text-white hover:brightness-120 transition-all duration-300 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-              <FaPlus /> Upload
-            </button>
-          </Link>
+          {(() => {
+            const userType = localStorage.getItem("userType");
+            if (userType !== "ADMIN" && userType !== "ASSISTANT") {
+              return (
+                <Link href="/upload">
+                  <button className="bg-gradient-to-r from-gold to-gold-fg text-white hover:brightness-120 hover:shadow-lg hover:shadow-gold/80 transition-all duration-300 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+                    <FaPlus /> Upload
+                  </button>
+                </Link>
+              );
+            }
+            return null;
+          })()}
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-            <Image
+              <Image
                 src={profile?.users?.profile_picture || avatar}
                 className="w-10 h-10 rounded-full cursor-pointer"
                 alt="User profile picture"
@@ -107,9 +122,13 @@ export default function AdminNavBar() {
                     Settings
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                <DropdownMenuItem
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                >
                   <SunMoon className="h-4 w-4" />
-                  <span className="cursor-pointer">{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+                  <span className="cursor-pointer">
+                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                  </span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />

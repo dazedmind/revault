@@ -255,6 +255,14 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.user_role = exports.$Enums.user_role = {
+  ADMIN: 'ADMIN',
+  ASSISTANT: 'ASSISTANT',
+  LIBRARIAN: 'LIBRARIAN',
+  STUDENT: 'STUDENT',
+  FACULTY: 'FACULTY'
+};
+
 exports.activity_type = exports.$Enums.activity_type = {
   LOGIN: 'LOGIN',
   LOGOUT: 'LOGOUT',
