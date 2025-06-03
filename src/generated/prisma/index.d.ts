@@ -94,11 +94,26 @@ export namespace $Enums {
 
 export type activity_type = (typeof activity_type)[keyof typeof activity_type]
 
+
+export const user_role: {
+  ADMIN: 'ADMIN',
+  ASSISTANT: 'ASSISTANT',
+  LIBRARIAN: 'LIBRARIAN',
+  STUDENT: 'STUDENT',
+  FACULTY: 'FACULTY'
+};
+
+export type user_role = (typeof user_role)[keyof typeof user_role]
+
 }
 
 export type activity_type = $Enums.activity_type
 
 export const activity_type: typeof $Enums.activity_type
+
+export type user_role = $Enums.user_role
+
+export const user_role: typeof $Enums.user_role
 
 /**
  * ##  Prisma Client ʲˢ
@@ -2052,7 +2067,7 @@ export namespace Prisma {
     ext_name: string | null
     email: string | null
     profile_picture: string | null
-    role: string | null
+    role: $Enums.user_role | null
     password: string | null
     created_at: Date | null
   }
@@ -2065,7 +2080,7 @@ export namespace Prisma {
     ext_name: string | null
     email: string | null
     profile_picture: string | null
-    role: string | null
+    role: $Enums.user_role | null
     password: string | null
     created_at: Date | null
   }
@@ -2227,7 +2242,7 @@ export namespace Prisma {
     ext_name: string | null
     email: string
     profile_picture: string | null
-    role: string | null
+    role: $Enums.user_role | null
     password: string
     created_at: Date | null
     _count: UsersCountAggregateOutputType | null
@@ -2338,7 +2353,7 @@ export namespace Prisma {
       ext_name: string | null
       email: string
       profile_picture: string | null
-      role: string | null
+      role: $Enums.user_role | null
       password: string
       created_at: Date | null
     }, ExtArgs["result"]["users"]>
@@ -2776,7 +2791,7 @@ export namespace Prisma {
     readonly ext_name: FieldRef<"users", 'String'>
     readonly email: FieldRef<"users", 'String'>
     readonly profile_picture: FieldRef<"users", 'String'>
-    readonly role: FieldRef<"users", 'String'>
+    readonly role: FieldRef<"users", 'user_role'>
     readonly password: FieldRef<"users", 'String'>
     readonly created_at: FieldRef<"users", 'DateTime'>
   }
@@ -15717,6 +15732,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'user_role'
+   */
+  export type Enumuser_roleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_role'>
+    
+
+
+  /**
+   * Reference to a field of type 'user_role[]'
+   */
+  export type ListEnumuser_roleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_role[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -15800,7 +15829,7 @@ export namespace Prisma {
     ext_name?: StringNullableFilter<"users"> | string | null
     email?: StringFilter<"users"> | string
     profile_picture?: StringNullableFilter<"users"> | string | null
-    role?: StringNullableFilter<"users"> | string | null
+    role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
     password?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
@@ -15839,7 +15868,7 @@ export namespace Prisma {
     last_name?: StringNullableFilter<"users"> | string | null
     ext_name?: StringNullableFilter<"users"> | string | null
     profile_picture?: StringNullableFilter<"users"> | string | null
-    role?: StringNullableFilter<"users"> | string | null
+    role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
     password?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
@@ -15878,7 +15907,7 @@ export namespace Prisma {
     ext_name?: StringNullableWithAggregatesFilter<"users"> | string | null
     email?: StringWithAggregatesFilter<"users"> | string
     profile_picture?: StringNullableWithAggregatesFilter<"users"> | string | null
-    role?: StringNullableWithAggregatesFilter<"users"> | string | null
+    role?: Enumuser_roleNullableWithAggregatesFilter<"users"> | $Enums.user_role | null
     password?: StringWithAggregatesFilter<"users"> | string
     created_at?: DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null
   }
@@ -16578,7 +16607,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -16596,7 +16625,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -16613,7 +16642,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -16631,7 +16660,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -16649,7 +16678,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
   }
@@ -16661,7 +16690,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -16674,7 +16703,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17395,6 +17424,13 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type Enumuser_roleNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -17543,6 +17579,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type Enumuser_roleNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel> | $Enums.user_role | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumuser_roleNullableFilter<$PrismaModel>
+    _max?: NestedEnumuser_roleNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -18269,6 +18315,10 @@ export namespace Prisma {
     set?: string
   }
 
+  export type NullableEnumuser_roleFieldUpdateOperationsInput = {
+    set?: $Enums.user_role | null
+  }
+
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
   }
@@ -18827,6 +18877,13 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedEnumuser_roleNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -18908,6 +18965,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel> | $Enums.user_role | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumuser_roleNullableFilter<$PrismaModel>
+    _max?: NestedEnumuser_roleNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -19309,7 +19376,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     students?: studentsCreateNestedOneWithoutUsersInput
@@ -19326,7 +19393,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
@@ -19358,7 +19425,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     students?: studentsUpdateOneWithoutUsersNestedInput
@@ -19375,7 +19442,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
@@ -19391,7 +19458,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -19408,7 +19475,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -19440,7 +19507,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -19457,7 +19524,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -19473,7 +19540,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -19490,7 +19557,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -19555,7 +19622,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -19572,7 +19639,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -19919,7 +19986,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -19936,7 +20003,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -20012,7 +20079,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -20029,7 +20096,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -20228,7 +20295,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -20245,7 +20312,7 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: string | null
+    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -20302,7 +20369,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -20319,7 +20386,7 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput

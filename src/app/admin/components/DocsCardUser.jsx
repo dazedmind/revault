@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Eye } from "lucide-react";
+import { Eye } from "lucide-react";
 import { useTheme } from 'next-themes'
 import Link from 'next/link';
 import { GoEye, GoPencil } from "react-icons/go";
@@ -14,6 +15,9 @@ const DocsCardUser = (props) => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const { theme } = useTheme()
+    const {
+      paper_id,
+    } = props;
     const {
       paper_id,
     } = props;
@@ -80,6 +84,7 @@ const DocsCardUser = (props) => {
     <div>
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4">
               <div className="flex items-start md:gap-4">
+              <div className="flex items-start md:gap-4">
                 <div className="md:w-40">
                   <a href={props.link}>
                     <Image
@@ -94,6 +99,7 @@ const DocsCardUser = (props) => {
                   {/* <Image src={document} alt="document" className="w-24" /> */}
                   <span className="flex flex-col">
                     <h1 className="text-lg font-bold mb-2">
+                    <h1 className="text-lg font-bold mb-2">
                       {props.title}
                     </h1>
 
@@ -106,6 +112,10 @@ const DocsCardUser = (props) => {
                     </p>
                     
                     <span className="flex gap-2 py-2 md:py-0">
+                      <p className="px-3 py-1 bg-gold/10 text-gold font-bold rounded-md text-sm">
+                        {props.year}
+                      </p>
+                      <p className="px-3 py-1 bg-gold/10 text-gold font-bold rounded-md text-sm">
                       <p className="px-3 py-1 bg-gold/10 text-gold font-bold rounded-md text-sm">
                         {props.year}
                       </p>
@@ -124,12 +134,20 @@ const DocsCardUser = (props) => {
                     <GoEye className="text-xl" /> View
                   </button>
                 </Link>
-                <Link href={`/edit-file/${paper_id}`}>
-                <button className={`w-full md:w-full flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
-                  <GoPencil className="text-xl"/>
-                  Edit
-                </button>
-                </Link>
+                {(() => {
+                  const userType = localStorage.getItem("userType");
+                  if (userType !== "ADMIN" && userType !== "ASSISTANT") {
+                    return (
+                      <Link href={`/edit-file/${paper_id}`}>
+                        <button className={`w-full md:w-full flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
+                          <GoPencil className="text-xl"/>
+                          Edit
+                        </button>
+                      </Link>
+                    );
+                  }
+                  return null;
+                })()}
               </span>
             </div>
             

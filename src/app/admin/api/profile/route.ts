@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     const userNumber = Number(payload.userNumber); // <- FIXED
     let user;
 
-    if (payload.role === "librarian") {
+    if (payload.role === "ADMIN") {
       user = await prisma.librarian.findFirst({
         where: { employee_id: userNumber },
         include: { users: true },

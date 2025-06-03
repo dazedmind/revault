@@ -20,7 +20,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useTheme } from "next-themes";
+import useAntiCopy from "../hooks/useAntiCopy";
 import {
   Select,
   SelectContent,
@@ -29,13 +29,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTheme } from "next-themes";
 
 export default function HomePage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const { theme } = useTheme();
+  // useAntiCopy();
 
   // — UI state for the filter controls (mirrors URL)
   const [departments, setDepartments] = useState<string[]>([]);
@@ -43,6 +44,7 @@ export default function HomePage() {
   const [startYear, setStartYear] = useState("");
   const [endYear, setEndYear] = useState("");
   const [courses, setCourses] = useState<string[]>([]);
+  const { theme } = useTheme();
 
   // — Applied filters (what actually gets sent to PapersArea)
   const [appliedFilters, setAppliedFilters] = useState({
@@ -173,12 +175,10 @@ export default function HomePage() {
 
   return (
     <main className="flex flex-col md:flex-row">
-      {/* --------------------- */}
-      {/* Sidebar (desktop)   */}
-      {/* --------------------- */}
+      {/* Sidebar (desktop) */}
       <aside className="hidden md:flex w-80 p-10">
         <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-bold">Filter Results</h1>
+          <h1 className="text-2xl font-bold ">Filter Results</h1>
 
           <section>
             <h2 className="font-bold text-gold">Program</h2>
@@ -216,7 +216,7 @@ export default function HomePage() {
                   value={startYear}
                   onChange={(e) => {
                     setStartYear(e.target.value);
-                    if (e.target.value && endYear) setYears([]);
+                    if (e.target.value && endYear) setYears([]); // clear years if custom
                   }}
                   className="border p-1 rounded-md text-sm w-20"
                 />
@@ -226,7 +226,7 @@ export default function HomePage() {
                   value={endYear}
                   onChange={(e) => {
                     setEndYear(e.target.value);
-                    if (e.target.value && startYear) setYears([]);
+                    if (e.target.value && startYear) setYears([]); // clear years if custom
                   }}
                   className="border p-1 rounded-md text-sm w-20"
                 />
@@ -259,9 +259,7 @@ export default function HomePage() {
             </button>
             <button
               onClick={clearAllFilters}
-              className={`${
-                theme === "light" ? "border-white-5" : "border-white-50"
-              } border transition-all duration-300 p-2 rounded-md cursor-pointer`}
+              className={`${theme === "light" ? "border-white-5" : "border-white-50"} border transition-all duration-300 p-2 rounded-md cursor-pointer`}
             >
               Clear Filters
             </button>
@@ -269,28 +267,21 @@ export default function HomePage() {
         </div>
       </aside>
 
-      {/* --------------------- */}
-      {/* Results & Pagination */}
-      {/* --------------------- */}
+      {/* Results area */}
       <div className="flex-1 p-8 flex flex-col gap-5">
         <h1 className="text-3xl font-bold">
           {hasFilters ? "Filtered Papers" : "Recent Papers"}
         </h1>
-        {/* Mobile filter popover (omitted for brevity; same as before) */}
+        {/* Mobile filter popover */}
         <div className="flex md:hidden">
           <Popover>
             <PopoverTrigger className="flex items-center gap-2 cursor-pointer">
               Filter <FaFilter />
             </PopoverTrigger>
             <PopoverContent
-              className={`${
-                theme === "light"
-                  ? "bg-accent border-white-50"
-                  : "bg-dusk border-white-5"
-              }`}
+              className={`${theme === "light" ? "bg-accent border-white-50" : "bg-dusk border-white-5"}`}
               align="start"
             >
-              {/* …Your mobile‐only filter UI… */}
               <Select>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Sort by" />
@@ -309,55 +300,49 @@ export default function HomePage() {
                 </SelectContent>
               </Select>
 
+              {/* divider */}
               <div
-                className={`${
-                  theme === "light" ? "bg-white-50" : "bg-white-5"
-                } h-0.5 w-auto mb-2 mt-2 mx-1`}
+                className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} h-0.5 w-auto mb-2 mt-2 mx-1`}
               ></div>
 
               <p className="text-lg">Department</p>
               <ul className="ml-1 flex flex-col gap-1">
                 <li>
                   <Checkbox id="it-courses" />
-                  <label htmlFor="it-courses">Information Technology</label>
+                  <label htmlFor="it-courses"> Information Technology</label>
                 </li>
                 <li>
                   <Checkbox id="cs-courses" />
-                  <label htmlFor="cs-courses">Computer Science</label>
+                  <label htmlFor="cs-courses"> Computer Science</label>
                 </li>
               </ul>
-
+              {/* divider */}
               <div
-                className={`${
-                  theme === "light" ? "bg-white-50" : "bg-white-5"
-                } h-0.5 w-auto mb-2 mt-2 mx-2`}
+                className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} h-0.5 w-auto mb-2 mt-2 mx-2`}
               ></div>
 
               <p className="text-lg">Course</p>
               <ul className="ml-1 flex flex-col gap-1">
                 <li>
                   <Checkbox id="it-courses" />
-                  <label htmlFor="it-courses">SIA</label>
+                  <label htmlFor="it-courses"> SIA</label>
                 </li>
                 <li>
                   <Checkbox id="cs-courses" />
-                  <label htmlFor="cs-courses">Capstone</label>
+                  <label htmlFor="cs-courses"> Capstone</label>
                 </li>
                 <li>
                   <Checkbox id="cs-courses" />
-                  <label htmlFor="cs-courses">CS Thesis Writing</label>
+                  <label htmlFor="cs-courses"> CS Thesis Writing</label>
                 </li>
                 <li>
                   <Checkbox id="cs-courses" />
-                  <label htmlFor="cs-courses">Research Writing</label>
+                  <label htmlFor="cs-courses"> Research Writing</label>
                 </li>
               </ul>
-
               <span className="flex gap-2">
                 <button
-                  className={`${
-                    theme === "light" ? "bg-white-50" : "bg-white-5"
-                  } p-2 mt-3 w-full rounded-sm cursor-pointer`}
+                  className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} p-2 mt-3 w-full rounded-sm cursor-pointer`}
                 >
                   Clear Filters
                 </button>
@@ -368,17 +353,8 @@ export default function HomePage() {
             </PopoverContent>
           </Popover>
         </div>
-        {/* ─────────────── */}
-        {/* Papers List     */}
-        {/* ─────────────── */}
-        <PapersArea
-          filters={appliedFilters}
-          page={currentPage}
-          onTotalPages={setTotalPages}
-        />
-        {/* ─────────────── */}
-        {/* Pagination UI   */}
-        {/* ─────────────── */}
+        <PapersArea filters={appliedFilters} />
+
         <Pagination>
           <PaginationContent>
             {/* ─────────────── “PREVIOUS” ─────────────── */}

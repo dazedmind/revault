@@ -8,6 +8,7 @@ import DocsLoader from "./DocsLoader";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { GoBookmark, GoBookmarkSlash, GoEye, GoPencil } from "react-icons/go";
+import { GoBookmark, GoBookmarkSlash, GoEye, GoPencil } from "react-icons/go";
 
 const tagColors = {
   IT: "bg-dusk",
@@ -106,6 +107,8 @@ const DocsCard = (props) => {
       toast.success(data.message || "Paper Bookmarked successfully.");
       setIsBookmarked(true);
       setBookmarkCount((prev) => prev + 1);
+      setIsBookmarked(true);
+      setBookmarkCount((prev) => prev + 1);
     } catch (err) {
       console.error("Bookmark error:", err);
       toast.error("An error occurred while bookmarking.");
@@ -119,6 +122,10 @@ const DocsCard = (props) => {
       if (!token) {
         return router.push("/login");
       }
+
+      // Check bookmark status and count
+      await checkBookmarkStatus();
+      await fetchBookmarkCount();
 
       // Check bookmark status and count
       await checkBookmarkStatus();
@@ -230,39 +237,40 @@ const DocsCard = (props) => {
                 Read
               </button>
             </Link>
-            {viewFromAdmin ? (
-              <button
-                onClick={() => router.push("/upload")}
-                className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
-              >
-                <GoPencil className="text-xl" />
-                <span className="hidden md:flex">Edit</span>
-              </button>
-            ) : (
-              <>
-                {isBookmarked ? (
+            {(() => {
+              const userType = localStorage.getItem("userType");
+              if (userType !== "ADMIN" && userType !== "ASSISTANT") {
+                return viewFromAdmin ? (
                   <button
-                    onClick={() => handleUnbookmark(paper_id)}
-                    className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-3 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"} rounded-lg cursor-pointer hover:bg-red-warning-fg hover:text-white`}
+                    onClick={() => router.push("/upload")}
+                    className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-4 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"}  rounded-lg cursor-pointer hover:brightness-105`}
                   >
-                    <GoBookmarkSlash className="text-xl" />
+                    <GoPencil className="text-xl" />
+                    <span className="hidden md:flex">Edit</span>
                   </button>
                 ) : (
-                  <button
-                    onClick={() => handleBookmark(paper_id)}
-                    className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-3 py-2 ${theme == "light" ? "bg-tertiary" : "bg-dusk"} rounded-lg cursor-pointer hover:brightness-105`}
-                  >
-                    <GoBookmark className="text-xl" />
-                  </button>
-                )}
-              </>
-            )}
+                  <>
+                    {isBookmarked ? (
+                      <button
+                        onClick={() => handleUnbookmark(paper_id)}
+                        className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-3 py-2 ${theme == "light" ? "bg-white-75" : "bg-dusk"} rounded-lg cursor-pointer hover:bg-red-warning-fg hover:text-white`}
+                      >
+                        <GoBookmarkSlash className="text-xl" />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleBookmark(paper_id)}
+                        className={`w-auto transition-all duration-300 flex flex-row items-center justify-center gap-2 px-3 py-2 ${theme == "light" ? "bg-tertiary" : "bg-dusk"} rounded-lg cursor-pointer hover:brightness-105`}
+                      >
+                        <GoBookmark className="text-xl" />
+                      </button>
+                    )}
+                  </>
+                );
+              }
+              return null;
+            })()}
           </div>
-
-          {/* <span className={`text-sm ${theme === "light" ? "text-gray-600" : "text-gray-300"} hidden md:flex items-center align-middle flex-row gap-1`}>
-                  <p>{bookmarkCount} </p>
-                  <p>{bookmarkCount === 1 ? "bookmark" : "bookmarks"}</p>
-          </span> */}
         </div>
       </div>
     </div>

@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     const userNumber = Number(payload.userNumber); // <- FIXED
     let user;
 
-    if (payload.role === "student") {
+    if (payload.role === "STUDENT") {
       user = await prisma.students.findFirst({
         where: { student_num: userNumber },
         include: { users: true },
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
           },
         };
       }
-    } else if (payload.role === "faculty") {
+    } else if (payload.role === "FACULTY") {
       user = await prisma.faculty.findFirst({
         where: { employee_id: userNumber },
         include: { users: true },

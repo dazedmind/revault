@@ -88,6 +88,7 @@ export async function POST(req: Request) {
       token,
       user: {
         name: userRecord.first_name,
+        role: userRecord.role,
       },
     }),
     { headers },

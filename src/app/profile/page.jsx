@@ -105,14 +105,14 @@ export default function Profile() {
             name={`${profile.users.first_name} ${profile.users.last_name}`}
             profile_picture={profile.users.profile_picture || avatar}
             number={
-              profile.role === "student"
+              profile.role === "STUDENT"
                 ? profile.student_num
                 : profile.employee_id
             }
             college={profile.college}
             position={profile.position}
             programOrDept={
-              profile.role === "student" ? profile.program : profile.department
+              profile.role === "STUDENT" ? profile.program : profile.department
             }
             role={profile.role}
           />
