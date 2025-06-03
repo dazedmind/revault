@@ -1,0 +1,218 @@
+// components/manage-users/AddUserModal.tsx
+"use client";
+import { Dispatch, SetStateAction, ChangeEvent } from "react";
+
+interface NewUser {
+  fullName: string;
+  middleName: string;
+  lastName: string;
+  extension: string;
+  employeeId: string;
+  email: string;
+  userAccess: string;
+  status: string;
+}
+
+interface AddUserModalProps {
+  theme: string;
+  show: boolean;
+  newUser: NewUser;
+  newUserPasswords: { password: string; confirmPassword: string };
+  newUserPasswordError: string;
+  onInputChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onPasswordChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onCancel: () => void;
+  onAddUser: () => void;
+}
+
+export default function AddUserModal({
+  theme,
+  show,
+  newUser,
+  newUserPasswords,
+  newUserPasswordError,
+  onInputChange,
+  onPasswordChange,
+  onCancel,
+  onAddUser,
+}: AddUserModalProps) {
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div className="p-6 rounded-lg bg-dusk w-full max-w-md relative z-10">
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-medium mb-4 text-gold">
+              Personal Information
+            </h3>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  First Name *
+                </label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={newUser.fullName}
+                  onChange={onInputChange}
+                  className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Middle Name
+                </label>
+                <input
+                  type="text"
+                  name="middleName"
+                  value={newUser.middleName}
+                  onChange={onInputChange}
+                  className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Last Name *
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={newUser.lastName}
+                  onChange={onInputChange}
+                  className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Ext. (e.g. III, Sr.)
+                </label>
+                <input
+                  type="text"
+                  name="extension"
+                  value={newUser.extension}
+                  onChange={onInputChange}
+                  className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Employee Information Section */}
+          <div>
+            <h3 className="text-lg font-medium mb-4 text-gold">
+              Employee Information
+            </h3>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Employee ID *
+                </label>
+                <input
+                  type="text"
+                  name="employeeId"
+                  value={newUser.employeeId}
+                  onChange={onInputChange}
+                  className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  User Access
+                </label>
+                <div className="relative">
+                  <select
+                    name="userAccess"
+                    value={newUser.userAccess}
+                    onChange={onInputChange}
+                    className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px] pr-8 appearance-none"
+                  >
+                    <option value="Librarian-in-Charge">
+                      Librarian-in-Charge
+                    </option>
+                    <option value="Admin Assistant">Admin Assistant</option>
+                    <option value="Admin">Admin</option>
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Email Address *
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={newUser.email}
+                onChange={onInputChange}
+                className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+              />
+            </div>
+          </div>
+
+          {/* Password Section */}
+          <div>
+            <h3 className="text-lg font-medium mb-4 text-gold">Password</h3>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Create Password *
+              </label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter Password"
+                value={newUserPasswords.password}
+                onChange={onPasswordChange}
+                className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-4">
+                Confirm Password *
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Enter Password Again"
+                value={newUserPasswords.confirmPassword}
+                onChange={onPasswordChange}
+                className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+              />
+            </div>
+            {newUserPasswordError && (
+              <p className="text-red-500 text-sm mt-2">
+                {newUserPasswordError}
+              </p>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-4 pt-4">
+            <button
+              onClick={onCancel}
+              className="px-4 py-2 rounded-[12px] bg-transparent border border-gray-600 hover:bg-opacity-10 hover:bg-gray-600 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onAddUser}
+              className="px-4 py-2 rounded-[12px] text-white transition-colors bg-gold hover:opacity-90"
+            >
+              Add User
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
