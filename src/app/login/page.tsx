@@ -5,18 +5,20 @@ import Header from "@/app/component/Header";
 import React, { useEffect, useState } from "react";
 import LogInInputField from "../component/LogInInputField";
 import { Button } from "@/components/ui/button";
-import { LogInCheckBox } from "../component/LogInCheckBox";
-import { FaMicrosoft } from "react-icons/fa6";
 import useAntiCopy from "../hooks/useAntiCopy";
 import { Toaster } from "sonner";
 import { GoEye } from "react-icons/go";
 import { GoEyeClosed } from "react-icons/go";
+import Image from "next/image";
+import avatar from "../img/user.png";
 
 const LogIn = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [theme, setTheme] = useState("light");
 
   // useAntiCopy();
 
@@ -91,7 +93,7 @@ const LogIn = () => {
       </div>
 
       {/* Main Content */}
-      <main className="flex flex-row justify-center mt-20 items-center relative z-10">
+      <main className="flex flex-col justify-center mt-20 items-center relative z-10">
         <div className="w-80 md:w-96 m-5 p-6 h-auto rounded-xl outline-1 bg-white relative z-10">
           {/* Title */}
           <div className="flex flex-col justify-center items-center">
@@ -168,8 +170,14 @@ const LogIn = () => {
               </a>
             </p>
           </div>
-
         </div>
+
+        <footer className="flex flex-col justify-center items-center z-150">
+          <p className="text-xs">
+            &copy; 2025 Revault. All rights reserved.
+          </p>
+          <p className="text-xs text-gold-fg font-bold cursor-pointer" onClick={() => setShowAddModal(true)}>Developers</p>
+        </footer>
       </main>
 
       {showErrorModal && (
@@ -183,6 +191,74 @@ const LogIn = () => {
             >
               Okay
             </button>
+          </div>
+        </div>
+      )}
+
+      {showAddModal && (
+        <div className="fixed inset-0 flex items-center mx-4 justify-center z-50">
+          <div className={`p-6 rounded-lg relative bg-dusk dark:bg-accent border-1 ${theme === 'light' ? ' border-white-50' : 'border-white-5'} w-full max-w-md relative z-10`}>
+            <h1 className="text-2xl w-full py-4 absolute top-0 left-0 rounded-t-lg bg-tertiary font-bold text-yale-blue text-center">
+              System Developers
+              <p className="text-sm text-white-5 italic text-center">Bachelor of Science in Information Technology</p>
+
+            </h1>
+            <div className="flex flex-col gap-4 mt-20">
+              <div className="flex flex-row gap-4 items-center">
+                <Image src={avatar} className="rounded-full" alt="Durante" width={40} height={40} />
+                <span>
+                  <h3 className="text-lg font-bold text-midnight">Durante, KC D.</h3>
+                  <span className="flex flex-row flex-wrap gap-2">
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">Programmer</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">Documentation Member</p>
+                  </span>
+                </span>
+             
+              </div>
+              <div className="flex flex-row gap-4 items-center">
+                <Image src={avatar} className="rounded-full" alt="Durante" width={40} height={40} />
+                <span>
+                  <h3 className="text-lg font-bold text-midnight">Lastra, Kristhia Cayle F.</h3>
+                  <span className="flex flex-row gap-2">
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">Team Leader</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">Documentation Head</p>
+                  </span>
+                </span>
+              </div>
+              <div className="flex flex-row gap-4 items-center">
+                <Image src={avatar} className="rounded-full" alt="Durante" width={40} height={40} />
+                <span>
+                  <h3 className="text-lg font-bold text-midnight">Insigne, Matthew Jacob B.</h3>
+                  <span className="flex flex-row gap-2">
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">System Programmer</p>
+                  </span>
+                </span>
+              </div>
+              <div className="flex flex-row gap-4 items-center">
+                <Image src={avatar} className="rounded-full" alt="Durante" width={40} height={40} />
+                <span>
+                  <h3 className="text-lg font-bold text-midnight">Valeña, John Allen Troy E.</h3>
+                  <span className="flex flex-row gap-2">
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">Lead Developer</p>
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">System Designer</p>
+                  </span>
+                </span>
+              </div>
+              <div className="flex flex-row gap-4 items-center">
+                <Image src={avatar} className="rounded-full" alt="Durante" width={40} height={40} />
+                <span>
+                  <h3 className="text-lg font-bold text-midnight">Yacub, Jetthro Karl C.</h3>
+                  <span className="flex flex-row gap-2">
+                    <p className=" rounded-md text-xs p-1.5 w-fit bg-gold/20 text-gold-fg">Documentation Member</p>
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div className="flex justify-center mt-4">
+              <button onClick={() => setShowAddModal(false)} className="text-white cursor-pointer hover:brightness-110 hover:dark:text-white-75 transition-all duration-300 bg-gold p-2 px-4 rounded-md">
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
