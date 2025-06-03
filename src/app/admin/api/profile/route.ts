@@ -35,6 +35,16 @@ export async function GET(req: Request) {
           },
         };
       }
+    } else if (payload.role === "ASSISTANT") {
+      user = await prisma.librarian.findFirst({
+        where: { employee_id: userNumber },
+        include: { users: true },
+      });
+    } else if (payload.role === "LIBRARIAN") {
+      user = await prisma.librarian.findFirst({
+        where: { employee_id: userNumber },
+        include: { users: true },
+      });
     } else {
       return NextResponse.json({ error: "Invalid role" }, { status: 400 });
     }

@@ -10,7 +10,7 @@ import FileMenuButton from "../../component/FileMenuButton";
 import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 import { useParams } from 'next/navigation';
-import { Bookmark, Download, Info, Link, Moon, SunMedium, Archive } from "lucide-react"; 
+import { Link } from "lucide-react"; 
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
 import useAntiCopy from "../../hooks/useAntiCopy";
@@ -136,9 +136,9 @@ function ViewFile() {
         window.location.href = "/login";      
       }
 
-      if (storedUserType === "student" || storedUserType === "faculty") {
+      if (storedUserType === "STUDENT" || storedUserType === "FACULTY") {
         setViewFromAdmin(false);
-      } else if (storedUserType === "librarian") {
+      } else if (storedUserType === "LIBRARIAN") {
         setViewFromAdmin(true);
       }
 
@@ -231,7 +231,7 @@ function ViewFile() {
   }
   return (
     <div className="dark:bg-secondary h-auto">
-      {userType === "librarian" ? <AdminNavBar /> : <NavBar />}
+      {userType === "LIBRARIAN" || userType === "ASSISTANT" || userType === "ADMIN" ? <AdminNavBar /> : <NavBar />}
 
       <ProtectedRoute>
         <main className="flex flex-col-reverse md:flex-row h-auto justify-center">
@@ -373,7 +373,7 @@ function ViewFile() {
                   </>
                 )}
 
-                {!viewFromAdmin && (
+                {!viewFromAdmin && userType !== "ADMIN" && userType !== "ASSISTANT" && (
                   <>
                     {isBookmarked ? (
                       <FileMenuButton
