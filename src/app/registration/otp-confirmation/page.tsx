@@ -6,100 +6,124 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { useEffect, useState, useCallback, Suspense } from "react";
-import { generateOTP } from "@/lib/generateOtp"; // Make sure this exists
+import { useEffect, useState, useCallback, Suspense, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 function OTPContent() {
   const [otp, setOtp] = useState("");
-  const [generatedOTP, setGeneratedOTP] = useState("");
   const [isSent, setIsSent] = useState(false);
   const [timer, setTimer] = useState(30);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showFailureModal, setShowFailureModal] = useState(false);
   const [role, setRole] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
   const emailFromQuery = searchParams.get("email");
+  
+  // Use ref to prevent multiple initial sends
+  const hasInitialSent = useRef(false);
 
   useEffect(() => {
-    // Move localStorage access to useEffect
+    // Only run once when component mounts
+    if (hasInitialSent.current) return;
+    
     const storedRole = localStorage.getItem("userType") || "";
-    setRole(storedRole);
+    setRole(storedRole.toUpperCase());
     
     const savedEmail = localStorage.getItem("regEmail");
-    if (savedEmail) {
-      setUserEmail(savedEmail);
-    } else if (emailFromQuery) {
-      setUserEmail(emailFromQuery);
+    const finalEmail = savedEmail || emailFromQuery;
+    
+    if (finalEmail) {
+      setUserEmail(finalEmail);
+      
+      // Send initial OTP
+      sendInitialOTP(finalEmail, storedRole.toUpperCase());
+      hasInitialSent.current = true;
     }
-
-    // Generate initial OTP and start timer
-    const initialOTP = generateOTP();
-    setGeneratedOTP(initialOTP);
-    setIsSent(true);
-    setTimer(30);
-
-    // Send initial OTP
-    fetch("/api/send-otp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: savedEmail || emailFromQuery, otp: initialOTP, role: storedRole }),
-    });
+    
+    setIsInitialized(true);
   }, [emailFromQuery]);
 
-  const handleSendOTP = useCallback(async () => {
-    const code = generateOTP();
-    setGeneratedOTP(code);
-    setIsSent(true);
-    setTimer(30);
+  const sendInitialOTP = async (email: string, userRole: string) => {
+    try {
+      const response = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, role: userRole.toUpperCase() }),
+      });
 
-    await fetch("/api/send-otp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: userEmail, otp: code, role: role }),
-    });
+      if (response.ok) {
+        setIsSent(true);
+        setTimer(30);
+      }
+    } catch (error) {
+      console.error("Failed to send initial OTP:", error);
+    }
+  };
+
+  const handleSendOTP = useCallback(async () => {
+    if (!userEmail) return;
+
+    try {
+      const response = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: userEmail, role: role.toUpperCase() }),
+      });
+
+      if (response.ok) {
+        setIsSent(true);
+        setTimer(30);
+      }
+    } catch (error) {
+      console.error("Failed to resend OTP:", error);
+    }
   }, [userEmail, role]);
 
   const handleConfirm = async () => {
-    const res = await fetch("/api/verify-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: userEmail, otp, role }),
-    });
+    try {
+      const res = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: userEmail, otp, role: role.toUpperCase() }),
+      });
 
-    if (res.ok) {
-      const result = await res.json();
-      if (result.verified) {
-        // Move localStorage access inside useEffect
-        const regRole = localStorage.getItem("userType");
-        const regData = JSON.parse(localStorage.getItem("regForm") || "{}");
+      if (res.ok) {
+        const result = await res.json();
+        if (result.verified) {
+          const regRole = localStorage.getItem("userType");
+          const regData = JSON.parse(localStorage.getItem("regForm") || "{}");
 
-        regData.role = regRole;
+          regData.role = regRole.toUpperCase();
 
-        const saveRes = await fetch("/api/save-user", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(regData),
-        });
+          const saveRes = await fetch("/api/save-user", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(regData),
+          });
 
-        if (saveRes.ok) {
-          localStorage.removeItem("regForm");
-          localStorage.removeItem("regEmail");
-          setShowSuccessModal(true);
+          if (saveRes.ok) {
+            localStorage.removeItem("regForm");
+            localStorage.removeItem("regEmail");
+            setShowSuccessModal(true);
+          } else {
+            alert("Something went wrong saving info.");
+          }
         } else {
-          alert("Something went wrong saving info.");
+          setShowFailureModal(true);
         }
       } else {
         setShowFailureModal(true);
       }
-    } else {
+    } catch (error) {
+      console.error("Failed to verify OTP:", error);
       setShowFailureModal(true);
     }
   };
@@ -110,6 +134,11 @@ function OTPContent() {
       return () => clearInterval(interval);
     }
   }, [isSent, timer]);
+
+  // Show loading while initializing
+  if (!isInitialized) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex-grow flex justify-center">

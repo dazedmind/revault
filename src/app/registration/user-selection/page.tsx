@@ -18,7 +18,7 @@ const UserSelection = () => {
 
         <div className="flex md:flex-row flex-col justify-evenly gap-8 mt-10">
           <button
-            onClick={handleUserTypeSelection.bind(null, "student")}
+            onClick={handleUserTypeSelection.bind(null, "STUDENT")}
             className={`w-xs h-48 bg-accent border-2 rounded-lg hover:bg-white hover:shadow-lg transition-all duration-300 flex flex-col justify-center items-center p-6 cursor-pointer`}
           >
             <PiStudentBold className="size-14 mb-2 text-gold-fg" />
@@ -35,7 +35,7 @@ const UserSelection = () => {
           </button>
 
           <button
-            onClick={handleUserTypeSelection.bind(null, "faculty")}
+            onClick={handleUserTypeSelection.bind(null, "FACULTY")}
             className="w-xs h-48 bg-accent border-2 rounded-lg hover:bg-white hover:shadow-lg transition-all duration-300 flex flex-col justify-center items-center p-6 cursor-pointer"
           >
             <FaChalkboardTeacher className="size-14 mb-2 text-gold-fg" />

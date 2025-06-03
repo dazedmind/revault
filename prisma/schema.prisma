@@ -28,7 +28,7 @@ model users {
 }
 
 model faculty {
-  employee_id Int     @id @unique
+  employee_id BigInt     @id @unique
   position    String?
   department  String?
   user_id     Int     @unique
