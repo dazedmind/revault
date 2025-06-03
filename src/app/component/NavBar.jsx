@@ -98,10 +98,14 @@ export default function NavBar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <User />
-                  <Link href="/profile">Profile</Link>
+                <DropdownMenuItem className="p-2 pr-5">
+                  <Image src={avatar} alt="User profile picture" width={40} height={40} className="rounded-full"/>
+                  <Link href="/profile">
+                    {profile.users.name}
+                  </Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+
                 <DropdownMenuItem>
                   <Settings />
                   <Link href="/settings">Settings</Link>
