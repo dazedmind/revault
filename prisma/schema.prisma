@@ -1,7 +1,6 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
-  // output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -10,21 +9,21 @@ datasource db {
 }
 
 model users {
-  user_id        Int              @id @default(autoincrement())
-  first_name     String?
-  mid_name       String?
-  last_name      String?
-  ext_name       String?
-  email          String           @unique
+  user_id         Int              @id @default(autoincrement())
+  first_name      String?
+  mid_name        String?
+  last_name       String?
+  ext_name        String?
+  email           String           @unique
   profile_picture String?
-  role           String?
-  password       String
-  created_at     DateTime?
-  faculty        faculty?
-  students       students?
-  librarian      librarian?
-  user_bookmarks user_bookmarks[]
-  activity_logs activity_logs[]
+  password        String
+  created_at      DateTime?
+  role            user_role?
+  activity_logs   activity_logs[]
+  faculty         faculty?
+  librarian       librarian?
+  students        students?
+  user_bookmarks  user_bookmarks[]
 }
 
 model faculty {
@@ -45,31 +44,30 @@ model students {
 }
 
 model librarian {
-  employee_id  Int @id @unique
-  position    String?
-  contact_num  Int
-  user_id     Int @unique
-  users       users      @relation(fields: [user_id], references: [user_id])
+  employee_id   Int             @id @unique
+  position      String?
+  contact_num   Int
+  user_id       Int             @unique
   activity_logs activity_logs[]
-
+  users         users           @relation(fields: [user_id], references: [user_id])
 }
 
 model papers {
-  paper_id       Int              @id @default(autoincrement())
-  title          String?          @unique
-  author         String?
-  year           Int?
-  department     String?
-  keywords       String[]
-  course         String?
-  abstract       String?
-  created_at     DateTime?
-  updated_at     DateTime?
-  paper_url      String?
-  paper_metadata paper_metadata[]
-  user_bookmarks user_bookmarks[]
+  paper_id         Int                @id @default(autoincrement())
+  title            String?            @unique
+  author           String?
+  year             Int?
+  department       String?
+  keywords         String[]
+  course           String?
+  abstract         String?
+  created_at       DateTime?
+  updated_at       DateTime?
+  paper_url        String?
   paper_bm25_index paper_bm25_index[]
-  term_score     term_score[]
+  paper_metadata   paper_metadata[]
+  term_score       term_score[]
+  user_bookmarks   user_bookmarks[]
 }
 
 model paper_metadata {
@@ -104,40 +102,37 @@ model Otp {
 }
 
 model paper_bm25_index {
-  index_id         Int      @id @default(autoincrement())
-  paper_id         Int
+  index_id          Int    @id @default(autoincrement())
+  paper_id          Int
   token_frequencies Json
-  document_length  Int
-
-  papers           papers   @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
+  document_length   Int
+  papers            papers @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
 }
 
 model term_score {
-  id        Int     @id @default(autoincrement())
-  term      String
-  tf        Float
-  tfidf     Float
-  bm25      Float
-  paper_id  Int
-
-  papers    papers  @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
+  id       Int    @id @default(autoincrement())
+  term     String
+  tf       Float
+  tfidf    Float
+  bm25     Float
+  paper_id Int
+  papers   papers @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
 }
 
 model activity_logs {
-  act_id          Int       @id @default(autoincrement()) 
-  employee_id     Int 
-  user_id         Int
-  name        String
-  activity    String
-  created_at  DateTime  @default(now())
+  name          String
+  activity      String
+  created_at    DateTime       @default(now())
+  act_id        Int            @id @default(autoincrement())
   activity_type activity_type?
-  user_agent  String?
-  ip_address  String?
-  status      String?
-  librarian   librarian @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
-  users       users     @relation(fields: [user_id], references: [user_id])
+  ip_address    String?
+  status        String?
+  user_agent    String?
+  employee_id   Int
+  user_id       Int
+  librarian     librarian      @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+  users         users          @relation(fields: [user_id], references: [user_id])
 }
-
 
 model global_stats {
   id             Int      @id @default(autoincrement())
@@ -158,4 +153,12 @@ enum activity_type {
   DELETE_DOCUMENT
   UPDATE_DOCUMENT
   UPLOAD_DOCUMENT
+}
+
+enum user_role {
+  ADMIN
+  ASSISTANT
+  LIBRARIAN
+  STUDENT
+  FACULTY
 }
