@@ -124,12 +124,20 @@ const DocsCardUser = (props) => {
                     <GoEye className="text-xl" /> View
                   </button>
                 </Link>
-                <Link href={`/edit-file/${paper_id}`}>
-                <button className={`w-full md:w-full flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
-                  <GoPencil className="text-xl"/>
-                  Edit
-                </button>
-                </Link>
+                {(() => {
+                  const userType = localStorage.getItem("userType");
+                  if (userType !== "ADMIN" && userType !== "ASSISTANT") {
+                    return (
+                      <Link href={`/edit-file/${paper_id}`}>
+                        <button className={`w-full md:w-full flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}>
+                          <GoPencil className="text-xl"/>
+                          Edit
+                        </button>
+                      </Link>
+                    );
+                  }
+                  return null;
+                })()}
               </span>
             </div>
             

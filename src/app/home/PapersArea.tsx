@@ -87,7 +87,7 @@ export default function PapersArea({ filters }: { filters: Filters }) {
           tags={paper.keywords || []}
           department={paper.department || "No department available"}
           paper_id={paper.paper_id}
-          viewFromAdmin={storedUserType === "librarian"}
+          viewFromAdmin={storedUserType === "LIBRARIAN"}
           year={paper.year || "No year available"}
         />
       ))}

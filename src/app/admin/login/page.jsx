@@ -63,7 +63,7 @@ const AdminLogin = () => {
     if (result.success) {
       // Store token and userType in localStorage if login is successful
       localStorage.setItem("authToken", result.token);
-      localStorage.setItem("userType", "librarian"); // Store the user type as admin
+      localStorage.setItem("userType", result.user.role); // Use the role from the API response
       window.location.href = "/home"; // Redirect to home page
     } else {
       // Alert the user if login failed

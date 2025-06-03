@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
-  // output   = "../node_modules/.prisma/client"
+  // output   = "../src/generated/prisma"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -17,7 +17,7 @@ model users {
   ext_name       String?
   email          String           @unique
   profile_picture String?
-  role           String?
+  role           user_role?
   password       String
   created_at     DateTime?
   faculty        faculty?
@@ -159,3 +159,13 @@ enum activity_type {
   UPDATE_DOCUMENT
   UPLOAD_DOCUMENT
 }
+
+
+enum user_role {
+  ADMIN
+  ASSISTANT
+  LIBRARIAN
+  STUDENT
+  FACULTY
+}
+

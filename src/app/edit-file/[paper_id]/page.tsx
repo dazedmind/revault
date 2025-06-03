@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Trash } from "lucide-react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const EditFile = () => {
 
@@ -426,10 +427,13 @@ const EditFile = () => {
         </span>
 
         <span className="flex flex-row gap-2">
-          <button className="bg-accent p-2 px-8 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-            Cancel
-          </button>
-          <button className="bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br p-2 px-8 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+          <Link href={'/admin/profile'}>
+            <button className="bg-accent p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+              Cancel
+            </button>
+          </Link>
+      
+          <button className=" text-white bg-gradient-to-r from-gold-fg to-gold transition-all duration-300 ease-in-out hover:shadow-xl hover:brightness-120 inset-5 shadow-gold/80 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
             Save Changes
           </button>
         </span>

@@ -80,11 +80,20 @@ export default function AdminNavBar() {
           <SearchInput placeholder="Search paper" />
         </div>
         <ul className="flex flex-row items-center gap-8 text-lg">
-          <Link href="/upload">
-            <button className="bg-gradient-to-r from-gold to-gold-fg text-white hover:brightness-120 transition-all duration-300 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-              <FaPlus /> Upload
-            </button>
-          </Link>
+          {(() => {
+            const userType = localStorage.getItem("userType");
+            if (userType !== "ADMIN" && userType !== "ASSISTANT") {
+              return (
+                <Link href="/upload">
+                  <button className="bg-gradient-to-r from-gold to-gold-fg text-white hover:brightness-120 hover:shadow-lg hover:shadow-gold/80 transition-all duration-300 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+                    <FaPlus /> Upload
+                  </button>
+                </Link>
+              );
+            }
+            return null;
+          })()}
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
             <Image
