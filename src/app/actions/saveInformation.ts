@@ -32,7 +32,7 @@ export async function saveInformation(formData: any) {
 
     // Insert into users first
     // For students
-    if (role === "student") {
+    if (role === "STUDENT") {
       const user = await prisma.users.create({
         data: {
           first_name: firstName,
@@ -41,7 +41,7 @@ export async function saveInformation(formData: any) {
           ext_name: ext || null,
           email,
           password: hashedPassword,
-          role: "student", // Set the role to 'student' here
+          role: "STUDENT", // Set the role to 'student' here
           created_at: new Date(),
         },
       });
@@ -57,7 +57,7 @@ export async function saveInformation(formData: any) {
       });
 
       console.log("User and student info saved!");
-    } else if (role === "faculty") {
+    } else if (role === "FACULTY") {
       const user = await prisma.users.create({
         data: {
           first_name: firstName,
@@ -66,7 +66,7 @@ export async function saveInformation(formData: any) {
           ext_name: ext || null,
           email,
           password: hashedPassword,
-          role: "faculty", // Set the role to 'faculty' here
+          role: "FACULTY", // Set the role to 'faculty' here
           created_at: new Date(),
         },
       });

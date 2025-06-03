@@ -16,12 +16,13 @@ export async function POST(req: Request) {
 
   // 🧠 Determine role based on first digit
   const firstDigit = idNumber[0];
-  let role: "student" | "faculty" | null = null;
+  const numberLength = idNumber.length;
+  let role: "STUDENT" | "FACULTY" | null = null;
 
   console.log("ID Number:", idNumber); // Debugging line
 
-  if (firstDigit === "2") role = "student";
-  else if (firstDigit === "1") role = "faculty";
+  if (numberLength === 9) role = "STUDENT";
+  else if (numberLength === 10) role = "FACULTY";
   else {
     return Response.json(
       { success: false, message: "Invalid ID format" },
@@ -31,7 +32,7 @@ export async function POST(req: Request) {
 
   let userRecord: any = null;
 
-  if (role === "student") {
+  if (role === "STUDENT") {
     const student = await prisma.students.findUnique({
       where: { student_num: BigInt(idNumber) },
       include: { users: true },
@@ -40,9 +41,9 @@ export async function POST(req: Request) {
     if (student && student.users) {
       userRecord = student.users;
     }
-  } else if (role === "faculty") {
+  } else if (role === "FACULTY") {
     const faculty = await prisma.faculty.findUnique({
-      where: { employee_id: parseFloat(idNumber) },
+      where: { employee_id: BigInt(idNumber) },
       include: { users: true },
     });
 
