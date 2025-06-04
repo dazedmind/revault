@@ -7,7 +7,7 @@ import icon from "../img/revault-icon.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { LogOut, Settings, User, SunMoon } from "lucide-react";
+import { LogOut, Settings, SunMoon, ChevronRight } from "lucide-react";
 import LoadingScreen from "./LoadingScreen";
 import { useTheme } from "next-themes";
 
@@ -98,10 +98,11 @@ export default function NavBar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
-                <DropdownMenuItem className="p-2 pr-5">
+                <DropdownMenuItem className="p-2">
                   <Image src={avatar} alt="User profile picture" width={40} height={40} className="rounded-full"/>
-                  <Link href="/profile">
+                  <Link href="/profile" className="flex items-center gap-2">
                     {profile.users.name}
+                    <ChevronRight className="h-4 w-4" />
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
