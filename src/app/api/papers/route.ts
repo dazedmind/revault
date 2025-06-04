@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const startParam = qp.get("start"); // e.g. "2020"
     const endParam = qp.get("end"); // e.g. "2022"
     const pageParam = parseInt(qp.get("page") || "1", 10);
-    const sortParam = qp.get("sort") || "recent"; // Get sort parameter
+    const sortParam = qp.get("sort") || "recent"; // default sort
 
     // Pagination settings
     const take = 5; // 5 items per page
@@ -104,7 +104,8 @@ export async function GET(request: Request) {
 
     const totalPages = Math.ceil(totalCount / take);
 
-    return NextResponse.json({ items, totalPages }, { status: 200 });
+    // Return "items" under the key "papers", so client can do `json.papers.map(...)`
+    return NextResponse.json({ papers: items, totalPages }, { status: 200 });
   } catch (error) {
     console.error("API /papers error:", error);
     return NextResponse.json(

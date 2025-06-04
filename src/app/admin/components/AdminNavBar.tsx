@@ -29,13 +29,12 @@ export default function AdminNavBar() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) return;
-  
+
       try {
-        const res = await fetch('/admin/api/profile', {
-          method: 'GET',
+        const res = await fetch("/admin/api/profile", {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,28 +42,31 @@ export default function AdminNavBar() {
         const data = await res.json(); // <-- move this here regardless of res.ok
 
         if (!res.ok) {
-          console.error("Failed to fetch profile:", data?.error || res.statusText);
+          console.error(
+            "Failed to fetch profile:",
+            data?.error || res.statusText,
+          );
           return;
         }
-  
+
         setProfile(data);
       } catch (err) {
-        console.error('Error fetching profile:', err);
+        console.error("Error fetching profile:", err);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchProfile();
   }, []);
-  
+
   if (loading) return <LoadingScreen />;
 
   if (!mounted) return null;
   return (
     <>
       <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-8 px-10 md:px-16 dark:bg-primary">
-      <div className="flex align-middle items-center gap-10">
+        <div className="flex align-middle items-center gap-10">
           <Link
             href="/home"
             className="hidden md:flex gap-4 font-bold text-3xl text-gold"
@@ -72,12 +74,12 @@ export default function AdminNavBar() {
             <Image src={icon} className="w-14" alt="revault-icon" />
             ReVault
           </Link>
-          
+
           <Link href="/home">
             <Image src={icon} className="md:hidden w-14" alt="revault-icon" />
           </Link>
 
-          <SearchInput placeholder="Search paper" />
+          <SearchInput defaultValue={""} />
         </div>
         <ul className="flex flex-row items-center gap-8 text-lg">
           {(() => {
@@ -96,7 +98,7 @@ export default function AdminNavBar() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-            <Image
+              <Image
                 src={profile?.users?.profile_picture || avatar}
                 className="w-10 h-10 rounded-full cursor-pointer"
                 alt="User profile picture"
@@ -106,13 +108,18 @@ export default function AdminNavBar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
-                <DropdownMenuItem className="p-2">
-                  <Image src={avatar} alt="User profile picture" width={30} height={30} className="rounded-full"/>
-                  <Link href="/admin/profile" className="flex items-center gap-2">
-                    {profile.users.name}
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
+                <DropdownMenuItem className="p-2 pr-5">
+                  <Image
+                    src={avatar}
+                    alt="User profile picture"
+                    width={30}
+                    height={30}
+                    className="rounded-full"
+                  />
+                  <Link href="/admin/profile">{profile.users.name}</Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem>
@@ -121,9 +128,13 @@ export default function AdminNavBar() {
                     Settings
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                <DropdownMenuItem
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                >
                   <SunMoon className="h-4 w-4" />
-                  <span className="cursor-pointer">{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+                  <span className="cursor-pointer">
+                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                  </span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
