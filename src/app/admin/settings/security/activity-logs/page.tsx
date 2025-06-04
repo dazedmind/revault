@@ -34,6 +34,17 @@ interface UserOption {
   name: string;
 }
 
+// Updated interface to match the API response
+interface AdminUser {
+  id: number;
+  fullName: string;
+  middleName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  name: string;
+}
+
 export default function ActivityLogSettings() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -97,19 +108,49 @@ export default function ActivityLogSettings() {
     [router, searchParams],
   );
 
-  // ----- 3) Fetch user list for the “User name” dropdown -----
+  // ----- 3) Fetch user list for the "User name" dropdown -----
   useEffect(() => {
     if (!mounted) return;
 
-    fetch("/admin/api/user-options", { method: "GET" })
+    console.log("🔍 Fetching admin/staff users for dropdown...");
+
+    fetch("/admin/api/users", {
+      method: "GET",
+      credentials: "include", // Include cookies for authentication
+    })
       .then(async (res) => {
-        if (!res.ok) throw new Error("Failed to fetch user list");
+        console.log("📨 Users API response status:", res.status);
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("❌ Users API error:", res.status, errorText);
+          throw new Error(`Failed to fetch user list (${res.status})`);
+        }
         return res.json();
       })
-      .then((data: UserOption[]) => {
-        setUsers(data);
+      .then((data) => {
+        console.log("✅ Users API response:", data);
+
+        if (data.success && Array.isArray(data.users)) {
+          // Map the admin users to the format expected by the dropdown
+          const userOptions: UserOption[] = data.users.map(
+            (user: AdminUser) => ({
+              userId: user.id,
+              name: user.name || `${user.fullName} ${user.lastName}`.trim(),
+            }),
+          );
+
+          console.log("📋 Mapped user options:", userOptions);
+          setUsers(userOptions);
+        } else {
+          console.error("❌ Invalid users response format:", data);
+          setUsers([]);
+        }
       })
-      .catch((err) => console.error("Error fetching user list:", err));
+      .catch((err) => {
+        console.error("💥 Error fetching user list:", err);
+        setUsers([]);
+      });
   }, [mounted]);
 
   // ----- 4) Fetch logs whenever filters/pagination change -----
@@ -128,16 +169,19 @@ export default function ActivityLogSettings() {
     params.set("page", page.toString());
     params.set("limit", limit.toString());
 
-    fetch(`/admin/api/get-logs?${params.toString()}`, { method: "GET" })
+    console.log("🔍 Fetching logs with params:", params.toString());
+
+    fetch(`/admin/api/get-logs?${params.toString()}`, {
+      method: "GET",
+      credentials: "include", // Include cookies for authentication
+    })
       .then(async (res) => {
+        console.log("📨 Logs API response status:", res.status);
+
         if (!res.ok) {
           const text = await res.text();
-          console.error(
-            "Server returned non-200 for get-logs:",
-            res.status,
-            text,
-          );
-          throw new Error("Failed to fetch logs");
+          console.error("❌ Logs API error:", res.status, text);
+          throw new Error(`Failed to fetch logs (${res.status})`);
         }
         return res.json();
       })
@@ -149,19 +193,27 @@ export default function ActivityLogSettings() {
           limit: number;
           logs: Activity[];
         }) => {
+          console.log("✅ Logs API response:", data);
+
           if (data.success) {
             const fetchedLogs = Array.isArray(data.logs) ? data.logs : [];
             setLogs(fetchedLogs);
             setTotal(data.total);
+            console.log(
+              "📋 Set logs:",
+              fetchedLogs.length,
+              "Total:",
+              data.total,
+            );
           } else {
-            console.error("Failed to fetch logs:", data);
+            console.error("❌ Failed to fetch logs:", data);
             setLogs([]);
             setTotal(0);
           }
         },
       )
       .catch((err) => {
-        console.error("Error fetching logs:", err);
+        console.error("💥 Error fetching logs:", err);
         setLogs([]);
         setTotal(0);
       });
@@ -205,6 +257,7 @@ export default function ActivityLogSettings() {
           <Select
             value={selectedUser}
             onValueChange={(val) => {
+              console.log("🔄 User selection changed to:", val);
               setSelectedUser(val);
               setPage(1);
               updateQueryParams({ userId: val, page: 1 });
@@ -215,7 +268,7 @@ export default function ActivityLogSettings() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="all">All Users</SelectItem>
                 {users.map((u) => (
                   <SelectItem key={u.userId} value={u.userId.toString()}>
                     {u.name}
@@ -224,6 +277,9 @@ export default function ActivityLogSettings() {
               </SelectGroup>
             </SelectContent>
           </Select>
+          {users.length === 0 && (
+            <p className="text-xs text-gray-500 mt-1">Loading users...</p>
+          )}
         </div>
 
         {/* Event Type Multi-Select */}
@@ -233,6 +289,7 @@ export default function ActivityLogSettings() {
             options={eventOptions}
             value={selectedEventTypes}
             onChange={(newSelected) => {
+              console.log("🔄 Event types changed to:", newSelected);
               setSelectedEventTypes(newSelected);
               setPage(1);
               const typesString =
@@ -258,10 +315,27 @@ export default function ActivityLogSettings() {
         limit={limit}
         total={total}
         onPageChange={(newPage) => {
+          console.log("🔄 Page changed to:", newPage);
           setPage(newPage);
           updateQueryParams({ page: newPage });
         }}
       />
+
+      {/* Debug info (remove in production) */}
+      {process.env.NODE_ENV === "development" && (
+        <div className="mt-4 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+          <p>
+            <strong>Debug Info:</strong>
+          </p>
+          <p>Users loaded: {users.length}</p>
+          <p>Logs loaded: {logs.length}</p>
+          <p>Selected user: {selectedUser}</p>
+          <p>
+            Selected events:{" "}
+            {selectedEventTypes.map((e) => e.value).join(", ") || "all"}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

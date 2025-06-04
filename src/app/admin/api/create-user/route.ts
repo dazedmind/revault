@@ -1,77 +1,118 @@
 // File: src/app/admin/api/create-user/route.ts
+
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import bcrypt from "bcryptjs";
+import { saveAdminStaffInformation } from "../../../actions/saveAdminStaffInformation";
 
 export async function POST(req: Request) {
+  console.log("🚀 API Route called: /admin/api/create-user");
+
   try {
     const body = await req.json();
-    const { fullName, midName, lastName, extName, email, role, password } =
-      body as {
-        fullName: string;
-        midName?: string;
-        lastName: string;
-        extName?: string;
-        email: string;
-        role: string;
-        password: string;
-      };
+    console.log("📥 Raw request body:", JSON.stringify(body, null, 2));
 
-    // Validate required fields
-    if (!fullName || !lastName || !email || !role || !password) {
+    // Normalize the role
+    const role = body.role?.toUpperCase();
+    console.log("🔄 Normalized role:", role);
+
+    if (!role) {
+      console.log("❌ No role provided");
       return NextResponse.json(
-        { success: false, message: "Missing required fields" },
-        { status: 400 },
-      );
-    }
-    if (password.length < 6) {
-      return NextResponse.json(
-        { success: false, message: "Password must be at least 6 characters" },
+        { success: false, message: "Role is required" },
         { status: 400 },
       );
     }
 
-    // Hash password
-    const hashed = await bcrypt.hash(password, 10);
+    // Only allow admin/staff roles in admin panel
+    const allowedRoles = ["LIBRARIAN", "ADMIN", "ASSISTANT"];
+    if (!allowedRoles.includes(role)) {
+      console.log("❌ Invalid role:", role);
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Invalid role for admin panel. Must be one of: ${allowedRoles.join(", ")}`,
+        },
+        { status: 400 },
+      );
+    }
 
-    // Insert into users
-    const created = await prisma.users.create({
-      data: {
-        first_name: fullName,
-        mid_name: midName || null,
-        last_name: lastName,
-        ext_name: extName || null,
-        email: email,
-        role: role,
-        password: hashed,
-        // created_at will default to null; you can add a @default(now()) in schema if desired
-      },
-    });
+    // Map the request body to match the action's expected format
+    const formData = {
+      firstName: body.fullName || body.firstName,
+      middleName: body.midName || body.middleName,
+      lastName: body.lastName,
+      ext: body.extName || body.ext,
+      email: body.email,
+      password: body.password,
+      confirmPassword: body.confirmPassword || body.password,
+      role: role,
 
-    const newUser = {
-      id: created.user_id,
-      fullName: created.first_name ?? "",
-      middleName: created.mid_name ?? "",
-      lastName: created.last_name ?? "",
-      extension: created.ext_name ?? "",
-      employeeId: "", // Not stored here—use separate `librarian` table if needed
-      email: created.email,
-      role: created.role ?? "",
-      status: "", // No `status` column exists in `users` table
-      userAccess: created.role ?? "",
-      name: `${created.first_name ?? ""} ${created.last_name ?? ""}${
-        created.ext_name ? " " + created.ext_name : ""
-      }`,
+      // Staff-specific fields
+      employeeID: body.employeeID,
+      position: body.position,
+
+      // Librarian-specific fields
+      contactNum: body.contactNum,
     };
 
-    return NextResponse.json({ user: newUser }, { status: 201 });
-  } catch (err) {
-    console.error("Error creating user:", err);
+    console.log("🗂️ Mapped form data for role:", role);
+    console.log("📋 Form data details:", {
+      ...formData,
+      password: formData.password ? "***" : "missing",
+      confirmPassword: formData.confirmPassword ? "***" : "missing",
+      employeeID: formData.employeeID,
+      contactNum: formData.contactNum,
+      hasEmployeeID: !!formData.employeeID,
+      hasContactNum: !!formData.contactNum,
+    });
+
+    console.log("📞 Calling saveAdminStaffInformation action...");
+    const result = await saveAdminStaffInformation(formData);
+    console.log("✅ Action completed successfully:", result);
+
     return NextResponse.json(
-      { success: false, message: "Failed to create user" },
-      { status: 500 },
+      {
+        success: true,
+        message: result.message,
+        user: result.data,
+      },
+      { status: 201 },
     );
-  } finally {
-    await prisma.$disconnect();
+  } catch (error) {
+    console.error("💥 Error in create-user route:", error);
+    console.error(
+      "Error stack:",
+      error instanceof Error ? error.stack : "No stack",
+    );
+
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to create user";
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: errorMessage,
+      },
+      { status: 400 },
+    );
   }
+}
+
+// Get endpoint for form requirements
+export async function GET() {
+  return NextResponse.json({
+    validRoles: ["ADMIN", "ASSISTANT", "LIBRARIAN"], // Only admin panel roles
+    requiredFields: {
+      all: ["firstName", "lastName", "email", "role", "password"],
+      librarian: ["employeeID", "contactNum"],
+      admin: ["employeeID"], // Optional but recommended
+      assistant: ["employeeID"], // Optional but recommended
+      optional: ["middleName", "ext", "position"],
+    },
+    fieldMapping: {
+      fullName: "firstName",
+      midName: "middleName",
+      extName: "ext",
+    },
+    note: "This endpoint is for admin panel user creation only. Students and faculty register through the public registration flow.",
+  });
 }

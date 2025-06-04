@@ -259,7 +259,9 @@ export default function HomePage() {
             </button>
             <button
               onClick={clearAllFilters}
-              className={`${theme === "light" ? "border-white-5" : "border-white-50"} border transition-all duration-300 p-2 rounded-md cursor-pointer`}
+              className={`${
+                theme === "light" ? "border-white-5" : "border-white-50"
+              } border transition-all duration-300 p-2 rounded-md cursor-pointer`}
             >
               Clear Filters
             </button>
@@ -279,7 +281,11 @@ export default function HomePage() {
               Filter <FaFilter />
             </PopoverTrigger>
             <PopoverContent
-              className={`${theme === "light" ? "bg-accent border-white-50" : "bg-dusk border-white-5"}`}
+              className={`${
+                theme === "light"
+                  ? "bg-accent border-white-50"
+                  : "bg-dusk border-white-5"
+              }`}
               align="start"
             >
               <Select>
@@ -302,58 +308,95 @@ export default function HomePage() {
 
               {/* divider */}
               <div
-                className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} h-0.5 w-auto mb-2 mt-2 mx-1`}
+                className={`${
+                  theme === "light" ? "bg-white-50" : "bg-white-5"
+                } h-0.5 w-auto mb-2 mt-2 mx-1`}
               ></div>
 
               <p className="text-lg">Department</p>
               <ul className="ml-1 flex flex-col gap-1">
                 <li>
-                  <Checkbox id="it-courses" />
-                  <label htmlFor="it-courses"> Information Technology</label>
+                  <Checkbox
+                    id="dept-it-mobile"
+                    checked={departments.includes("Information Technology")}
+                    onCheckedChange={() =>
+                      toggle(
+                        "Information Technology",
+                        departments,
+                        setDepartments,
+                      )
+                    }
+                  />
+                  <label htmlFor="dept-it-mobile">
+                    {" "}
+                    Information Technology
+                  </label>
                 </li>
                 <li>
-                  <Checkbox id="cs-courses" />
-                  <label htmlFor="cs-courses"> Computer Science</label>
+                  <Checkbox
+                    id="dept-cs-mobile"
+                    checked={departments.includes("Computer Science")}
+                    onCheckedChange={() =>
+                      toggle("Computer Science", departments, setDepartments)
+                    }
+                  />
+                  <label htmlFor="dept-cs-mobile"> Computer Science</label>
                 </li>
               </ul>
               {/* divider */}
               <div
-                className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} h-0.5 w-auto mb-2 mt-2 mx-2`}
+                className={`${
+                  theme === "light" ? "bg-white-50" : "bg-white-5"
+                } h-0.5 w-auto mb-2 mt-2 mx-2`}
               ></div>
 
               <p className="text-lg">Course</p>
               <ul className="ml-1 flex flex-col gap-1">
-                <li>
-                  <Checkbox id="it-courses" />
-                  <label htmlFor="it-courses"> SIA</label>
-                </li>
-                <li>
-                  <Checkbox id="cs-courses" />
-                  <label htmlFor="cs-courses"> Capstone</label>
-                </li>
-                <li>
-                  <Checkbox id="cs-courses" />
-                  <label htmlFor="cs-courses"> CS Thesis Writing</label>
-                </li>
-                <li>
-                  <Checkbox id="cs-courses" />
-                  <label htmlFor="cs-courses"> Research Writing</label>
-                </li>
+                {[
+                  "SIA",
+                  "Capstone",
+                  "Research Writing",
+                  "CS Thesis Writing",
+                ].map((c) => (
+                  <li key={c}>
+                    <Checkbox
+                      id={`course-${c}-mobile`}
+                      checked={courses.includes(c)}
+                      onCheckedChange={() => toggle(c, courses, setCourses)}
+                    />
+                    <label htmlFor={`course-${c}-mobile`}> {c}</label>
+                  </li>
+                ))}
               </ul>
-              <span className="flex gap-2">
+              <div className="flex flex-col gap-2 mt-4">
                 <button
-                  className={`${theme === "light" ? "bg-white-50" : "bg-white-5"} p-2 mt-3 w-full rounded-sm cursor-pointer`}
+                  onClick={clearAllFilters}
+                  className={`${
+                    theme === "light" ? "bg-white-50" : "bg-white-5"
+                  } p-2 w-full rounded-sm cursor-pointer`}
                 >
                   Clear Filters
                 </button>
-                <button className="bg-gold p-2 mt-3 w-full rounded-sm cursor-pointer">
+                <button
+                  onClick={() => {
+                    applyFilters();
+                    // close popover if needed (depending on your Popover component)
+                  }}
+                  className="bg-gold p-2 w-full rounded-sm cursor-pointer"
+                >
                   Apply Filters
                 </button>
-              </span>
+              </div>
             </PopoverContent>
           </Popover>
         </div>
-        <PapersArea filters={appliedFilters} />
+
+        {/* ←———— Here is the fix: pass page and onTotalPages ————→ */}
+        <PapersArea
+          filters={appliedFilters}
+          page={currentPage}
+          onTotalPages={(n) => setTotalPages(n)}
+        />
 
         <Pagination>
           <PaginationContent>
@@ -397,7 +440,7 @@ export default function HomePage() {
             ))}
 
             {/* If you have a lot of pages, you can drop in
-            <PaginationEllipsis /> at the spots you prefer. */}
+                <PaginationEllipsis /> at the spots you prefer. */}
 
             {/* ─────────────── “NEXT” ─────────────── */}
             <PaginationItem>

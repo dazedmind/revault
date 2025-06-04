@@ -1,7 +1,7 @@
 // File: /app/admin/profile/page.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
 
@@ -17,106 +17,167 @@ export default function AdminProfilePage() {
   const searchParams = useSearchParams();
   const { theme } = useTheme();
 
-  // ── Filter & Sort UI State (mirrors URL)
-  const [departments, setDepartments] = useState<string[]>([]);
-  const [courses, setCourses] = useState<string[]>([]);
-  const [sortOpt, setSortOpt] = useState<string>("");
+  // ── URL-driven state (single source of truth)
+  const [urlState, setUrlState] = useState({
+    departments: [] as string[],
+    courses: [] as string[],
+    sortOpt: "recent", // Default sort
+    currentPage: 1,
+  });
 
-  // ── Pagination State
-  const rawPageParam = searchParams.get("page");
-  const initialPage = rawPageParam ? parseInt(rawPageParam, 10) || 1 : 1;
-  const [currentPage, setCurrentPage] = useState<number>(initialPage);
+  // ── Local filter state (for UI before "Apply")
+  const [localFilters, setLocalFilters] = useState({
+    departments: [] as string[],
+    courses: [] as string[],
+    sortOpt: "recent",
+  });
 
-  // ── Paged Results for display
+  // ── Data state
   const [papers, setPapers] = useState<any[]>([]);
   const [loadingPapers, setLoadingPapers] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState<number>(1);
-
-  // ── All Papers for Stats
   const [allPapers, setAllPapers] = useState<any[]>([]);
   const [loadingAllPapers, setLoadingAllPapers] = useState<boolean>(true);
-
-  // ── Profile/Auth
   const [profile, setProfile] = useState<any>(null);
   const [loadingProfile, setLoadingProfile] = useState<boolean>(true);
 
-  // ── Sync filter/sort/page from URL → local state
-  useEffect(() => {
+  // ── Parse URL params into state (single source of truth)
+  const parseUrlState = useCallback(() => {
     const depsParam = searchParams.get("department");
-    const depsArray = depsParam?.split(",").filter(Boolean) || [];
-    setDepartments(depsArray);
+    const departments = depsParam?.split(",").filter(Boolean) || [];
 
-    const crsParam = searchParams.get("course");
-    const crsArray = crsParam?.split(",").filter(Boolean) || [];
-    setCourses(crsArray);
+    const coursesParam = searchParams.get("course");
+    const courses = coursesParam?.split(",").filter(Boolean) || [];
 
-    const sParam = searchParams.get("sort") || "";
-    setSortOpt(sParam);
+    const sortOpt = searchParams.get("sort") || "recent"; // Default to recent
 
-    const p = rawPageParam ? parseInt(rawPageParam, 10) : 1;
-    setCurrentPage(isNaN(p) || p < 1 ? 1 : p);
-  }, [searchParams, rawPageParam]);
+    const pageParam = searchParams.get("page");
+    const currentPage = pageParam
+      ? Math.max(1, parseInt(pageParam, 10) || 1)
+      : 1;
 
-  // ── Fetch profile & role check (same as before) ────────────────────────────
+    return { departments, courses, sortOpt, currentPage };
+  }, [searchParams]);
+
+  // ── Update URL state when search params change
+  useEffect(() => {
+    const newUrlState = parseUrlState();
+    console.log("📄 URL state updated:", newUrlState);
+
+    setUrlState(newUrlState);
+    setLocalFilters({
+      departments: [...newUrlState.departments],
+      courses: [...newUrlState.courses],
+      sortOpt: newUrlState.sortOpt,
+    });
+  }, [parseUrlState]);
+
+  // ── Fetch profile & role check
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("authToken");
       if (!token) {
+        console.log("❌ No auth token found");
         setLoadingProfile(false);
         router.push("/login");
         return;
       }
+
+      console.log("🔍 Fetching admin profile...");
+
       try {
         const res = await fetch("/admin/api/profile", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
+
         const data = await res.json();
+        console.log("📨 Profile API response:", { status: res.status, data });
+
         if (!res.ok) {
+          console.error(
+            "❌ Profile fetch failed:",
+            data?.error || res.statusText,
+          );
           setLoadingProfile(false);
           return;
         }
-        if (data.users.role !== "librarian") {
-          router.replace("/");
+
+        const allowedRoles = ["ADMIN", "ASSISTANT", "LIBRARIAN"];
+        const userRole = data.users?.role || data.role;
+
+        console.log(
+          "🔍 Checking user role:",
+          userRole,
+          "Allowed:",
+          allowedRoles,
+        );
+
+        if (!userRole || !allowedRoles.includes(userRole)) {
+          console.log("❌ Access denied for role:", userRole);
+          router.replace("/home");
           return;
         }
+
+        console.log("✅ Profile loaded successfully for role:", userRole);
         setProfile(data);
       } catch (err) {
-        console.error("Error fetching profile:", err);
+        console.error("💥 Error fetching profile:", err);
+        setProfile(null);
       } finally {
         setLoadingProfile(false);
       }
     };
+
     fetchProfile();
   }, [router]);
 
-  // ── Fetch 1 page of /api/papers?… (as before) ──────────────────────────────
+  // ── Fetch paged papers based on URL state
   useEffect(() => {
-    const fetchPaged = async () => {
+    const fetchPapers = async () => {
+      if (loadingProfile) return; // Wait for profile to load
+
+      console.log("🔍 Fetching papers with state:", urlState);
       setLoadingPapers(true);
-      const qp = new URLSearchParams();
-      if (searchParams.get("department")) {
-        qp.set("department", searchParams.get("department")!);
-      }
-      if (searchParams.get("course")) {
-        qp.set("course", searchParams.get("course")!);
-      }
-      if (searchParams.get("sort")) {
-        qp.set("sort", searchParams.get("sort")!);
-      }
-      qp.set("page", String(currentPage));
 
       try {
-        const res = await fetch(`/api/papers?${qp.toString()}`, {
-          cache: "no-store",
-        });
+        const qp = new URLSearchParams();
+
+        // Add filters
+        if (urlState.departments.length) {
+          qp.set("department", urlState.departments.join(","));
+        }
+        if (urlState.courses.length) {
+          qp.set("course", urlState.courses.join(","));
+        }
+
+        // Always include sort (default to recent)
+        qp.set("sort", urlState.sortOpt || "recent");
+        qp.set("page", String(urlState.currentPage));
+
+        const apiUrl = `/api/papers?${qp.toString()}`;
+        console.log("📤 Fetching papers from:", apiUrl);
+
+        const res = await fetch(apiUrl, { cache: "no-store" });
+
+        if (!res.ok) {
+          throw new Error(`Papers API returned ${res.status}`);
+        }
+
         const json = await res.json();
+        console.log("📋 Papers response:", {
+          papersCount: Array.isArray(json.papers) ? json.papers.length : 0,
+          totalPages: json.totalPages,
+          currentPage: json.currentPage,
+          sort: urlState.sortOpt,
+        });
+
         setPapers(Array.isArray(json.papers) ? json.papers : []);
         setTotalPages(
           typeof json.totalPages === "number" ? json.totalPages : 1,
         );
       } catch (err) {
-        console.error("failed to load paged papers:", err);
+        console.error("💥 Failed to load papers:", err);
         setPapers([]);
         setTotalPages(1);
       } finally {
@@ -124,107 +185,178 @@ export default function AdminProfilePage() {
       }
     };
 
-    if (!loadingProfile && profile) {
-      fetchPaged();
-    }
-  }, [searchParams, currentPage, loadingProfile, profile]);
+    fetchPapers();
+  }, [urlState, loadingProfile]);
 
-  // ── Fetch all papers once (for StatsSection) ───────────────────────────────
+  // ── Fetch all papers for stats (only once)
   useEffect(() => {
-    const fetchAll = async () => {
+    const fetchAllPapers = async () => {
+      if (loadingProfile) return;
+
+      console.log("🔍 Fetching all papers for stats...");
       setLoadingAllPapers(true);
-      let accumulated: any[] = [];
-      let page = 1;
-      let pages = 1;
 
       try {
+        let allPapersData: any[] = [];
+        let page = 1;
+        let totalPagesCount = 1;
+
         do {
-          const res = await fetch(`/api/papers?page=${page}`, {
+          const res = await fetch(`/api/papers?page=${page}&sort=recent`, {
             cache: "no-store",
           });
-          const json = await res.json();
-          accumulated.push(...(Array.isArray(json.papers) ? json.papers : []));
-          pages = typeof json.totalPages === "number" ? json.totalPages : 1;
-          page += 1;
-        } while (page <= pages);
 
-        setAllPapers(accumulated);
+          if (!res.ok) {
+            throw new Error(
+              `Papers API returned ${res.status} for page ${page}`,
+            );
+          }
+
+          const json = await res.json();
+          const pagePapers = Array.isArray(json.papers) ? json.papers : [];
+          allPapersData.push(...pagePapers);
+          totalPagesCount =
+            typeof json.totalPages === "number" ? json.totalPages : 1;
+
+          console.log(`📋 Stats page ${page}: ${pagePapers.length} papers`);
+          page += 1;
+        } while (page <= totalPagesCount);
+
+        console.log(`✅ Loaded ${allPapersData.length} total papers for stats`);
+        setAllPapers(allPapersData);
       } catch (err) {
-        console.error("failed to load all papers for stats:", err);
+        console.error("💥 Failed to load all papers for stats:", err);
         setAllPapers([]);
       } finally {
         setLoadingAllPapers(false);
       }
     };
 
-    if (!loadingProfile && profile) {
-      fetchAll();
-    }
-  }, [loadingProfile, profile]);
+    fetchAllPapers();
+  }, [loadingProfile]);
 
-  // ── Handlers: toggle local filter state (before “Apply”) ────────────────
+  // ── Filter handlers (update local state only)
   const toggleDepartment = (dept: string) => {
-    setDepartments((prev) =>
-      prev.includes(dept) ? prev.filter((d) => d !== dept) : [...prev, dept],
-    );
+    console.log("🔄 Toggling department:", dept);
+    setLocalFilters((prev) => ({
+      ...prev,
+      departments: prev.departments.includes(dept)
+        ? prev.departments.filter((d) => d !== dept)
+        : [...prev.departments, dept],
+    }));
   };
+
   const toggleCourse = (course: string) => {
-    setCourses((prev) =>
-      prev.includes(course)
-        ? prev.filter((c) => c !== course)
-        : [...prev, course],
-    );
+    console.log("🔄 Toggling course:", course);
+    setLocalFilters((prev) => ({
+      ...prev,
+      courses: prev.courses.includes(course)
+        ? prev.courses.filter((c) => c !== course)
+        : [...prev.courses, course],
+    }));
   };
+
   const handleSortChange = (val: string) => {
-    setSortOpt(val);
+    console.log("🔄 Sort changed to:", val);
+    setLocalFilters((prev) => ({ ...prev, sortOpt: val }));
   };
 
-  // ── Apply Filters: overwrite URL (reset page=1) ──────────────────────────
+  // ── Apply filters: update URL (reset to page 1)
   const applyFilters = () => {
-    const qp = new URLSearchParams();
-    if (departments.length) qp.set("department", departments.join(","));
-    if (courses.length) qp.set("course", courses.join(","));
-    if (sortOpt) qp.set("sort", sortOpt);
-    qp.set("page", "1");
+    console.log("✅ Applying filters:", localFilters);
 
-    router.replace(`${pathname}?${qp.toString()}`, { scroll: false });
+    const qp = new URLSearchParams();
+
+    if (localFilters.departments.length) {
+      qp.set("department", localFilters.departments.join(","));
+    }
+    if (localFilters.courses.length) {
+      qp.set("course", localFilters.courses.join(","));
+    }
+    if (localFilters.sortOpt && localFilters.sortOpt !== "recent") {
+      qp.set("sort", localFilters.sortOpt);
+    }
+    // Always reset to page 1 when applying filters
+    // Don't set page=1 in URL, just omit it (cleaner URLs)
+
+    const newUrl = `${pathname}${qp.toString() ? `?${qp.toString()}` : ""}`;
+    console.log("📤 Applying filters, navigating to:", newUrl);
+    router.replace(newUrl, { scroll: false });
   };
 
-  // ── Clear Filters completely ⟶ clear URL entirely ───────────────────────
+  // ── Clear all filters
   const clearAllFilters = () => {
-    setDepartments([]);
-    setCourses([]);
-    setSortOpt("");
+    console.log("🗑️ Clearing all filters");
+    setLocalFilters({
+      departments: [],
+      courses: [],
+      sortOpt: "recent",
+    });
     router.replace(pathname, { scroll: false });
   };
 
-  // ── Pagination: adjust only ?page= ─────────────────────────────────────
+  // ── Pagination handler
   const goToPage = (newPage: number) => {
-    if (newPage < 1) newPage = 1;
-    if (newPage > totalPages) newPage = totalPages;
+    if (newPage < 1 || newPage > totalPages) return;
 
-    const qp = new URLSearchParams(Object.fromEntries(searchParams.entries()));
-    if (newPage === 1) {
-      qp.delete("page");
-    } else {
+    console.log("📄 Going to page:", newPage);
+
+    const qp = new URLSearchParams();
+
+    // Preserve current filters
+    if (urlState.departments.length) {
+      qp.set("department", urlState.departments.join(","));
+    }
+    if (urlState.courses.length) {
+      qp.set("course", urlState.courses.join(","));
+    }
+    if (urlState.sortOpt && urlState.sortOpt !== "recent") {
+      qp.set("sort", urlState.sortOpt);
+    }
+
+    // Only add page if not page 1 (cleaner URLs)
+    if (newPage > 1) {
       qp.set("page", String(newPage));
     }
-    router.replace(`${pathname}?${qp.toString()}`, { scroll: false });
+
+    const newUrl = `${pathname}${qp.toString() ? `?${qp.toString()}` : ""}`;
+    console.log("📤 Pagination, navigating to:", newUrl);
+    router.replace(newUrl, { scroll: false });
   };
 
+  // ── Loading states
   if (loadingProfile) {
     return <ProfileHeader profile={null} loading={true} />;
   }
+
   if (!profile) {
-    return <div className="p-8 text-center">Unable to load profile.</div>;
+    return (
+      <div className="p-8 text-center">
+        <h1 className="text-2xl mb-4">Profile Loading Failed</h1>
+        <p className="text-gray-600">
+          Unable to load profile. You may not have access to this page.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 bg-gold px-4 py-2 rounded"
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
-  // ── Build “preview PDF” link (omit page= so backend returns all matches) ──
+  // ── PDF download link (use URL state, not local filters)
   const pdfParams = new URLSearchParams();
-  if (departments.length) pdfParams.set("department", departments.join(","));
-  if (courses.length) pdfParams.set("course", courses.join(","));
-  if (sortOpt) pdfParams.set("sort", sortOpt);
-  // intentionally do NOT append “page” here
+  if (urlState.departments.length) {
+    pdfParams.set("department", urlState.departments.join(","));
+  }
+  if (urlState.courses.length) {
+    pdfParams.set("course", urlState.courses.join(","));
+  }
+  if (urlState.sortOpt && urlState.sortOpt !== "recent") {
+    pdfParams.set("sort", urlState.sortOpt);
+  }
 
   const previewHref = `/admin/papers-preview-pdf?${pdfParams.toString()}`;
 
@@ -236,9 +368,9 @@ export default function AdminProfilePage() {
         <StatsSection allPapers={allPapers} />
 
         <FilterBar
-          departments={departments}
-          courses={courses}
-          sortOpt={sortOpt}
+          departments={localFilters.departments}
+          courses={localFilters.courses}
+          sortOpt={localFilters.sortOpt}
           onToggleDepartment={toggleDepartment}
           onToggleCourse={toggleCourse}
           onSortChange={handleSortChange}
@@ -246,11 +378,8 @@ export default function AdminProfilePage() {
           onClearFilters={clearAllFilters}
           theme={theme}
           downloadComponent={
-            <a href={previewHref} target="__blank">
-              <button
-                className="bg-gold p-2 px-4 font-sans flex items-center 
-            gap-2 rounded-lg cursor-pointer"
-              >
+            <a href={previewHref} target="_blank" rel="noopener noreferrer">
+              <button className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
                 <p className="hidden md:block">Download</p>
               </button>
             </a>
@@ -271,12 +400,44 @@ export default function AdminProfilePage() {
           />
 
           <PaginationControls
-            currentPage={currentPage}
+            currentPage={urlState.currentPage}
             totalPages={totalPages}
             onChangePage={goToPage}
           />
         </div>
       </main>
+
+      {/* Debug Panel */}
+      {process.env.NODE_ENV === "development" && (
+        <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded text-xs max-w-sm">
+          <h4 className="font-bold mb-2">Debug Info:</h4>
+          <p>Profile: {profile ? "✅" : "❌"}</p>
+          <p>
+            Papers: {papers.length} | Page: {urlState.currentPage}/{totalPages}
+          </p>
+          <p>All Papers: {allPapers.length}</p>
+          <p>Sort: {urlState.sortOpt}</p>
+          <p>
+            URL Filters: D:{urlState.departments.length} C:
+            {urlState.courses.length}
+          </p>
+          <p>
+            Local Filters: D:{localFilters.departments.length} C:
+            {localFilters.courses.length}
+          </p>
+          <p>
+            Loading: P:{loadingPapers ? "⏳" : "✅"} A:
+            {loadingAllPapers ? "⏳" : "✅"}
+          </p>
+          <p>
+            Filters Match:{" "}
+            {JSON.stringify(urlState.departments) ===
+            JSON.stringify(localFilters.departments)
+              ? "✅"
+              : "❌"}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

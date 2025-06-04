@@ -32,6 +32,41 @@ export async function GET(req: Request) {
           users: {
             ...user.users,
             user_id: user.users.user_id.toString(),
+            name: user.users.first_name + " " + user.users.last_name,
+          },
+        };
+      }
+    } else if (payload.role === "ASSISTANT") {
+      user = await prisma.librarian.findFirst({
+        where: { employee_id: userNumber },
+        include: { users: true },
+      });
+
+      if (user) {
+        user = {
+          ...user,
+          employee_id: user.employee_id.toString(),
+          users: {
+            ...user.users,
+            user_id: user.users.user_id.toString(),
+            name: user.users.first_name + " " + user.users.last_name,
+          },
+        };
+      }
+    } else if (payload.role === "LIBRARIAN") {
+      user = await prisma.librarian.findFirst({
+        where: { employee_id: userNumber },
+        include: { users: true },
+      });
+
+      if (user) {
+        user = {
+          ...user,
+          employee_id: user.employee_id.toString(),
+          users: {
+            ...user.users,
+            user_id: user.users.user_id.toString(),
+            name: user.users.first_name + " " + user.users.last_name,
           },
         };
       }

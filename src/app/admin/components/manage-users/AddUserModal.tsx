@@ -1,4 +1,4 @@
-// components/manage-users/AddUserModal.tsx
+// app/admin/components/manage-users/AddUserModal.tsx
 "use client";
 import { Dispatch, SetStateAction, ChangeEvent } from "react";
 
@@ -7,9 +7,11 @@ interface NewUser {
   middleName: string;
   lastName: string;
   extension: string;
-  employeeId: string;
+  employeeID: string; // Changed from employeeId
   email: string;
   userAccess: string;
+  contactNum: string; // Added for librarian
+  position: string; // Added optional position field
   status: string;
 }
 
@@ -40,7 +42,7 @@ export default function AddUserModal({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="p-6 rounded-lg bg-dusk w-full max-w-md relative z-10">
+      <div className="p-6 rounded-lg dark:bg-primary border-1 dark:border-foreground w-full max-w-md relative z-10 max-h-[90vh] overflow-y-auto">
         <div className="space-y-6">
           <div>
             <h3 className="text-lg font-medium mb-4 text-gold">
@@ -56,7 +58,8 @@ export default function AddUserModal({
                   name="fullName"
                   value={newUser.fullName}
                   onChange={onInputChange}
-                  className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl  text-sm h-[45px]"
+                  required
                 />
               </div>
               <div>
@@ -68,7 +71,7 @@ export default function AddUserModal({
                   name="middleName"
                   value={newUser.middleName}
                   onChange={onInputChange}
-                  className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
                 />
               </div>
             </div>
@@ -82,7 +85,8 @@ export default function AddUserModal({
                   name="lastName"
                   value={newUser.lastName}
                   onChange={onInputChange}
-                  className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                  required
                 />
               </div>
               <div>
@@ -94,7 +98,7 @@ export default function AddUserModal({
                   name="extension"
                   value={newUser.extension}
                   onChange={onInputChange}
-                  className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
                 />
               </div>
             </div>
@@ -112,23 +116,26 @@ export default function AddUserModal({
                 </label>
                 <input
                   type="text"
-                  name="employeeId"
-                  value={newUser.employeeId}
+                  name="employeeID" // Changed from employeeId
+                  value={newUser.employeeID}
                   onChange={onInputChange}
-                  className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                  required
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  User Access
+                  User Access *
                 </label>
                 <div className="relative">
                   <select
                     name="userAccess"
                     value={newUser.userAccess}
                     onChange={onInputChange}
-                    className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px] pr-8 appearance-none"
+                    className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px] pr-8 appearance-none"
+                    required
                   >
+                    <option value="">Select Role</option>
                     <option value="Librarian-in-Charge">
                       Librarian-in-Charge
                     </option>
@@ -147,7 +154,8 @@ export default function AddUserModal({
                 </div>
               </div>
             </div>
-            <div>
+
+            <div className="mb-4">
               <label className="block text-sm font-medium mb-2">
                 Email Address *
               </label>
@@ -156,9 +164,25 @@ export default function AddUserModal({
                 name="email"
                 value={newUser.email}
                 onChange={onInputChange}
-                className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                required
               />
             </div>
+
+            {/* Position field - optional for all roles */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">Position</label>
+              <input
+                type="text"
+                name="position"
+                value={newUser.position}
+                onChange={onInputChange}
+                placeholder="e.g. Head Librarian, Senior Admin"
+                className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+              />
+            </div>
+
+            {/* Removed contact number field entirely */}
           </div>
 
           {/* Password Section */}
@@ -171,10 +195,12 @@ export default function AddUserModal({
               <input
                 type="password"
                 name="password"
-                placeholder="Enter Password"
+                placeholder="Enter Password (min. 6 characters)"
                 value={newUserPasswords.password}
                 onChange={onPasswordChange}
-                className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                required
+                minLength={6}
               />
             </div>
             <div>
@@ -187,7 +213,8 @@ export default function AddUserModal({
                 placeholder="Enter Password Again"
                 value={newUserPasswords.confirmPassword}
                 onChange={onPasswordChange}
-                className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
+                className="w-full p-2 pl-3 border border-[#444] rounded-xl text-sm h-[45px]"
+                required
               />
             </div>
             {newUserPasswordError && (
@@ -206,7 +233,7 @@ export default function AddUserModal({
             </button>
             <button
               onClick={onAddUser}
-              className="px-4 py-2 rounded-[12px] text-white transition-colors bg-gold hover:opacity-90"
+              className="px-4 py-2 rounded-[12px] transition-colors bg-gold hover:opacity-90"
             >
               Add User
             </button>

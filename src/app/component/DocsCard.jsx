@@ -8,7 +8,6 @@ import DocsLoader from "./DocsLoader";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { GoBookmark, GoBookmarkSlash, GoEye, GoPencil } from "react-icons/go";
-import { GoBookmark, GoBookmarkSlash, GoEye, GoPencil } from "react-icons/go";
 
 const tagColors = {
   IT: "bg-dusk",
@@ -107,8 +106,6 @@ const DocsCard = (props) => {
       toast.success(data.message || "Paper Bookmarked successfully.");
       setIsBookmarked(true);
       setBookmarkCount((prev) => prev + 1);
-      setIsBookmarked(true);
-      setBookmarkCount((prev) => prev + 1);
     } catch (err) {
       console.error("Bookmark error:", err);
       toast.error("An error occurred while bookmarking.");
@@ -122,10 +119,6 @@ const DocsCard = (props) => {
       if (!token) {
         return router.push("/login");
       }
-
-      // Check bookmark status and count
-      await checkBookmarkStatus();
-      await fetchBookmarkCount();
 
       // Check bookmark status and count
       await checkBookmarkStatus();
@@ -239,7 +232,11 @@ const DocsCard = (props) => {
             </Link>
             {(() => {
               const userType = localStorage.getItem("userType");
-              if (userType !== "ADMIN" && userType !== "ASSISTANT") {
+              if (
+                userType !== "ADMIN" &&
+                userType !== "ASSISTANT" &&
+                userType !== "LIBRARIAN"
+              ) {
                 return viewFromAdmin ? (
                   <button
                     onClick={() => router.push("/upload")}
