@@ -105,12 +105,12 @@ export function ProfileHeader({ profile, loading }: ProfileHeaderProps) {
     return fullName;
   };
 
-  const displayName = constructFullName() || profile.firstName || "Admin User";
+  const displayName = constructFullName();
 
   console.log("🎯 Final display name:", displayName);
   console.log("📋 Profile data being sent to ProfileCard:", {
     name: displayName,
-    number: profile.userNumber || profile.user_id?.toString() || "",
+    number: profile.userNumber,
     college: getDepartmentInfo(),
     programOrDept: profile.department || "",
     position: profile.position || getRoleDisplayName(profile.role),
@@ -123,10 +123,10 @@ export function ProfileHeader({ profile, loading }: ProfileHeaderProps) {
       <ProfileCard
         profile_picture={profile.profile_picture || avatar}
         name={displayName}
-        number={profile.userNumber || profile.user_id?.toString() || ""}
+        number={profile.userNumber}
         college={getDepartmentInfo()}
         programOrDept={profile.department || ""}
-        position={profile.position || getRoleDisplayName(profile.role)}
+        position={getRoleDisplayName(profile.role)}
       />
     </>
   );
