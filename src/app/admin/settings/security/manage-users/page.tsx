@@ -1,147 +1,159 @@
+// File: src/app/admin/settings/security/manage-users/ManageUserSettings.tsx
 "use client";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { FaPen, FaTrash } from "react-icons/fa";
-import user from "../../../../img/user.png";
-import Image from "next/image";
+
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { Plus } from "lucide-react";
 
-const ManageUserSettings = () => {
+import UsersTable from "@/app/admin/components/manage-users/UsersTable";
+import AddUserModal from "@/app/admin/components/manage-users/AddUserModal";
+import DeleteConfirmationModal from "@/app/admin/components/manage-users/DeleteConfirmationModal";
+import EditUserModal from "@/app/admin/components/manage-users/EditUserModal";
+
+interface FrontendUser {
+  id: number;
+  fullName: string;
+  middleName: string;
+  lastName: string;
+  extension: string;
+  employeeID: string; // Changed from employeeId
+  email: string;
+  role: string;
+  status: string;
+  userAccess: string;
+  contactNum: string; // Added
+  position: string; // Added
+  name: string;
+}
+
+export default function ManageUserSettings() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john.doe@example.com",
-      role: "Admin",
-      status: "Active",
-      fullName: "Juan Protacio",
-      middleName: "",
-      lastName: "Dela Cruz",
-      extension: "Jr.",
-      employeeId: "1023456",
-      userAccess: "Librarian"
-    },
-    {
-      id: 2,
-      name: "Maria Clara",
-      email: "maria.clara@example.com",
-      role: "Librarian",
-      status: "Active",
-      fullName: "Maria Clara",
-      middleName: "Ignacia",
-      lastName: "Santos",
-      extension: "",
-      employeeId: "1023456",
-      userAccess: "Librarian"
-    },
-    {
-      id: 3,
-      name: "Jose Burgos",
-      email: "jose.burgos@example.com",
-      role: "Librarian",
-      status: "Inactive",
-      fullName: "Jose Apolonio",
-      middleName: "Gomez",
-      lastName: "Burgos",
-      extension: "",
-      employeeId: "1023456",
-      userAccess: "Librarian"
-    },
-    {
-      id: 4,
-      name: "Andres Bonifacio",
-      email: "andres.b@example.com",
-      role: "Admin",
-      status: "Active",
-      fullName: "Andres",
-      middleName: "de Castro",
-      lastName: "Bonifacio",
-      extension: "",
-      employeeId: "1023456",
-      userAccess: "Admin"
-    }
-  ]);
+
+  // ─── Users state ───
+  const [users, setUsers] = useState<FrontendUser[]>([]);
+
+  // ─── Delete modal state ───
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [userToDelete, setUserToDelete] = useState(null);
+  const [userToDelete, setUserToDelete] = useState<number | null>(null);
+
+  // ─── Edit modal state ───
   const [showEditModal, setShowEditModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentEditUser, setCurrentEditUser] = useState<FrontendUser | null>(
+    null,
+  );
   const [passwords, setPasswords] = useState({
     newPassword: "",
     confirmPassword: "",
   });
   const [passwordError, setPasswordError] = useState("");
-  // Add Librarian Modal State
+
+  // ─── Add modal state ───
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newUser, setNewUser] = useState({
+  const [newUser, setNewUser] = useState<Omit<FrontendUser, "id" | "name">>({
     fullName: "",
     middleName: "",
     lastName: "",
     extension: "",
-    employeeId: "",
+    employeeID: "", // Changed from employeeId
     email: "",
-    userAccess: "Librarian",
-    status: "Active"
+    role: "LIBRARIAN", // Changed to match enum
+    status: "Active",
+    userAccess: "Librarian-in-Charge", // Default to librarian
+    contactNum: "", // Added
+    position: "", // Added
   });
   const [newUserPasswords, setNewUserPasswords] = useState({
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [newUserPasswordError, setNewUserPasswordError] = useState("");
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  const handleDeleteClick = (userId) => {
-    setUserToDelete(userId);
+  // ─── Fetch admin/staff users ───
+  useEffect(() => {
+    if (!mounted) return;
+
+    console.log("🔄 Fetching admin/staff users...");
+
+    fetch("/admin/api/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Failed to fetch users (${res.status})`);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("✅ Users fetched successfully:", data);
+        if (data.success && Array.isArray(data.users)) {
+          setUsers(data.users);
+        } else {
+          console.error("❌ Invalid response format:", data);
+          setUsers([]);
+        }
+      })
+      .catch((err) => {
+        console.error("💥 Error fetching users:", err);
+        setUsers([]);
+      });
+  }, [mounted]);
+
+  // ─── Delete handlers ───
+  const handleDeleteClick = (id: number) => {
+    setUserToDelete(id);
     setShowDeleteModal(true);
   };
+  const handleConfirmDelete = () => {
+    if (userToDelete === null) return;
 
-  const handleEditClick = (user) => {
-    setCurrentUser(JSON.parse(JSON.stringify(user)));
+    fetch(`/admin/api/delete-user/${userToDelete}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Failed to delete user (${res.status})`);
+        return res.json();
+      })
+      .then(() => {
+        setUsers((prev) => prev.filter((u) => u.id !== userToDelete));
+        setShowDeleteModal(false);
+        setUserToDelete(null);
+      })
+      .catch((err) => {
+        console.error("Error deleting user:", err);
+      });
+  };
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setUserToDelete(null);
+  };
+
+  // ─── Edit handlers ───
+  const handleEditClick = (user: FrontendUser) => {
+    setCurrentEditUser({ ...user });
     setPasswords({ newPassword: "", confirmPassword: "" });
     setPasswordError("");
     setShowEditModal(true);
   };
-
-  const confirmDelete = () => {
-    if (userToDelete) {
-      setUsers(users.filter(user => user.id !== userToDelete));
-    }
-    setShowDeleteModal(false);
-    setUserToDelete(null);
-  };
-
-  const cancelDelete = () => {
-    setShowDeleteModal(false);
-    setUserToDelete(null);
-  };
-
-  const handleInputChange = (e) => {
+  const handleEditInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    if (!currentEditUser) return;
     const { name, value } = e.target;
-    setCurrentUser({
-      ...currentUser,
-      [name]: value
-    });
+    setCurrentEditUser((prev) => (prev ? { ...prev, [name]: value } : null));
   };
-
-  const handlePasswordChange = (e) => {
+  const handleEditPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setPasswords({
-      ...passwords,
-      [name]: value
-    });
+    setPasswords((prev) => ({ ...prev, [name]: value }));
   };
+  const handleSaveEdit = () => {
+    if (!currentEditUser) return;
 
-  const handleSave = () => {
     if (passwords.newPassword || passwords.confirmPassword) {
       if (passwords.newPassword !== passwords.confirmPassword) {
         setPasswordError("Passwords do not match");
@@ -153,512 +165,242 @@ const ManageUserSettings = () => {
       }
     }
 
-    const updatedUsers = users.map(user => {
-      if (user.id === currentUser.id) {
-        const updatedName = `${currentUser.fullName} ${currentUser.lastName}${currentUser.extension ? ' ' + currentUser.extension : ''}`;
-        
-        return {
-          ...currentUser,
-          name: updatedName,
-          role: currentUser.userAccess
-        };
-      }
-      return user;
-    });
-
-    setUsers(updatedUsers);
-    setShowEditModal(false);
-    setCurrentUser(null);
-    setPasswords({ newPassword: "", confirmPassword: "" });
-    setPasswordError("");
+    fetch(`/admin/api/update-user/${currentEditUser.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fullName: currentEditUser.fullName,
+        middleName: currentEditUser.middleName,
+        lastName: currentEditUser.lastName,
+        extension: currentEditUser.extension,
+        employeeID: currentEditUser.employeeID, // Changed from employeeId
+        email: currentEditUser.email,
+        role: currentEditUser.role,
+        status: currentEditUser.status,
+        contactNum: currentEditUser.contactNum, // Added
+        position: currentEditUser.position, // Added
+        password: passwords.newPassword || undefined,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Failed to update user (${res.status})`);
+        return res.json();
+      })
+      .then((data: { user: FrontendUser }) => {
+        const updatedUser = data.user;
+        setUsers((prev) =>
+          prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)),
+        );
+        setShowEditModal(false);
+        setCurrentEditUser(null);
+        setPasswords({ newPassword: "", confirmPassword: "" });
+        setPasswordError("");
+      })
+      .catch((err) => {
+        console.error("Error updating user:", err);
+      });
   };
 
-  // Add Librarian handlers
-  const handleAddLibrarian = () => {
-    resetNewUserForm();
-    setShowAddModal(true);
-  };
-
-  const resetNewUserForm = () => {
+  // ─── Add handlers ───
+  const handleAddClick = () => {
     setNewUser({
       fullName: "",
       middleName: "",
       lastName: "",
       extension: "",
-      employeeId: "",
+      employeeID: "", // Changed from employeeId
       email: "",
-      userAccess: "Librarian",
-      status: "Active"
+      role: "LIBRARIAN", // Changed to match enum
+      status: "Active",
+      userAccess: "Librarian-in-Charge", // Default selection
+      contactNum: "", // Added
+      position: "", // Added
     });
-    setNewUserPasswords({
-      password: "",
-      confirmPassword: ""
-    });
+    setNewUserPasswords({ password: "", confirmPassword: "" });
     setNewUserPasswordError("");
+    setShowAddModal(true);
   };
-
-  const handleNewUserInputChange = (e) => {
+  const handleNewUserInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
-    setNewUser({
-      ...newUser,
-      [name]: value
-    });
+    setNewUser((prev) => ({ ...prev, [name]: value }));
   };
-
-  const handleNewUserPasswordChange = (e) => {
+  const handleNewUserPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewUserPasswords({
-      ...newUserPasswords,
-      [name]: value
-    });
+    setNewUserPasswords((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddUser = () => {
-    // Validate required fields
-    if (!newUser.fullName || !newUser.lastName || !newUser.email || !newUser.employeeId) {
+    // Validation
+    if (
+      !newUser.fullName ||
+      !newUser.lastName ||
+      !newUser.email ||
+      !newUser.employeeID ||
+      !newUser.userAccess
+    ) {
       setNewUserPasswordError("Please fill in all required fields");
       return;
     }
 
-    // Validate passwords
     if (!newUserPasswords.password || !newUserPasswords.confirmPassword) {
       setNewUserPasswordError("Password is required");
       return;
     }
-
     if (newUserPasswords.password !== newUserPasswords.confirmPassword) {
       setNewUserPasswordError("Passwords do not match");
       return;
     }
-
     if (newUserPasswords.password.length < 6) {
       setNewUserPasswordError("Password must be at least 6 characters");
       return;
     }
 
-    // Create new user name from form fields
-    const name = `${newUser.fullName} ${newUser.lastName}${newUser.extension ? ' ' + newUser.extension : ''}`;
-    
-    // Generate a new unique ID (simple implementation)
-    const newId = Math.max(...users.map(user => user.id)) + 1;
-    
-    // Add new user to the users array
-    const userToAdd = {
-      id: newId,
-      name: name,
-      email: newUser.email,
-      role: newUser.userAccess,
-      status: newUser.status,
-      fullName: newUser.fullName,
-      middleName: newUser.middleName,
-      lastName: newUser.lastName,
-      extension: newUser.extension,
-      employeeId: newUser.employeeId,
-      userAccess: newUser.userAccess
+    // Map userAccess to API role format
+    const roleMapping: { [key: string]: string } = {
+      "Librarian-in-Charge": "LIBRARIAN",
+      "Admin Assistant": "ASSISTANT",
+      Admin: "ADMIN",
     };
-    
-    setUsers([...users, userToAdd]);
-    setShowAddModal(false);
-    resetNewUserForm();
+
+    const apiPayload = {
+      fullName: newUser.fullName,
+      midName: newUser.middleName,
+      lastName: newUser.lastName,
+      extName: newUser.extension,
+      employeeID: newUser.employeeID, // API expects this field name
+      email: newUser.email,
+      role: roleMapping[newUser.userAccess] || "LIBRARIAN", // Map to enum values
+      password: newUserPasswords.password,
+      confirmPassword: newUserPasswords.confirmPassword,
+      position: newUser.position,
+      // Removed contactNum since we don't need it
+    };
+
+    console.log("Sending API payload:", {
+      ...apiPayload,
+      password: "***",
+      confirmPassword: "***",
+    });
+
+    fetch("/admin/api/create-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(apiPayload),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((errorData) => {
+            throw new Error(
+              errorData.message || `Failed to create user (${res.status})`,
+            );
+          });
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("User created successfully:", data);
+
+        // Create frontend user object from API response
+        const createdUser: FrontendUser = {
+          id: data.user.userId,
+          fullName: data.user.fullName || newUser.fullName,
+          middleName: data.user.middleName || newUser.middleName,
+          lastName: data.user.lastName || newUser.lastName,
+          extension: data.user.extension || newUser.extension,
+          employeeID: data.user.employeeId || newUser.employeeID,
+          email: data.user.email,
+          role: data.user.role,
+          status: "Active",
+          userAccess: newUser.userAccess,
+          contactNum: "0", // Always 0 since we don't collect it
+          position: data.user.position || newUser.position,
+          name: `${newUser.fullName} ${newUser.lastName}${newUser.extension ? " " + newUser.extension : ""}`,
+        };
+
+        setUsers((prev) => [...prev, createdUser]);
+        setShowAddModal(false);
+        setNewUserPasswordError(""); // Clear any previous errors
+      })
+      .catch((err) => {
+        console.error("Error creating user:", err);
+        setNewUserPasswordError(
+          err.message || "Failed to create user. Please try again.",
+        );
+      });
   };
 
   if (!mounted) return null;
 
   return (
-    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 rounded-xl border-1 border-white-5`}>
-      
-      {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-          <div className={`p-6 rounded-lg ${theme === 'light' ? 'bg-white' : 'bg-dusk'} w-96 shadow-xl border ${theme === 'light' ? 'border-gray-200' : 'border-gray-700'} pointer-events-auto`}>
-            <div className="text-center mb-6">
-              <h2 className="text-xl font-semibold">Are you sure you want to delete this user?</h2>
-            </div>
-            <div className="text-center mb-6 text-sm text-gray-500">
-              This action cannot be undone
-            </div>
-            <div className="flex justify-center gap-4">
-              <button 
-                onClick={cancelDelete}
-                className="px-4 py-2 rounded-md border border-gray-300 hover:bg-opacity-10 hover:bg-gray-600 transition-colors"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={confirmDelete}
-                className="px-4 py-2 rounded-md bg-red-warning text-white hover:bg-red-700 transition-colors"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+    <div
+      className={`flex flex-col w-auto ${
+        theme === "light" ? "bg-secondary border-white-50" : "bg-midnight"
+      } p-6 rounded-xl border-1 border-white-5`}
+    >
+      {/* ─── Delete Confirmation Modal ─── */}
+      <DeleteConfirmationModal
+        theme={theme}
+        show={showDeleteModal}
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+      />
 
-      {/* Edit User Modal */}
-      {showEditModal && currentUser && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className={`p-6 rounded-lg bg-dusk w-full max-w-md relative z-10`}>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-medium mb-4 text-gold">Personal Information</h3>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Full Name</label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      value={currentUser.fullName}
-                      onChange={handleInputChange}
-                      className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Middle Name</label>
-                    <input
-                      type="text"
-                      name="middleName"
-                      value={currentUser.middleName}
-                      onChange={handleInputChange}
-                      className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Last Name</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={currentUser.lastName}
-                      onChange={handleInputChange}
-                      className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Ext. (e.g. III, Sr.)</label>
-                    <input
-                      type="text"
-                      name="extension"
-                      value={currentUser.extension}
-                      onChange={handleInputChange}
-                      className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                    />
-                  </div>
-                </div>
-              </div>
+      {/* ─── Edit User Modal ─── */}
+      <EditUserModal
+        theme={theme}
+        show={showEditModal}
+        user={currentEditUser}
+        passwords={passwords}
+        passwordError={passwordError}
+        onInputChange={handleEditInputChange}
+        onPasswordChange={handleEditPasswordChange}
+        onCancel={() => {
+          setShowEditModal(false);
+          setCurrentEditUser(null);
+          setPasswords({ newPassword: "", confirmPassword: "" });
+          setPasswordError("");
+        }}
+        onSave={handleSaveEdit}
+      />
 
-             {/* Employee Information Section */}
-              <div>
-                <h3 className="text-lg font-medium mb-4 text-gold">Employee Information</h3>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Employee ID</label>
-                    <input
-                      type="text"
-                      name="employeeId"
-                      value={currentUser.employeeId}
-                      onChange={handleInputChange}
-                      className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">User Access</label>
-                    <div className="relative">
-                      <select
-                        name="userAccess"
-                        value={currentUser.userAccess}
-                        onChange={handleInputChange}
-                        className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px] pr-8 appearance-none"
-                      >
-                        <option>Librarian</option>
-                        <option>Admin</option>
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* Moved Email Address Here */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">Email Address</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={currentUser.email}
-                    onChange={handleInputChange}
-                    className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                  />
-                </div>
-              </div>
+      {/* ─── Add User Modal ─── */}
+      <AddUserModal
+        theme={theme}
+        show={showAddModal}
+        newUser={newUser}
+        newUserPasswords={newUserPasswords}
+        newUserPasswordError={newUserPasswordError}
+        onInputChange={handleNewUserInputChange}
+        onPasswordChange={handleNewUserPasswordChange}
+        onCancel={() => setShowAddModal(false)}
+        onAddUser={handleAddUser}
+      />
 
-              <div>
-                <h3 className="text-lg font-medium mb-4 text-gold">Password</h3>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">Create Password</label>
-                  <input
-                    type="password"
-                    name="newPassword"
-                    placeholder="Enter Password"
-                    value={passwords.newPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Confirm Password</label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Enter Password Again"
-                    value={passwords.confirmPassword}
-                    onChange={handlePasswordChange}
-                    className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                  />
-                </div>
-                {passwordError && (
-                  <p className="text-red-500 text-sm mt-2">{passwordError}</p>
-                )}
-              </div>
-
-              <div className="flex justify-end gap-4 pt-4">
-                <button
-                  onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 rounded-[12px] bg-transparent border border-gray-600 hover:bg-opacity-10 hover:bg-gray-600 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSave}
-                  className="px-4 py-2 rounded-[12px] text-white transition-colors bg-gold hover:opacity-90"
-                >
-                  Update User
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add Librarian Modal - Modified to match the Edit Modal style */}
-      {showAddModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className={`p-6 rounded-lg bg-dusk w-full max-w-md relative z-10`}>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-medium mb-4 text-gold">Personal Information</h3>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">First Name *</label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      value={newUser.fullName}
-                      onChange={handleNewUserInputChange}
-                      className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Middle Name</label>
-                    <input
-                      type="text"
-                      name="middleName"
-                      value={newUser.middleName}
-                      onChange={handleNewUserInputChange}
-                      className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Last Name *</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={newUser.lastName}
-                      onChange={handleNewUserInputChange}
-                      className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Ext. (e.g. III, Sr.)</label>
-                    <input
-                      type="text"
-                      name="extension"
-                      value={newUser.extension}
-                      onChange={handleNewUserInputChange}
-                      className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Employee Information Section */}
-              <div>
-                <h3 className="text-lg font-medium mb-4 text-gold">Employee Information</h3>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Employee ID *</label>
-                    <input
-                      type="text"
-                      name="employeeId"
-                      value={newUser.employeeId}
-                      onChange={handleNewUserInputChange}
-                      className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">User Access</label>
-                    <div className="relative">
-                      <select
-                        name="userAccess"
-                        value={newUser.userAccess}
-                        onChange={handleNewUserInputChange}
-                        className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px] pr-8 appearance-none"
-                      >
-                        <option>Librarian</option>
-                        <option>Admin</option>
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Email Address *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={newUser.email}
-                    onChange={handleNewUserInputChange}
-                    className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-medium mb-4 text-gold">Password</h3>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">Create Password *</label>
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Enter Password"
-                    value={newUserPasswords.password}
-                    onChange={handleNewUserPasswordChange}
-                    className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Confirm Password *</label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Enter Password Again"
-                    value={newUserPasswords.confirmPassword}
-                    onChange={handleNewUserPasswordChange}
-                    className="w-full p-2 pl-3 bg-dusk border border-[#444] rounded-xl text-white text-sm h-[45px]"
-                  />
-                </div>
-                {newUserPasswordError && (
-                  <p className="text-red-500 text-sm mt-2">{newUserPasswordError}</p>
-                )}
-              </div>
-
-              <div className="flex justify-end gap-4 pt-4">
-                <button
-                  onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-[12px] bg-transparent border border-gray-600 hover:bg-opacity-10 hover:bg-gray-600 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleAddUser}
-                  className="px-4 py-2 rounded-[12px] text-white transition-colors bg-gold hover:opacity-90"
-                >
-                  Add User
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
+      {/* ─── Header + Create New Button ─── */}
       <div className="flex justify-between w-auto">
         <h1 className="text-2xl ml-1">Manage Users</h1>
-        <button 
-          onClick={handleAddLibrarian}
-          className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+        <button
+          onClick={handleAddClick}
+          className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer"
+        >
           <span className="hidden md:block text-sm">Create New</span>
           <Plus className="block md:hidden" />
         </button>
       </div>
 
-      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
+      <div
+        className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-dusk"}`}
+      />
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]"></TableHead>
-            <TableHead className="w-[200px]">Name</TableHead>
-            <TableHead className="w-[250px]">Email</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-center">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map((userData) => (
-            <TableRow key={userData.id}>
-              <TableCell className="py-3 align-middle">
-                <div className="flex justify-center">
-                  <Image
-                    src={user}
-                    alt="avatar"
-                    width={40}
-                    height={40}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                </div>
-              </TableCell>
-              <TableCell className="py-3 align-middle">{userData.name}</TableCell>
-              <TableCell className="py-3 align-middle">{userData.email}</TableCell>
-              <TableCell className="py-3 align-middle">{userData.role}</TableCell>
-              <TableCell className="py-3 align-middle">
-                <span className={`px-2 py-1 rounded-full text-xs ${
-                  userData.status === "Active" ? "bg-green-500/20 text-green-500" : "bg-red-500/20 text-red-500"
-                }`}>
-                  {userData.status}
-                </span>
-              </TableCell>
-              <TableCell className="py-3 align-middle">
-                <div className="flex gap-2 justify-center">
-                  <button 
-                    onClick={() => handleDeleteClick(userData.id)}
-                    className="cursor-pointer bg-red-warning text-white p-2 rounded-md hover:bg-red-700"
-                  >
-                    <FaTrash />
-                  </button>
-                  <button 
-                    onClick={() => handleEditClick(userData)}
-                    className="cursor-pointer bg-dusk text-white p-2 rounded-md hover:bg-blue-700"
-                  >
-                    <FaPen />
-                  </button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      {/* ─── Users Table ─── */}
+      <UsersTable
+        users={users}
+        onDeleteClick={handleDeleteClick}
+        onEditClick={handleEditClick}
+        theme={theme}
+      />
     </div>
   );
-};
-
-export default ManageUserSettings;
+}

@@ -47,7 +47,7 @@ export async function GET(req: Request) {
           ...user,
           employee_id: user.employee_id.toString(),
           users: {
-            ...user.users,  
+            ...user.users,
             user_id: user.users.user_id.toString(),
             name: user.users.first_name + " " + user.users.last_name,
           },

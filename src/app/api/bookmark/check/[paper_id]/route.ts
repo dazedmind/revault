@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import jwt from 'jsonwebtoken';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import jwt from "jsonwebtoken";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest, context: any) {
 
     return NextResponse.json({ isBookmarked: !!bookmark });
   } catch (err) {
-    console.error('Check bookmark status error:', err);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error("Check bookmark status error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
