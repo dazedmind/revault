@@ -10,20 +10,21 @@ interface RouteParams {
   };
 }
 
-export async function GET(req: NextRequest, { params }: RouteParams) {
-  try {
-    const authHeader = req.headers.get("authorization");
-    const token = authHeader?.split(" ")[1];
-    const payload = await jwt.verify(token, SECRET_KEY);
+export async function GET(req: NextRequest, context: any) {
+  const { paper_id } = context.params;
 
-    const paper_id = params.paper_id;
-    if (!paper_id || !payload?.user_id) {
-      return NextResponse.json({ error: "Missing data" }, { status: 400 });
+  try {
+    const authHeader = req.headers.get('authorization');
+    const token = authHeader?.split(' ')[1];
+    const payload = jwt.verify(token, process.env.JWT_SECRET_KEY!);
+
+    if (!paper_id || typeof payload !== 'object' || !("user_id" in payload)) {
+      return NextResponse.json({ error: 'Missing data' }, { status: 400 });
     }
 
     const bookmark = await prisma.user_bookmarks.findFirst({
       where: {
-        user_id: payload.user_id,
+        user_id: (payload as any).user_id,
         paper_id: Number(paper_id),
       },
     });
