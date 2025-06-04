@@ -28,9 +28,9 @@ export const ProfileCard = ({
             <h1 className="text-lg md:text-3xl font-bold">{name}</h1>
             <p className="text-xs md:text-lg">
               {position} {college}{" "}
-              {position === "ADMIN" ||
-              position === "ASSISTANT" ||
-              position === "LIBRARIAN"
+              {position === "Librarian-in-Charge" ||
+              position === "Head Librarian" ||
+              position === "Assistant Librarian"
                 ? ""
                 : `- ${programOrDept}`}
             </p>
