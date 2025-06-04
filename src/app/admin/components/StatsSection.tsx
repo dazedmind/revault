@@ -1,8 +1,8 @@
-// src/app/admin/profile/components/StatsSection.tsx
+// src/app/admin/components/StatsSection.tsx
 "use client";
 
 import React from "react";
-import StatsCard from "../components/StatsCard";
+import StatsCard from "./StatsCard";
 import {
   Carousel,
   CarouselContent,
@@ -13,15 +13,39 @@ import {
 
 interface StatsSectionProps {
   allPapers: Array<{ department: string }>;
+  loading?: boolean; // Added loading prop
 }
 
-export function StatsSection({ allPapers }: StatsSectionProps) {
+export function StatsSection({
+  allPapers,
+  loading = false,
+}: StatsSectionProps) {
   const itCount = allPapers.filter(
     (p) => p.department === "Information Technology",
   ).length;
   const csCount = allPapers.filter(
     (p) => p.department === "Computer Science",
   ).length;
+
+  // Loading skeleton component
+  const LoadingSkeleton = () => (
+    <div className="animate-pulse">
+      <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-48 mb-4"></div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="bg-gray-200 dark:bg-gray-800 p-6 rounded-lg">
+            <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+            <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-2"></div>
+            <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded w-1/4"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <>

@@ -245,7 +245,13 @@ function ViewFile() {
   }
   return (
     <div className="dark:bg-secondary h-auto">
-      {userType === "librarian" ? <AdminNavBar /> : <NavBar />}
+      {userType === "ADMIN" ||
+      userType === "ASSISTANT" ||
+      userType === "LIBRARIAN" ? (
+        <AdminNavBar />
+      ) : (
+        <NavBar />
+      )}
 
       <ProtectedRoute>
         <main className="flex flex-col-reverse md:flex-row h-auto justify-center">

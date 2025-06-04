@@ -1911,13 +1911,13 @@ export namespace Prisma {
    */
 
   export type UsersCountOutputType = {
-    user_bookmarks: number
     activity_logs: number
+    user_bookmarks: number
   }
 
   export type UsersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user_bookmarks?: boolean | UsersCountOutputTypeCountUser_bookmarksArgs
     activity_logs?: boolean | UsersCountOutputTypeCountActivity_logsArgs
+    user_bookmarks?: boolean | UsersCountOutputTypeCountUser_bookmarksArgs
   }
 
   // Custom InputTypes
@@ -1934,15 +1934,15 @@ export namespace Prisma {
   /**
    * UsersCountOutputType without action
    */
-  export type UsersCountOutputTypeCountUser_bookmarksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: user_bookmarksWhereInput
+  export type UsersCountOutputTypeCountActivity_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: activity_logsWhereInput
   }
 
   /**
    * UsersCountOutputType without action
    */
-  export type UsersCountOutputTypeCountActivity_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: activity_logsWhereInput
+  export type UsersCountOutputTypeCountUser_bookmarksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: user_bookmarksWhereInput
   }
 
 
@@ -1982,17 +1982,17 @@ export namespace Prisma {
    */
 
   export type PapersCountOutputType = {
-    paper_metadata: number
-    user_bookmarks: number
     paper_bm25_index: number
+    paper_metadata: number
     term_score: number
+    user_bookmarks: number
   }
 
   export type PapersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    paper_metadata?: boolean | PapersCountOutputTypeCountPaper_metadataArgs
-    user_bookmarks?: boolean | PapersCountOutputTypeCountUser_bookmarksArgs
     paper_bm25_index?: boolean | PapersCountOutputTypeCountPaper_bm25_indexArgs
+    paper_metadata?: boolean | PapersCountOutputTypeCountPaper_metadataArgs
     term_score?: boolean | PapersCountOutputTypeCountTerm_scoreArgs
+    user_bookmarks?: boolean | PapersCountOutputTypeCountUser_bookmarksArgs
   }
 
   // Custom InputTypes
@@ -2009,20 +2009,6 @@ export namespace Prisma {
   /**
    * PapersCountOutputType without action
    */
-  export type PapersCountOutputTypeCountPaper_metadataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: paper_metadataWhereInput
-  }
-
-  /**
-   * PapersCountOutputType without action
-   */
-  export type PapersCountOutputTypeCountUser_bookmarksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: user_bookmarksWhereInput
-  }
-
-  /**
-   * PapersCountOutputType without action
-   */
   export type PapersCountOutputTypeCountPaper_bm25_indexArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: paper_bm25_indexWhereInput
   }
@@ -2030,8 +2016,22 @@ export namespace Prisma {
   /**
    * PapersCountOutputType without action
    */
+  export type PapersCountOutputTypeCountPaper_metadataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: paper_metadataWhereInput
+  }
+
+  /**
+   * PapersCountOutputType without action
+   */
   export type PapersCountOutputTypeCountTerm_scoreArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: term_scoreWhereInput
+  }
+
+  /**
+   * PapersCountOutputType without action
+   */
+  export type PapersCountOutputTypeCountUser_bookmarksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: user_bookmarksWhereInput
   }
 
 
@@ -2067,9 +2067,9 @@ export namespace Prisma {
     ext_name: string | null
     email: string | null
     profile_picture: string | null
-    role: $Enums.user_role | null
     password: string | null
     created_at: Date | null
+    role: $Enums.user_role | null
   }
 
   export type UsersMaxAggregateOutputType = {
@@ -2080,9 +2080,9 @@ export namespace Prisma {
     ext_name: string | null
     email: string | null
     profile_picture: string | null
-    role: $Enums.user_role | null
     password: string | null
     created_at: Date | null
+    role: $Enums.user_role | null
   }
 
   export type UsersCountAggregateOutputType = {
@@ -2093,9 +2093,9 @@ export namespace Prisma {
     ext_name: number
     email: number
     profile_picture: number
-    role: number
     password: number
     created_at: number
+    role: number
     _all: number
   }
 
@@ -2116,9 +2116,9 @@ export namespace Prisma {
     ext_name?: true
     email?: true
     profile_picture?: true
-    role?: true
     password?: true
     created_at?: true
+    role?: true
   }
 
   export type UsersMaxAggregateInputType = {
@@ -2129,9 +2129,9 @@ export namespace Prisma {
     ext_name?: true
     email?: true
     profile_picture?: true
-    role?: true
     password?: true
     created_at?: true
+    role?: true
   }
 
   export type UsersCountAggregateInputType = {
@@ -2142,9 +2142,9 @@ export namespace Prisma {
     ext_name?: true
     email?: true
     profile_picture?: true
-    role?: true
     password?: true
     created_at?: true
+    role?: true
     _all?: true
   }
 
@@ -2242,9 +2242,9 @@ export namespace Prisma {
     ext_name: string | null
     email: string
     profile_picture: string | null
-    role: $Enums.user_role | null
     password: string
     created_at: Date | null
+    role: $Enums.user_role | null
     _count: UsersCountAggregateOutputType | null
     _avg: UsersAvgAggregateOutputType | null
     _sum: UsersSumAggregateOutputType | null
@@ -2274,14 +2274,14 @@ export namespace Prisma {
     ext_name?: boolean
     email?: boolean
     profile_picture?: boolean
-    role?: boolean
     password?: boolean
     created_at?: boolean
-    faculty?: boolean | users$facultyArgs<ExtArgs>
-    students?: boolean | users$studentsArgs<ExtArgs>
-    librarian?: boolean | users$librarianArgs<ExtArgs>
-    user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
+    role?: boolean
     activity_logs?: boolean | users$activity_logsArgs<ExtArgs>
+    faculty?: boolean | users$facultyArgs<ExtArgs>
+    librarian?: boolean | users$librarianArgs<ExtArgs>
+    students?: boolean | users$studentsArgs<ExtArgs>
+    user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["users"]>
 
@@ -2293,9 +2293,9 @@ export namespace Prisma {
     ext_name?: boolean
     email?: boolean
     profile_picture?: boolean
-    role?: boolean
     password?: boolean
     created_at?: boolean
+    role?: boolean
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2306,9 +2306,9 @@ export namespace Prisma {
     ext_name?: boolean
     email?: boolean
     profile_picture?: boolean
-    role?: boolean
     password?: boolean
     created_at?: boolean
+    role?: boolean
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectScalar = {
@@ -2319,18 +2319,18 @@ export namespace Prisma {
     ext_name?: boolean
     email?: boolean
     profile_picture?: boolean
-    role?: boolean
     password?: boolean
     created_at?: boolean
+    role?: boolean
   }
 
-  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "first_name" | "mid_name" | "last_name" | "ext_name" | "email" | "profile_picture" | "role" | "password" | "created_at", ExtArgs["result"]["users"]>
+  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "first_name" | "mid_name" | "last_name" | "ext_name" | "email" | "profile_picture" | "password" | "created_at" | "role", ExtArgs["result"]["users"]>
   export type usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    faculty?: boolean | users$facultyArgs<ExtArgs>
-    students?: boolean | users$studentsArgs<ExtArgs>
-    librarian?: boolean | users$librarianArgs<ExtArgs>
-    user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
     activity_logs?: boolean | users$activity_logsArgs<ExtArgs>
+    faculty?: boolean | users$facultyArgs<ExtArgs>
+    librarian?: boolean | users$librarianArgs<ExtArgs>
+    students?: boolean | users$studentsArgs<ExtArgs>
+    user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type usersIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2339,11 +2339,11 @@ export namespace Prisma {
   export type $usersPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "users"
     objects: {
-      faculty: Prisma.$facultyPayload<ExtArgs> | null
-      students: Prisma.$studentsPayload<ExtArgs> | null
-      librarian: Prisma.$librarianPayload<ExtArgs> | null
-      user_bookmarks: Prisma.$user_bookmarksPayload<ExtArgs>[]
       activity_logs: Prisma.$activity_logsPayload<ExtArgs>[]
+      faculty: Prisma.$facultyPayload<ExtArgs> | null
+      librarian: Prisma.$librarianPayload<ExtArgs> | null
+      students: Prisma.$studentsPayload<ExtArgs> | null
+      user_bookmarks: Prisma.$user_bookmarksPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       user_id: number
@@ -2353,9 +2353,9 @@ export namespace Prisma {
       ext_name: string | null
       email: string
       profile_picture: string | null
-      role: $Enums.user_role | null
       password: string
       created_at: Date | null
+      role: $Enums.user_role | null
     }, ExtArgs["result"]["users"]>
     composites: {}
   }
@@ -2750,11 +2750,11 @@ export namespace Prisma {
    */
   export interface Prisma__usersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    faculty<T extends users$facultyArgs<ExtArgs> = {}>(args?: Subset<T, users$facultyArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    students<T extends users$studentsArgs<ExtArgs> = {}>(args?: Subset<T, users$studentsArgs<ExtArgs>>): Prisma__studentsClient<$Result.GetResult<Prisma.$studentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    librarian<T extends users$librarianArgs<ExtArgs> = {}>(args?: Subset<T, users$librarianArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    user_bookmarks<T extends users$user_bookmarksArgs<ExtArgs> = {}>(args?: Subset<T, users$user_bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_bookmarksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activity_logs<T extends users$activity_logsArgs<ExtArgs> = {}>(args?: Subset<T, users$activity_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$activity_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    faculty<T extends users$facultyArgs<ExtArgs> = {}>(args?: Subset<T, users$facultyArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    librarian<T extends users$librarianArgs<ExtArgs> = {}>(args?: Subset<T, users$librarianArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    students<T extends users$studentsArgs<ExtArgs> = {}>(args?: Subset<T, users$studentsArgs<ExtArgs>>): Prisma__studentsClient<$Result.GetResult<Prisma.$studentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    user_bookmarks<T extends users$user_bookmarksArgs<ExtArgs> = {}>(args?: Subset<T, users$user_bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_bookmarksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2791,9 +2791,9 @@ export namespace Prisma {
     readonly ext_name: FieldRef<"users", 'String'>
     readonly email: FieldRef<"users", 'String'>
     readonly profile_picture: FieldRef<"users", 'String'>
-    readonly role: FieldRef<"users", 'user_role'>
     readonly password: FieldRef<"users", 'String'>
     readonly created_at: FieldRef<"users", 'DateTime'>
+    readonly role: FieldRef<"users", 'user_role'>
   }
     
 
@@ -3182,6 +3182,30 @@ export namespace Prisma {
   }
 
   /**
+   * users.activity_logs
+   */
+  export type users$activity_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the activity_logs
+     */
+    select?: activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the activity_logs
+     */
+    omit?: activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: activity_logsInclude<ExtArgs> | null
+    where?: activity_logsWhereInput
+    orderBy?: activity_logsOrderByWithRelationInput | activity_logsOrderByWithRelationInput[]
+    cursor?: activity_logsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Activity_logsScalarFieldEnum | Activity_logsScalarFieldEnum[]
+  }
+
+  /**
    * users.faculty
    */
   export type users$facultyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3201,25 +3225,6 @@ export namespace Prisma {
   }
 
   /**
-   * users.students
-   */
-  export type users$studentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the students
-     */
-    select?: studentsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the students
-     */
-    omit?: studentsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: studentsInclude<ExtArgs> | null
-    where?: studentsWhereInput
-  }
-
-  /**
    * users.librarian
    */
   export type users$librarianArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3236,6 +3241,25 @@ export namespace Prisma {
      */
     include?: librarianInclude<ExtArgs> | null
     where?: librarianWhereInput
+  }
+
+  /**
+   * users.students
+   */
+  export type users$studentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the students
+     */
+    select?: studentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the students
+     */
+    omit?: studentsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: studentsInclude<ExtArgs> | null
+    where?: studentsWhereInput
   }
 
   /**
@@ -3260,30 +3284,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: User_bookmarksScalarFieldEnum | User_bookmarksScalarFieldEnum[]
-  }
-
-  /**
-   * users.activity_logs
-   */
-  export type users$activity_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the activity_logs
-     */
-    select?: activity_logsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the activity_logs
-     */
-    omit?: activity_logsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: activity_logsInclude<ExtArgs> | null
-    where?: activity_logsWhereInput
-    orderBy?: activity_logsOrderByWithRelationInput | activity_logsOrderByWithRelationInput[]
-    cursor?: activity_logsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Activity_logsScalarFieldEnum | Activity_logsScalarFieldEnum[]
   }
 
   /**
@@ -5686,8 +5686,8 @@ export namespace Prisma {
     position?: boolean
     contact_num?: boolean
     user_id?: boolean
-    users?: boolean | usersDefaultArgs<ExtArgs>
     activity_logs?: boolean | librarian$activity_logsArgs<ExtArgs>
+    users?: boolean | usersDefaultArgs<ExtArgs>
     _count?: boolean | LibrarianCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["librarian"]>
 
@@ -5716,8 +5716,8 @@ export namespace Prisma {
 
   export type librarianOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"employee_id" | "position" | "contact_num" | "user_id", ExtArgs["result"]["librarian"]>
   export type librarianInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    users?: boolean | usersDefaultArgs<ExtArgs>
     activity_logs?: boolean | librarian$activity_logsArgs<ExtArgs>
+    users?: boolean | usersDefaultArgs<ExtArgs>
     _count?: boolean | LibrarianCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type librarianIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5730,8 +5730,8 @@ export namespace Prisma {
   export type $librarianPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "librarian"
     objects: {
-      users: Prisma.$usersPayload<ExtArgs>
       activity_logs: Prisma.$activity_logsPayload<ExtArgs>[]
+      users: Prisma.$usersPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       employee_id: number
@@ -6132,8 +6132,8 @@ export namespace Prisma {
    */
   export interface Prisma__librarianClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    users<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     activity_logs<T extends librarian$activity_logsArgs<ExtArgs> = {}>(args?: Subset<T, librarian$activity_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$activity_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    users<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6851,10 +6851,10 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     paper_url?: boolean
-    paper_metadata?: boolean | papers$paper_metadataArgs<ExtArgs>
-    user_bookmarks?: boolean | papers$user_bookmarksArgs<ExtArgs>
     paper_bm25_index?: boolean | papers$paper_bm25_indexArgs<ExtArgs>
+    paper_metadata?: boolean | papers$paper_metadataArgs<ExtArgs>
     term_score?: boolean | papers$term_scoreArgs<ExtArgs>
+    user_bookmarks?: boolean | papers$user_bookmarksArgs<ExtArgs>
     _count?: boolean | PapersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["papers"]>
 
@@ -6902,10 +6902,10 @@ export namespace Prisma {
 
   export type papersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"paper_id" | "title" | "author" | "year" | "department" | "keywords" | "course" | "abstract" | "created_at" | "updated_at" | "paper_url", ExtArgs["result"]["papers"]>
   export type papersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    paper_metadata?: boolean | papers$paper_metadataArgs<ExtArgs>
-    user_bookmarks?: boolean | papers$user_bookmarksArgs<ExtArgs>
     paper_bm25_index?: boolean | papers$paper_bm25_indexArgs<ExtArgs>
+    paper_metadata?: boolean | papers$paper_metadataArgs<ExtArgs>
     term_score?: boolean | papers$term_scoreArgs<ExtArgs>
+    user_bookmarks?: boolean | papers$user_bookmarksArgs<ExtArgs>
     _count?: boolean | PapersCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type papersIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6914,10 +6914,10 @@ export namespace Prisma {
   export type $papersPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "papers"
     objects: {
-      paper_metadata: Prisma.$paper_metadataPayload<ExtArgs>[]
-      user_bookmarks: Prisma.$user_bookmarksPayload<ExtArgs>[]
       paper_bm25_index: Prisma.$paper_bm25_indexPayload<ExtArgs>[]
+      paper_metadata: Prisma.$paper_metadataPayload<ExtArgs>[]
       term_score: Prisma.$term_scorePayload<ExtArgs>[]
+      user_bookmarks: Prisma.$user_bookmarksPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       paper_id: number
@@ -7325,10 +7325,10 @@ export namespace Prisma {
    */
   export interface Prisma__papersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    paper_metadata<T extends papers$paper_metadataArgs<ExtArgs> = {}>(args?: Subset<T, papers$paper_metadataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$paper_metadataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    user_bookmarks<T extends papers$user_bookmarksArgs<ExtArgs> = {}>(args?: Subset<T, papers$user_bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_bookmarksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     paper_bm25_index<T extends papers$paper_bm25_indexArgs<ExtArgs> = {}>(args?: Subset<T, papers$paper_bm25_indexArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$paper_bm25_indexPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    paper_metadata<T extends papers$paper_metadataArgs<ExtArgs> = {}>(args?: Subset<T, papers$paper_metadataArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$paper_metadataPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     term_score<T extends papers$term_scoreArgs<ExtArgs> = {}>(args?: Subset<T, papers$term_scoreArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$term_scorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user_bookmarks<T extends papers$user_bookmarksArgs<ExtArgs> = {}>(args?: Subset<T, papers$user_bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_bookmarksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7757,54 +7757,6 @@ export namespace Prisma {
   }
 
   /**
-   * papers.paper_metadata
-   */
-  export type papers$paper_metadataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the paper_metadata
-     */
-    select?: paper_metadataSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the paper_metadata
-     */
-    omit?: paper_metadataOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: paper_metadataInclude<ExtArgs> | null
-    where?: paper_metadataWhereInput
-    orderBy?: paper_metadataOrderByWithRelationInput | paper_metadataOrderByWithRelationInput[]
-    cursor?: paper_metadataWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Paper_metadataScalarFieldEnum | Paper_metadataScalarFieldEnum[]
-  }
-
-  /**
-   * papers.user_bookmarks
-   */
-  export type papers$user_bookmarksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the user_bookmarks
-     */
-    select?: user_bookmarksSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the user_bookmarks
-     */
-    omit?: user_bookmarksOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: user_bookmarksInclude<ExtArgs> | null
-    where?: user_bookmarksWhereInput
-    orderBy?: user_bookmarksOrderByWithRelationInput | user_bookmarksOrderByWithRelationInput[]
-    cursor?: user_bookmarksWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: User_bookmarksScalarFieldEnum | User_bookmarksScalarFieldEnum[]
-  }
-
-  /**
    * papers.paper_bm25_index
    */
   export type papers$paper_bm25_indexArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7829,6 +7781,30 @@ export namespace Prisma {
   }
 
   /**
+   * papers.paper_metadata
+   */
+  export type papers$paper_metadataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the paper_metadata
+     */
+    select?: paper_metadataSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the paper_metadata
+     */
+    omit?: paper_metadataOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: paper_metadataInclude<ExtArgs> | null
+    where?: paper_metadataWhereInput
+    orderBy?: paper_metadataOrderByWithRelationInput | paper_metadataOrderByWithRelationInput[]
+    cursor?: paper_metadataWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Paper_metadataScalarFieldEnum | Paper_metadataScalarFieldEnum[]
+  }
+
+  /**
    * papers.term_score
    */
   export type papers$term_scoreArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7850,6 +7826,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Term_scoreScalarFieldEnum | Term_scoreScalarFieldEnum[]
+  }
+
+  /**
+   * papers.user_bookmarks
+   */
+  export type papers$user_bookmarksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_bookmarks
+     */
+    select?: user_bookmarksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_bookmarks
+     */
+    omit?: user_bookmarksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_bookmarksInclude<ExtArgs> | null
+    where?: user_bookmarksWhereInput
+    orderBy?: user_bookmarksOrderByWithRelationInput | user_bookmarksOrderByWithRelationInput[]
+    cursor?: user_bookmarksWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: User_bookmarksScalarFieldEnum | User_bookmarksScalarFieldEnum[]
   }
 
   /**
@@ -13325,42 +13325,42 @@ export namespace Prisma {
   }
 
   export type Activity_logsMinAggregateOutputType = {
-    act_id: number | null
-    employee_id: number | null
-    user_id: number | null
     name: string | null
     activity: string | null
     created_at: Date | null
+    act_id: number | null
     activity_type: $Enums.activity_type | null
-    user_agent: string | null
     ip_address: string | null
     status: string | null
+    user_agent: string | null
+    employee_id: number | null
+    user_id: number | null
   }
 
   export type Activity_logsMaxAggregateOutputType = {
-    act_id: number | null
-    employee_id: number | null
-    user_id: number | null
     name: string | null
     activity: string | null
     created_at: Date | null
+    act_id: number | null
     activity_type: $Enums.activity_type | null
-    user_agent: string | null
     ip_address: string | null
     status: string | null
+    user_agent: string | null
+    employee_id: number | null
+    user_id: number | null
   }
 
   export type Activity_logsCountAggregateOutputType = {
-    act_id: number
-    employee_id: number
-    user_id: number
     name: number
     activity: number
     created_at: number
+    act_id: number
     activity_type: number
-    user_agent: number
     ip_address: number
     status: number
+    user_agent: number
+    employee_id: number
+    user_id: number
     _all: number
   }
 
@@ -13378,42 +13378,42 @@ export namespace Prisma {
   }
 
   export type Activity_logsMinAggregateInputType = {
-    act_id?: true
-    employee_id?: true
-    user_id?: true
     name?: true
     activity?: true
     created_at?: true
+    act_id?: true
     activity_type?: true
-    user_agent?: true
     ip_address?: true
     status?: true
+    user_agent?: true
+    employee_id?: true
+    user_id?: true
   }
 
   export type Activity_logsMaxAggregateInputType = {
-    act_id?: true
-    employee_id?: true
-    user_id?: true
     name?: true
     activity?: true
     created_at?: true
+    act_id?: true
     activity_type?: true
-    user_agent?: true
     ip_address?: true
     status?: true
+    user_agent?: true
+    employee_id?: true
+    user_id?: true
   }
 
   export type Activity_logsCountAggregateInputType = {
-    act_id?: true
-    employee_id?: true
-    user_id?: true
     name?: true
     activity?: true
     created_at?: true
+    act_id?: true
     activity_type?: true
-    user_agent?: true
     ip_address?: true
     status?: true
+    user_agent?: true
+    employee_id?: true
+    user_id?: true
     _all?: true
   }
 
@@ -13504,16 +13504,16 @@ export namespace Prisma {
   }
 
   export type Activity_logsGroupByOutputType = {
-    act_id: number
-    employee_id: number
-    user_id: number
     name: string
     activity: string
     created_at: Date
+    act_id: number
     activity_type: $Enums.activity_type | null
-    user_agent: string | null
     ip_address: string | null
     status: string | null
+    user_agent: string | null
+    employee_id: number
+    user_id: number
     _count: Activity_logsCountAggregateOutputType | null
     _avg: Activity_logsAvgAggregateOutputType | null
     _sum: Activity_logsSumAggregateOutputType | null
@@ -13536,64 +13536,64 @@ export namespace Prisma {
 
 
   export type activity_logsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    act_id?: boolean
-    employee_id?: boolean
-    user_id?: boolean
     name?: boolean
     activity?: boolean
     created_at?: boolean
+    act_id?: boolean
     activity_type?: boolean
-    user_agent?: boolean
     ip_address?: boolean
     status?: boolean
+    user_agent?: boolean
+    employee_id?: boolean
+    user_id?: boolean
     librarian?: boolean | librarianDefaultArgs<ExtArgs>
     users?: boolean | usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activity_logs"]>
 
   export type activity_logsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    act_id?: boolean
-    employee_id?: boolean
-    user_id?: boolean
     name?: boolean
     activity?: boolean
     created_at?: boolean
+    act_id?: boolean
     activity_type?: boolean
-    user_agent?: boolean
     ip_address?: boolean
     status?: boolean
+    user_agent?: boolean
+    employee_id?: boolean
+    user_id?: boolean
     librarian?: boolean | librarianDefaultArgs<ExtArgs>
     users?: boolean | usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activity_logs"]>
 
   export type activity_logsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    act_id?: boolean
-    employee_id?: boolean
-    user_id?: boolean
     name?: boolean
     activity?: boolean
     created_at?: boolean
+    act_id?: boolean
     activity_type?: boolean
-    user_agent?: boolean
     ip_address?: boolean
     status?: boolean
+    user_agent?: boolean
+    employee_id?: boolean
+    user_id?: boolean
     librarian?: boolean | librarianDefaultArgs<ExtArgs>
     users?: boolean | usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activity_logs"]>
 
   export type activity_logsSelectScalar = {
-    act_id?: boolean
-    employee_id?: boolean
-    user_id?: boolean
     name?: boolean
     activity?: boolean
     created_at?: boolean
+    act_id?: boolean
     activity_type?: boolean
-    user_agent?: boolean
     ip_address?: boolean
     status?: boolean
+    user_agent?: boolean
+    employee_id?: boolean
+    user_id?: boolean
   }
 
-  export type activity_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"act_id" | "employee_id" | "user_id" | "name" | "activity" | "created_at" | "activity_type" | "user_agent" | "ip_address" | "status", ExtArgs["result"]["activity_logs"]>
+  export type activity_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"name" | "activity" | "created_at" | "act_id" | "activity_type" | "ip_address" | "status" | "user_agent" | "employee_id" | "user_id", ExtArgs["result"]["activity_logs"]>
   export type activity_logsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     librarian?: boolean | librarianDefaultArgs<ExtArgs>
     users?: boolean | usersDefaultArgs<ExtArgs>
@@ -13614,16 +13614,16 @@ export namespace Prisma {
       users: Prisma.$usersPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      act_id: number
-      employee_id: number
-      user_id: number
       name: string
       activity: string
       created_at: Date
+      act_id: number
       activity_type: $Enums.activity_type | null
-      user_agent: string | null
       ip_address: string | null
       status: string | null
+      user_agent: string | null
+      employee_id: number
+      user_id: number
     }, ExtArgs["result"]["activity_logs"]>
     composites: {}
   }
@@ -13707,8 +13707,8 @@ export namespace Prisma {
      * // Get first 10 Activity_logs
      * const activity_logs = await prisma.activity_logs.findMany({ take: 10 })
      * 
-     * // Only select the `act_id`
-     * const activity_logsWithAct_idOnly = await prisma.activity_logs.findMany({ select: { act_id: true } })
+     * // Only select the `name`
+     * const activity_logsWithNameOnly = await prisma.activity_logs.findMany({ select: { name: true } })
      * 
      */
     findMany<T extends activity_logsFindManyArgs>(args?: SelectSubset<T, activity_logsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$activity_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -13752,9 +13752,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Create many Activity_logs and only return the `act_id`
-     * const activity_logsWithAct_idOnly = await prisma.activity_logs.createManyAndReturn({
-     *   select: { act_id: true },
+     * // Create many Activity_logs and only return the `name`
+     * const activity_logsWithNameOnly = await prisma.activity_logs.createManyAndReturn({
+     *   select: { name: true },
      *   data: [
      *     // ... provide data here
      *   ]
@@ -13843,9 +13843,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Activity_logs and only return the `act_id`
-     * const activity_logsWithAct_idOnly = await prisma.activity_logs.updateManyAndReturn({
-     *   select: { act_id: true },
+     * // Update zero or more Activity_logs and only return the `name`
+     * const activity_logsWithNameOnly = await prisma.activity_logs.updateManyAndReturn({
+     *   select: { name: true },
      *   where: {
      *     // ... provide filter here
      *   },
@@ -14049,16 +14049,16 @@ export namespace Prisma {
    * Fields of the activity_logs model
    */
   interface activity_logsFieldRefs {
-    readonly act_id: FieldRef<"activity_logs", 'Int'>
-    readonly employee_id: FieldRef<"activity_logs", 'Int'>
-    readonly user_id: FieldRef<"activity_logs", 'Int'>
     readonly name: FieldRef<"activity_logs", 'String'>
     readonly activity: FieldRef<"activity_logs", 'String'>
     readonly created_at: FieldRef<"activity_logs", 'DateTime'>
+    readonly act_id: FieldRef<"activity_logs", 'Int'>
     readonly activity_type: FieldRef<"activity_logs", 'activity_type'>
-    readonly user_agent: FieldRef<"activity_logs", 'String'>
     readonly ip_address: FieldRef<"activity_logs", 'String'>
     readonly status: FieldRef<"activity_logs", 'String'>
+    readonly user_agent: FieldRef<"activity_logs", 'String'>
+    readonly employee_id: FieldRef<"activity_logs", 'Int'>
+    readonly user_id: FieldRef<"activity_logs", 'Int'>
   }
     
 
@@ -15519,9 +15519,9 @@ export namespace Prisma {
     ext_name: 'ext_name',
     email: 'email',
     profile_picture: 'profile_picture',
-    role: 'role',
     password: 'password',
-    created_at: 'created_at'
+    created_at: 'created_at',
+    role: 'role'
   };
 
   export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
@@ -15633,16 +15633,16 @@ export namespace Prisma {
 
 
   export const Activity_logsScalarFieldEnum: {
-    act_id: 'act_id',
-    employee_id: 'employee_id',
-    user_id: 'user_id',
     name: 'name',
     activity: 'activity',
     created_at: 'created_at',
+    act_id: 'act_id',
     activity_type: 'activity_type',
-    user_agent: 'user_agent',
     ip_address: 'ip_address',
-    status: 'status'
+    status: 'status',
+    user_agent: 'user_agent',
+    employee_id: 'employee_id',
+    user_id: 'user_id'
   };
 
   export type Activity_logsScalarFieldEnum = (typeof Activity_logsScalarFieldEnum)[keyof typeof Activity_logsScalarFieldEnum]
@@ -15732,20 +15732,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'user_role'
-   */
-  export type Enumuser_roleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_role'>
-    
-
-
-  /**
-   * Reference to a field of type 'user_role[]'
-   */
-  export type ListEnumuser_roleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_role[]'>
-    
-
-
-  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -15756,6 +15742,20 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'user_role'
+   */
+  export type Enumuser_roleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_role'>
+    
+
+
+  /**
+   * Reference to a field of type 'user_role[]'
+   */
+  export type ListEnumuser_roleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'user_role[]'>
     
 
 
@@ -15829,14 +15829,14 @@ export namespace Prisma {
     ext_name?: StringNullableFilter<"users"> | string | null
     email?: StringFilter<"users"> | string
     profile_picture?: StringNullableFilter<"users"> | string | null
-    role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
     password?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
-    faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
-    students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
-    librarian?: XOR<LibrarianNullableScalarRelationFilter, librarianWhereInput> | null
-    user_bookmarks?: User_bookmarksListRelationFilter
+    role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
     activity_logs?: Activity_logsListRelationFilter
+    faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
+    librarian?: XOR<LibrarianNullableScalarRelationFilter, librarianWhereInput> | null
+    students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
+    user_bookmarks?: User_bookmarksListRelationFilter
   }
 
   export type usersOrderByWithRelationInput = {
@@ -15847,14 +15847,14 @@ export namespace Prisma {
     ext_name?: SortOrderInput | SortOrder
     email?: SortOrder
     profile_picture?: SortOrderInput | SortOrder
-    role?: SortOrderInput | SortOrder
     password?: SortOrder
     created_at?: SortOrderInput | SortOrder
-    faculty?: facultyOrderByWithRelationInput
-    students?: studentsOrderByWithRelationInput
-    librarian?: librarianOrderByWithRelationInput
-    user_bookmarks?: user_bookmarksOrderByRelationAggregateInput
+    role?: SortOrderInput | SortOrder
     activity_logs?: activity_logsOrderByRelationAggregateInput
+    faculty?: facultyOrderByWithRelationInput
+    librarian?: librarianOrderByWithRelationInput
+    students?: studentsOrderByWithRelationInput
+    user_bookmarks?: user_bookmarksOrderByRelationAggregateInput
   }
 
   export type usersWhereUniqueInput = Prisma.AtLeast<{
@@ -15868,14 +15868,14 @@ export namespace Prisma {
     last_name?: StringNullableFilter<"users"> | string | null
     ext_name?: StringNullableFilter<"users"> | string | null
     profile_picture?: StringNullableFilter<"users"> | string | null
-    role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
     password?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
-    faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
-    students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
-    librarian?: XOR<LibrarianNullableScalarRelationFilter, librarianWhereInput> | null
-    user_bookmarks?: User_bookmarksListRelationFilter
+    role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
     activity_logs?: Activity_logsListRelationFilter
+    faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
+    librarian?: XOR<LibrarianNullableScalarRelationFilter, librarianWhereInput> | null
+    students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
+    user_bookmarks?: User_bookmarksListRelationFilter
   }, "user_id" | "email">
 
   export type usersOrderByWithAggregationInput = {
@@ -15886,9 +15886,9 @@ export namespace Prisma {
     ext_name?: SortOrderInput | SortOrder
     email?: SortOrder
     profile_picture?: SortOrderInput | SortOrder
-    role?: SortOrderInput | SortOrder
     password?: SortOrder
     created_at?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
     _count?: usersCountOrderByAggregateInput
     _avg?: usersAvgOrderByAggregateInput
     _max?: usersMaxOrderByAggregateInput
@@ -15907,9 +15907,9 @@ export namespace Prisma {
     ext_name?: StringNullableWithAggregatesFilter<"users"> | string | null
     email?: StringWithAggregatesFilter<"users"> | string
     profile_picture?: StringNullableWithAggregatesFilter<"users"> | string | null
-    role?: Enumuser_roleNullableWithAggregatesFilter<"users"> | $Enums.user_role | null
     password?: StringWithAggregatesFilter<"users"> | string
     created_at?: DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null
+    role?: Enumuser_roleNullableWithAggregatesFilter<"users"> | $Enums.user_role | null
   }
 
   export type facultyWhereInput = {
@@ -16029,8 +16029,8 @@ export namespace Prisma {
     position?: StringNullableFilter<"librarian"> | string | null
     contact_num?: IntFilter<"librarian"> | number
     user_id?: IntFilter<"librarian"> | number
-    users?: XOR<UsersScalarRelationFilter, usersWhereInput>
     activity_logs?: Activity_logsListRelationFilter
+    users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }
 
   export type librarianOrderByWithRelationInput = {
@@ -16038,8 +16038,8 @@ export namespace Prisma {
     position?: SortOrderInput | SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
-    users?: usersOrderByWithRelationInput
     activity_logs?: activity_logsOrderByRelationAggregateInput
+    users?: usersOrderByWithRelationInput
   }
 
   export type librarianWhereUniqueInput = Prisma.AtLeast<{
@@ -16050,8 +16050,8 @@ export namespace Prisma {
     NOT?: librarianWhereInput | librarianWhereInput[]
     position?: StringNullableFilter<"librarian"> | string | null
     contact_num?: IntFilter<"librarian"> | number
-    users?: XOR<UsersScalarRelationFilter, usersWhereInput>
     activity_logs?: Activity_logsListRelationFilter
+    users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }, "employee_id" | "employee_id" | "user_id">
 
   export type librarianOrderByWithAggregationInput = {
@@ -16091,10 +16091,10 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"papers"> | Date | string | null
     paper_url?: StringNullableFilter<"papers"> | string | null
-    paper_metadata?: Paper_metadataListRelationFilter
-    user_bookmarks?: User_bookmarksListRelationFilter
     paper_bm25_index?: Paper_bm25_indexListRelationFilter
+    paper_metadata?: Paper_metadataListRelationFilter
     term_score?: Term_scoreListRelationFilter
+    user_bookmarks?: User_bookmarksListRelationFilter
   }
 
   export type papersOrderByWithRelationInput = {
@@ -16109,10 +16109,10 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
     paper_url?: SortOrderInput | SortOrder
-    paper_metadata?: paper_metadataOrderByRelationAggregateInput
-    user_bookmarks?: user_bookmarksOrderByRelationAggregateInput
     paper_bm25_index?: paper_bm25_indexOrderByRelationAggregateInput
+    paper_metadata?: paper_metadataOrderByRelationAggregateInput
     term_score?: term_scoreOrderByRelationAggregateInput
+    user_bookmarks?: user_bookmarksOrderByRelationAggregateInput
   }
 
   export type papersWhereUniqueInput = Prisma.AtLeast<{
@@ -16130,10 +16130,10 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"papers"> | Date | string | null
     paper_url?: StringNullableFilter<"papers"> | string | null
-    paper_metadata?: Paper_metadataListRelationFilter
-    user_bookmarks?: User_bookmarksListRelationFilter
     paper_bm25_index?: Paper_bm25_indexListRelationFilter
+    paper_metadata?: Paper_metadataListRelationFilter
     term_score?: Term_scoreListRelationFilter
+    user_bookmarks?: User_bookmarksListRelationFilter
   }, "paper_id" | "title">
 
   export type papersOrderByWithAggregationInput = {
@@ -16470,31 +16470,31 @@ export namespace Prisma {
     AND?: activity_logsWhereInput | activity_logsWhereInput[]
     OR?: activity_logsWhereInput[]
     NOT?: activity_logsWhereInput | activity_logsWhereInput[]
-    act_id?: IntFilter<"activity_logs"> | number
-    employee_id?: IntFilter<"activity_logs"> | number
-    user_id?: IntFilter<"activity_logs"> | number
     name?: StringFilter<"activity_logs"> | string
     activity?: StringFilter<"activity_logs"> | string
     created_at?: DateTimeFilter<"activity_logs"> | Date | string
+    act_id?: IntFilter<"activity_logs"> | number
     activity_type?: Enumactivity_typeNullableFilter<"activity_logs"> | $Enums.activity_type | null
-    user_agent?: StringNullableFilter<"activity_logs"> | string | null
     ip_address?: StringNullableFilter<"activity_logs"> | string | null
     status?: StringNullableFilter<"activity_logs"> | string | null
+    user_agent?: StringNullableFilter<"activity_logs"> | string | null
+    employee_id?: IntFilter<"activity_logs"> | number
+    user_id?: IntFilter<"activity_logs"> | number
     librarian?: XOR<LibrarianScalarRelationFilter, librarianWhereInput>
     users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }
 
   export type activity_logsOrderByWithRelationInput = {
-    act_id?: SortOrder
-    employee_id?: SortOrder
-    user_id?: SortOrder
     name?: SortOrder
     activity?: SortOrder
     created_at?: SortOrder
+    act_id?: SortOrder
     activity_type?: SortOrderInput | SortOrder
-    user_agent?: SortOrderInput | SortOrder
     ip_address?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
+    user_agent?: SortOrderInput | SortOrder
+    employee_id?: SortOrder
+    user_id?: SortOrder
     librarian?: librarianOrderByWithRelationInput
     users?: usersOrderByWithRelationInput
   }
@@ -16504,30 +16504,30 @@ export namespace Prisma {
     AND?: activity_logsWhereInput | activity_logsWhereInput[]
     OR?: activity_logsWhereInput[]
     NOT?: activity_logsWhereInput | activity_logsWhereInput[]
-    employee_id?: IntFilter<"activity_logs"> | number
-    user_id?: IntFilter<"activity_logs"> | number
     name?: StringFilter<"activity_logs"> | string
     activity?: StringFilter<"activity_logs"> | string
     created_at?: DateTimeFilter<"activity_logs"> | Date | string
     activity_type?: Enumactivity_typeNullableFilter<"activity_logs"> | $Enums.activity_type | null
-    user_agent?: StringNullableFilter<"activity_logs"> | string | null
     ip_address?: StringNullableFilter<"activity_logs"> | string | null
     status?: StringNullableFilter<"activity_logs"> | string | null
+    user_agent?: StringNullableFilter<"activity_logs"> | string | null
+    employee_id?: IntFilter<"activity_logs"> | number
+    user_id?: IntFilter<"activity_logs"> | number
     librarian?: XOR<LibrarianScalarRelationFilter, librarianWhereInput>
     users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }, "act_id">
 
   export type activity_logsOrderByWithAggregationInput = {
-    act_id?: SortOrder
-    employee_id?: SortOrder
-    user_id?: SortOrder
     name?: SortOrder
     activity?: SortOrder
     created_at?: SortOrder
+    act_id?: SortOrder
     activity_type?: SortOrderInput | SortOrder
-    user_agent?: SortOrderInput | SortOrder
     ip_address?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
+    user_agent?: SortOrderInput | SortOrder
+    employee_id?: SortOrder
+    user_id?: SortOrder
     _count?: activity_logsCountOrderByAggregateInput
     _avg?: activity_logsAvgOrderByAggregateInput
     _max?: activity_logsMaxOrderByAggregateInput
@@ -16539,16 +16539,16 @@ export namespace Prisma {
     AND?: activity_logsScalarWhereWithAggregatesInput | activity_logsScalarWhereWithAggregatesInput[]
     OR?: activity_logsScalarWhereWithAggregatesInput[]
     NOT?: activity_logsScalarWhereWithAggregatesInput | activity_logsScalarWhereWithAggregatesInput[]
-    act_id?: IntWithAggregatesFilter<"activity_logs"> | number
-    employee_id?: IntWithAggregatesFilter<"activity_logs"> | number
-    user_id?: IntWithAggregatesFilter<"activity_logs"> | number
     name?: StringWithAggregatesFilter<"activity_logs"> | string
     activity?: StringWithAggregatesFilter<"activity_logs"> | string
     created_at?: DateTimeWithAggregatesFilter<"activity_logs"> | Date | string
+    act_id?: IntWithAggregatesFilter<"activity_logs"> | number
     activity_type?: Enumactivity_typeNullableWithAggregatesFilter<"activity_logs"> | $Enums.activity_type | null
-    user_agent?: StringNullableWithAggregatesFilter<"activity_logs"> | string | null
     ip_address?: StringNullableWithAggregatesFilter<"activity_logs"> | string | null
     status?: StringNullableWithAggregatesFilter<"activity_logs"> | string | null
+    user_agent?: StringNullableWithAggregatesFilter<"activity_logs"> | string | null
+    employee_id?: IntWithAggregatesFilter<"activity_logs"> | number
+    user_id?: IntWithAggregatesFilter<"activity_logs"> | number
   }
 
   export type global_statsWhereInput = {
@@ -16607,14 +16607,14 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
-    faculty?: facultyCreateNestedOneWithoutUsersInput
-    students?: studentsCreateNestedOneWithoutUsersInput
-    librarian?: librarianCreateNestedOneWithoutUsersInput
-    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+    role?: $Enums.user_role | null
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    faculty?: facultyCreateNestedOneWithoutUsersInput
+    librarian?: librarianCreateNestedOneWithoutUsersInput
+    students?: studentsCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
   }
 
   export type usersUncheckedCreateInput = {
@@ -16625,14 +16625,14 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
-    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
-    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
-    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
-    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+    role?: $Enums.user_role | null
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
+    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
+    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type usersUpdateInput = {
@@ -16642,14 +16642,14 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    faculty?: facultyUpdateOneWithoutUsersNestedInput
-    students?: studentsUpdateOneWithoutUsersNestedInput
-    librarian?: librarianUpdateOneWithoutUsersNestedInput
-    user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
+    faculty?: facultyUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUpdateOneWithoutUsersNestedInput
+    students?: studentsUpdateOneWithoutUsersNestedInput
+    user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateInput = {
@@ -16660,14 +16660,14 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
-    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
-    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
-    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
+    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
+    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type usersCreateManyInput = {
@@ -16678,9 +16678,9 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
+    role?: $Enums.user_role | null
   }
 
   export type usersUpdateManyMutationInput = {
@@ -16690,9 +16690,9 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
   }
 
   export type usersUncheckedUpdateManyInput = {
@@ -16703,9 +16703,9 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
   }
 
   export type facultyCreateInput = {
@@ -16815,8 +16815,8 @@ export namespace Prisma {
     employee_id: number
     position?: string | null
     contact_num: number
-    users: usersCreateNestedOneWithoutLibrarianInput
     activity_logs?: activity_logsCreateNestedManyWithoutLibrarianInput
+    users: usersCreateNestedOneWithoutLibrarianInput
   }
 
   export type librarianUncheckedCreateInput = {
@@ -16831,8 +16831,8 @@ export namespace Prisma {
     employee_id?: IntFieldUpdateOperationsInput | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
-    users?: usersUpdateOneRequiredWithoutLibrarianNestedInput
     activity_logs?: activity_logsUpdateManyWithoutLibrarianNestedInput
+    users?: usersUpdateOneRequiredWithoutLibrarianNestedInput
   }
 
   export type librarianUncheckedUpdateInput = {
@@ -16874,10 +16874,10 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     paper_url?: string | null
-    paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
-    user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexCreateNestedManyWithoutPapersInput
+    paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     term_score?: term_scoreCreateNestedManyWithoutPapersInput
+    user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
   }
 
   export type papersUncheckedCreateInput = {
@@ -16892,10 +16892,10 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     paper_url?: string | null
-    paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
-    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexUncheckedCreateNestedManyWithoutPapersInput
+    paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     term_score?: term_scoreUncheckedCreateNestedManyWithoutPapersInput
+    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
   }
 
   export type papersUpdateInput = {
@@ -16909,10 +16909,10 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
-    paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
-    user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUpdateManyWithoutPapersNestedInput
+    paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUpdateManyWithoutPapersNestedInput
+    user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
   }
 
   export type papersUncheckedUpdateInput = {
@@ -16927,10 +16927,10 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
-    paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
-    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUncheckedUpdateManyWithoutPapersNestedInput
+    paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUncheckedUpdateManyWithoutPapersNestedInput
+    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
   }
 
   export type papersCreateManyInput = {
@@ -17256,24 +17256,24 @@ export namespace Prisma {
     activity: string
     created_at?: Date | string
     activity_type?: $Enums.activity_type | null
-    user_agent?: string | null
     ip_address?: string | null
     status?: string | null
+    user_agent?: string | null
     librarian: librarianCreateNestedOneWithoutActivity_logsInput
     users: usersCreateNestedOneWithoutActivity_logsInput
   }
 
   export type activity_logsUncheckedCreateInput = {
-    act_id?: number
-    employee_id: number
-    user_id: number
     name: string
     activity: string
     created_at?: Date | string
+    act_id?: number
     activity_type?: $Enums.activity_type | null
-    user_agent?: string | null
     ip_address?: string | null
     status?: string | null
+    user_agent?: string | null
+    employee_id: number
+    user_id: number
   }
 
   export type activity_logsUpdateInput = {
@@ -17281,37 +17281,37 @@ export namespace Prisma {
     activity?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     librarian?: librarianUpdateOneRequiredWithoutActivity_logsNestedInput
     users?: usersUpdateOneRequiredWithoutActivity_logsNestedInput
   }
 
   export type activity_logsUncheckedUpdateInput = {
-    act_id?: IntFieldUpdateOperationsInput | number
-    employee_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     activity?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    act_id?: IntFieldUpdateOperationsInput | number
     activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type activity_logsCreateManyInput = {
-    act_id?: number
-    employee_id: number
-    user_id: number
     name: string
     activity: string
     created_at?: Date | string
+    act_id?: number
     activity_type?: $Enums.activity_type | null
-    user_agent?: string | null
     ip_address?: string | null
     status?: string | null
+    user_agent?: string | null
+    employee_id: number
+    user_id: number
   }
 
   export type activity_logsUpdateManyMutationInput = {
@@ -17319,22 +17319,22 @@ export namespace Prisma {
     activity?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type activity_logsUncheckedUpdateManyInput = {
-    act_id?: IntFieldUpdateOperationsInput | number
-    employee_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     activity?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    act_id?: IntFieldUpdateOperationsInput | number
     activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type global_statsCreateInput = {
@@ -17424,13 +17424,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type Enumuser_roleNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
-    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
-  }
-
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -17442,25 +17435,11 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type FacultyNullableScalarRelationFilter = {
-    is?: facultyWhereInput | null
-    isNot?: facultyWhereInput | null
-  }
-
-  export type StudentsNullableScalarRelationFilter = {
-    is?: studentsWhereInput | null
-    isNot?: studentsWhereInput | null
-  }
-
-  export type LibrarianNullableScalarRelationFilter = {
-    is?: librarianWhereInput | null
-    isNot?: librarianWhereInput | null
-  }
-
-  export type User_bookmarksListRelationFilter = {
-    every?: user_bookmarksWhereInput
-    some?: user_bookmarksWhereInput
-    none?: user_bookmarksWhereInput
+  export type Enumuser_roleNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
   }
 
   export type Activity_logsListRelationFilter = {
@@ -17469,16 +17448,37 @@ export namespace Prisma {
     none?: activity_logsWhereInput
   }
 
+  export type FacultyNullableScalarRelationFilter = {
+    is?: facultyWhereInput | null
+    isNot?: facultyWhereInput | null
+  }
+
+  export type LibrarianNullableScalarRelationFilter = {
+    is?: librarianWhereInput | null
+    isNot?: librarianWhereInput | null
+  }
+
+  export type StudentsNullableScalarRelationFilter = {
+    is?: studentsWhereInput | null
+    isNot?: studentsWhereInput | null
+  }
+
+  export type User_bookmarksListRelationFilter = {
+    every?: user_bookmarksWhereInput
+    some?: user_bookmarksWhereInput
+    none?: user_bookmarksWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
-  export type user_bookmarksOrderByRelationAggregateInput = {
+  export type activity_logsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type activity_logsOrderByRelationAggregateInput = {
+  export type user_bookmarksOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17490,9 +17490,9 @@ export namespace Prisma {
     ext_name?: SortOrder
     email?: SortOrder
     profile_picture?: SortOrder
-    role?: SortOrder
     password?: SortOrder
     created_at?: SortOrder
+    role?: SortOrder
   }
 
   export type usersAvgOrderByAggregateInput = {
@@ -17507,9 +17507,9 @@ export namespace Prisma {
     ext_name?: SortOrder
     email?: SortOrder
     profile_picture?: SortOrder
-    role?: SortOrder
     password?: SortOrder
     created_at?: SortOrder
+    role?: SortOrder
   }
 
   export type usersMinOrderByAggregateInput = {
@@ -17520,9 +17520,9 @@ export namespace Prisma {
     ext_name?: SortOrder
     email?: SortOrder
     profile_picture?: SortOrder
-    role?: SortOrder
     password?: SortOrder
     created_at?: SortOrder
+    role?: SortOrder
   }
 
   export type usersSumOrderByAggregateInput = {
@@ -17581,16 +17581,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type Enumuser_roleNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
-    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel> | $Enums.user_role | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumuser_roleNullableFilter<$PrismaModel>
-    _max?: NestedEnumuser_roleNullableFilter<$PrismaModel>
-  }
-
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -17603,6 +17593,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type Enumuser_roleNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel> | $Enums.user_role | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumuser_roleNullableFilter<$PrismaModel>
+    _max?: NestedEnumuser_roleNullableFilter<$PrismaModel>
   }
 
   export type UsersScalarRelationFilter = {
@@ -17772,16 +17772,16 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type Paper_metadataListRelationFilter = {
-    every?: paper_metadataWhereInput
-    some?: paper_metadataWhereInput
-    none?: paper_metadataWhereInput
-  }
-
   export type Paper_bm25_indexListRelationFilter = {
     every?: paper_bm25_indexWhereInput
     some?: paper_bm25_indexWhereInput
     none?: paper_bm25_indexWhereInput
+  }
+
+  export type Paper_metadataListRelationFilter = {
+    every?: paper_metadataWhereInput
+    some?: paper_metadataWhereInput
+    none?: paper_metadataWhereInput
   }
 
   export type Term_scoreListRelationFilter = {
@@ -17790,11 +17790,11 @@ export namespace Prisma {
     none?: term_scoreWhereInput
   }
 
-  export type paper_metadataOrderByRelationAggregateInput = {
+  export type paper_bm25_indexOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type paper_bm25_indexOrderByRelationAggregateInput = {
+  export type paper_metadataOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18150,16 +18150,16 @@ export namespace Prisma {
   }
 
   export type activity_logsCountOrderByAggregateInput = {
-    act_id?: SortOrder
-    employee_id?: SortOrder
-    user_id?: SortOrder
     name?: SortOrder
     activity?: SortOrder
     created_at?: SortOrder
+    act_id?: SortOrder
     activity_type?: SortOrder
-    user_agent?: SortOrder
     ip_address?: SortOrder
     status?: SortOrder
+    user_agent?: SortOrder
+    employee_id?: SortOrder
+    user_id?: SortOrder
   }
 
   export type activity_logsAvgOrderByAggregateInput = {
@@ -18169,29 +18169,29 @@ export namespace Prisma {
   }
 
   export type activity_logsMaxOrderByAggregateInput = {
-    act_id?: SortOrder
-    employee_id?: SortOrder
-    user_id?: SortOrder
     name?: SortOrder
     activity?: SortOrder
     created_at?: SortOrder
+    act_id?: SortOrder
     activity_type?: SortOrder
-    user_agent?: SortOrder
     ip_address?: SortOrder
     status?: SortOrder
+    user_agent?: SortOrder
+    employee_id?: SortOrder
+    user_id?: SortOrder
   }
 
   export type activity_logsMinOrderByAggregateInput = {
-    act_id?: SortOrder
-    employee_id?: SortOrder
-    user_id?: SortOrder
     name?: SortOrder
     activity?: SortOrder
     created_at?: SortOrder
+    act_id?: SortOrder
     activity_type?: SortOrder
-    user_agent?: SortOrder
     ip_address?: SortOrder
     status?: SortOrder
+    user_agent?: SortOrder
+    employee_id?: SortOrder
+    user_id?: SortOrder
   }
 
   export type activity_logsSumOrderByAggregateInput = {
@@ -18243,16 +18243,17 @@ export namespace Prisma {
     avg_doc_length?: SortOrder
   }
 
+  export type activity_logsCreateNestedManyWithoutUsersInput = {
+    create?: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput> | activity_logsCreateWithoutUsersInput[] | activity_logsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: activity_logsCreateOrConnectWithoutUsersInput | activity_logsCreateOrConnectWithoutUsersInput[]
+    createMany?: activity_logsCreateManyUsersInputEnvelope
+    connect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
+  }
+
   export type facultyCreateNestedOneWithoutUsersInput = {
     create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
     connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
     connect?: facultyWhereUniqueInput
-  }
-
-  export type studentsCreateNestedOneWithoutUsersInput = {
-    create?: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: studentsCreateOrConnectWithoutUsersInput
-    connect?: studentsWhereUniqueInput
   }
 
   export type librarianCreateNestedOneWithoutUsersInput = {
@@ -18261,39 +18262,13 @@ export namespace Prisma {
     connect?: librarianWhereUniqueInput
   }
 
-  export type user_bookmarksCreateNestedManyWithoutUsersInput = {
-    create?: XOR<user_bookmarksCreateWithoutUsersInput, user_bookmarksUncheckedCreateWithoutUsersInput> | user_bookmarksCreateWithoutUsersInput[] | user_bookmarksUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: user_bookmarksCreateOrConnectWithoutUsersInput | user_bookmarksCreateOrConnectWithoutUsersInput[]
-    createMany?: user_bookmarksCreateManyUsersInputEnvelope
-    connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
-  }
-
-  export type activity_logsCreateNestedManyWithoutUsersInput = {
-    create?: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput> | activity_logsCreateWithoutUsersInput[] | activity_logsUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: activity_logsCreateOrConnectWithoutUsersInput | activity_logsCreateOrConnectWithoutUsersInput[]
-    createMany?: activity_logsCreateManyUsersInputEnvelope
-    connect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
-  }
-
-  export type facultyUncheckedCreateNestedOneWithoutUsersInput = {
-    create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
-    connect?: facultyWhereUniqueInput
-  }
-
-  export type studentsUncheckedCreateNestedOneWithoutUsersInput = {
+  export type studentsCreateNestedOneWithoutUsersInput = {
     create?: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
     connectOrCreate?: studentsCreateOrConnectWithoutUsersInput
     connect?: studentsWhereUniqueInput
   }
 
-  export type librarianUncheckedCreateNestedOneWithoutUsersInput = {
-    create?: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: librarianCreateOrConnectWithoutUsersInput
-    connect?: librarianWhereUniqueInput
-  }
-
-  export type user_bookmarksUncheckedCreateNestedManyWithoutUsersInput = {
+  export type user_bookmarksCreateNestedManyWithoutUsersInput = {
     create?: XOR<user_bookmarksCreateWithoutUsersInput, user_bookmarksUncheckedCreateWithoutUsersInput> | user_bookmarksCreateWithoutUsersInput[] | user_bookmarksUncheckedCreateWithoutUsersInput[]
     connectOrCreate?: user_bookmarksCreateOrConnectWithoutUsersInput | user_bookmarksCreateOrConnectWithoutUsersInput[]
     createMany?: user_bookmarksCreateManyUsersInputEnvelope
@@ -18307,6 +18282,31 @@ export namespace Prisma {
     connect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
   }
 
+  export type facultyUncheckedCreateNestedOneWithoutUsersInput = {
+    create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
+    connect?: facultyWhereUniqueInput
+  }
+
+  export type librarianUncheckedCreateNestedOneWithoutUsersInput = {
+    create?: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: librarianCreateOrConnectWithoutUsersInput
+    connect?: librarianWhereUniqueInput
+  }
+
+  export type studentsUncheckedCreateNestedOneWithoutUsersInput = {
+    create?: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: studentsCreateOrConnectWithoutUsersInput
+    connect?: studentsWhereUniqueInput
+  }
+
+  export type user_bookmarksUncheckedCreateNestedManyWithoutUsersInput = {
+    create?: XOR<user_bookmarksCreateWithoutUsersInput, user_bookmarksUncheckedCreateWithoutUsersInput> | user_bookmarksCreateWithoutUsersInput[] | user_bookmarksUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: user_bookmarksCreateOrConnectWithoutUsersInput | user_bookmarksCreateOrConnectWithoutUsersInput[]
+    createMany?: user_bookmarksCreateManyUsersInputEnvelope
+    connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -18315,56 +18315,12 @@ export namespace Prisma {
     set?: string
   }
 
-  export type NullableEnumuser_roleFieldUpdateOperationsInput = {
-    set?: $Enums.user_role | null
-  }
-
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
   }
 
-  export type facultyUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
-    upsert?: facultyUpsertWithoutUsersInput
-    disconnect?: facultyWhereInput | boolean
-    delete?: facultyWhereInput | boolean
-    connect?: facultyWhereUniqueInput
-    update?: XOR<XOR<facultyUpdateToOneWithWhereWithoutUsersInput, facultyUpdateWithoutUsersInput>, facultyUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type studentsUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: studentsCreateOrConnectWithoutUsersInput
-    upsert?: studentsUpsertWithoutUsersInput
-    disconnect?: studentsWhereInput | boolean
-    delete?: studentsWhereInput | boolean
-    connect?: studentsWhereUniqueInput
-    update?: XOR<XOR<studentsUpdateToOneWithWhereWithoutUsersInput, studentsUpdateWithoutUsersInput>, studentsUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type librarianUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: librarianCreateOrConnectWithoutUsersInput
-    upsert?: librarianUpsertWithoutUsersInput
-    disconnect?: librarianWhereInput | boolean
-    delete?: librarianWhereInput | boolean
-    connect?: librarianWhereUniqueInput
-    update?: XOR<XOR<librarianUpdateToOneWithWhereWithoutUsersInput, librarianUpdateWithoutUsersInput>, librarianUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type user_bookmarksUpdateManyWithoutUsersNestedInput = {
-    create?: XOR<user_bookmarksCreateWithoutUsersInput, user_bookmarksUncheckedCreateWithoutUsersInput> | user_bookmarksCreateWithoutUsersInput[] | user_bookmarksUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: user_bookmarksCreateOrConnectWithoutUsersInput | user_bookmarksCreateOrConnectWithoutUsersInput[]
-    upsert?: user_bookmarksUpsertWithWhereUniqueWithoutUsersInput | user_bookmarksUpsertWithWhereUniqueWithoutUsersInput[]
-    createMany?: user_bookmarksCreateManyUsersInputEnvelope
-    set?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
-    disconnect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
-    delete?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
-    connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
-    update?: user_bookmarksUpdateWithWhereUniqueWithoutUsersInput | user_bookmarksUpdateWithWhereUniqueWithoutUsersInput[]
-    updateMany?: user_bookmarksUpdateManyWithWhereWithoutUsersInput | user_bookmarksUpdateManyWithWhereWithoutUsersInput[]
-    deleteMany?: user_bookmarksScalarWhereInput | user_bookmarksScalarWhereInput[]
+  export type NullableEnumuser_roleFieldUpdateOperationsInput = {
+    set?: $Enums.user_role | null
   }
 
   export type activity_logsUpdateManyWithoutUsersNestedInput = {
@@ -18381,15 +18337,7 @@ export namespace Prisma {
     deleteMany?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
-  export type facultyUncheckedUpdateOneWithoutUsersNestedInput = {
+  export type facultyUpdateOneWithoutUsersNestedInput = {
     create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
     connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
     upsert?: facultyUpsertWithoutUsersInput
@@ -18399,17 +18347,7 @@ export namespace Prisma {
     update?: XOR<XOR<facultyUpdateToOneWithWhereWithoutUsersInput, facultyUpdateWithoutUsersInput>, facultyUncheckedUpdateWithoutUsersInput>
   }
 
-  export type studentsUncheckedUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: studentsCreateOrConnectWithoutUsersInput
-    upsert?: studentsUpsertWithoutUsersInput
-    disconnect?: studentsWhereInput | boolean
-    delete?: studentsWhereInput | boolean
-    connect?: studentsWhereUniqueInput
-    update?: XOR<XOR<studentsUpdateToOneWithWhereWithoutUsersInput, studentsUpdateWithoutUsersInput>, studentsUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type librarianUncheckedUpdateOneWithoutUsersNestedInput = {
+  export type librarianUpdateOneWithoutUsersNestedInput = {
     create?: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
     connectOrCreate?: librarianCreateOrConnectWithoutUsersInput
     upsert?: librarianUpsertWithoutUsersInput
@@ -18419,7 +18357,17 @@ export namespace Prisma {
     update?: XOR<XOR<librarianUpdateToOneWithWhereWithoutUsersInput, librarianUpdateWithoutUsersInput>, librarianUncheckedUpdateWithoutUsersInput>
   }
 
-  export type user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput = {
+  export type studentsUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: studentsCreateOrConnectWithoutUsersInput
+    upsert?: studentsUpsertWithoutUsersInput
+    disconnect?: studentsWhereInput | boolean
+    delete?: studentsWhereInput | boolean
+    connect?: studentsWhereUniqueInput
+    update?: XOR<XOR<studentsUpdateToOneWithWhereWithoutUsersInput, studentsUpdateWithoutUsersInput>, studentsUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type user_bookmarksUpdateManyWithoutUsersNestedInput = {
     create?: XOR<user_bookmarksCreateWithoutUsersInput, user_bookmarksUncheckedCreateWithoutUsersInput> | user_bookmarksCreateWithoutUsersInput[] | user_bookmarksUncheckedCreateWithoutUsersInput[]
     connectOrCreate?: user_bookmarksCreateOrConnectWithoutUsersInput | user_bookmarksCreateOrConnectWithoutUsersInput[]
     upsert?: user_bookmarksUpsertWithWhereUniqueWithoutUsersInput | user_bookmarksUpsertWithWhereUniqueWithoutUsersInput[]
@@ -18431,6 +18379,14 @@ export namespace Prisma {
     update?: user_bookmarksUpdateWithWhereUniqueWithoutUsersInput | user_bookmarksUpdateWithWhereUniqueWithoutUsersInput[]
     updateMany?: user_bookmarksUpdateManyWithWhereWithoutUsersInput | user_bookmarksUpdateManyWithWhereWithoutUsersInput[]
     deleteMany?: user_bookmarksScalarWhereInput | user_bookmarksScalarWhereInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type activity_logsUncheckedUpdateManyWithoutUsersNestedInput = {
@@ -18445,6 +18401,50 @@ export namespace Prisma {
     update?: activity_logsUpdateWithWhereUniqueWithoutUsersInput | activity_logsUpdateWithWhereUniqueWithoutUsersInput[]
     updateMany?: activity_logsUpdateManyWithWhereWithoutUsersInput | activity_logsUpdateManyWithWhereWithoutUsersInput[]
     deleteMany?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
+  }
+
+  export type facultyUncheckedUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: facultyCreateOrConnectWithoutUsersInput
+    upsert?: facultyUpsertWithoutUsersInput
+    disconnect?: facultyWhereInput | boolean
+    delete?: facultyWhereInput | boolean
+    connect?: facultyWhereUniqueInput
+    update?: XOR<XOR<facultyUpdateToOneWithWhereWithoutUsersInput, facultyUpdateWithoutUsersInput>, facultyUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type librarianUncheckedUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: librarianCreateOrConnectWithoutUsersInput
+    upsert?: librarianUpsertWithoutUsersInput
+    disconnect?: librarianWhereInput | boolean
+    delete?: librarianWhereInput | boolean
+    connect?: librarianWhereUniqueInput
+    update?: XOR<XOR<librarianUpdateToOneWithWhereWithoutUsersInput, librarianUpdateWithoutUsersInput>, librarianUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type studentsUncheckedUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: studentsCreateOrConnectWithoutUsersInput
+    upsert?: studentsUpsertWithoutUsersInput
+    disconnect?: studentsWhereInput | boolean
+    delete?: studentsWhereInput | boolean
+    connect?: studentsWhereUniqueInput
+    update?: XOR<XOR<studentsUpdateToOneWithWhereWithoutUsersInput, studentsUpdateWithoutUsersInput>, studentsUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<user_bookmarksCreateWithoutUsersInput, user_bookmarksUncheckedCreateWithoutUsersInput> | user_bookmarksCreateWithoutUsersInput[] | user_bookmarksUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: user_bookmarksCreateOrConnectWithoutUsersInput | user_bookmarksCreateOrConnectWithoutUsersInput[]
+    upsert?: user_bookmarksUpsertWithWhereUniqueWithoutUsersInput | user_bookmarksUpsertWithWhereUniqueWithoutUsersInput[]
+    createMany?: user_bookmarksCreateManyUsersInputEnvelope
+    set?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+    disconnect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+    delete?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+    connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+    update?: user_bookmarksUpdateWithWhereUniqueWithoutUsersInput | user_bookmarksUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: user_bookmarksUpdateManyWithWhereWithoutUsersInput | user_bookmarksUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: user_bookmarksScalarWhereInput | user_bookmarksScalarWhereInput[]
   }
 
   export type usersCreateNestedOneWithoutFacultyInput = {
@@ -18491,12 +18491,6 @@ export namespace Prisma {
     update?: XOR<XOR<usersUpdateToOneWithWhereWithoutStudentsInput, usersUpdateWithoutStudentsInput>, usersUncheckedUpdateWithoutStudentsInput>
   }
 
-  export type usersCreateNestedOneWithoutLibrarianInput = {
-    create?: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
-    connectOrCreate?: usersCreateOrConnectWithoutLibrarianInput
-    connect?: usersWhereUniqueInput
-  }
-
   export type activity_logsCreateNestedManyWithoutLibrarianInput = {
     create?: XOR<activity_logsCreateWithoutLibrarianInput, activity_logsUncheckedCreateWithoutLibrarianInput> | activity_logsCreateWithoutLibrarianInput[] | activity_logsUncheckedCreateWithoutLibrarianInput[]
     connectOrCreate?: activity_logsCreateOrConnectWithoutLibrarianInput | activity_logsCreateOrConnectWithoutLibrarianInput[]
@@ -18504,19 +18498,17 @@ export namespace Prisma {
     connect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
   }
 
+  export type usersCreateNestedOneWithoutLibrarianInput = {
+    create?: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
+    connectOrCreate?: usersCreateOrConnectWithoutLibrarianInput
+    connect?: usersWhereUniqueInput
+  }
+
   export type activity_logsUncheckedCreateNestedManyWithoutLibrarianInput = {
     create?: XOR<activity_logsCreateWithoutLibrarianInput, activity_logsUncheckedCreateWithoutLibrarianInput> | activity_logsCreateWithoutLibrarianInput[] | activity_logsUncheckedCreateWithoutLibrarianInput[]
     connectOrCreate?: activity_logsCreateOrConnectWithoutLibrarianInput | activity_logsCreateOrConnectWithoutLibrarianInput[]
     createMany?: activity_logsCreateManyLibrarianInputEnvelope
     connect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
-  }
-
-  export type usersUpdateOneRequiredWithoutLibrarianNestedInput = {
-    create?: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
-    connectOrCreate?: usersCreateOrConnectWithoutLibrarianInput
-    upsert?: usersUpsertWithoutLibrarianInput
-    connect?: usersWhereUniqueInput
-    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutLibrarianInput, usersUpdateWithoutLibrarianInput>, usersUncheckedUpdateWithoutLibrarianInput>
   }
 
   export type activity_logsUpdateManyWithoutLibrarianNestedInput = {
@@ -18531,6 +18523,14 @@ export namespace Prisma {
     update?: activity_logsUpdateWithWhereUniqueWithoutLibrarianInput | activity_logsUpdateWithWhereUniqueWithoutLibrarianInput[]
     updateMany?: activity_logsUpdateManyWithWhereWithoutLibrarianInput | activity_logsUpdateManyWithWhereWithoutLibrarianInput[]
     deleteMany?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
+  }
+
+  export type usersUpdateOneRequiredWithoutLibrarianNestedInput = {
+    create?: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
+    connectOrCreate?: usersCreateOrConnectWithoutLibrarianInput
+    upsert?: usersUpsertWithoutLibrarianInput
+    connect?: usersWhereUniqueInput
+    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutLibrarianInput, usersUpdateWithoutLibrarianInput>, usersUncheckedUpdateWithoutLibrarianInput>
   }
 
   export type activity_logsUncheckedUpdateManyWithoutLibrarianNestedInput = {
@@ -18551,25 +18551,18 @@ export namespace Prisma {
     set: string[]
   }
 
-  export type paper_metadataCreateNestedManyWithoutPapersInput = {
-    create?: XOR<paper_metadataCreateWithoutPapersInput, paper_metadataUncheckedCreateWithoutPapersInput> | paper_metadataCreateWithoutPapersInput[] | paper_metadataUncheckedCreateWithoutPapersInput[]
-    connectOrCreate?: paper_metadataCreateOrConnectWithoutPapersInput | paper_metadataCreateOrConnectWithoutPapersInput[]
-    createMany?: paper_metadataCreateManyPapersInputEnvelope
-    connect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
-  }
-
-  export type user_bookmarksCreateNestedManyWithoutPapersInput = {
-    create?: XOR<user_bookmarksCreateWithoutPapersInput, user_bookmarksUncheckedCreateWithoutPapersInput> | user_bookmarksCreateWithoutPapersInput[] | user_bookmarksUncheckedCreateWithoutPapersInput[]
-    connectOrCreate?: user_bookmarksCreateOrConnectWithoutPapersInput | user_bookmarksCreateOrConnectWithoutPapersInput[]
-    createMany?: user_bookmarksCreateManyPapersInputEnvelope
-    connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
-  }
-
   export type paper_bm25_indexCreateNestedManyWithoutPapersInput = {
     create?: XOR<paper_bm25_indexCreateWithoutPapersInput, paper_bm25_indexUncheckedCreateWithoutPapersInput> | paper_bm25_indexCreateWithoutPapersInput[] | paper_bm25_indexUncheckedCreateWithoutPapersInput[]
     connectOrCreate?: paper_bm25_indexCreateOrConnectWithoutPapersInput | paper_bm25_indexCreateOrConnectWithoutPapersInput[]
     createMany?: paper_bm25_indexCreateManyPapersInputEnvelope
     connect?: paper_bm25_indexWhereUniqueInput | paper_bm25_indexWhereUniqueInput[]
+  }
+
+  export type paper_metadataCreateNestedManyWithoutPapersInput = {
+    create?: XOR<paper_metadataCreateWithoutPapersInput, paper_metadataUncheckedCreateWithoutPapersInput> | paper_metadataCreateWithoutPapersInput[] | paper_metadataUncheckedCreateWithoutPapersInput[]
+    connectOrCreate?: paper_metadataCreateOrConnectWithoutPapersInput | paper_metadataCreateOrConnectWithoutPapersInput[]
+    createMany?: paper_metadataCreateManyPapersInputEnvelope
+    connect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
   }
 
   export type term_scoreCreateNestedManyWithoutPapersInput = {
@@ -18579,14 +18572,7 @@ export namespace Prisma {
     connect?: term_scoreWhereUniqueInput | term_scoreWhereUniqueInput[]
   }
 
-  export type paper_metadataUncheckedCreateNestedManyWithoutPapersInput = {
-    create?: XOR<paper_metadataCreateWithoutPapersInput, paper_metadataUncheckedCreateWithoutPapersInput> | paper_metadataCreateWithoutPapersInput[] | paper_metadataUncheckedCreateWithoutPapersInput[]
-    connectOrCreate?: paper_metadataCreateOrConnectWithoutPapersInput | paper_metadataCreateOrConnectWithoutPapersInput[]
-    createMany?: paper_metadataCreateManyPapersInputEnvelope
-    connect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
-  }
-
-  export type user_bookmarksUncheckedCreateNestedManyWithoutPapersInput = {
+  export type user_bookmarksCreateNestedManyWithoutPapersInput = {
     create?: XOR<user_bookmarksCreateWithoutPapersInput, user_bookmarksUncheckedCreateWithoutPapersInput> | user_bookmarksCreateWithoutPapersInput[] | user_bookmarksUncheckedCreateWithoutPapersInput[]
     connectOrCreate?: user_bookmarksCreateOrConnectWithoutPapersInput | user_bookmarksCreateOrConnectWithoutPapersInput[]
     createMany?: user_bookmarksCreateManyPapersInputEnvelope
@@ -18600,6 +18586,13 @@ export namespace Prisma {
     connect?: paper_bm25_indexWhereUniqueInput | paper_bm25_indexWhereUniqueInput[]
   }
 
+  export type paper_metadataUncheckedCreateNestedManyWithoutPapersInput = {
+    create?: XOR<paper_metadataCreateWithoutPapersInput, paper_metadataUncheckedCreateWithoutPapersInput> | paper_metadataCreateWithoutPapersInput[] | paper_metadataUncheckedCreateWithoutPapersInput[]
+    connectOrCreate?: paper_metadataCreateOrConnectWithoutPapersInput | paper_metadataCreateOrConnectWithoutPapersInput[]
+    createMany?: paper_metadataCreateManyPapersInputEnvelope
+    connect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
+  }
+
   export type term_scoreUncheckedCreateNestedManyWithoutPapersInput = {
     create?: XOR<term_scoreCreateWithoutPapersInput, term_scoreUncheckedCreateWithoutPapersInput> | term_scoreCreateWithoutPapersInput[] | term_scoreUncheckedCreateWithoutPapersInput[]
     connectOrCreate?: term_scoreCreateOrConnectWithoutPapersInput | term_scoreCreateOrConnectWithoutPapersInput[]
@@ -18607,37 +18600,16 @@ export namespace Prisma {
     connect?: term_scoreWhereUniqueInput | term_scoreWhereUniqueInput[]
   }
 
+  export type user_bookmarksUncheckedCreateNestedManyWithoutPapersInput = {
+    create?: XOR<user_bookmarksCreateWithoutPapersInput, user_bookmarksUncheckedCreateWithoutPapersInput> | user_bookmarksCreateWithoutPapersInput[] | user_bookmarksUncheckedCreateWithoutPapersInput[]
+    connectOrCreate?: user_bookmarksCreateOrConnectWithoutPapersInput | user_bookmarksCreateOrConnectWithoutPapersInput[]
+    createMany?: user_bookmarksCreateManyPapersInputEnvelope
+    connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+  }
+
   export type papersUpdatekeywordsInput = {
     set?: string[]
     push?: string | string[]
-  }
-
-  export type paper_metadataUpdateManyWithoutPapersNestedInput = {
-    create?: XOR<paper_metadataCreateWithoutPapersInput, paper_metadataUncheckedCreateWithoutPapersInput> | paper_metadataCreateWithoutPapersInput[] | paper_metadataUncheckedCreateWithoutPapersInput[]
-    connectOrCreate?: paper_metadataCreateOrConnectWithoutPapersInput | paper_metadataCreateOrConnectWithoutPapersInput[]
-    upsert?: paper_metadataUpsertWithWhereUniqueWithoutPapersInput | paper_metadataUpsertWithWhereUniqueWithoutPapersInput[]
-    createMany?: paper_metadataCreateManyPapersInputEnvelope
-    set?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
-    disconnect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
-    delete?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
-    connect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
-    update?: paper_metadataUpdateWithWhereUniqueWithoutPapersInput | paper_metadataUpdateWithWhereUniqueWithoutPapersInput[]
-    updateMany?: paper_metadataUpdateManyWithWhereWithoutPapersInput | paper_metadataUpdateManyWithWhereWithoutPapersInput[]
-    deleteMany?: paper_metadataScalarWhereInput | paper_metadataScalarWhereInput[]
-  }
-
-  export type user_bookmarksUpdateManyWithoutPapersNestedInput = {
-    create?: XOR<user_bookmarksCreateWithoutPapersInput, user_bookmarksUncheckedCreateWithoutPapersInput> | user_bookmarksCreateWithoutPapersInput[] | user_bookmarksUncheckedCreateWithoutPapersInput[]
-    connectOrCreate?: user_bookmarksCreateOrConnectWithoutPapersInput | user_bookmarksCreateOrConnectWithoutPapersInput[]
-    upsert?: user_bookmarksUpsertWithWhereUniqueWithoutPapersInput | user_bookmarksUpsertWithWhereUniqueWithoutPapersInput[]
-    createMany?: user_bookmarksCreateManyPapersInputEnvelope
-    set?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
-    disconnect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
-    delete?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
-    connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
-    update?: user_bookmarksUpdateWithWhereUniqueWithoutPapersInput | user_bookmarksUpdateWithWhereUniqueWithoutPapersInput[]
-    updateMany?: user_bookmarksUpdateManyWithWhereWithoutPapersInput | user_bookmarksUpdateManyWithWhereWithoutPapersInput[]
-    deleteMany?: user_bookmarksScalarWhereInput | user_bookmarksScalarWhereInput[]
   }
 
   export type paper_bm25_indexUpdateManyWithoutPapersNestedInput = {
@@ -18654,6 +18626,20 @@ export namespace Prisma {
     deleteMany?: paper_bm25_indexScalarWhereInput | paper_bm25_indexScalarWhereInput[]
   }
 
+  export type paper_metadataUpdateManyWithoutPapersNestedInput = {
+    create?: XOR<paper_metadataCreateWithoutPapersInput, paper_metadataUncheckedCreateWithoutPapersInput> | paper_metadataCreateWithoutPapersInput[] | paper_metadataUncheckedCreateWithoutPapersInput[]
+    connectOrCreate?: paper_metadataCreateOrConnectWithoutPapersInput | paper_metadataCreateOrConnectWithoutPapersInput[]
+    upsert?: paper_metadataUpsertWithWhereUniqueWithoutPapersInput | paper_metadataUpsertWithWhereUniqueWithoutPapersInput[]
+    createMany?: paper_metadataCreateManyPapersInputEnvelope
+    set?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
+    disconnect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
+    delete?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
+    connect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
+    update?: paper_metadataUpdateWithWhereUniqueWithoutPapersInput | paper_metadataUpdateWithWhereUniqueWithoutPapersInput[]
+    updateMany?: paper_metadataUpdateManyWithWhereWithoutPapersInput | paper_metadataUpdateManyWithWhereWithoutPapersInput[]
+    deleteMany?: paper_metadataScalarWhereInput | paper_metadataScalarWhereInput[]
+  }
+
   export type term_scoreUpdateManyWithoutPapersNestedInput = {
     create?: XOR<term_scoreCreateWithoutPapersInput, term_scoreUncheckedCreateWithoutPapersInput> | term_scoreCreateWithoutPapersInput[] | term_scoreUncheckedCreateWithoutPapersInput[]
     connectOrCreate?: term_scoreCreateOrConnectWithoutPapersInput | term_scoreCreateOrConnectWithoutPapersInput[]
@@ -18668,21 +18654,7 @@ export namespace Prisma {
     deleteMany?: term_scoreScalarWhereInput | term_scoreScalarWhereInput[]
   }
 
-  export type paper_metadataUncheckedUpdateManyWithoutPapersNestedInput = {
-    create?: XOR<paper_metadataCreateWithoutPapersInput, paper_metadataUncheckedCreateWithoutPapersInput> | paper_metadataCreateWithoutPapersInput[] | paper_metadataUncheckedCreateWithoutPapersInput[]
-    connectOrCreate?: paper_metadataCreateOrConnectWithoutPapersInput | paper_metadataCreateOrConnectWithoutPapersInput[]
-    upsert?: paper_metadataUpsertWithWhereUniqueWithoutPapersInput | paper_metadataUpsertWithWhereUniqueWithoutPapersInput[]
-    createMany?: paper_metadataCreateManyPapersInputEnvelope
-    set?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
-    disconnect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
-    delete?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
-    connect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
-    update?: paper_metadataUpdateWithWhereUniqueWithoutPapersInput | paper_metadataUpdateWithWhereUniqueWithoutPapersInput[]
-    updateMany?: paper_metadataUpdateManyWithWhereWithoutPapersInput | paper_metadataUpdateManyWithWhereWithoutPapersInput[]
-    deleteMany?: paper_metadataScalarWhereInput | paper_metadataScalarWhereInput[]
-  }
-
-  export type user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput = {
+  export type user_bookmarksUpdateManyWithoutPapersNestedInput = {
     create?: XOR<user_bookmarksCreateWithoutPapersInput, user_bookmarksUncheckedCreateWithoutPapersInput> | user_bookmarksCreateWithoutPapersInput[] | user_bookmarksUncheckedCreateWithoutPapersInput[]
     connectOrCreate?: user_bookmarksCreateOrConnectWithoutPapersInput | user_bookmarksCreateOrConnectWithoutPapersInput[]
     upsert?: user_bookmarksUpsertWithWhereUniqueWithoutPapersInput | user_bookmarksUpsertWithWhereUniqueWithoutPapersInput[]
@@ -18710,6 +18682,20 @@ export namespace Prisma {
     deleteMany?: paper_bm25_indexScalarWhereInput | paper_bm25_indexScalarWhereInput[]
   }
 
+  export type paper_metadataUncheckedUpdateManyWithoutPapersNestedInput = {
+    create?: XOR<paper_metadataCreateWithoutPapersInput, paper_metadataUncheckedCreateWithoutPapersInput> | paper_metadataCreateWithoutPapersInput[] | paper_metadataUncheckedCreateWithoutPapersInput[]
+    connectOrCreate?: paper_metadataCreateOrConnectWithoutPapersInput | paper_metadataCreateOrConnectWithoutPapersInput[]
+    upsert?: paper_metadataUpsertWithWhereUniqueWithoutPapersInput | paper_metadataUpsertWithWhereUniqueWithoutPapersInput[]
+    createMany?: paper_metadataCreateManyPapersInputEnvelope
+    set?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
+    disconnect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
+    delete?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
+    connect?: paper_metadataWhereUniqueInput | paper_metadataWhereUniqueInput[]
+    update?: paper_metadataUpdateWithWhereUniqueWithoutPapersInput | paper_metadataUpdateWithWhereUniqueWithoutPapersInput[]
+    updateMany?: paper_metadataUpdateManyWithWhereWithoutPapersInput | paper_metadataUpdateManyWithWhereWithoutPapersInput[]
+    deleteMany?: paper_metadataScalarWhereInput | paper_metadataScalarWhereInput[]
+  }
+
   export type term_scoreUncheckedUpdateManyWithoutPapersNestedInput = {
     create?: XOR<term_scoreCreateWithoutPapersInput, term_scoreUncheckedCreateWithoutPapersInput> | term_scoreCreateWithoutPapersInput[] | term_scoreUncheckedCreateWithoutPapersInput[]
     connectOrCreate?: term_scoreCreateOrConnectWithoutPapersInput | term_scoreCreateOrConnectWithoutPapersInput[]
@@ -18722,6 +18708,20 @@ export namespace Prisma {
     update?: term_scoreUpdateWithWhereUniqueWithoutPapersInput | term_scoreUpdateWithWhereUniqueWithoutPapersInput[]
     updateMany?: term_scoreUpdateManyWithWhereWithoutPapersInput | term_scoreUpdateManyWithWhereWithoutPapersInput[]
     deleteMany?: term_scoreScalarWhereInput | term_scoreScalarWhereInput[]
+  }
+
+  export type user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput = {
+    create?: XOR<user_bookmarksCreateWithoutPapersInput, user_bookmarksUncheckedCreateWithoutPapersInput> | user_bookmarksCreateWithoutPapersInput[] | user_bookmarksUncheckedCreateWithoutPapersInput[]
+    connectOrCreate?: user_bookmarksCreateOrConnectWithoutPapersInput | user_bookmarksCreateOrConnectWithoutPapersInput[]
+    upsert?: user_bookmarksUpsertWithWhereUniqueWithoutPapersInput | user_bookmarksUpsertWithWhereUniqueWithoutPapersInput[]
+    createMany?: user_bookmarksCreateManyPapersInputEnvelope
+    set?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+    disconnect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+    delete?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+    connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+    update?: user_bookmarksUpdateWithWhereUniqueWithoutPapersInput | user_bookmarksUpdateWithWhereUniqueWithoutPapersInput[]
+    updateMany?: user_bookmarksUpdateManyWithWhereWithoutPapersInput | user_bookmarksUpdateManyWithWhereWithoutPapersInput[]
+    deleteMany?: user_bookmarksScalarWhereInput | user_bookmarksScalarWhereInput[]
   }
 
   export type papersCreateNestedOneWithoutPaper_metadataInput = {
@@ -18877,13 +18877,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type NestedEnumuser_roleNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
-    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
-  }
-
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -18893,6 +18886,13 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedEnumuser_roleNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -18967,16 +18967,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
-    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel> | $Enums.user_role | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumuser_roleNullableFilter<$PrismaModel>
-    _max?: NestedEnumuser_roleNullableFilter<$PrismaModel>
-  }
-
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -18989,6 +18979,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.user_role | Enumuser_roleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.user_role[] | ListEnumuser_roleFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumuser_roleNullableWithAggregatesFilter<$PrismaModel> | $Enums.user_role | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumuser_roleNullableFilter<$PrismaModel>
+    _max?: NestedEnumuser_roleNullableFilter<$PrismaModel>
   }
 
   export type NestedBigIntFilter<$PrismaModel = never> = {
@@ -19126,6 +19126,39 @@ export namespace Prisma {
     _max?: NestedEnumactivity_typeNullableFilter<$PrismaModel>
   }
 
+  export type activity_logsCreateWithoutUsersInput = {
+    name: string
+    activity: string
+    created_at?: Date | string
+    activity_type?: $Enums.activity_type | null
+    ip_address?: string | null
+    status?: string | null
+    user_agent?: string | null
+    librarian: librarianCreateNestedOneWithoutActivity_logsInput
+  }
+
+  export type activity_logsUncheckedCreateWithoutUsersInput = {
+    name: string
+    activity: string
+    created_at?: Date | string
+    act_id?: number
+    activity_type?: $Enums.activity_type | null
+    ip_address?: string | null
+    status?: string | null
+    user_agent?: string | null
+    employee_id: number
+  }
+
+  export type activity_logsCreateOrConnectWithoutUsersInput = {
+    where: activity_logsWhereUniqueInput
+    create: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput>
+  }
+
+  export type activity_logsCreateManyUsersInputEnvelope = {
+    data: activity_logsCreateManyUsersInput | activity_logsCreateManyUsersInput[]
+    skipDuplicates?: boolean
+  }
+
   export type facultyCreateWithoutUsersInput = {
     employee_id: number
     position?: string | null
@@ -19141,25 +19174,6 @@ export namespace Prisma {
   export type facultyCreateOrConnectWithoutUsersInput = {
     where: facultyWhereUniqueInput
     create: XOR<facultyCreateWithoutUsersInput, facultyUncheckedCreateWithoutUsersInput>
-  }
-
-  export type studentsCreateWithoutUsersInput = {
-    student_num: bigint | number
-    program?: string | null
-    college?: string | null
-    year_level?: number | null
-  }
-
-  export type studentsUncheckedCreateWithoutUsersInput = {
-    student_num: bigint | number
-    program?: string | null
-    college?: string | null
-    year_level?: number | null
-  }
-
-  export type studentsCreateOrConnectWithoutUsersInput = {
-    where: studentsWhereUniqueInput
-    create: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
   }
 
   export type librarianCreateWithoutUsersInput = {
@@ -19179,6 +19193,25 @@ export namespace Prisma {
   export type librarianCreateOrConnectWithoutUsersInput = {
     where: librarianWhereUniqueInput
     create: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
+  }
+
+  export type studentsCreateWithoutUsersInput = {
+    student_num: bigint | number
+    program?: string | null
+    college?: string | null
+    year_level?: number | null
+  }
+
+  export type studentsUncheckedCreateWithoutUsersInput = {
+    student_num: bigint | number
+    program?: string | null
+    college?: string | null
+    year_level?: number | null
+  }
+
+  export type studentsCreateOrConnectWithoutUsersInput = {
+    where: studentsWhereUniqueInput
+    create: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
   }
 
   export type user_bookmarksCreateWithoutUsersInput = {
@@ -19204,37 +19237,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type activity_logsCreateWithoutUsersInput = {
-    name: string
-    activity: string
-    created_at?: Date | string
-    activity_type?: $Enums.activity_type | null
-    user_agent?: string | null
-    ip_address?: string | null
-    status?: string | null
-    librarian: librarianCreateNestedOneWithoutActivity_logsInput
-  }
-
-  export type activity_logsUncheckedCreateWithoutUsersInput = {
-    act_id?: number
-    employee_id: number
-    name: string
-    activity: string
-    created_at?: Date | string
-    activity_type?: $Enums.activity_type | null
-    user_agent?: string | null
-    ip_address?: string | null
-    status?: string | null
-  }
-
-  export type activity_logsCreateOrConnectWithoutUsersInput = {
+  export type activity_logsUpsertWithWhereUniqueWithoutUsersInput = {
     where: activity_logsWhereUniqueInput
+    update: XOR<activity_logsUpdateWithoutUsersInput, activity_logsUncheckedUpdateWithoutUsersInput>
     create: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput>
   }
 
-  export type activity_logsCreateManyUsersInputEnvelope = {
-    data: activity_logsCreateManyUsersInput | activity_logsCreateManyUsersInput[]
-    skipDuplicates?: boolean
+  export type activity_logsUpdateWithWhereUniqueWithoutUsersInput = {
+    where: activity_logsWhereUniqueInput
+    data: XOR<activity_logsUpdateWithoutUsersInput, activity_logsUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type activity_logsUpdateManyWithWhereWithoutUsersInput = {
+    where: activity_logsScalarWhereInput
+    data: XOR<activity_logsUpdateManyMutationInput, activity_logsUncheckedUpdateManyWithoutUsersInput>
+  }
+
+  export type activity_logsScalarWhereInput = {
+    AND?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
+    OR?: activity_logsScalarWhereInput[]
+    NOT?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
+    name?: StringFilter<"activity_logs"> | string
+    activity?: StringFilter<"activity_logs"> | string
+    created_at?: DateTimeFilter<"activity_logs"> | Date | string
+    act_id?: IntFilter<"activity_logs"> | number
+    activity_type?: Enumactivity_typeNullableFilter<"activity_logs"> | $Enums.activity_type | null
+    ip_address?: StringNullableFilter<"activity_logs"> | string | null
+    status?: StringNullableFilter<"activity_logs"> | string | null
+    user_agent?: StringNullableFilter<"activity_logs"> | string | null
+    employee_id?: IntFilter<"activity_logs"> | number
+    user_id?: IntFilter<"activity_logs"> | number
   }
 
   export type facultyUpsertWithoutUsersInput = {
@@ -19260,31 +19292,6 @@ export namespace Prisma {
     department?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type studentsUpsertWithoutUsersInput = {
-    update: XOR<studentsUpdateWithoutUsersInput, studentsUncheckedUpdateWithoutUsersInput>
-    create: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
-    where?: studentsWhereInput
-  }
-
-  export type studentsUpdateToOneWithWhereWithoutUsersInput = {
-    where?: studentsWhereInput
-    data: XOR<studentsUpdateWithoutUsersInput, studentsUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type studentsUpdateWithoutUsersInput = {
-    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
-    program?: NullableStringFieldUpdateOperationsInput | string | null
-    college?: NullableStringFieldUpdateOperationsInput | string | null
-    year_level?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type studentsUncheckedUpdateWithoutUsersInput = {
-    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
-    program?: NullableStringFieldUpdateOperationsInput | string | null
-    college?: NullableStringFieldUpdateOperationsInput | string | null
-    year_level?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
   export type librarianUpsertWithoutUsersInput = {
     update: XOR<librarianUpdateWithoutUsersInput, librarianUncheckedUpdateWithoutUsersInput>
     create: XOR<librarianCreateWithoutUsersInput, librarianUncheckedCreateWithoutUsersInput>
@@ -19308,6 +19315,31 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
     activity_logs?: activity_logsUncheckedUpdateManyWithoutLibrarianNestedInput
+  }
+
+  export type studentsUpsertWithoutUsersInput = {
+    update: XOR<studentsUpdateWithoutUsersInput, studentsUncheckedUpdateWithoutUsersInput>
+    create: XOR<studentsCreateWithoutUsersInput, studentsUncheckedCreateWithoutUsersInput>
+    where?: studentsWhereInput
+  }
+
+  export type studentsUpdateToOneWithWhereWithoutUsersInput = {
+    where?: studentsWhereInput
+    data: XOR<studentsUpdateWithoutUsersInput, studentsUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type studentsUpdateWithoutUsersInput = {
+    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
+    program?: NullableStringFieldUpdateOperationsInput | string | null
+    college?: NullableStringFieldUpdateOperationsInput | string | null
+    year_level?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type studentsUncheckedUpdateWithoutUsersInput = {
+    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
+    program?: NullableStringFieldUpdateOperationsInput | string | null
+    college?: NullableStringFieldUpdateOperationsInput | string | null
+    year_level?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type user_bookmarksUpsertWithWhereUniqueWithoutUsersInput = {
@@ -19337,38 +19369,6 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"user_bookmarks"> | Date | string | null
   }
 
-  export type activity_logsUpsertWithWhereUniqueWithoutUsersInput = {
-    where: activity_logsWhereUniqueInput
-    update: XOR<activity_logsUpdateWithoutUsersInput, activity_logsUncheckedUpdateWithoutUsersInput>
-    create: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput>
-  }
-
-  export type activity_logsUpdateWithWhereUniqueWithoutUsersInput = {
-    where: activity_logsWhereUniqueInput
-    data: XOR<activity_logsUpdateWithoutUsersInput, activity_logsUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type activity_logsUpdateManyWithWhereWithoutUsersInput = {
-    where: activity_logsScalarWhereInput
-    data: XOR<activity_logsUpdateManyMutationInput, activity_logsUncheckedUpdateManyWithoutUsersInput>
-  }
-
-  export type activity_logsScalarWhereInput = {
-    AND?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
-    OR?: activity_logsScalarWhereInput[]
-    NOT?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
-    act_id?: IntFilter<"activity_logs"> | number
-    employee_id?: IntFilter<"activity_logs"> | number
-    user_id?: IntFilter<"activity_logs"> | number
-    name?: StringFilter<"activity_logs"> | string
-    activity?: StringFilter<"activity_logs"> | string
-    created_at?: DateTimeFilter<"activity_logs"> | Date | string
-    activity_type?: Enumactivity_typeNullableFilter<"activity_logs"> | $Enums.activity_type | null
-    user_agent?: StringNullableFilter<"activity_logs"> | string | null
-    ip_address?: StringNullableFilter<"activity_logs"> | string | null
-    status?: StringNullableFilter<"activity_logs"> | string | null
-  }
-
   export type usersCreateWithoutFacultyInput = {
     first_name?: string | null
     mid_name?: string | null
@@ -19376,13 +19376,13 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
-    students?: studentsCreateNestedOneWithoutUsersInput
-    librarian?: librarianCreateNestedOneWithoutUsersInput
-    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+    role?: $Enums.user_role | null
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    librarian?: librarianCreateNestedOneWithoutUsersInput
+    students?: studentsCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
   }
 
   export type usersUncheckedCreateWithoutFacultyInput = {
@@ -19393,13 +19393,13 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
-    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
-    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
-    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+    role?: $Enums.user_role | null
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
+    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type usersCreateOrConnectWithoutFacultyInput = {
@@ -19425,13 +19425,13 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    students?: studentsUpdateOneWithoutUsersNestedInput
-    librarian?: librarianUpdateOneWithoutUsersNestedInput
-    user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
+    librarian?: librarianUpdateOneWithoutUsersNestedInput
+    students?: studentsUpdateOneWithoutUsersNestedInput
+    user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutFacultyInput = {
@@ -19442,13 +19442,13 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
-    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
-    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
+    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
+    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type usersCreateWithoutStudentsInput = {
@@ -19458,13 +19458,13 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
+    role?: $Enums.user_role | null
+    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
-    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
   }
 
   export type usersUncheckedCreateWithoutStudentsInput = {
@@ -19475,13 +19475,13 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
+    role?: $Enums.user_role | null
+    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
-    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type usersCreateOrConnectWithoutStudentsInput = {
@@ -19507,13 +19507,13 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
-    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutStudentsInput = {
@@ -19524,51 +19524,13 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
-    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
-  }
-
-  export type usersCreateWithoutLibrarianInput = {
-    first_name?: string | null
-    mid_name?: string | null
-    last_name?: string | null
-    ext_name?: string | null
-    email: string
-    profile_picture?: string | null
-    role?: $Enums.user_role | null
-    password: string
-    created_at?: Date | string | null
-    faculty?: facultyCreateNestedOneWithoutUsersInput
-    students?: studentsCreateNestedOneWithoutUsersInput
-    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
-    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
-  }
-
-  export type usersUncheckedCreateWithoutLibrarianInput = {
-    user_id?: number
-    first_name?: string | null
-    mid_name?: string | null
-    last_name?: string | null
-    ext_name?: string | null
-    email: string
-    profile_picture?: string | null
-    role?: $Enums.user_role | null
-    password: string
-    created_at?: Date | string | null
-    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
-    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
-    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
-    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
-  }
-
-  export type usersCreateOrConnectWithoutLibrarianInput = {
-    where: usersWhereUniqueInput
-    create: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
   }
 
   export type activity_logsCreateWithoutLibrarianInput = {
@@ -19576,22 +19538,22 @@ export namespace Prisma {
     activity: string
     created_at?: Date | string
     activity_type?: $Enums.activity_type | null
-    user_agent?: string | null
     ip_address?: string | null
     status?: string | null
+    user_agent?: string | null
     users: usersCreateNestedOneWithoutActivity_logsInput
   }
 
   export type activity_logsUncheckedCreateWithoutLibrarianInput = {
-    act_id?: number
-    user_id: number
     name: string
     activity: string
     created_at?: Date | string
+    act_id?: number
     activity_type?: $Enums.activity_type | null
-    user_agent?: string | null
     ip_address?: string | null
     status?: string | null
+    user_agent?: string | null
+    user_id: number
   }
 
   export type activity_logsCreateOrConnectWithoutLibrarianInput = {
@@ -19602,6 +19564,60 @@ export namespace Prisma {
   export type activity_logsCreateManyLibrarianInputEnvelope = {
     data: activity_logsCreateManyLibrarianInput | activity_logsCreateManyLibrarianInput[]
     skipDuplicates?: boolean
+  }
+
+  export type usersCreateWithoutLibrarianInput = {
+    first_name?: string | null
+    mid_name?: string | null
+    last_name?: string | null
+    ext_name?: string | null
+    email: string
+    profile_picture?: string | null
+    password: string
+    created_at?: Date | string | null
+    role?: $Enums.user_role | null
+    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    faculty?: facultyCreateNestedOneWithoutUsersInput
+    students?: studentsCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersUncheckedCreateWithoutLibrarianInput = {
+    user_id?: number
+    first_name?: string | null
+    mid_name?: string | null
+    last_name?: string | null
+    ext_name?: string | null
+    email: string
+    profile_picture?: string | null
+    password: string
+    created_at?: Date | string | null
+    role?: $Enums.user_role | null
+    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
+    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersCreateOrConnectWithoutLibrarianInput = {
+    where: usersWhereUniqueInput
+    create: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
+  }
+
+  export type activity_logsUpsertWithWhereUniqueWithoutLibrarianInput = {
+    where: activity_logsWhereUniqueInput
+    update: XOR<activity_logsUpdateWithoutLibrarianInput, activity_logsUncheckedUpdateWithoutLibrarianInput>
+    create: XOR<activity_logsCreateWithoutLibrarianInput, activity_logsUncheckedCreateWithoutLibrarianInput>
+  }
+
+  export type activity_logsUpdateWithWhereUniqueWithoutLibrarianInput = {
+    where: activity_logsWhereUniqueInput
+    data: XOR<activity_logsUpdateWithoutLibrarianInput, activity_logsUncheckedUpdateWithoutLibrarianInput>
+  }
+
+  export type activity_logsUpdateManyWithWhereWithoutLibrarianInput = {
+    where: activity_logsScalarWhereInput
+    data: XOR<activity_logsUpdateManyMutationInput, activity_logsUncheckedUpdateManyWithoutLibrarianInput>
   }
 
   export type usersUpsertWithoutLibrarianInput = {
@@ -19622,13 +19638,13 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
-    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutLibrarianInput = {
@@ -19639,29 +19655,34 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
-    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
   }
 
-  export type activity_logsUpsertWithWhereUniqueWithoutLibrarianInput = {
-    where: activity_logsWhereUniqueInput
-    update: XOR<activity_logsUpdateWithoutLibrarianInput, activity_logsUncheckedUpdateWithoutLibrarianInput>
-    create: XOR<activity_logsCreateWithoutLibrarianInput, activity_logsUncheckedCreateWithoutLibrarianInput>
+  export type paper_bm25_indexCreateWithoutPapersInput = {
+    token_frequencies: JsonNullValueInput | InputJsonValue
+    document_length: number
   }
 
-  export type activity_logsUpdateWithWhereUniqueWithoutLibrarianInput = {
-    where: activity_logsWhereUniqueInput
-    data: XOR<activity_logsUpdateWithoutLibrarianInput, activity_logsUncheckedUpdateWithoutLibrarianInput>
+  export type paper_bm25_indexUncheckedCreateWithoutPapersInput = {
+    index_id?: number
+    token_frequencies: JsonNullValueInput | InputJsonValue
+    document_length: number
   }
 
-  export type activity_logsUpdateManyWithWhereWithoutLibrarianInput = {
-    where: activity_logsScalarWhereInput
-    data: XOR<activity_logsUpdateManyMutationInput, activity_logsUncheckedUpdateManyWithoutLibrarianInput>
+  export type paper_bm25_indexCreateOrConnectWithoutPapersInput = {
+    where: paper_bm25_indexWhereUniqueInput
+    create: XOR<paper_bm25_indexCreateWithoutPapersInput, paper_bm25_indexUncheckedCreateWithoutPapersInput>
+  }
+
+  export type paper_bm25_indexCreateManyPapersInputEnvelope = {
+    data: paper_bm25_indexCreateManyPapersInput | paper_bm25_indexCreateManyPapersInput[]
+    skipDuplicates?: boolean
   }
 
   export type paper_metadataCreateWithoutPapersInput = {
@@ -19691,50 +19712,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type user_bookmarksCreateWithoutPapersInput = {
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    users: usersCreateNestedOneWithoutUser_bookmarksInput
-  }
-
-  export type user_bookmarksUncheckedCreateWithoutPapersInput = {
-    bookmark_id?: number
-    user_id: number
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-  }
-
-  export type user_bookmarksCreateOrConnectWithoutPapersInput = {
-    where: user_bookmarksWhereUniqueInput
-    create: XOR<user_bookmarksCreateWithoutPapersInput, user_bookmarksUncheckedCreateWithoutPapersInput>
-  }
-
-  export type user_bookmarksCreateManyPapersInputEnvelope = {
-    data: user_bookmarksCreateManyPapersInput | user_bookmarksCreateManyPapersInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type paper_bm25_indexCreateWithoutPapersInput = {
-    token_frequencies: JsonNullValueInput | InputJsonValue
-    document_length: number
-  }
-
-  export type paper_bm25_indexUncheckedCreateWithoutPapersInput = {
-    index_id?: number
-    token_frequencies: JsonNullValueInput | InputJsonValue
-    document_length: number
-  }
-
-  export type paper_bm25_indexCreateOrConnectWithoutPapersInput = {
-    where: paper_bm25_indexWhereUniqueInput
-    create: XOR<paper_bm25_indexCreateWithoutPapersInput, paper_bm25_indexUncheckedCreateWithoutPapersInput>
-  }
-
-  export type paper_bm25_indexCreateManyPapersInputEnvelope = {
-    data: paper_bm25_indexCreateManyPapersInput | paper_bm25_indexCreateManyPapersInput[]
-    skipDuplicates?: boolean
-  }
-
   export type term_scoreCreateWithoutPapersInput = {
     term: string
     tf: number
@@ -19758,6 +19735,55 @@ export namespace Prisma {
   export type term_scoreCreateManyPapersInputEnvelope = {
     data: term_scoreCreateManyPapersInput | term_scoreCreateManyPapersInput[]
     skipDuplicates?: boolean
+  }
+
+  export type user_bookmarksCreateWithoutPapersInput = {
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    users: usersCreateNestedOneWithoutUser_bookmarksInput
+  }
+
+  export type user_bookmarksUncheckedCreateWithoutPapersInput = {
+    bookmark_id?: number
+    user_id: number
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type user_bookmarksCreateOrConnectWithoutPapersInput = {
+    where: user_bookmarksWhereUniqueInput
+    create: XOR<user_bookmarksCreateWithoutPapersInput, user_bookmarksUncheckedCreateWithoutPapersInput>
+  }
+
+  export type user_bookmarksCreateManyPapersInputEnvelope = {
+    data: user_bookmarksCreateManyPapersInput | user_bookmarksCreateManyPapersInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type paper_bm25_indexUpsertWithWhereUniqueWithoutPapersInput = {
+    where: paper_bm25_indexWhereUniqueInput
+    update: XOR<paper_bm25_indexUpdateWithoutPapersInput, paper_bm25_indexUncheckedUpdateWithoutPapersInput>
+    create: XOR<paper_bm25_indexCreateWithoutPapersInput, paper_bm25_indexUncheckedCreateWithoutPapersInput>
+  }
+
+  export type paper_bm25_indexUpdateWithWhereUniqueWithoutPapersInput = {
+    where: paper_bm25_indexWhereUniqueInput
+    data: XOR<paper_bm25_indexUpdateWithoutPapersInput, paper_bm25_indexUncheckedUpdateWithoutPapersInput>
+  }
+
+  export type paper_bm25_indexUpdateManyWithWhereWithoutPapersInput = {
+    where: paper_bm25_indexScalarWhereInput
+    data: XOR<paper_bm25_indexUpdateManyMutationInput, paper_bm25_indexUncheckedUpdateManyWithoutPapersInput>
+  }
+
+  export type paper_bm25_indexScalarWhereInput = {
+    AND?: paper_bm25_indexScalarWhereInput | paper_bm25_indexScalarWhereInput[]
+    OR?: paper_bm25_indexScalarWhereInput[]
+    NOT?: paper_bm25_indexScalarWhereInput | paper_bm25_indexScalarWhereInput[]
+    index_id?: IntFilter<"paper_bm25_index"> | number
+    paper_id?: IntFilter<"paper_bm25_index"> | number
+    token_frequencies?: JsonFilter<"paper_bm25_index">
+    document_length?: IntFilter<"paper_bm25_index"> | number
   }
 
   export type paper_metadataUpsertWithWhereUniqueWithoutPapersInput = {
@@ -19789,48 +19815,6 @@ export namespace Prisma {
     rights?: StringNullableFilter<"paper_metadata"> | string | null
   }
 
-  export type user_bookmarksUpsertWithWhereUniqueWithoutPapersInput = {
-    where: user_bookmarksWhereUniqueInput
-    update: XOR<user_bookmarksUpdateWithoutPapersInput, user_bookmarksUncheckedUpdateWithoutPapersInput>
-    create: XOR<user_bookmarksCreateWithoutPapersInput, user_bookmarksUncheckedCreateWithoutPapersInput>
-  }
-
-  export type user_bookmarksUpdateWithWhereUniqueWithoutPapersInput = {
-    where: user_bookmarksWhereUniqueInput
-    data: XOR<user_bookmarksUpdateWithoutPapersInput, user_bookmarksUncheckedUpdateWithoutPapersInput>
-  }
-
-  export type user_bookmarksUpdateManyWithWhereWithoutPapersInput = {
-    where: user_bookmarksScalarWhereInput
-    data: XOR<user_bookmarksUpdateManyMutationInput, user_bookmarksUncheckedUpdateManyWithoutPapersInput>
-  }
-
-  export type paper_bm25_indexUpsertWithWhereUniqueWithoutPapersInput = {
-    where: paper_bm25_indexWhereUniqueInput
-    update: XOR<paper_bm25_indexUpdateWithoutPapersInput, paper_bm25_indexUncheckedUpdateWithoutPapersInput>
-    create: XOR<paper_bm25_indexCreateWithoutPapersInput, paper_bm25_indexUncheckedCreateWithoutPapersInput>
-  }
-
-  export type paper_bm25_indexUpdateWithWhereUniqueWithoutPapersInput = {
-    where: paper_bm25_indexWhereUniqueInput
-    data: XOR<paper_bm25_indexUpdateWithoutPapersInput, paper_bm25_indexUncheckedUpdateWithoutPapersInput>
-  }
-
-  export type paper_bm25_indexUpdateManyWithWhereWithoutPapersInput = {
-    where: paper_bm25_indexScalarWhereInput
-    data: XOR<paper_bm25_indexUpdateManyMutationInput, paper_bm25_indexUncheckedUpdateManyWithoutPapersInput>
-  }
-
-  export type paper_bm25_indexScalarWhereInput = {
-    AND?: paper_bm25_indexScalarWhereInput | paper_bm25_indexScalarWhereInput[]
-    OR?: paper_bm25_indexScalarWhereInput[]
-    NOT?: paper_bm25_indexScalarWhereInput | paper_bm25_indexScalarWhereInput[]
-    index_id?: IntFilter<"paper_bm25_index"> | number
-    paper_id?: IntFilter<"paper_bm25_index"> | number
-    token_frequencies?: JsonFilter<"paper_bm25_index">
-    document_length?: IntFilter<"paper_bm25_index"> | number
-  }
-
   export type term_scoreUpsertWithWhereUniqueWithoutPapersInput = {
     where: term_scoreWhereUniqueInput
     update: XOR<term_scoreUpdateWithoutPapersInput, term_scoreUncheckedUpdateWithoutPapersInput>
@@ -19859,6 +19843,22 @@ export namespace Prisma {
     paper_id?: IntFilter<"term_score"> | number
   }
 
+  export type user_bookmarksUpsertWithWhereUniqueWithoutPapersInput = {
+    where: user_bookmarksWhereUniqueInput
+    update: XOR<user_bookmarksUpdateWithoutPapersInput, user_bookmarksUncheckedUpdateWithoutPapersInput>
+    create: XOR<user_bookmarksCreateWithoutPapersInput, user_bookmarksUncheckedCreateWithoutPapersInput>
+  }
+
+  export type user_bookmarksUpdateWithWhereUniqueWithoutPapersInput = {
+    where: user_bookmarksWhereUniqueInput
+    data: XOR<user_bookmarksUpdateWithoutPapersInput, user_bookmarksUncheckedUpdateWithoutPapersInput>
+  }
+
+  export type user_bookmarksUpdateManyWithWhereWithoutPapersInput = {
+    where: user_bookmarksScalarWhereInput
+    data: XOR<user_bookmarksUpdateManyMutationInput, user_bookmarksUncheckedUpdateManyWithoutPapersInput>
+  }
+
   export type papersCreateWithoutPaper_metadataInput = {
     title?: string | null
     author?: string | null
@@ -19870,9 +19870,9 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     paper_url?: string | null
-    user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexCreateNestedManyWithoutPapersInput
     term_score?: term_scoreCreateNestedManyWithoutPapersInput
+    user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
   }
 
   export type papersUncheckedCreateWithoutPaper_metadataInput = {
@@ -19887,9 +19887,9 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     paper_url?: string | null
-    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexUncheckedCreateNestedManyWithoutPapersInput
     term_score?: term_scoreUncheckedCreateNestedManyWithoutPapersInput
+    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
   }
 
   export type papersCreateOrConnectWithoutPaper_metadataInput = {
@@ -19919,9 +19919,9 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
-    user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUpdateManyWithoutPapersNestedInput
+    user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
   }
 
   export type papersUncheckedUpdateWithoutPaper_metadataInput = {
@@ -19936,9 +19936,9 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
-    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUncheckedUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUncheckedUpdateManyWithoutPapersNestedInput
+    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
   }
 
   export type papersCreateWithoutUser_bookmarksInput = {
@@ -19952,8 +19952,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     paper_url?: string | null
-    paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexCreateNestedManyWithoutPapersInput
+    paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     term_score?: term_scoreCreateNestedManyWithoutPapersInput
   }
 
@@ -19969,8 +19969,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     paper_url?: string | null
-    paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     paper_bm25_index?: paper_bm25_indexUncheckedCreateNestedManyWithoutPapersInput
+    paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     term_score?: term_scoreUncheckedCreateNestedManyWithoutPapersInput
   }
 
@@ -19986,13 +19986,13 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
-    faculty?: facultyCreateNestedOneWithoutUsersInput
-    students?: studentsCreateNestedOneWithoutUsersInput
-    librarian?: librarianCreateNestedOneWithoutUsersInput
+    role?: $Enums.user_role | null
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    faculty?: facultyCreateNestedOneWithoutUsersInput
+    librarian?: librarianCreateNestedOneWithoutUsersInput
+    students?: studentsCreateNestedOneWithoutUsersInput
   }
 
   export type usersUncheckedCreateWithoutUser_bookmarksInput = {
@@ -20003,13 +20003,13 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
-    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
-    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
-    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
+    role?: $Enums.user_role | null
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
+    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
+    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
   }
 
   export type usersCreateOrConnectWithoutUser_bookmarksInput = {
@@ -20039,8 +20039,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
-    paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUpdateManyWithoutPapersNestedInput
+    paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUpdateManyWithoutPapersNestedInput
   }
 
@@ -20056,8 +20056,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
-    paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     paper_bm25_index?: paper_bm25_indexUncheckedUpdateManyWithoutPapersNestedInput
+    paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUncheckedUpdateManyWithoutPapersNestedInput
   }
 
@@ -20079,13 +20079,13 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    faculty?: facultyUpdateOneWithoutUsersNestedInput
-    students?: studentsUpdateOneWithoutUsersNestedInput
-    librarian?: librarianUpdateOneWithoutUsersNestedInput
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
+    faculty?: facultyUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUpdateOneWithoutUsersNestedInput
+    students?: studentsUpdateOneWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutUser_bookmarksInput = {
@@ -20096,13 +20096,13 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
-    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
-    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
+    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
   }
 
   export type papersCreateWithoutPaper_bm25_indexInput = {
@@ -20117,8 +20117,8 @@ export namespace Prisma {
     updated_at?: Date | string | null
     paper_url?: string | null
     paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
-    user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
     term_score?: term_scoreCreateNestedManyWithoutPapersInput
+    user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
   }
 
   export type papersUncheckedCreateWithoutPaper_bm25_indexInput = {
@@ -20134,8 +20134,8 @@ export namespace Prisma {
     updated_at?: Date | string | null
     paper_url?: string | null
     paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
-    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
     term_score?: term_scoreUncheckedCreateNestedManyWithoutPapersInput
+    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
   }
 
   export type papersCreateOrConnectWithoutPaper_bm25_indexInput = {
@@ -20166,8 +20166,8 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
-    user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUpdateManyWithoutPapersNestedInput
+    user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
   }
 
   export type papersUncheckedUpdateWithoutPaper_bm25_indexInput = {
@@ -20183,8 +20183,8 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
-    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
     term_score?: term_scoreUncheckedUpdateManyWithoutPapersNestedInput
+    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
   }
 
   export type papersCreateWithoutTerm_scoreInput = {
@@ -20198,9 +20198,9 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     paper_url?: string | null
+    paper_bm25_index?: paper_bm25_indexCreateNestedManyWithoutPapersInput
     paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
-    paper_bm25_index?: paper_bm25_indexCreateNestedManyWithoutPapersInput
   }
 
   export type papersUncheckedCreateWithoutTerm_scoreInput = {
@@ -20215,9 +20215,9 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     paper_url?: string | null
+    paper_bm25_index?: paper_bm25_indexUncheckedCreateNestedManyWithoutPapersInput
     paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
-    paper_bm25_index?: paper_bm25_indexUncheckedCreateNestedManyWithoutPapersInput
   }
 
   export type papersCreateOrConnectWithoutTerm_scoreInput = {
@@ -20247,9 +20247,9 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
+    paper_bm25_index?: paper_bm25_indexUpdateManyWithoutPapersNestedInput
     paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
-    paper_bm25_index?: paper_bm25_indexUpdateManyWithoutPapersNestedInput
   }
 
   export type papersUncheckedUpdateWithoutTerm_scoreInput = {
@@ -20264,9 +20264,9 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
+    paper_bm25_index?: paper_bm25_indexUncheckedUpdateManyWithoutPapersNestedInput
     paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
-    paper_bm25_index?: paper_bm25_indexUncheckedUpdateManyWithoutPapersNestedInput
   }
 
   export type librarianCreateWithoutActivity_logsInput = {
@@ -20295,12 +20295,12 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
+    role?: $Enums.user_role | null
     faculty?: facultyCreateNestedOneWithoutUsersInput
-    students?: studentsCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
+    students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
   }
 
@@ -20312,12 +20312,12 @@ export namespace Prisma {
     ext_name?: string | null
     email: string
     profile_picture?: string | null
-    role?: $Enums.user_role | null
     password: string
     created_at?: Date | string | null
+    role?: $Enums.user_role | null
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
-    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
+    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -20369,12 +20369,12 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     faculty?: facultyUpdateOneWithoutUsersNestedInput
-    students?: studentsUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
+    students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
   }
 
@@ -20386,13 +20386,25 @@ export namespace Prisma {
     ext_name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
-    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
+    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+  }
+
+  export type activity_logsCreateManyUsersInput = {
+    name: string
+    activity: string
+    created_at?: Date | string
+    act_id?: number
+    activity_type?: $Enums.activity_type | null
+    ip_address?: string | null
+    status?: string | null
+    user_agent?: string | null
+    employee_id: number
   }
 
   export type user_bookmarksCreateManyUsersInput = {
@@ -20402,16 +20414,39 @@ export namespace Prisma {
     updated_at?: Date | string | null
   }
 
-  export type activity_logsCreateManyUsersInput = {
-    act_id?: number
-    employee_id: number
-    name: string
-    activity: string
-    created_at?: Date | string
-    activity_type?: $Enums.activity_type | null
-    user_agent?: string | null
-    ip_address?: string | null
-    status?: string | null
+  export type activity_logsUpdateWithoutUsersInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
+    ip_address?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    librarian?: librarianUpdateOneRequiredWithoutActivity_logsNestedInput
+  }
+
+  export type activity_logsUncheckedUpdateWithoutUsersInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    act_id?: IntFieldUpdateOperationsInput | number
+    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
+    ip_address?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type activity_logsUncheckedUpdateManyWithoutUsersInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    act_id?: IntFieldUpdateOperationsInput | number
+    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
+    ip_address?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type user_bookmarksUpdateWithoutUsersInput = {
@@ -20434,51 +20469,16 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type activity_logsUpdateWithoutUsersInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    activity?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
-    ip_address?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    librarian?: librarianUpdateOneRequiredWithoutActivity_logsNestedInput
-  }
-
-  export type activity_logsUncheckedUpdateWithoutUsersInput = {
-    act_id?: IntFieldUpdateOperationsInput | number
-    employee_id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    activity?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
-    ip_address?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type activity_logsUncheckedUpdateManyWithoutUsersInput = {
-    act_id?: IntFieldUpdateOperationsInput | number
-    employee_id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    activity?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
-    ip_address?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
   export type activity_logsCreateManyLibrarianInput = {
-    act_id?: number
-    user_id: number
     name: string
     activity: string
     created_at?: Date | string
+    act_id?: number
     activity_type?: $Enums.activity_type | null
-    user_agent?: string | null
     ip_address?: string | null
     status?: string | null
+    user_agent?: string | null
+    user_id: number
   }
 
   export type activity_logsUpdateWithoutLibrarianInput = {
@@ -20486,34 +20486,40 @@ export namespace Prisma {
     activity?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     users?: usersUpdateOneRequiredWithoutActivity_logsNestedInput
   }
 
   export type activity_logsUncheckedUpdateWithoutLibrarianInput = {
-    act_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     activity?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    act_id?: IntFieldUpdateOperationsInput | number
     activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type activity_logsUncheckedUpdateManyWithoutLibrarianInput = {
-    act_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     activity?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    act_id?: IntFieldUpdateOperationsInput | number
     activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type paper_bm25_indexCreateManyPapersInput = {
+    index_id?: number
+    token_frequencies: JsonNullValueInput | InputJsonValue
+    document_length: number
   }
 
   export type paper_metadataCreateManyPapersInput = {
@@ -20525,6 +20531,14 @@ export namespace Prisma {
     rights?: string | null
   }
 
+  export type term_scoreCreateManyPapersInput = {
+    id?: number
+    term: string
+    tf: number
+    tfidf: number
+    bm25: number
+  }
+
   export type user_bookmarksCreateManyPapersInput = {
     bookmark_id?: number
     user_id: number
@@ -20532,18 +20546,21 @@ export namespace Prisma {
     updated_at?: Date | string | null
   }
 
-  export type paper_bm25_indexCreateManyPapersInput = {
-    index_id?: number
-    token_frequencies: JsonNullValueInput | InputJsonValue
-    document_length: number
+  export type paper_bm25_indexUpdateWithoutPapersInput = {
+    token_frequencies?: JsonNullValueInput | InputJsonValue
+    document_length?: IntFieldUpdateOperationsInput | number
   }
 
-  export type term_scoreCreateManyPapersInput = {
-    id?: number
-    term: string
-    tf: number
-    tfidf: number
-    bm25: number
+  export type paper_bm25_indexUncheckedUpdateWithoutPapersInput = {
+    index_id?: IntFieldUpdateOperationsInput | number
+    token_frequencies?: JsonNullValueInput | InputJsonValue
+    document_length?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type paper_bm25_indexUncheckedUpdateManyWithoutPapersInput = {
+    index_id?: IntFieldUpdateOperationsInput | number
+    token_frequencies?: JsonNullValueInput | InputJsonValue
+    document_length?: IntFieldUpdateOperationsInput | number
   }
 
   export type paper_metadataUpdateWithoutPapersInput = {
@@ -20572,43 +20589,6 @@ export namespace Prisma {
     rights?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type user_bookmarksUpdateWithoutPapersInput = {
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    users?: usersUpdateOneRequiredWithoutUser_bookmarksNestedInput
-  }
-
-  export type user_bookmarksUncheckedUpdateWithoutPapersInput = {
-    bookmark_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type user_bookmarksUncheckedUpdateManyWithoutPapersInput = {
-    bookmark_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type paper_bm25_indexUpdateWithoutPapersInput = {
-    token_frequencies?: JsonNullValueInput | InputJsonValue
-    document_length?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type paper_bm25_indexUncheckedUpdateWithoutPapersInput = {
-    index_id?: IntFieldUpdateOperationsInput | number
-    token_frequencies?: JsonNullValueInput | InputJsonValue
-    document_length?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type paper_bm25_indexUncheckedUpdateManyWithoutPapersInput = {
-    index_id?: IntFieldUpdateOperationsInput | number
-    token_frequencies?: JsonNullValueInput | InputJsonValue
-    document_length?: IntFieldUpdateOperationsInput | number
-  }
-
   export type term_scoreUpdateWithoutPapersInput = {
     term?: StringFieldUpdateOperationsInput | string
     tf?: FloatFieldUpdateOperationsInput | number
@@ -20630,6 +20610,26 @@ export namespace Prisma {
     tf?: FloatFieldUpdateOperationsInput | number
     tfidf?: FloatFieldUpdateOperationsInput | number
     bm25?: FloatFieldUpdateOperationsInput | number
+  }
+
+  export type user_bookmarksUpdateWithoutPapersInput = {
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    users?: usersUpdateOneRequiredWithoutUser_bookmarksNestedInput
+  }
+
+  export type user_bookmarksUncheckedUpdateWithoutPapersInput = {
+    bookmark_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type user_bookmarksUncheckedUpdateManyWithoutPapersInput = {
+    bookmark_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 

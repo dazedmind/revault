@@ -128,9 +128,9 @@ exports.Prisma.UsersScalarFieldEnum = {
   ext_name: 'ext_name',
   email: 'email',
   profile_picture: 'profile_picture',
-  role: 'role',
   password: 'password',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  role: 'role'
 };
 
 exports.Prisma.FacultyScalarFieldEnum = {
@@ -212,16 +212,16 @@ exports.Prisma.Term_scoreScalarFieldEnum = {
 };
 
 exports.Prisma.Activity_logsScalarFieldEnum = {
-  act_id: 'act_id',
-  employee_id: 'employee_id',
-  user_id: 'user_id',
   name: 'name',
   activity: 'activity',
   created_at: 'created_at',
+  act_id: 'act_id',
   activity_type: 'activity_type',
-  user_agent: 'user_agent',
   ip_address: 'ip_address',
-  status: 'status'
+  status: 'status',
+  user_agent: 'user_agent',
+  employee_id: 'employee_id',
+  user_id: 'user_id'
 };
 
 exports.Prisma.Global_statsScalarFieldEnum = {

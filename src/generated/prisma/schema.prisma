@@ -1,7 +1,6 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
-  // output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -17,14 +16,14 @@ model users {
   ext_name        String?
   email           String           @unique
   profile_picture String?
-  role            user_role?
   password        String
   created_at      DateTime?
-  faculty         faculty?
-  students        students?
-  librarian       librarian?
-  user_bookmarks  user_bookmarks[]
+  role            user_role?
   activity_logs   activity_logs[]
+  faculty         faculty?
+  librarian       librarian?
+  students        students?
+  user_bookmarks  user_bookmarks[]
 }
 
 model faculty {
@@ -49,8 +48,8 @@ model librarian {
   position      String?
   contact_num   Int
   user_id       Int             @unique
-  users         users           @relation(fields: [user_id], references: [user_id])
   activity_logs activity_logs[]
+  users         users           @relation(fields: [user_id], references: [user_id])
 }
 
 model papers {
@@ -65,10 +64,10 @@ model papers {
   created_at       DateTime?
   updated_at       DateTime?
   paper_url        String?
-  paper_metadata   paper_metadata[]
-  user_bookmarks   user_bookmarks[]
   paper_bm25_index paper_bm25_index[]
+  paper_metadata   paper_metadata[]
   term_score       term_score[]
+  user_bookmarks   user_bookmarks[]
 }
 
 model paper_metadata {
@@ -103,12 +102,11 @@ model Otp {
 }
 
 model paper_bm25_index {
-  index_id          Int  @id @default(autoincrement())
+  index_id          Int    @id @default(autoincrement())
   paper_id          Int
   token_frequencies Json
   document_length   Int
-
-  papers papers @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
+  papers            papers @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
 }
 
 model term_score {
@@ -118,21 +116,20 @@ model term_score {
   tfidf    Float
   bm25     Float
   paper_id Int
-
-  papers papers @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
+  papers   papers @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
 }
 
 model activity_logs {
-  act_id        Int            @id @default(autoincrement())
-  employee_id   Int
-  user_id       Int
   name          String
   activity      String
   created_at    DateTime       @default(now())
+  act_id        Int            @id @default(autoincrement())
   activity_type activity_type?
-  user_agent    String?
   ip_address    String?
   status        String?
+  user_agent    String?
+  employee_id   Int
+  user_id       Int
   librarian     librarian      @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
   users         users          @relation(fields: [user_id], references: [user_id])
 }

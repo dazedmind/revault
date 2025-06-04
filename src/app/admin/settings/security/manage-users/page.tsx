@@ -1,4 +1,4 @@
-// File: src/app/admin/components/manage-users/ManageUserSettings.tsx
+// File: src/app/admin/settings/security/manage-users/ManageUserSettings.tsx
 "use client";
 
 import { useTheme } from "next-themes";
@@ -16,11 +16,13 @@ interface FrontendUser {
   middleName: string;
   lastName: string;
   extension: string;
-  employeeId: string;
+  employeeID: string; // Changed from employeeId
   email: string;
   role: string;
   status: string;
   userAccess: string;
+  contactNum: string; // Added
+  position: string; // Added
   name: string;
 }
 
@@ -53,11 +55,13 @@ export default function ManageUserSettings() {
     middleName: "",
     lastName: "",
     extension: "",
-    employeeId: "",
+    employeeID: "", // Changed from employeeId
     email: "",
-    role: "Librarian",
+    role: "LIBRARIAN", // Changed to match enum
     status: "Active",
-    userAccess: "Librarian",
+    userAccess: "Librarian-in-Charge", // Default to librarian
+    contactNum: "", // Added
+    position: "", // Added
   });
   const [newUserPasswords, setNewUserPasswords] = useState({
     password: "",
@@ -69,51 +73,34 @@ export default function ManageUserSettings() {
     setMounted(true);
   }, []);
 
-  // ─── Fetch “profile” via Bearer token from localStorage ───
+  // ─── Fetch admin/staff users ───
   useEffect(() => {
     if (!mounted) return;
 
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      console.error("No authToken found in localStorage");
-      return;
-    }
+    console.log("🔄 Fetching admin/staff users...");
 
-    fetch("/admin/api/profile", {
+    fetch("/admin/api/users", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     })
       .then((res) => {
-        if (!res.ok) throw new Error(`Failed to fetch profile (${res.status})`);
+        if (!res.ok) throw new Error(`Failed to fetch users (${res.status})`);
         return res.json();
       })
-      .then((data: any) => {
-        if (data.error) {
-          console.error("API error:", data.error);
-          return;
+      .then((data) => {
+        console.log("✅ Users fetched successfully:", data);
+        if (data.success && Array.isArray(data.users)) {
+          setUsers(data.users);
+        } else {
+          console.error("❌ Invalid response format:", data);
+          setUsers([]);
         }
-        const empId = data.employee_id as string;
-        const fetched = Array.isArray(data.users) ? data.users : [];
-        const mapped: FrontendUser[] = fetched.map((u: any) => ({
-          id: Number(u.user_id),
-          fullName: u.first_name,
-          middleName: u.middle_name || "",
-          lastName: u.last_name,
-          extension: u.extension || "",
-          employeeId: empId,
-          email: u.email,
-          role: u.role,
-          status: u.status,
-          userAccess: u.role,
-          name: `${u.first_name} ${u.last_name}${u.extension ? " " + u.extension : ""}`,
-        }));
-        setUsers(mapped);
       })
       .catch((err) => {
-        console.error("Error fetching profile/users:", err);
+        console.error("💥 Error fetching users:", err);
+        setUsers([]);
       });
   }, [mounted]);
 
@@ -186,10 +173,12 @@ export default function ManageUserSettings() {
         middleName: currentEditUser.middleName,
         lastName: currentEditUser.lastName,
         extension: currentEditUser.extension,
-        employeeId: currentEditUser.employeeId,
+        employeeID: currentEditUser.employeeID, // Changed from employeeId
         email: currentEditUser.email,
         role: currentEditUser.role,
         status: currentEditUser.status,
+        contactNum: currentEditUser.contactNum, // Added
+        position: currentEditUser.position, // Added
         password: passwords.newPassword || undefined,
       }),
     })
@@ -219,11 +208,13 @@ export default function ManageUserSettings() {
       middleName: "",
       lastName: "",
       extension: "",
-      employeeId: "",
+      employeeID: "", // Changed from employeeId
       email: "",
-      role: "Librarian",
+      role: "LIBRARIAN", // Changed to match enum
       status: "Active",
-      userAccess: "Librarian",
+      userAccess: "Librarian-in-Charge", // Default selection
+      contactNum: "", // Added
+      position: "", // Added
     });
     setNewUserPasswords({ password: "", confirmPassword: "" });
     setNewUserPasswordError("");
@@ -239,16 +230,20 @@ export default function ManageUserSettings() {
     const { name, value } = e.target;
     setNewUserPasswords((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleAddUser = () => {
+    // Validation
     if (
       !newUser.fullName ||
       !newUser.lastName ||
       !newUser.email ||
-      !newUser.employeeId
+      !newUser.employeeID ||
+      !newUser.userAccess
     ) {
       setNewUserPasswordError("Please fill in all required fields");
       return;
     }
+
     if (!newUserPasswords.password || !newUserPasswords.confirmPassword) {
       setNewUserPasswordError("Password is required");
       return;
@@ -262,31 +257,77 @@ export default function ManageUserSettings() {
       return;
     }
 
+    // Map userAccess to API role format
+    const roleMapping: { [key: string]: string } = {
+      "Librarian-in-Charge": "LIBRARIAN",
+      "Admin Assistant": "ASSISTANT",
+      Admin: "ADMIN",
+    };
+
+    const apiPayload = {
+      fullName: newUser.fullName,
+      midName: newUser.middleName,
+      lastName: newUser.lastName,
+      extName: newUser.extension,
+      employeeID: newUser.employeeID, // API expects this field name
+      email: newUser.email,
+      role: roleMapping[newUser.userAccess] || "LIBRARIAN", // Map to enum values
+      password: newUserPasswords.password,
+      confirmPassword: newUserPasswords.confirmPassword,
+      position: newUser.position,
+      // Removed contactNum since we don't need it
+    };
+
+    console.log("Sending API payload:", {
+      ...apiPayload,
+      password: "***",
+      confirmPassword: "***",
+    });
+
     fetch("/admin/api/create-user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fullName: newUser.fullName,
-        middleName: newUser.middleName,
-        lastName: newUser.lastName,
-        extension: newUser.extension,
-        employeeId: newUser.employeeId,
-        email: newUser.email,
-        role: newUser.role,
-        status: newUser.status,
-        password: newUserPasswords.password,
-      }),
+      body: JSON.stringify(apiPayload),
     })
       .then((res) => {
-        if (!res.ok) throw new Error(`Failed to create user (${res.status})`);
+        if (!res.ok) {
+          return res.json().then((errorData) => {
+            throw new Error(
+              errorData.message || `Failed to create user (${res.status})`,
+            );
+          });
+        }
         return res.json();
       })
-      .then((data: { user: FrontendUser }) => {
-        setUsers((prev) => [...prev, data.user]);
+      .then((data) => {
+        console.log("User created successfully:", data);
+
+        // Create frontend user object from API response
+        const createdUser: FrontendUser = {
+          id: data.user.userId,
+          fullName: data.user.fullName || newUser.fullName,
+          middleName: data.user.middleName || newUser.middleName,
+          lastName: data.user.lastName || newUser.lastName,
+          extension: data.user.extension || newUser.extension,
+          employeeID: data.user.employeeId || newUser.employeeID,
+          email: data.user.email,
+          role: data.user.role,
+          status: "Active",
+          userAccess: newUser.userAccess,
+          contactNum: "0", // Always 0 since we don't collect it
+          position: data.user.position || newUser.position,
+          name: `${newUser.fullName} ${newUser.lastName}${newUser.extension ? " " + newUser.extension : ""}`,
+        };
+
+        setUsers((prev) => [...prev, createdUser]);
         setShowAddModal(false);
+        setNewUserPasswordError(""); // Clear any previous errors
       })
       .catch((err) => {
         console.error("Error creating user:", err);
+        setNewUserPasswordError(
+          err.message || "Failed to create user. Please try again.",
+        );
       });
   };
 

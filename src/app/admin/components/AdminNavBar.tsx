@@ -8,7 +8,6 @@ import Link from "next/link";
 import { logout } from "../../utils/auth";
 import { useEffect, useState } from "react";
 import { LogOut, Settings, User, SunMoon } from "lucide-react";
-import { LogOut, Settings, User, SunMoon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,14 +18,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { useTheme } from "next-themes";
-import { useTheme } from "next-themes";
 
 export default function AdminNavBar() {
   const [mounted, setMounted] = useState(false);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { theme, setTheme } = useTheme();
-
   const { theme, setTheme } = useTheme();
 
   useEffect(() => setMounted(true), []);
@@ -83,12 +79,16 @@ export default function AdminNavBar() {
             <Image src={icon} className="md:hidden w-14" alt="revault-icon" />
           </Link>
 
-          <SearchInput placeholder="Search paper" />
+          <SearchInput defaultValue={""} />
         </div>
         <ul className="flex flex-row items-center gap-8 text-lg">
           {(() => {
             const userType = localStorage.getItem("userType");
-            if (userType !== "ADMIN" && userType !== "ASSISTANT") {
+            if (
+              userType !== "ADMIN" &&
+              userType !== "ASSISTANT" &&
+              userType == "LIBRARIAN"
+            ) {
               return (
                 <Link href="/upload">
                   <button className="bg-gradient-to-r from-gold to-gold-fg text-white hover:brightness-120 hover:shadow-lg hover:shadow-gold/80 transition-all duration-300 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
@@ -112,10 +112,18 @@ export default function AdminNavBar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <User />
-                  <Link href="/admin/profile">Profile</Link>
+                <DropdownMenuItem className="p-2 pr-5">
+                  <Image
+                    src={avatar}
+                    alt="User profile picture"
+                    width={30}
+                    height={30}
+                    className="rounded-full"
+                  />
+                  <Link href="/admin/profile">{profile.users.name}</Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+
                 <DropdownMenuItem>
                   <Settings />
                   <Link href="/admin/settings/general/edit-profile">
