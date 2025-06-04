@@ -8,8 +8,12 @@ import { useTheme } from "next-themes";
 import { FilterBar } from "../components/FilterBar";
 import { PapersList } from "../components/PapersList";
 import { PaginationControls } from "../components/PaginationControls";
-import { ProfileHeader } from "../components/ProfileHeader";
 import { StatsSection } from "../components/StatsSection";
+import { ProfileCard } from "../../component/ProfileCard";
+import avatar from "../../img/user.png";
+import AdminNavBar from "../components/AdminNavBar";
+import LoadingScreen from "@/app/component/LoadingScreen";
+import ProfileLoader from "@/app/component/ProfileLoader";
 
 export default function AdminProfilePage() {
   const router = useRouter();
@@ -326,7 +330,7 @@ export default function AdminProfilePage() {
 
   // ── Loading states
   if (loadingProfile) {
-    return <ProfileHeader profile={null} loading={true} />;
+    return <ProfileLoader />;
   }
 
   if (!profile) {
@@ -362,8 +366,22 @@ export default function AdminProfilePage() {
 
   return (
     <div>
-      <ProfileHeader profile={profile} loading={false} />
 
+      <AdminNavBar/>
+
+     {/* <ProfileCard/> */}
+     {profile ? (
+        <ProfileCard
+          profile_picture={profile?.users?.profile_picture || avatar}
+          name={`${profile.users.first_name} ${profile.users.last_name}`}
+          number={profile.employee_id}
+          position={profile.position}
+          college={profile.college}
+          programOrDept={profile.programOrDept}
+        />
+      ) : (
+        <div>Failed to load profile.</div>
+      )}
       <main className="flex flex-col dark:bg-secondary px-8 md:px-40 h-full">
         <StatsSection allPapers={allPapers} />
 
