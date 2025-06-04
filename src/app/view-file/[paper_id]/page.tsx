@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import NavBar from "../../component/NavBar";
 import AdminNavBar from "../../admin/components/AdminNavBar";
@@ -9,16 +9,8 @@ import { FaChevronLeft } from "react-icons/fa6";
 import FileMenuButton from "../../component/FileMenuButton";
 import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
-import { useParams } from "next/navigation";
-import {
-  Bookmark,
-  Download,
-  Info,
-  Link,
-  Moon,
-  SunMedium,
-  Archive,
-} from "lucide-react";
+import { useParams } from 'next/navigation';
+import { Link } from "lucide-react"; 
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
 import useAntiCopy from "../../hooks/useAntiCopy";
@@ -121,8 +113,8 @@ function ViewFile() {
     }
   };
 
-  const checkBookmarkStatus = async () => {
-    const token = localStorage.getItem("authToken");
+  const checkBookmarkStatus = useCallback(async () => {
+    const token = localStorage.getItem('authToken');
     if (!token) return;
 
     try {
@@ -139,7 +131,7 @@ function ViewFile() {
     } catch (error) {
       console.error("Error checking bookmark status:", error);
     }
-  };
+  }, [paper_id]);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -150,9 +142,9 @@ function ViewFile() {
         window.location.href = "/login";
       }
 
-      if (storedUserType === "student" || storedUserType === "faculty") {
+      if (storedUserType === "STUDENT" || storedUserType === "FACULTY") {
         setViewFromAdmin(false);
-      } else if (storedUserType === "librarian") {
+      } else if (storedUserType === "LIBRARIAN") {
         setViewFromAdmin(true);
       }
 
@@ -238,20 +230,14 @@ function ViewFile() {
     if (paper_id) {
       fetchPaper();
     }
-  }, [paper_id, router]);
-
+  }, [paper_id, router, checkBookmarkStatus]);
+  
   if (loading) {
     return <LoadingScreen />;
   }
   return (
     <div className="dark:bg-secondary h-auto">
-      {userType === "ADMIN" ||
-      userType === "ASSISTANT" ||
-      userType === "LIBRARIAN" ? (
-        <AdminNavBar />
-      ) : (
-        <NavBar />
-      )}
+      {userType === "LIBRARIAN" || userType === "ASSISTANT" || userType === "ADMIN" ? <AdminNavBar /> : <NavBar />}
 
       <ProtectedRoute>
         <main className="flex flex-col-reverse md:flex-row h-auto justify-center">
@@ -409,7 +395,7 @@ function ViewFile() {
                   </>
                 )}
 
-                {!viewFromAdmin && (
+                {!viewFromAdmin && userType !== "ADMIN" && userType !== "ASSISTANT" && (
                   <>
                     {isBookmarked ? (
                       <FileMenuButton

@@ -102,8 +102,8 @@ const EditProfilePage = () => {
       <WarningMessage
         containerClassName="w-auto h-auto md:w-full"
         textClassName=" "
-          message="Contact your admin if you want to request to change your Student Information"
-        />
+        message={`${profile.users.role === "STUDENT" ? "Contact your admin if you want to request to change your Student Information" : "Contact your admin if you want to request to change your Employee Information"}`}
+      />
 
       <div className="flex flex-col justify-between">
         <div className=" w-full mt-5">
@@ -155,7 +155,7 @@ const EditProfilePage = () => {
 
               <InputField
                 containerClassName="pt-4"
-                label="Student Number"
+                label={`${profile.users.role === "STUDENT" ? "Student Number" : "Employee ID"}`}
                 type="number"
                 name="studentNumber"
                 placeholder={profile.student_num || profile.employee_id}
@@ -167,7 +167,7 @@ const EditProfilePage = () => {
 
               <InputField
                 containerClassName="pt-4"
-                label="Program/Department"
+                label={`${profile.users.role === "STUDENT" ? "Program" : "Department"}`}
                 type="text"
                 name="program"
                 placeholder={profile.program || profile.department}
