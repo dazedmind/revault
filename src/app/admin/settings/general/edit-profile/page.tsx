@@ -4,18 +4,23 @@ import Image from "next/image";
 import avatar from "@/app/img/user.jpg";
 import { Button } from "@/components/ui/button";
 import { FaMicrosoft } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import ContentLoader from "@/app/component/ContentLoader";
 import { useTheme } from "next-themes";
 import { Camera } from "lucide-react";
 import { toast , Toaster } from "sonner";
 
-const EditProfilePage = () => {
+function EditProfileContent() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -50,14 +55,18 @@ const EditProfilePage = () => {
         // Optionally refetch the profile or update state
       } else {
         console.error("Upload failed:", data.error);
+        toast.error("Failed to update profile picture");
       }
     } catch (error) {
       console.error("Upload error:", error);
+      toast.error("An error occurred while updating profile picture");
     }
   };
 
   useEffect(() => {
     const fetchProfile = async () => {
+      if (!mounted || typeof window === "undefined") return;
+      
       const token = localStorage.getItem("authToken");
       if (!token) return;
 
@@ -87,7 +96,11 @@ const EditProfilePage = () => {
     };
 
     fetchProfile();
-  }, []);
+  }, [mounted]);
+
+  if (!mounted) {
+    return null;
+  }
 
   if (loading) {
     return <ContentLoader />; // or your own spinner
@@ -96,6 +109,7 @@ const EditProfilePage = () => {
   if (!profile) {
     return <div>Profile not found or failed to load.</div>;
   }
+
   return (
     <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mb-8 rounded-xl border-1 border-white-5`}>
       <h1 className="text-2xl ml-1">Edit Profile</h1>
@@ -194,6 +208,18 @@ const EditProfilePage = () => {
       <Toaster />
 
     </div>
+  );
+}
+
+function EditProfileLoading() {
+  return <ContentLoader />;
+}
+
+const EditProfilePage = () => {
+  return (
+    <Suspense fallback={<EditProfileLoading />}>
+      <EditProfileContent />
+    </Suspense>
   );
 };
 

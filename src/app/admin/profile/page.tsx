@@ -1,7 +1,7 @@
 // File: /app/admin/profile/page.tsx
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
 
@@ -14,9 +14,9 @@ import avatar from "../../img/user.png";
 import AdminNavBar from "../components/AdminNavBar";
 import LoadingScreen from "@/app/component/LoadingScreen";
 import ProfileLoader from "@/app/component/ProfileLoader";
-import { GoDownload } from "react-icons/go";
 
-export default function AdminProfilePage() {
+// Separate component for the search params logic
+function AdminProfileContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -367,7 +367,6 @@ export default function AdminProfilePage() {
 
   return (
     <div>
-
       <AdminNavBar/>
 
      {/* <ProfileCard/> */}
@@ -399,8 +398,7 @@ export default function AdminProfilePage() {
           downloadComponent={
             <a href={previewHref} target="_blank" rel="noopener noreferrer">
               <button className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-                <GoDownload />
-                <p className="hidden md:block">Download Report</p>
+                <p className="hidden md:block">Download</p>
               </button>
             </a>
           }
@@ -459,5 +457,19 @@ export default function AdminProfilePage() {
         </div>
       )}
     </div>
+  );
+}
+
+// Loading component for Suspense fallback
+function ProfilePageLoading() {
+  return <ProfileLoader />;
+}
+
+// Main component with Suspense wrapper
+export default function AdminProfilePage() {
+  return (
+    <Suspense fallback={<ProfilePageLoading />}>
+      <AdminProfileContent />
+    </Suspense>
   );
 }

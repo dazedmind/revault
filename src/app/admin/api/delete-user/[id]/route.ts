@@ -1,12 +1,12 @@
 // File: src/app/admin/api/delete-user/[id]/route.ts
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> }, // Changed to Promise
 ) {
-  const idParam = params.id;
+  const { id: idParam } = await params; // Await the params
   const userId = parseInt(idParam, 10);
 
   console.log("🗑️ Delete request for user ID:", userId);

@@ -1,5 +1,13 @@
-import { redirect } from "next/navigation";
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function SettingsPage() {
-  redirect("/admin/settings/general/edit-profile");
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/admin/settings/general/edit-profile");
+  }, [router]);
+
+  return null;
 }

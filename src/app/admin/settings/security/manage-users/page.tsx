@@ -2,7 +2,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState, ChangeEvent } from "react";
+import { useEffect, useState, ChangeEvent, Suspense } from "react";
 import { Plus } from "lucide-react";
 
 import UsersTable from "@/app/admin/components/manage-users/UsersTable";
@@ -26,7 +26,7 @@ interface FrontendUser {
   name: string;
 }
 
-export default function ManageUserSettings() {
+function ManageUserContent() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -331,7 +331,24 @@ export default function ManageUserSettings() {
       });
   };
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <div className="flex flex-col w-auto bg-midnight p-6 rounded-xl border-1 border-white-5">
+        <div className="flex justify-between w-auto">
+          <h1 className="text-2xl ml-1">Manage Users</h1>
+          <div className="bg-gold/20 p-2 px-4 rounded-lg">
+            <span className="text-sm">Loading...</span>
+          </div>
+        </div>
+        <div className="h-0.5 w-auto my-4 bg-dusk"></div>
+        <div className="animate-pulse space-y-4">
+          <div className="h-12 bg-gray-700 rounded"></div>
+          <div className="h-12 bg-gray-700 rounded"></div>
+          <div className="h-12 bg-gray-700 rounded"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -402,5 +419,32 @@ export default function ManageUserSettings() {
         theme={theme}
       />
     </div>
+  );
+}
+
+function ManageUsersLoading() {
+  return (
+    <div className="flex flex-col w-auto bg-midnight p-6 rounded-xl border-1 border-white-5">
+      <div className="flex justify-between w-auto">
+        <h1 className="text-2xl ml-1">Manage Users</h1>
+        <div className="bg-gold/20 p-2 px-4 rounded-lg animate-pulse">
+          <span className="text-sm">Loading...</span>
+        </div>
+      </div>
+      <div className="h-0.5 w-auto my-4 bg-dusk"></div>
+      <div className="animate-pulse space-y-4">
+        <div className="h-12 bg-gray-700 rounded"></div>
+        <div className="h-12 bg-gray-700 rounded"></div>
+        <div className="h-12 bg-gray-700 rounded"></div>
+      </div>
+    </div>
+  );
+}
+
+export default function ManageUserSettings() {
+  return (
+    <Suspense fallback={<ManageUsersLoading />}>
+      <ManageUserContent />
+    </Suspense>
   );
 }

@@ -13,15 +13,11 @@ const SettingsList = ({
   labelClassName = "text-white-75",
 }) => {
   const pathname = usePathname();
-  const [isLightTheme, setIsLightTheme] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
+
   useEffect(() => {
-    const theme = localStorage.getItem("theme");
-    if (theme === "light") {
-      setIsLightTheme(true);
-    } else {
-      setIsLightTheme(false);
-    }
+    setMounted(true);
   }, []);
 
   const slugify = (text: string) =>
@@ -29,21 +25,40 @@ const SettingsList = ({
 
   const categoryPath = slugify(category);
 
+  // Don't render until mounted to prevent hydration issues
+  if (!mounted) {
+    return (
+      <div>
+        <h1 className={categoryClassName}>{category}</h1>
+        <ul className={ulClassName}>
+          {labels.map((label, index) => (
+            <li key={index} className={`${labelClassName} w-80 md:w-auto cursor-pointer`}>
+              <div className="flex items-center gap-2">
+                {icon[index]}
+                {label}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h1 className={categoryClassName}>{category}</h1>
       <ul className={ulClassName}>
-      {labels.map((label, index) => {
+        {labels.map((label, index) => {
           const path = slugify(label);
           const fullPath = `/admin/settings/${categoryPath}/${path}`;
           const isActive = pathname === fullPath;
 
           return (
             <li
-            key={index}
-            className={`${labelClassName} w-80 md:w-auto cursor-pointer hover:text-gold ${
-              isActive && theme === 'light' ? "text-gold font-bold bg-tertiary rounded-md" : ""
-            } ${ isActive && theme === 'dark' ? 'bg-darker font-bold text-gold rounded-md' : ''}`}
+              key={index}
+              className={`${labelClassName} w-80 md:w-auto cursor-pointer hover:text-gold ${
+                isActive && theme === 'light' ? "text-gold font-bold bg-tertiary rounded-md" : ""
+              } ${isActive && theme === 'dark' ? 'bg-darker font-bold text-gold rounded-md' : ''}`}
             >
               <Link className="flex items-center gap-2" href={fullPath} prefetch={true}>
                 {icon[index]}
