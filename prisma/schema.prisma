@@ -28,7 +28,7 @@ model users {
 }
 
 model faculty {
-  employee_id Int     @id @unique
+  employee_id BigInt     @id @unique
   position    String?
   department  String?
   user_id     Int     @unique
@@ -45,7 +45,7 @@ model students {
 }
 
 model librarian {
-  employee_id   Int             @id @unique
+  employee_id   BigInt             @id @unique
   position      String?
   contact_num   Int
   user_id       Int             @unique
@@ -129,7 +129,7 @@ model activity_logs {
   ip_address    String?
   status        String?
   user_agent    String?
-  employee_id   Int
+  employee_id   BigInt
   user_id       Int
   librarian     librarian      @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
   users         users          @relation(fields: [user_id], references: [user_id])

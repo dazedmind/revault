@@ -12,7 +12,8 @@ export default function SettingsLayout({
   children: React.ReactNode;
 }) {
   const [activeLabel, setActiveLabel] = useState("Edit Profile");
-
+  const userType = localStorage.getItem("userType");
+  
   const settingsData = [
     {
       category: "General",
@@ -21,7 +22,9 @@ export default function SettingsLayout({
     },
     {
       category: "Security",
-      labels: ["Manage Users", "Activity Logs", "About Revault"],
+      labels: userType === "LIBRARIAN" || userType === "ASSISTANT" 
+        ? ["Activity Logs", "About Revault"]
+        : ["Manage Users", "Activity Logs", "About Revault"],
       icon: [<User key="user2" />, <Activity key="activity" />, <Info key="info" />]
     },
   ];

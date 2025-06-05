@@ -7,7 +7,7 @@ import icon from "../img/revault-icon.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { LogOut, Settings, SunMoon, ChevronRight } from "lucide-react";
+import { LogOut, Settings, SunMoon, ChevronRight, IdCard, ChevronDown } from "lucide-react";
 import LoadingScreen from "./LoadingScreen";
 import { useTheme } from "next-themes";
 
@@ -87,21 +87,31 @@ export default function NavBar() {
 
         <ul className="flex flex-row items-center gap-8 text-lg">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Image
-                src={profile?.users?.profile_picture || avatar}
-                className="w-10 h-10 rounded-full cursor-pointer border-midnight"
-                alt="User profile picture"
-                width={100}
-                height={100}
-              />
+          <DropdownMenuTrigger asChild>
+              <div className="flex items-center gap-2 md:bg-accent rounded-lg p-2 cursor-pointer hover:bg-gold/80 transition-all duration-300">
+                <Image
+                  src={profile?.users?.profile_picture || avatar}
+                  className="w-10 h-10 md:w-8 md:h-8 rounded-full cursor-pointer border-gold border-2"
+                  alt="User profile picture"
+                  width={50}
+                  height={50}
+                />
+                <ChevronDown className="h-4 w-4 hidden md:block" /> 
+                {/* <span className="text-sm font-[Inter] hidden md:block">{profile.users.name}</span> */}
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
                 <DropdownMenuItem className="p-2">
-                  <Image src={avatar} alt="User profile picture" width={40} height={40} className="rounded-full"/>
+                  <Image src={avatar} alt="User profile picture" width={40} height={40} className="rounded-full border-gold border-2"/>
                   <Link href="/profile" className="flex items-center gap-2">
-                    {profile.users.name}
+                    <span className="flex flex-col">
+                      <p className="text-sm font-[Inter]">{profile.users.name}</p>
+                      <p className="text-xs font-[Inter] flex items-center gap-1 text-gray-500"> 
+                        <IdCard className="text-xxs" strokeWidth={1.5} />
+                        {profile.role === "STUDENT" ? profile.student_num : profile.employee_id}
+                      </p>
+                    </span>
                     <ChevronRight className="h-4 w-4" />
                   </Link>
                 </DropdownMenuItem>

@@ -14,6 +14,7 @@ import avatar from "../../img/user.png";
 import AdminNavBar from "../components/AdminNavBar";
 import LoadingScreen from "@/app/component/LoadingScreen";
 import ProfileLoader from "@/app/component/ProfileLoader";
+import { GoDownload } from "react-icons/go";
 
 export default function AdminProfilePage() {
   const router = useRouter();
@@ -398,7 +399,8 @@ export default function AdminProfilePage() {
           downloadComponent={
             <a href={previewHref} target="_blank" rel="noopener noreferrer">
               <button className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-                <p className="hidden md:block">Download</p>
+                <GoDownload />
+                <p className="hidden md:block">Download Report</p>
               </button>
             </a>
           }
