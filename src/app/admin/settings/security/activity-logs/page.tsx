@@ -1,7 +1,7 @@
 // File: src/app/admin/settings/security/activity-logs/page.tsx
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import { useTheme } from "next-themes";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -45,7 +45,7 @@ interface AdminUser {
   name: string;
 }
 
-export default function ActivityLogSettings() {
+function ActivityLogContent() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -219,7 +219,21 @@ export default function ActivityLogSettings() {
       });
   }, [mounted, selectedUser, selectedEventTypes, page, limit]);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <div className="flex flex-col w-auto bg-midnight p-6 mb-8 rounded-xl border-1 border-white-5">
+        <h1 className="text-2xl ml-1">Activity Logs</h1>
+        <div className="h-0.5 w-auto my-4 bg-dusk"></div>
+        <div className="animate-pulse space-y-4">
+          <div className="flex gap-4">
+            <div className="h-10 bg-gray-700 rounded w-64"></div>
+            <div className="h-10 bg-gray-700 rounded w-64"></div>
+          </div>
+          <div className="h-64 bg-gray-700 rounded"></div>
+        </div>
+      </div>
+    );
+  }
 
   // ----- 5) Define the multi-select options (match your enum) -----
   const eventOptions: Option[] = [
@@ -337,5 +351,29 @@ export default function ActivityLogSettings() {
         </div>
       )}
     </div>
+  );
+}
+
+function ActivityLogsLoading() {
+  return (
+    <div className="flex flex-col w-auto bg-midnight p-6 mb-8 rounded-xl border-1 border-white-5">
+      <h1 className="text-2xl ml-1">Activity Logs</h1>
+      <div className="h-0.5 w-auto my-4 bg-dusk"></div>
+      <div className="animate-pulse space-y-4">
+        <div className="flex gap-4">
+          <div className="h-10 bg-gray-700 rounded w-64"></div>
+          <div className="h-10 bg-gray-700 rounded w-64"></div>
+        </div>
+        <div className="h-64 bg-gray-700 rounded"></div>
+      </div>
+    </div>
+  );
+}
+
+export default function ActivityLogSettings() {
+  return (
+    <Suspense fallback={<ActivityLogsLoading />}>
+      <ActivityLogContent />
+    </Suspense>
   );
 }

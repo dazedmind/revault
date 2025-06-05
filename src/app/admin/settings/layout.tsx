@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdminNavBar from "../components/AdminNavBar";
 import SettingsList from "../components/SettingsSideBar";
 import ProtectedRoute from "../../component/ProtectedRoute";
@@ -11,21 +11,32 @@ export default function SettingsLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [userType, setUserType] = useState<string | null>(null);
   const [activeLabel, setActiveLabel] = useState("Edit Profile");
-  const userType = localStorage.getItem("userType");
-  
+
+  useEffect(() => {
+    const storedUserType = localStorage.getItem("userType");
+    setUserType(storedUserType);
+  }, []);
+
+  if (userType === null) {
+    // You can show a loading spinner or blank screen to avoid hydration mismatch
+    return null;
+  }
+
   const settingsData = [
     {
       category: "General",
       labels: ["Edit Profile", "Change Password", "Appearance"],
-      icon: [<User key="user" />, <Settings key="settings" />, <SunMoon key="sunmoon" />]
+      icon: [<User key="user" />, <Settings key="settings" />, <SunMoon key="sunmoon" />],
     },
     {
       category: "Security",
-      labels: userType === "LIBRARIAN" || userType === "ASSISTANT" 
-        ? ["Activity Logs", "About Revault"]
-        : ["Manage Users", "Activity Logs", "About Revault"],
-      icon: [<User key="user2" />, <Activity key="activity" />, <Info key="info" />]
+      labels:
+        userType === "LIBRARIAN" || userType === "ASSISTANT"
+          ? ["Activity Logs", "About Revault"]
+          : ["Manage Users", "Activity Logs", "About Revault"],
+      icon: [<User key="user2" />, <Activity key="activity" />, <Info key="info" />],
     },
   ];
 
@@ -38,8 +49,7 @@ export default function SettingsLayout({
           </nav>
 
           <div className="flex flex-col md:flex-row min-h-screen dark:bg-secondary gap-8">
-          <aside className="w-auto md:min-h-screen md:pl-17 mt-10 ml-5 md:ml-0">
-          {/* <h1 className="text-4xl font-bold">System Settings</h1> */}
+            <aside className="w-auto md:min-h-screen md:pl-17 mt-10 ml-5 md:ml-0">
               {settingsData.map((setting, index) => (
                 <SettingsList
                   key={index}
