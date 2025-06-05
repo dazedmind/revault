@@ -81,7 +81,7 @@ export default function AdminNavBar() {
 
           <SearchInput defaultValue={""} />
         </div>
-        <ul className="flex flex-row items-center gap-8 text-lg">
+        <ul className="flex flex-row items-center gap-2 md:gap-4 text-lg">
           {(() => {
             const userType = localStorage.getItem("userType");
             if (userType !== "ADMIN" && userType !== "ASSISTANT" && userType == "LIBRARIAN") {
