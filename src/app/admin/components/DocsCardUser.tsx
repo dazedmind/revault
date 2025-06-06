@@ -4,14 +4,29 @@ import DocsLoader from "../../component/DocsLoader";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Eye } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { GoEye, GoPencil } from "react-icons/go";
+import { 
+  GoEye, 
+  GoChevronRight,
+  GoPencil,
+} from "react-icons/go";
+import { 
+  Calendar, 
+  Building, 
+  User, 
+  FileText, 
+  Clock,
+  MoreHorizontal,
+  Edit3,
+  Eye,
+  Download
+} from "lucide-react";
 
 const DocsCardUser = (props) => {
   const [papers, setPapers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
   const { theme } = useTheme();
   const { paper_id } = props;
@@ -23,7 +38,6 @@ const DocsCardUser = (props) => {
       if (!token) {
         return router.push("/login");
       }
-      // you can re-use your decode(token) here…
 
       // 2. Fetch recent papers
       console.log("▶️ fetching /api/recent");
@@ -61,7 +75,7 @@ const DocsCardUser = (props) => {
   };
 
   const truncateAuthor = (text, maxWords = 24) => {
-    if (!text) return "No description available";
+    if (!text) return "No author available";
     const words = text.split(" ");
     if (words.length > maxWords) {
       return words.slice(0, maxWords).join(" ") + "...";
@@ -69,75 +83,180 @@ const DocsCardUser = (props) => {
     return text;
   };
 
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   if (loading) {
     return <DocsLoader message="Loading Recent Papers" />;
   }
+
   return (
-    <div>
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4">
-        <div className="flex items-start md:gap-4">
-          <div className="md:w-40">
-            <a href={props.link}>
-              <Image
-                src={props.img}
-                alt="Project"
-                className="hidden md:flex w-full h-full"
-              />
-            </a>
+    <div 
+      className={`group relative transition-all duration-300 hover:shadow-lg mb-4 ${
+        theme === "light" 
+          ? "bg-white border border-gray-200 " 
+          : "bg-darker border border-white-5"
+      } rounded-xl overflow-hidden`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Status Bar */}
+      {/* <div className={`h-2 w-full ${
+        props.status === 'published' ? 'bg-green-500' :
+        props.status === 'draft' ? 'bg-yellow-500' :
+        props.status === 'review' ? 'bg-blue-500' : 'bg-gold'
+      }`} /> */}
+
+      <div className="p-6">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Document Preview */}
+          <div className="lg:w-32 xl:w-40 flex-shrink-0">
+            <div className="relative group/image">
+              <div className={`relative overflow-hidden rounded-lg transition-all duration-300 ${
+                theme === "light" ? "bg-gray-100" : "bg-gray-800"
+              }`}>
+                <Image
+                  src={props.img}
+                  alt="Document preview"
+                  className="w-full h-fit lg:h-fit object-cover transition-transform duration-300 group-hover/image:scale-105"
+                  width={160}
+                  height={144}
+                />
+                
+                {/* Quick View Overlay */}
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <Link href={`/view-file/${paper_id}`}>
+                    <button className="bg-white text-gray-900 p-2 rounded-full hover:scale-110 transition-transform duration-200">
+                      <Eye className="w-5 h-5" />
+                    </button>
+                  </Link>
+                </div>
+              </div>
+              
+              {/* Document Type Badge */}
+              <div className="absolute -top-2 -right-2 bg-gold text-white px-2 py-1 rounded-full text-xs font-semibold">
+                PDF
+              </div>
+            </div>
           </div>
 
-          <div className="w-full">
-            {/* <Image src={document} alt="document" className="w-24" /> */}
-            <span className="flex flex-col">
-              <h1 className="text-lg font-bold mb-2">{props.title}</h1>
+          {/* Content Section */}
+          <div className="flex-1 min-w-0">
+            {/* Header */}
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg lg:text-xl font-bold mb-2 line-clamp-2 group-hover:text-gold transition-colors duration-200">
+                  {props.title}
+                </h2>
+                
+                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-2">
+                  <User className="w-4 h-4 flex-shrink-0" />
+                  <span className="text-sm truncate">{truncateAuthor(props.author)}</span>
+                </div>
+              </div>
 
-              <p className="text-sm italic">{truncateAuthor(props.author)}</p>
+              {/* Action Menu */}
+              <div className="flex items-center gap-1 ml-4">
+                <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200">
+                  <MoreHorizontal className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
 
-              <p className="hidden md:block text-sm py-2 line-clamp-4 text-justify dark:text-card">
+            {/* Metadata Row */}
+            <div className="flex flex-wrap items-center gap-4 mb-4 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                <span>{props.year}</span>
+              </div>
+              
+              <div className="flex items-center gap-1">
+                <Building className="w-4 h-4" />
+                <span>{props.department}</span>
+              </div>
+              
+              <div className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                <span>Last modified: {formatDate(new Date())}</span>
+              </div>
+            </div>
+
+            {/* Abstract Preview */}
+            <div className="mb-4">
+              <p className={`text-sm ${theme === "light" ? "text-white-5" : "text-gray-300"} line-clamp-3 leading-relaxed`}>
                 {truncateText(props.abstract)}
               </p>
+            </div>
 
-              <span className="flex gap-2 py-2 md:py-0">
-                <p className="px-3 py-1 bg-gold/10 text-gold font-bold rounded-md text-sm">
-                  {props.year}
-                </p>
-                <p className="px-3 py-1 bg-gold/10 text-gold font-bold rounded-md text-sm">
-                  {props.department}
-                </p>
+     
+
+            {/* Tags
+            <div className="flex flex-wrap gap-2 mb-4">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gold/10 text-gold">
+                {props.year}
               </span>
-            </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                {props.department}
+              </span>
+              {props.course && (
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300">
+                  {props.course}
+                </span>
+              )}
+            </div> */}
           </div>
         </div>
 
-        <span className="flex flex-col md:flex-col gap-2 w-full md:w-auto">
-          <Link href={`/view-file/${paper_id}`}>
-            <button className=" w-full md:w-auto bg-gradient-to-r from-gold to-gold-fg hover:brightness-120  text-white transition-all duration-300 px-4 py-3 flex items-center justify-center gap-2 rounded-lg cursor-pointer text-md flex-1 md:flex-none">
-              {" "}
-              <GoEye className="text-xl" /> View
-            </button>
-          </Link>
-          {(() => {
-            const userType = localStorage.getItem("userType");
-            if (
-              userType !== "ADMIN" &&
-              userType !== "ASSISTANT" &&
-              userType !== "LIBRARIAN"
-            ) {
-              return (
-                <Link href={`/edit-file/${paper_id}`}>
-                  <button
-                    className={`w-full md:w-full flex items-center justify-center gap-2 ${theme == "light" ? "bg-white-50" : "bg-white-5"} rounded-md px-4 py-3 text-md cursor-pointer flex-1 md:flex-none`}
-                  >
-                    <GoPencil className="text-xl" />
-                    Edit
-                  </button>
-                </Link>
-              );
-            }
-            return null;
-          })()}
-        </span>
+        {/* Action Bar */}
+        <div className={`flex items-center justify-between pt-4 mt-4 border-t ${
+          theme === "light" ? "border-gray-200" : "border-white-5"
+        }`}>
+          <div className="flex items-center gap-3">
+            {/* Primary Action */}
+            <Link href={`/view-file/${paper_id}`} className="flex-shrink-0">
+              <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 text-white rounded-lg font-medium transition-all duration-200 hover:shadow-lg hover:scale-105 cursor-pointer">
+                <GoEye className="text-lg" />
+                <span className="hidden sm:inline">View</span>
+                <span className="sm:hidden">View</span>
+              </button>
+            </Link>
+
+            {/* Secondary Actions */}
+            {(() => {
+              const userType = localStorage.getItem("userType");
+              if (userType === "LIBRARIAN" || userType === "ADMIN") {
+                return (
+                  <Link href={`/edit-file/${paper_id}`} className="flex-shrink-0">
+                    <button className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 cursor-pointer ${
+                      theme === "light" 
+                        ? " text-gray-700" 
+                        : " text-gray-300"
+                    }`}>
+                      <GoPencil className="text-lg" />
+                      <span className="hidden sm:inline">Edit</span>
+                    </button>
+                  </Link>
+                );
+              }
+              return null;
+            })()}
+          </div>
+
+           {/* Stats Row */}
+           <div className="flex items-center gap-6 text-xs text-gray-500 dark:text-gray-400">
+              <div className="flex items-center gap-1">
+                <FileText className="w-3 h-3" />
+                <span>12 pages</span>
+              </div>
+            </div>
+        </div>
       </div>
+
     </div>
   );
 };

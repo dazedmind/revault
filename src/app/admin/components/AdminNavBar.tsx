@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { logout } from "../../utils/auth";
 import { useEffect, useState } from "react";
-import { LogOut, Settings, User, SunMoon, ChevronRight } from "lucide-react";
+import { LogOut, Settings, User, SunMoon, ChevronRight, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -98,13 +98,18 @@ export default function AdminNavBar() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Image
-                src={profile?.users?.profile_picture || avatar}
-                className="w-10 h-10 rounded-full cursor-pointer"
-                alt="User profile picture"
-                width={100}
-                height={100}
-              />
+              <div className="flex items-center gap-2 md:bg-accent rounded-lg p-2 cursor-pointer hover:bg-gold/80 transition-all duration-300">
+                <Image
+                  src={profile?.users?.profile_picture || avatar}
+                  className="w-10 h-10 md:w-8 md:h-8 rounded-full cursor-pointer border-gold border-2"
+                  alt="User profile picture"
+                  width={50}
+                  height={50}
+                />
+                <span className="text-sm font-[Inter] hidden md:block">{profile.users.first_name}</span>
+                <ChevronDown className="h-4 w-4 hidden md:block" /> 
+
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
@@ -117,7 +122,8 @@ export default function AdminNavBar() {
                     className="rounded-full"
                   />
                   <Link href="/admin/profile">{profile.users.name}</Link>
-                  <ChevronRight className="h-4 w-4" />
+                  
+                  <ChevronRight className="h-4 w-4" />  
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>

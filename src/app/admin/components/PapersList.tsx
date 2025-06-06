@@ -30,7 +30,7 @@ export function PapersList({ papers, loading, theme }: PapersListProps) {
 
   return (
     <>
-      {papers.map((paper, idx) => (
+      {papers.map((paper) => (
         <React.Fragment key={paper.paper_id}>
           <DocsCardUser
             img={document}
@@ -41,13 +41,7 @@ export function PapersList({ papers, loading, theme }: PapersListProps) {
             year={paper.year}
             paper_id={paper.paper_id}
           />
-          {idx < papers.length - 1 && (
-            <div
-              className={`bg-dusk h-0.5 w-auto my-2 mx-4 ${
-                theme === "light" ? "bg-white-50" : "bg-white-5"
-              }`}
-            />
-          )}
+   
         </React.Fragment>
       ))}
     </>
