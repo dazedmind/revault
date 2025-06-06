@@ -229,9 +229,7 @@ const UploadFile = () => {
             <h1 className="text-3xl md:text-4xl font-bold mb-2">
               Upload Research Paper
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Share your research with the academic community. Upload your PDF and we'll automatically extract key information.
-            </p>
+     
           </div>
         </div>
       </div>
