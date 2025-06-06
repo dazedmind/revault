@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
+import DeveloperList from "@/app/component/DeveloperList";
 
 const AboutRevault = () => {
   const { theme } = useTheme();
@@ -27,7 +28,6 @@ const AboutRevault = () => {
       
       <div className="text-center space-y-3">
         <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">PLM CISTM Research Archive</h2>
           <p className="text-lg">Revault is a platform for PLM CISTM Students to browse archived research-based works</p>
         </div>
         
@@ -43,13 +43,13 @@ const AboutRevault = () => {
             </span>
           </p>
           <p className="text-sm font-mono bg-gold/10 text-gold px-2 py-1 rounded inline-block">
-            Version 1.3.0-alpha
+            Version 1.6.0-alpha
           </p>
         </div>
 
-        <div className="mt-8 p-4 rounded-lg bg-gold/5 border border-gold/20">
+        <div className="mt-8 p-4 rounded-lg bg-gold/20 border border-gold/20">
           <h3 className="text-lg font-medium mb-2">About the Platform</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+          <p className="text-sm ">
             This digital repository serves as a comprehensive archive for academic research papers, 
             thesis works, and capstone projects from the College of Information Systems and Technology Management.
           </p>
@@ -57,51 +57,7 @@ const AboutRevault = () => {
       </div>
 
       {showAddModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
-          <div className={`p-6 rounded-lg bg-dusk dark:bg-accent border-1 ${theme === 'light' ? ' border-white-50' : 'border-white-5'} w-full max-w-md relative z-10 max-h-[80vh] overflow-y-auto`}>
-            <h1 className="text-2xl font-bold text-gold text-center mb-4">
-              BS in Information Technology 
-              <br />
-              (Keyboard Warriors)
-            </h1>
-            
-            <div className="flex flex-col gap-4">
-              <div className="p-3 rounded-lg bg-white/5">
-                <h3 className="text-lg font-medium text-gold">Durante, KC D.</h3>
-                <p className="text-sm text-gray-300">System Programmer and Documentation Member</p>
-              </div>
-              
-              <div className="p-3 rounded-lg bg-white/5">
-                <h3 className="text-lg font-medium text-gold">Lastra, Kristhia Cayle F.</h3>
-                <p className="text-sm text-gray-300">Team Leader and Documentation Head</p>
-              </div>
-              
-              <div className="p-3 rounded-lg bg-white/5">
-                <h3 className="text-lg font-medium text-gold">Insigne, Matthew Jacob B.</h3>
-                <p className="text-sm text-gray-300">System Programmer</p>
-              </div>
-              
-              <div className="p-3 rounded-lg bg-white/5">
-                <h3 className="text-lg font-medium text-gold">Valena, John Allen Troy E.</h3>
-                <p className="text-sm text-gray-300">System Programmer and Designer</p>
-              </div>
-              
-              <div className="p-3 rounded-lg bg-white/5">
-                <h3 className="text-lg font-medium text-gold">Yacub, Jetthro Karl C.</h3>
-                <p className="text-sm text-gray-300">Documentation Member</p>
-              </div>
-            </div>
-            
-            <div className="flex justify-center mt-6">
-              <button 
-                onClick={() => setShowAddModal(false)} 
-                className="text-white cursor-pointer hover:brightness-110 hover:dark:text-white-75 transition-all duration-300 bg-gold p-3 px-6 rounded-md font-medium"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
+        <DeveloperList onClick={() => setShowAddModal(false)} />
       )}
     </div>
   );

@@ -405,7 +405,7 @@ function AdminProfileContent() {
         />
 
         <div
-          className={`p-2 md:p-4 border-2 border-white-5 bg-white-100 rounded-xl mt-4 mb-4 ${
+          className={`p-2 md:p-4 border-2 border-white-5 bg-white-100 rounded-3xl mt-4 mb-4 ${
             theme === "light" ? "border-white-50" : "border-white-5"
           }`}
         >
