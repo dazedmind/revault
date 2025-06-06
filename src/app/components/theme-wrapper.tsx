@@ -14,16 +14,12 @@ export function ThemeWrapper({ children }) {
     (path) => pathname === path || pathname.startsWith(`${path}/`),
   );
 
-  // Only force a theme for dark mode pages
-  // For all other pages, don't force any theme (null)
-  const forcedTheme = isDarkModePage ? "dark" : null;
 
   return (
     <ThemeProvider
       attribute="class"
       defaultTheme="light"
       enableSystem={false}
-      forcedTheme={forcedTheme}
     >
       {children}
     </ThemeProvider>

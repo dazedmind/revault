@@ -14,7 +14,7 @@ import {
   GoDownload,
   GoShare
 } from "react-icons/go";
-import { Calendar, User, Building, Tag } from "lucide-react";
+import { Calendar, User, Building, Tag, BookOpen } from "lucide-react";
 import DocsLoader from "./DocsLoader";
 
 
@@ -192,9 +192,9 @@ const DocsCard = (props) => {
 
       {/* Bookmark Status Indicator */}
       {isBookmarked && (
-        <div className="absolute top-4 right-4 z-10">
-          <div className="bg-blue-500 text-white p-2 rounded-full shadow-lg">
-            <GoBookmarkFill className="text-sm" />
+        <div className="absolute top-0 left-2 z-10">
+          <div className="bg-blue-500 text-white p-2 h-10 rounded-b-sm shadow-xl">
+            <GoBookmarkFill className="text-2xl" />
           </div>
         </div>
       )}
@@ -253,12 +253,18 @@ const DocsCard = (props) => {
                 <span>{props.department}</span>
               </div>
             )}
+            {props.course && (
+              <div className="flex items-center gap-1">
+                <BookOpen className="w-4 h-4" />
+                <span>{props.course}</span>
+              </div>
+            )}
           </div>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex-wrap gap-2 hidden md:flex">
             {props.tags && props.tags.length > 0 ? (
-              props.tags.slice(0, 3).map((tag, index) => (
+              props.tags.slice(0, 5).map((tag, index) => (
                 <span
                   key={index}
                   className="inline-flex items-center gap-1 px-3 py-1 bg-yale-blue/30  text-yale-blue  rounded-full text-xs font-medium"
@@ -270,9 +276,31 @@ const DocsCard = (props) => {
             ) : (
               <span className="text-gray-500 italic text-sm">No tags available</span>
             )}
-            {props.tags && props.tags.length > 3 && (
+            {props.tags && props.tags.length > 5 && (
               <span className="px-3 py-1 bg-yale-blue/80  text-white  rounded-full text-xs">
-                +{props.tags.length - 3} more
+                +{props.tags.length - 5} more
+              </span>
+            )}
+          </div>
+
+          {/* Tags on mobile */}
+          <div className="flex flex-wrap gap-2 md:hidden">
+            {props.tags && props.tags.length > 0 ? (
+              props.tags.slice(0, 2).map((tag, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-yale-blue/30  text-yale-blue  rounded-full text-xs font-medium"
+                >
+                  <Tag className="w-3 h-3" />
+                  {tag}
+                </span>
+              ))
+            ) : (
+              <span className="text-gray-500 italic text-sm">No tags available</span>
+            )}
+            {props.tags && props.tags.length > 2 && (
+              <span className="px-3 py-1 bg-yale-blue/80  text-white  rounded-full text-xs">
+                +{props.tags.length - 2} more
               </span>
             )}
           </div>
