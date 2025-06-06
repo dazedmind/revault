@@ -64,7 +64,7 @@ export default function PapersArea({
         qp.set("sort", filters.sort);
       }
 
-      // Always set “page” param
+      // Always set "page" param
       qp.set("page", String(page));
 
       // Decide which endpoint: if any filter exists, call /api/papers, otherwise fallback to /api/recent
@@ -86,7 +86,7 @@ export default function PapersArea({
         if (Array.isArray(json)) {
           // (In case your API ever returns a raw array by mistake)
           rawArray = json as any[];
-          // But if it’s a raw array, totalPages is “1” by default
+          // But if it's a raw array, totalPages is "1" by default
           onTotalPages(1);
         } else if (Array.isArray((json as any).papers)) {
           rawArray = (json as any).papers;
@@ -153,6 +153,7 @@ export default function PapersArea({
           paper_id={paper.paper_id}
           viewFromAdmin={userType === "librarian"}
           year={paper.year || "No year available"}
+          course={paper.course || "No course available"}
         />
       ))}
     </>

@@ -11,18 +11,33 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Trash } from "lucide-react";
+import { 
+  Trash, 
+  Upload, 
+  FileText, 
+  User, 
+  Calendar, 
+  Building, 
+  BookOpen, 
+  Tag,
+  Edit3,
+  Save,
+  Eye,
+  CheckCircle,
+  AlertCircle,
+  FileCheck
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import { toast, Toaster } from "sonner";
 
 const UploadFile = () => {
   const [title, setTitle] = useState("");
   const [fullText, setFullText] = useState("");
-  const [author, setAuthor] = useState(""); // Add authors state
+  const [author, setAuthor] = useState("");
   const [course, setCourse] = useState("");
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
-  const [key, setKey] = useState(Date.now()); // forces re-render of input
+  const [key, setKey] = useState(Date.now());
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -31,15 +46,17 @@ const UploadFile = () => {
   const [isEditingAbstract, setIsEditingAbstract] = useState(false);
   const [keywords, setKeywords] = useState<string[]>([]);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
 
+  // Keep all your existing functions exactly as they are
   function fixSplitAccents(text) {
     return (
       text
-        // Common accents accidentally separated by spaces
-        .replace(/n\s*̃\s*a/gi, "ña") // if ñ was broken down (rare but can happen)
-        .replace(/([A-Za-z])\s*ñ\s*([A-Za-z])/gi, "$1ñ$2") // general case for ñ
-        .replace(/([A-Za-z])\s*é\s*([A-Za-z])/gi, "$1é$2") // general case for é
+        .replace(/n\s*̃\s*a/gi, "ña")
+        .replace(/([A-Za-z])\s*ñ\s*([A-Za-z])/gi, "$1ñ$2")
+        .replace(/([A-Za-z])\s*é\s*([A-Za-z])/gi, "$1é$2")
         .replace(/([A-Za-z])\s*á\s*([A-Za-z])/gi, "$1á$2")
         .replace(/([A-Za-z])\s*í\s*([A-Za-z])/gi, "$1í$2")
         .replace(/([A-Za-z])\s*ó\s*([A-Za-z])/gi, "$1ó$2")
@@ -87,11 +104,10 @@ const UploadFile = () => {
     }
   };
 
-  // Add progress animation function
   const startProgressAnimation = () => {
     setProgress(0);
-    const duration = 2000; // 2 seconds
-    const interval = 50; // Update every 50ms
+    const duration = 2000;
+    const interval = 50;
     const steps = duration / interval;
     const increment = 100 / steps;
 
@@ -107,25 +123,21 @@ const UploadFile = () => {
     }, interval);
   };
 
-  const [pdfUrl, setPdfUrl] = useState("");
-
   async function extractText(event) {
     const file = event.target.files[0];
     if (!file || file.type !== "application/pdf") return;
 
-    setPdfUrl(URL.createObjectURL(file)); // 👈 This line enables the preview
+    setPdfUrl(URL.createObjectURL(file));
 
     try {
       setIsLoading(true);
       startProgressAnimation();
       const rawText = await pdfToText(file);
 
-      // Step 1: Get first page only by cutting off at "Table of contents"
       const firstPageEnd = rawText.toLowerCase().indexOf("table of contents");
       const firstPageText =
         firstPageEnd !== -1 ? rawText.substring(0, firstPageEnd) : rawText;
 
-      // Step 2: Sanitize the text
       const sanitized = firstPageText.replace(/\s+/g, " ").trim();
 
       const response = await fetch("/api/extract", {
@@ -136,25 +148,14 @@ const UploadFile = () => {
 
       const result = await response.json();
 
-      // Log the full response to debug
       console.log("Full API Response:", result);
       setKeywords(result.tfidfKeywords ?? []);
 
-      // Access properties safely (optional chaining + nullish coalescing)
-      console.log("Title:", result?.extractedTitle ?? "No title found");
-      console.log("Authors:", result?.extractedAuthor ?? "No authors found");
-      console.log("Course:", result?.extractedCourse ?? "No course found");
-      console.log(
-        "Department:",
-        result?.extractedDepartment ?? "No department found",
-      );
-
-      // Update state
       if (result) {
         setTitle(result.extractedTitle ?? "");
         setAuthor(result.extractedAuthor ?? "");
         setFullText(result.extractedAbstract ?? "");
-        setCourse(result.extractedCourse ?? ""); // Check for typos (extracted vs extrated)
+        setCourse(result.extractedCourse ?? "");
         setDepartment(result.extractedDepartment ?? "");
         setYear(result.extractedYear ?? "");
       }
@@ -162,7 +163,7 @@ const UploadFile = () => {
       console.error("Error extracting text:", error);
     } finally {
       setIsLoading(false);
-      setProgress(100); // Ensure progress bar is full when done
+      setProgress(100);
     }
   }
 
@@ -189,16 +190,16 @@ const UploadFile = () => {
 
   const handleClearFile = () => {
     if (ref.current) {
-      ref.current.value = ""; // Clear the file input
+      ref.current.value = "";
     }
-    setTitle(""); // Clear the detected title
-    setFullText(""); // Clear the extracted text
-    setAuthor(""); // Clear the authors
+    setTitle("");
+    setFullText("");
+    setAuthor("");
     setCourse("");
     setDepartment("");
     setYear("");
-    setKeywords([]); // Clear keywords
-    setKey(Date.now()); // Update key to force re-render
+    setKeywords([]);
+    setKey(Date.now());
     setPdfUrl("");
     setIsEditingTitle(false);
     setIsEditingAuthors(false);
@@ -206,328 +207,408 @@ const UploadFile = () => {
     setIsTermsAccepted(false);
   };
 
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => setMounted(true), []);
 
   if (!mounted) return null;
 
+  const isFormValid = title && author && course && department && year && isTermsAccepted;
+
   return (
-    <div className="bg-midnight dark:bg-secondary">
+    <div className={`min-h-screen ${theme === 'light' ? 'bg-secondary' : 'bg-midnight'}`}>
       <AdminNavBar />
-      <div className="flex flex-col md:flex-row">
-        <main className="p-8 md:mx-12">
-          <div>
-            <h1 className="font-bold text-3xl mb-6">Upload Research Paper</h1>
-          </div>
-          <div className="flex flex-row">
-            <label
-              htmlFor="uploadFile1"
-              className=" text-slate-500 font-semibold text-base rounded w-full h-42 flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-gold-fg mx-auto hover:border-gold transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-11 mb-3 fill-gray-500"
-                viewBox="0 0 32 32"
-              >
-                <path
-                  d="M23.75 11.044a7.99 7.99 0 0 0-15.5-.009A8 8 0 0 0 9 27h3a1 1 0 0 0 0-2H9a6 6 0 0 1-.035-12 1.038 1.038 0 0 0 1.1-.854 5.991 5.991 0 0 1 11.862 0A1.08 1.08 0 0 0 23 13a6 6 0 0 1 0 12h-3a1 1 0 0 0 0 2h3a8 8 0 0 0 .75-15.956z"
-                />
-                <path
-                  d="M20.293 19.707a1 1 0 0 0 1.414-1.414l-5-5a1 1 0 0 0-1.414 0l-5 5a1 1 0 0 0 1.414 1.414L15 16.414V29a1 1 0 0 0 2 0V16.414z"
-                />
-              </svg>
-              <span>Upload file</span>
-
-              <input
-                type="file"
-                id="uploadFile1"
-                ref={ref}
-                className="hidden"
-                accept="application/pdf"
-                onChange={extractText}
-                name="file-input"
-                key={ref.current?.value}
-                disabled={isLoading}
-              />
-
-              <p className="text-xs font-medium text-slate-400 mt-2">
-                PDF only. Max size 15MB.
-              </p>
-
-              
-            </label>
-
-            <button
-                onClick={handleClearFile}
-                className={`ml-4 px-4 py-4 cursor-pointer ${theme == "light" ? "bg-tertiary" : "bg-dusk"} transition-all duration-300 hover:bg-red-warning hover:text-white hover:border-none rounded-md hover:shadow-lg`}
-                disabled={isLoading}
-              >
-                <Trash className="w-6 h-6" />
-              </button>
-          </div>
-          {/* <div className="flex flex-row">
-            <input
-              type="file"
-              className="p-4 w-full md:w-4xl md:p-10 md:px-60 border-2 border-dashed border-gold rounded-md dark:bg-secondary"
-              accept="application/pdf"
-              onChange={extractText}
-              name="file-input"
-              key={ref.current?.value}
-              disabled={isLoading}
-            />
-
-            <button
-              onClick={handleClearFile}
-              className={`ml-4 px-4 py-4 cursor-pointer ${theme == "light" ? "bg-tertiary" : "bg-dusk"} transition-all duration-300 hover:bg-red-warning hover:text-white hover:border-none rounded-md hover:shadow-lg`}
-              disabled={isLoading}
-            >
-              <Trash className="w-6 h-6" />
-            </button>
-          </div>
-          <label htmlFor="file-input" className="text-sm text-white-50">
-            File type: .pdf and .tiff only (Maximum file size: 15MB)
-          </label> */}
-
-          {isLoading && (
-            <div className="mt-4">
-              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
-                <div
-                  className="bg-gold h-2.5 rounded-full transition-all duration-300 ease-out"
-                  style={{ width: `${progress}%` }}
-                ></div>
+      
+      {/* Hero Section */}
+      <div className={`${theme === 'light' ? 'border-b bg-tertiary' : 'border-b bg-dusk'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
+          <div className="text-center">
+            <div className="flex justify-center mb-4">
+              <div className="p-3 bg-gold/20 rounded-full">
+                <Upload className="w-8 h-8 text-gold" />
               </div>
-              <p className="text-sm text-gold mt-2">
-                {progress < 100
-                  ? "Extracting text from PDF..."
-                  : "Processing complete!"}
-              </p>
             </div>
-          )}
-
-          <div className="flex flex-col gap-8 mt-8">
-            <span className="flex flex-col gap-2">
-              <div className="flex justify-between items-center">
-                <span className="flex flex-row justify-between w-4xl gap-2">
-                  <h3 className="text-md font-medium text-gold">
-                    Research Title:
-                  </h3>
-                  <button
-                    onClick={() =>
-                      isEditingTitle
-                        ? handleSaveTitle()
-                        : setIsEditingTitle(true)
-                    }
-                    className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
-                  >
-                    {isEditingTitle ? "Save" : "Edit"}
-                  </button>
-                </span>
-              </div>
-              <textarea
-                className={` w-auto p-4 bg-midnight border rounded-md md:w-4xl outline-0 dark:bg-secondary ${
-                  isEditingTitle
-                    ? "border-gold cursor-text"
-                    : "border-white-5 cursor-default"
-                }`}
-                defaultValue={title.toUpperCase()}
-                onChange={(e) => setTitle(e.target.value.toUpperCase())}
-                readOnly={!isEditingTitle}
-              />
-            </span>
-
-            <span className="flex flex-col gap-2">
-              <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
-                <h3 className="text-md font-medium text-gold">Authors:</h3>
-                <button
-                  onClick={() =>
-                    isEditingAuthors
-                      ? handleSaveAuthors()
-                      : setIsEditingAuthors(true)
-                  }
-                  className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
-                >
-                  {isEditingAuthors ? "Save" : "Edit"}
-                </button>
-              </span>
-              <input
-                type="text"
-                className={`p-4 bg-midnight border rounded-md w-full md:w-4xl outline-0 dark:bg-secondary ${
-                  isEditingAuthors
-                    ? "border-gold cursor-text"
-                    : "border-white-5 cursor-default"
-                }`}
-                defaultValue={author}
-                onChange={(e) => setAuthor(e.target.value)}
-                readOnly={!isEditingAuthors}
-              />
-            </span>
-
-            <span className="flex flex-col gap-2">
-              <h3 className="text-md font-medium text-gold">Keywords:</h3>
-              <div className="flex flex-row flex-wrap gap-2">
-                {keywords.map((kw, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 bg-gold/10 text-gold rounded-md text-sm"
-                  >
-                    {kw}
-                  </span>
-                ))}
-              </div>
-            </span>
-
-            <div className="flex flex-col md:flex-row gap-4">
-              <span className="flex flex-col gap-2">
-                <div className="flex flex-col flex-grow">
-                  <Label className="text-md font-medium text-gold mb-2 dark:bg-secondary">
-                    Department:
-                  </Label>
-                  <Select
-                    name="department"
-                    value={department}
-                    onValueChange={setDepartment}
-                  >
-                    <SelectTrigger className="w-full md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
-                      <SelectValue placeholder="Select paper department " />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem className="p-4" value="Computer Science">
-                          Computer Science
-                        </SelectItem>
-                        <SelectItem
-                          className="p-4"
-                          value="Information Technology"
-                        >
-                          Information Technology
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </span>
-              <span className="flex flex-col gap-2">
-                <div className="flex flex-col flex-grow">
-                  <Label className="text-md font-medium text-gold mb-2">
-                    Course:
-                  </Label>
-                  <Select
-                    name="course"
-                    value={course}
-                    onValueChange={setCourse}
-                  >
-                    <SelectTrigger className="w-auto md:w-xs p-7 px-4 text-md dark:bg-secondary border-white-5">
-                      <SelectValue placeholder="Select course" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem className="p-4" value="SIA">
-                          SIA
-                        </SelectItem>
-                        <SelectItem className="p-4" value="Capstone">
-                          Capstone
-                        </SelectItem>
-                        <SelectItem className="p-4" value="Compiler Design">
-                          Compiler Design
-                        </SelectItem>
-                        <SelectItem className="p-4" value="CS Thesis Writing">
-                          CS Thesis Writing
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </span>
-
-              <span className="flex flex-col gap-2">
-                <h3 className="text-md font-medium text-gold">Year:</h3>
-                <input
-                  type="text"
-                  className="p-4 bg-midnight border border-white-5 rounded-md w-auto md:w-xxs outline-0 dark:bg-secondary"
-                  defaultValue={year}
-                  onChange={(e) => {
-                    setYear(e.target.value);
-                  }}
-                />
-              </span>
-            </div>
-
-            <span className="flex flex-col gap-2">
-              <span className="flex flex-row justify-between w-full md:w-4xl gap-2">
-                <h3 className="text-md font-medium text-gold">Abstract:</h3>
-                <button
-                  onClick={() =>
-                    isEditingAbstract
-                      ? handleSaveAbstract()
-                      : setIsEditingAbstract(true)
-                  }
-                  className="text-sm px-3 py-1 bg-gold/10 hover:bg-gold/20 text-gold rounded-md transition-colors"
-                >
-                  {isEditingAbstract ? "Save" : "Edit"}
-                </button>
-              </span>{" "}
-              <textarea
-                className={`p-4 bg-midnight border rounded-md w-auto md:w-4xl h-64 outline-0 dark:bg-secondary ${
-                  isEditingAbstract
-                    ? "border-gold cursor-text"
-                    : "border-white-5 cursor-default"
-                }`}
-                defaultValue={fullText}
-                onChange={(e) => setFullText(e.target.value)}
-                readOnly={!isEditingAbstract}
-              />
-            </span>
-          </div>
-          {/* <Upload /> */}
-        </main>
-
-        {pdfUrl && (
-          <div className="flex flex-col mx-12 m-10 md:mx-0 md:mt-10">
-            <h3 className="text-md font-medium text-gold mb-2">PDF Preview:</h3>
-            <iframe
-              src={`${pdfUrl}#toolbar=0`}
-              title="PDF Preview"
-              className="w-xs h-dvh border rounded-md"
-            ></iframe>
-          </div>
-        )}
-      </div>
-
-      <div className="flex flex-col md:flex-row justify-between items-center bg-darker p-7 md:p-12 md:px-24 border-t-2 border-dashed border-white-5 dark:bg-primary">
-        <span className="w-full flex flex-col justify-start items-start align-start gap-2">
-          <div className="flex flex-row my-4">
-            <input
-              type="checkbox"
-              checked={isTermsAccepted}
-              onChange={(e) => setIsTermsAccepted(e.target.checked)}
-            />
-            <p className="font-inter text-sm ml-1">
-              By uploading, you agree to our{" "}
-              <span className="text-gold">Terms and Privacy Policy</span> and
-              consent to its publication.
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              Upload Research Paper
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Share your research with the academic community. Upload your PDF and we'll automatically extract key information.
             </p>
           </div>
-        </span>
-
-        <span className="w-full md:w-auto">
-          <button
-            onClick={handleUpload}
-            disabled={
-              isLoading ||
-              !title ||
-              !author ||
-              !course ||
-              !department ||
-              !year ||
-              !isTermsAccepted
-            }
-            className="w-full md:w-auto text-center text-lg justify-center align-middle items-center bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br p-2 px-8 font-sans flex gap-2 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 ease-out"
-          >
-            Upload
-          </button>
-        </span>
+        </div>
       </div>
+
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 `}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Main Upload Section */}
+          <div className="lg:col-span-2 space-y-8">
+            
+            {/* File Upload Card */}
+            <div className={`${theme === 'light' ? 'bg-secondary border-white-50' : ' border-white-5'} rounded-2xl shadow-sm border p-6`}>
+              <div className="flex items-center justify-between gap-3 mb-6">
+                <span className="flex items-center gap-2">
+                  <FileText className="w-6 h-6 text-gold" />
+                  <h2 className="text-xl font-semibold">Upload Document</h2>
+                </span>
+
+                <button
+                  onClick={handleClearFile}
+                  className="p-3 h-fit bg-accent cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-md transition-all duration-300 hover:scale-105"
+                  disabled={isLoading}
+                  title="Clear file"
+                >
+                  <Trash className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex gap-4">
+                <label
+                  htmlFor="uploadFile1"
+                  className={`flex-1 relative group cursor-pointer transition-all duration-300 ${
+                    isLoading ? 'pointer-events-none opacity-50' : 'hover:scale-[1.02]'
+                  }`}
+                >
+                  <div className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
+                    pdfUrl 
+                      ? 'border-green-300  dark:border-green-700 ' 
+                      : 'border-gold/30 hover:border-gold/60 hover:bg-gold/5'
+                  }`}>
+                    {pdfUrl ? (
+                      <div className="space-y-3">
+                        <div className="flex justify-center">
+                          <CheckCircle className="w-12 h-12 text-green-500" />
+                        </div>
+                        <div>
+                          <p className="text-green-700 dark:text-green-400 font-semibold">PDF Uploaded Successfully</p>
+                          <p className="text-sm text-green-600 dark:text-green-500">Ready for processing</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="flex justify-center">
+                          <div className="p-3 bg-gold/10 rounded-full group-hover:bg-gold/20 transition-colors duration-300">
+                            <Upload className="w-8 h-8 text-gold" />
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-lg font-semibold ">Upload your PDF</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">Drag and drop or click to browse</p>
+                        </div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500">
+                          PDF only • Max 15MB
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <input
+                    type="file"
+                    id="uploadFile1"
+                    ref={ref}
+                    className="hidden"
+                    accept="application/pdf"
+                    onChange={extractText}
+                    name="file-input"
+                    key={ref.current?.value}
+                    disabled={isLoading}
+                  />
+                </label>
+
+        
+              </div>
+
+              {isLoading && (
+                <div className="mt-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="animate-spin w-5 h-5 border-2 border-gold border-t-transparent rounded-full"></div>
+                    <span className="text-sm font-medium text-gold">
+                      {progress < 100 ? "Extracting text from PDF..." : "Processing complete!"}
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                    <div
+                      className="bg-gradient-to-r from-gold to-gold-fg h-full rounded-full transition-all duration-300 ease-out"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Form Fields */}
+            {(title || author || fullText || course || department || year || keywords.length > 0) && (
+              <div className="space-y-6">
+                
+                {/* Title Section */}
+                <div className={`bg-secondary rounded-2xl shadow-sm border ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <FileCheck className="w-5 h-5 text-gold" />
+                      <h3 className="text-lg font-semibold">Research Title</h3>
+                    </div>
+                    <button
+                      onClick={() => isEditingTitle ? handleSaveTitle() : setIsEditingTitle(true)}
+                      className="flex items-center gap-2 px-3 py-1.5 bg-gold/10 hover:bg-gold/20 text-gold rounded-lg transition-colors duration-200 text-sm font-medium"
+                    >
+                      {isEditingTitle ? <Save className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                      {isEditingTitle ? "Save" : "Edit"}
+                    </button>
+                  </div>
+                  <textarea
+                    className={`w-full p-4 rounded-xl border transition-all duration-200 resize-none ${
+                      isEditingTitle
+                        ? "border-gold bg-gold/5 focus:ring-2 focus:ring-gold/20 focus:border-gold"
+                        : "border-white-5  cursor-default"
+                    }  outline-none`}
+                    value={title.toUpperCase()}
+                    onChange={(e) => setTitle(e.target.value.toUpperCase())}
+                    readOnly={!isEditingTitle}
+                    rows={3}
+                    placeholder="Research paper title will appear here..."
+                  />
+                </div>
+
+                {/* Author Section */}
+                <div className={`bg-secondary rounded-2xl shadow-sm border ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <User className="w-5 h-5 text-gold" />
+                      <h3 className="text-lg font-semibold">Authors</h3>
+                    </div>
+                    <button
+                      onClick={() => isEditingAuthors ? handleSaveAuthors() : setIsEditingAuthors(true)}
+                      className="flex items-center gap-2 px-3 py-1.5 bg-gold/10 hover:bg-gold/20 text-gold rounded-lg transition-colors duration-200 text-sm font-medium"
+                    >
+                      {isEditingAuthors ? <Save className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                      {isEditingAuthors ? "Save" : "Edit"}
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    className={`w-full p-4 rounded-xl border transition-all duration-200 ${
+                      isEditingAuthors
+                        ? "border-gold bg-gold/5 focus:ring-2 focus:ring-gold/20 focus:border-gold"
+                        : "border-white-5 bg-accent cursor-default"
+                    } outline-none`}
+                    value={author}
+                    onChange={(e) => setAuthor(e.target.value)}
+                    readOnly={!isEditingAuthors}
+                    placeholder="Author names will appear here..."
+                  />
+                </div>
+
+                {/* Keywords Section */}
+                {keywords.length > 0 && (
+                  <div className={`bg-secondary rounded-2xl shadow-sm border ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6`}>
+                    <div className="flex items-center gap-3 mb-4">
+                      <Tag className="w-5 h-5 text-gold" />
+                      <h3 className="text-lg font-semibold">Keywords</h3>
+  
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {keywords.map((kw, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1.5 bg-yale-blue/20 text-yale-blue rounded-full text-sm font-medium"
+                        >
+                          {kw}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Metadata Section */}
+                <div className={`bg-secondary rounded-2xl shadow-sm border ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6`}>
+                  <div className="flex items-center gap-3 mb-6">
+                    <Building className="w-5 h-5 text-gold" />
+                    <h3 className="text-lg font-semibold">Paper Details</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2 text-sm font-medium">
+                        <Building className="w-4 h-4" />
+                        Department
+                      </Label>
+                      <Select name="department" value={department} onValueChange={setDepartment}>
+                      <SelectTrigger className="w-full p-7 px-4 text-md dark:bg-secondary border-white-5 rounded-lg">
+                      <SelectValue placeholder="Select department" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem className="p-3" value="Computer Science">
+                              Computer Science
+                            </SelectItem>
+                            <SelectItem className="p-3" value="Information Technology">
+                              Information Technology
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2 text-sm font-medium">
+                        <BookOpen className="w-4 h-4" />
+                        Course
+                      </Label>
+                      <Select name="course" value={course} onValueChange={setCourse} required={true}>
+                      <SelectTrigger className="w-full p-7 px-4 text-md dark:bg-secondary border-white-5 rounded-lg">
+                          <SelectValue placeholder="Select course" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem className="p-3" value="SIA">SIA</SelectItem>
+                            <SelectItem className="p-3" value="Capstone">Capstone</SelectItem>
+                            <SelectItem className="p-3" value="Compiler Design">Compiler Design</SelectItem>
+                            <SelectItem className="p-3" value="CS Thesis Writing">CS Thesis Writing</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2 text-sm font-medium">
+                        <Calendar className="w-4 h-4" />
+                        Year
+                      </Label>
+                      <input
+                        type="text"
+                        className="w-full p-4 text-md dark:bg-secondary border-white-5 border-1 rounded-lg outline-none focus:ring-2 focus:ring-gold focus:border-gold transition-all duration-200"
+                        value={year}
+                        onChange={(e) => setYear(e.target.value)}
+                        placeholder="2024"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Abstract Section */}
+                <div className={`bg-secondary rounded-2xl shadow-sm border ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6`}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <FileText className="w-5 h-5 text-gold" />
+                      <h3 className="text-lg font-semibold">Abstract</h3>
+                    </div>
+                    <button
+                      onClick={() => isEditingAbstract ? handleSaveAbstract() : setIsEditingAbstract(true)}
+                      className="flex items-center gap-2 px-3 py-1.5 bg-gold/10 hover:bg-gold/20 text-gold rounded-lg transition-colors duration-200 text-sm font-medium"
+                    >
+                      {isEditingAbstract ? <Save className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                      {isEditingAbstract ? "Save" : "Edit"}
+                    </button>
+                  </div>
+                  <textarea
+                    className={`w-full p-4 rounded-xl border transition-all duration-200 resize-none ${
+                      isEditingAbstract
+                        ? "border-gold bg-gold/5 focus:ring-2 focus:ring-gold/20 focus:border-gold"
+                        : "border-white-5 bg-accent cursor-default"
+                    } outline-none`}
+                    value={fullText}
+                    onChange={(e) => setFullText(e.target.value)}
+                    readOnly={!isEditingAbstract}
+                    rows={8}
+                    placeholder="Paper abstract will appear here..."
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* PDF Preview */}
+            {pdfUrl && (
+              <div className={`bg-secondary rounded-2xl shadow-sm border ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6`}>
+                <div className="flex items-center gap-3 mb-4">
+                  <Eye className="w-5 h-5 text-gold" />
+                  <h3 className="text-lg font-semibold">PDF Preview</h3>
+                </div>
+                <div className="relative">
+                  <iframe
+                    src={`${pdfUrl}#toolbar=0`}
+                    title="PDF Preview"
+                    className="w-full h-96 border border-white-5 rounded-xl"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Upload Progress */}
+            {pdfUrl && (
+              <div className={`bg-secondary rounded-2xl shadow-sm border ${theme === 'light' ? 'border-white-50' : 'border-white-5'} p-6`}>
+                <h3 className="text-lg font-semibold mb-4">Upload Progress</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">PDF uploaded</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Text extracted</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {isFormValid ? (
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    ) : (
+                      <AlertCircle className="w-5 h-5 text-amber-500" />
+                    )}
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      Form {isFormValid ? 'completed' : 'incomplete'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Action Bar */}
+      <div className={`${theme === 'light' ? 'bg-secondary border-t border-white-5' : 'bg-dusk-fg border-t border-white-5'} p-6`}>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                checked={isTermsAccepted}
+                onChange={(e) => setIsTermsAccepted(e.target.checked)}
+                className="mt-1 w-4 h-4 text-gold focus:ring-gold border-white-5 rounded"
+              />
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                By uploading, you agree to our{" "}
+                <span className="text-gold font-medium cursor-pointer hover:underline">
+                  Terms and Privacy Policy
+                </span>{" "}
+                and consent to its publication.
+              </p>
+            </div>
+
+            <button
+              onClick={handleUpload}
+              disabled={!isFormValid || isLoading}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-white transition-all duration-300 cursor-pointer ${
+                isFormValid && !isLoading
+                  ? "bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 hover:shadow-lg shadow-gold"
+                  : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"
+              }`}
+            >
+              {isLoading ? (
+                <>
+                  <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Upload className="w-5 h-5" />
+                  Upload Paper
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <Toaster />
     </div>
   );
