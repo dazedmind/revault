@@ -49,6 +49,7 @@ const UploadFile = () => {
   const [pdfUrl, setPdfUrl] = useState("");
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Keep all your existing functions exactly as they are
   function fixSplitAccents(text) {
@@ -64,45 +65,64 @@ const UploadFile = () => {
     );
   }
 
-  const handleUpload = async () => {
-    try {
-      const payload = {
-        title,
-        author,
-        abstract: fullText,
-        course,
-        department,
-        year,
-        keywords,
-      };
+ // Replace your handleUpload function with this:
+const handleUpload = async () => {
+  if (!selectedFile) {
+    toast.error("Please select a PDF file first.");
+    return;
+  }
 
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+  try {
+    setIsLoading(true);
+    
+    // Create FormData for multipart/form-data upload
+    const formData = new FormData();
+    
+    // Add the file
+    formData.append('file', selectedFile);
+    
+    // Add all the form fields
+    formData.append('title', title);
+    formData.append('author', author);
+    formData.append('abstract', fullText);
+    formData.append('course', course);
+    formData.append('department', department);
+    formData.append('year', year);
+    formData.append('keywords', JSON.stringify(keywords));
 
-      const result = await response.json();
+    console.log("📤 Uploading with FormData:");
+    console.log("File:", selectedFile.name, selectedFile.size, "bytes");
+    console.log("Title:", title);
+    console.log("Author:", author);
 
-      if (response.ok) {
-        toast.success("Upload successful!");
-        handleClearFile();
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData, // Send FormData, don't set Content-Type header
+    });
+
+    const result = await response.json();
+    console.log("Upload response:", result);
+
+    if (response.ok) {
+      toast.success("Upload successful! File uploaded to Google Cloud Storage.");
+      handleClearFile();
+    } else {
+      console.error("Upload failed:", result);
+      if (result.code === "P2002") {
+        toast.error(
+          "A paper with this title already exists. Please use a different title.",
+        );
       } else {
-        if (result.code === "P2002") {
-          toast.error(
-            "A paper with this title already exists. Please use a different title.",
-          );
-        } else {
-          toast.error(result.message || "Upload failed. Please try again.");
-        }
+        toast.error(result.message || "Upload failed. Please try again.");
       }
-    } catch (error) {
-      console.error("Upload error:", error);
-      toast.error("An unexpected error occurred. Please try again.");
     }
-  };
+  } catch (error) {
+    console.error("Upload error:", error);
+    toast.error("An unexpected error occurred. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const startProgressAnimation = () => {
     setProgress(0);
@@ -123,50 +143,52 @@ const UploadFile = () => {
     }, interval);
   };
 
-  async function extractText(event) {
-    const file = event.target.files[0];
-    if (!file || file.type !== "application/pdf") return;
+ // Modify your extractText function to also store the file
+async function extractText(event) {
+  const file = event.target.files[0];
+  if (!file || file.type !== "application/pdf") return;
 
-    setPdfUrl(URL.createObjectURL(file));
+  // Store the file for later upload
+  setSelectedFile(file);
+  setPdfUrl(URL.createObjectURL(file));
 
-    try {
-      setIsLoading(true);
-      startProgressAnimation();
-      const rawText = await pdfToText(file);
+  try {
+    setIsLoading(true);
+    startProgressAnimation();
+    const rawText = await pdfToText(file);
 
-      const firstPageEnd = rawText.toLowerCase().indexOf("table of contents");
-      const firstPageText =
-        firstPageEnd !== -1 ? rawText.substring(0, firstPageEnd) : rawText;
+    const firstPageEnd = rawText.toLowerCase().indexOf("table of contents");
+    const firstPageText =
+      firstPageEnd !== -1 ? rawText.substring(0, firstPageEnd) : rawText;
 
-      const sanitized = firstPageText.replace(/\s+/g, " ").trim();
+    const sanitized = firstPageText.replace(/\s+/g, " ").trim();
 
-      const response = await fetch("/api/extract", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: sanitized, rawText }),
-      });
+    const response = await fetch("/api/extract", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: sanitized, rawText }),
+    });
 
-      const result = await response.json();
+    const result = await response.json();
 
-      console.log("Full API Response:", result);
-      setKeywords(result.tfidfKeywords ?? []);
+    console.log("Full API Response:", result);
+    setKeywords(result.tfidfKeywords ?? []);
 
-      if (result) {
-        setTitle(result.extractedTitle ?? "");
-        setAuthor(result.extractedAuthor ?? "");
-        setFullText(result.extractedAbstract ?? "");
-        setCourse(result.extractedCourse ?? "");
-        setDepartment(result.extractedDepartment ?? "");
-        setYear(result.extractedYear ?? "");
-      }
-    } catch (error) {
-      console.error("Error extracting text:", error);
-    } finally {
-      setIsLoading(false);
-      setProgress(100);
+    if (result) {
+      setTitle(result.extractedTitle ?? "");
+      setAuthor(result.extractedAuthor ?? "");
+      setFullText(result.extractedAbstract ?? "");
+      setCourse(result.extractedCourse ?? "");
+      setDepartment(result.extractedDepartment ?? "");
+      setYear(result.extractedYear ?? "");
     }
+  } catch (error) {
+    console.error("Error extracting text:", error);
+  } finally {
+    setIsLoading(false);
+    setProgress(100);
   }
-
+}
   const handleSaveTitle = () => {
     setIsEditingTitle(false);
     if (!title) {
@@ -188,24 +210,26 @@ const UploadFile = () => {
     }
   };
 
+// Update your handleClearFile function to also clear the selected file:
   const handleClearFile = () => {
-    if (ref.current) {
-      ref.current.value = "";
-    }
-    setTitle("");
-    setFullText("");
-    setAuthor("");
-    setCourse("");
-    setDepartment("");
-    setYear("");
-    setKeywords([]);
-    setKey(Date.now());
-    setPdfUrl("");
-    setIsEditingTitle(false);
-    setIsEditingAuthors(false);
-    setIsEditingAbstract(false);
-    setIsTermsAccepted(false);
-  };
+  if (ref.current) {
+    ref.current.value = "";
+  }
+  setTitle("");
+  setFullText("");
+  setAuthor("");
+  setCourse("");
+  setDepartment("");
+  setYear("");
+  setKeywords([]);
+  setKey(Date.now());
+  setPdfUrl("");
+  setSelectedFile(null); // Clear the selected file
+  setIsEditingTitle(false);
+  setIsEditingAuthors(false);
+  setIsEditingAbstract(false);
+  setIsTermsAccepted(false);
+};
 
   useEffect(() => setMounted(true), []);
 

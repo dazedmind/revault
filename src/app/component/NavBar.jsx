@@ -68,7 +68,7 @@ export default function NavBar() {
 
   return (
     <>
-      <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-6 px-10 md:px-16 dark:bg-primary">
+      <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-4 px-10 md:px-16 dark:bg-primary">
         <div className="flex align-middle items-center gap-10">
           <Link
             href="/home"
