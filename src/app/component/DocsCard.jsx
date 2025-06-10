@@ -184,7 +184,7 @@ const DocsCard = (props) => {
         theme === "light" 
           ? "bg-white border border-gray-200" 
           : "bg-darker border border-white-5"
-      } rounded-2xl overflow-hidden`}
+      } rounded-2xl border-2 overflow-hidden`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -211,7 +211,7 @@ const DocsCard = (props) => {
           />
           
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-gold/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
           {/* Quick Action Overlay */}
           <div className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 ${
