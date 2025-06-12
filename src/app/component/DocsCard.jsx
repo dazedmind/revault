@@ -322,27 +322,43 @@ const DocsCard = (props) => {
                 </button>
               </Link>
 
-              {/* Secondary Actions */}
-              <div className="flex items-center gap-1">
+                 {/* Secondary Actions */}
+                 <div className="flex items-center gap-1">
                 {(() => {
-                const userType = localStorage.getItem("userType");
-                // Allow LIBRARIAN, ADMIN, and ASSISTANT to edit
-                if (userType === "LIBRARIAN" || userType === "ADMIN" || userType === "ASSISTANT") {
-                  return (
-                    <Link href={`/edit-file/${paper_id}`} className="flex-shrink-0">
-                      <button className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 cursor-pointer border ${
-                        theme === "light" 
-                          ? "border-gray-200 hover:border-gray-300 text-gray-700 hover:bg-gray-50" 
-                          : "border-white-5 hover:border-white-10 text-gray-300 hover:bg-white-5"
-                      }`}>
+                  const userType = localStorage.getItem("userType");
+                  
+                  if (userType === "LIBRARIAN") {
+                    return (
+                      <button
+                        onClick={() => router.push("/upload")}
+                        className="p-2.5 text-gray-600 dark:text-gray-400 hover:text-gold hover:bg-gold/10 rounded-lg transition-all duration-200 cursor-pointer"
+                        title="Edit paper"
+                      >
                         <GoPencil className="text-lg" />
-                        <span className="hidden sm:inline">Edit</span>
                       </button>
-                    </Link>
-                  );
-                }
-                return null;
-              })()}
+                    );
+                  } else if (userType !== "ADMIN" && userType !== "ASSISTANT") {
+                    return (
+                      <button
+                        onClick={() => isBookmarked ? handleUnbookmark(paper_id) : handleBookmark(paper_id)}
+                        className={`p-2.5 rounded-lg transition-all duration-200 cursor-pointer ${
+                          isBookmarked 
+                            ? "text-yale-blue bg-blue-100 hover:bg-blue-200" 
+                            : "text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                        }`}
+                        title={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+                      >
+                        {isBookmarked ? (
+                          <GoBookmarkFill className="text-lg" />
+                        ) : (
+                          <GoBookmark className="text-lg" />
+                        )}
+                      </button>
+                    );
+                  }
+                  return null;
+                })()}
+         
               </div>
             </div>
           </div>

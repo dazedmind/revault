@@ -10,7 +10,7 @@ function FileMenuButton({ icon, label, onClick }) {
         onClick={onClick}
         className="flex gap-2 items-center cursor-pointer"
       >
-        <div className={`rounded-md p-2 ${theme === "light" ? "bg-tertiary" : "bg-card-foreground"}`}>{icon}</div>
+        <div className={`rounded-md p-2 hover:bg-card-foreground`}>{icon}</div>
         <p className="hidden md:block">{label}</p>
       </button>
     </div>
