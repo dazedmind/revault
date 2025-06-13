@@ -19,6 +19,7 @@ import MultipleSelector, {
   Option,
 } from "@/app/admin/components/EventTypeMultiSelect";
 import ActivityLogsSection from "@/app/admin/components/ActivityLogsSection";
+import { Download, FileText } from "lucide-react";
 
 interface Activity {
   name: string;
@@ -73,6 +74,47 @@ function ActivityLogContent() {
   const [logs, setLogs] = useState<Activity[]>([]);
   const [users, setUsers] = useState<UserOption[]>([]);
   const [total, setTotal] = useState<number>(0);
+
+  const generatePDFReport = () => {
+    // Build query parameters for PDF generation
+    const params = new URLSearchParams();
+
+    params.set("userId", selectedUser);
+
+    const eventTypesString =
+      selectedEventTypes.length === 0
+        ? "all"
+        : selectedEventTypes.map((opt) => opt.value).join(",");
+    params.set("activityTypes", eventTypesString);
+
+    params.set("page", page.toString());
+    params.set("limit", limit.toString());
+
+    // Open PDF preview in new tab
+    const pdfUrl = `/admin/api/activity-logs-report?${params.toString()}`;
+    window.open(pdfUrl, "_blank");
+  };
+
+  const downloadPDFReport = () => {
+    // Build query parameters for PDF download
+    const params = new URLSearchParams();
+
+    params.set("userId", selectedUser);
+
+    const eventTypesString =
+      selectedEventTypes.length === 0
+        ? "all"
+        : selectedEventTypes.map((opt) => opt.value).join(",");
+    params.set("activityTypes", eventTypesString);
+
+    params.set("page", page.toString());
+    params.set("limit", limit.toString());
+    params.set("download", "1");
+
+    // Trigger download
+    const downloadUrl = `/admin/api/activity-logs-report?${params.toString()}`;
+    window.open(downloadUrl, "_blank");
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -322,6 +364,19 @@ function ActivityLogContent() {
         </div>
       </div>
 
+      <div className="flex justify-end mb-6">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={generatePDFReport}
+            className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-sm"
+            title="Preview PDF Report"
+          >
+            <FileText className="w-4 h-4" />
+            <span>Preview PDF</span>
+          </button>
+        </div>
+      </div>
+
       {/* Activity Logs Table + Pagination */}
       <ActivityLogsSection
         logs={logs}
@@ -332,6 +387,13 @@ function ActivityLogContent() {
           console.log("🔄 Page changed to:", newPage);
           setPage(newPage);
           updateQueryParams({ page: newPage });
+        }}
+        currentFilters={{
+          userId: selectedUser,
+          activityTypes:
+            selectedEventTypes.length === 0
+              ? "all"
+              : selectedEventTypes.map((opt) => opt.value).join(","),
         }}
       />
 
