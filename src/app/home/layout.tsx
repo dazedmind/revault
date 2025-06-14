@@ -55,7 +55,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
     <div className="font-[family-name:'Inter'] dark:bg-accent min-h-screen">
       {userType === "ADMIN" ||
-      userType === "ASSISTANT" ||
+      userType === "ADMIN_ASSISTANT" ||
       userType === "LIBRARIAN" ? (
         <AdminNavBar />
       ) : (

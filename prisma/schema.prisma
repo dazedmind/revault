@@ -158,7 +158,7 @@ enum activity_type {
 
 enum user_role {
   ADMIN
-  ASSISTANT
+  ADMIN_ASSISTANT
   LIBRARIAN
   STUDENT
   FACULTY

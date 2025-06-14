@@ -108,7 +108,7 @@ function AdminProfileContent() {
           return;
         }
 
-        const allowedRoles = ["ADMIN", "ASSISTANT", "LIBRARIAN"];
+        const allowedRoles = ["ADMIN", "ADMIN_ASSISTANT", "LIBRARIAN"];
         const userRole = data.users?.role || data.role;
 
         console.log(

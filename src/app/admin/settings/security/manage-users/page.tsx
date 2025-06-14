@@ -260,7 +260,7 @@ function ManageUserContent() {
     // Map userAccess to API role format
     const roleMapping: { [key: string]: string } = {
       "Librarian-in-Charge": "LIBRARIAN",
-      "Admin Assistant": "ASSISTANT",
+      "Admin Assistant": "ADMIN_ASSISTANT",
       Admin: "ADMIN",
     };
 
