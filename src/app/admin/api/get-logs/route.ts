@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
+import { user_role } from "@prisma/client";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
 
