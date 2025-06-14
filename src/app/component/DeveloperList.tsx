@@ -60,7 +60,7 @@ const DeveloperList = ({ onClick }: { onClick: () => void }) => {
             System Developers
           </h1>
           <p className={`text-md italic ${theme === 'light' ? 'text-white-5' : 'text-white-50'}`}>
-            "Keyboard Warriors" 🛡️⚔️
+          &quot;Keyboard Warriors&quot; 🛡️⚔️
           </p>
           <div className="w-24 h-1 bg-gradient-to-r from-gold to-yellow-500 mx-auto mt-3 rounded-full"></div>
         </div>
