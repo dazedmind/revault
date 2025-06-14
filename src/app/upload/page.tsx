@@ -685,14 +685,13 @@ const UploadFile = () => {
                 type="checkbox"
                 checked={isTermsAccepted}
                 onChange={(e) => setIsTermsAccepted(e.target.checked)}
-                className="mt-1 w-4 h-4 text-gold focus:ring-gold border-white-5 rounded"
+                className="mt-1 md:mt-0 w-4 h-4 text-gold focus:ring-gold border-white-5 rounded"
               />
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                By uploading, you agree to our{" "}
-                <span className="text-gold font-medium cursor-pointer hover:underline">
-                  Terms and Privacy Policy
-                </span>{" "}
-                and consent to its publication.
+                I ensure the accuracy of the information above and that it contains 
+                <span className="ml-1 text-gold font-medium ">
+                  no clerical mistakes.
+                </span>
               </p>
             </div>
 

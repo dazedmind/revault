@@ -2,6 +2,7 @@ import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 // import { TfIdf } from 'natural';
 import { TfIdf } from '@/lib/tfidf';
+import EnhancedAutoTagger from '@/lib/tfidf/enhanced-tagger';
 
 // Validate API key
 if (!process.env.GROQ_API_KEY) {
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
 
       1. The Title (Must be in the format of Title of the paper (Title of the paper must be in uppercase)),
       2. The Author(s) (Usually, followed by the word "by" just extract the names only and separate by comma. Format: Surname, F. M. (APA Format)),
-      3. The Abstract. (Get the first paragraph of the abstract or the first 6 sentences. If there is no abstract, generate a short abstract based on the title.)
+      3. The Abstract. (Get the first paragraph of the abstract or the first 6 sentences. If there is no abstract, generate a short abstract based on the title minimum of 100 words.)
       4. The Course Subject. (Strictly follow the format of: SIA, Capstone, Compiler Design, Research Writing. If none just write "Cannot Determine")
       5. The Department. (Information Technology, Computer Science)
       6. The Year (must be in the format of YYYY)
@@ -70,16 +71,15 @@ export async function POST(req: Request) {
     try {
       const parsed = JSON.parse(match[0]);
       // 🔍 TF-IDF Keyword Extraction
-      const tfidf = new TfIdf();
-      tfidf.addDocument(rawText);
+      const tfidf = new EnhancedAutoTagger();
+      const terms = tfidf.extractTfIdfKeywords(rawText, 10);
 
-      const terms = tfidf.listTerms(0);
       // Custom stopwords (add more as needed)
       const stopwords = [
         'information', 'technology', 'research', 'using',
         'pamantasan', 'lungsod', 'maynila', 'study',
         'system', 'based', 'data', '2020', '2021', '2022', '2023', '2024', '2025',
-        'figure', 'table', 'figures', 'tables', 'will', 'user', 'page', 'book'
+        'figure', 'table', 'figures', 'tables', 'will', 'user', 'page', 'book', 'datasets', 'dataset',
       ];
 
       const topKeywords = terms

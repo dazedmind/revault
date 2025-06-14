@@ -113,7 +113,7 @@ const AdminLogin = () => {
                 name="idNumber"
                 value={formData.idNumber}
                 onChange={handleChange}
-                className="w-68 md:w-xs"
+                className="w-68 md:w-xs "
               />
 
               <div className="col-span-2 w-full relative">
