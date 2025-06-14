@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import AdminNavBar from "../components/AdminNavBar";
 import SettingsList from "../components/SettingsSideBar";
 import ProtectedRoute from "../../component/ProtectedRoute";
-import { Activity, Info, Settings, SunMoon, Upload, User } from "lucide-react";
+import { Activity, Cog, Info, Settings, SunMoon, Upload, User } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export default function SettingsLayout({
@@ -57,7 +57,7 @@ export default function SettingsLayout({
                 <div className="text-center">
                   <div className="flex justify-center mb-4">
                     <div className="p-3 bg-gold/20 rounded-full">
-                      <Settings className="w-8 h-8 text-gold" />
+                      <Cog className="w-8 h-8 text-gold" />
                     </div>
                   </div>
                   <h1 className="text-3xl md:text-4xl font-bold mb-2">
