@@ -95,10 +95,6 @@ const DocsCard = (props) => {
         return router.push("/login");
       }
 
-      // Check bookmark status and count
-      await checkBookmarkStatus();
-      await fetchBookmarkCount();
-
       // 2. Fetch recent papers
       console.log("▶️ fetching /api/recent");
       try {
