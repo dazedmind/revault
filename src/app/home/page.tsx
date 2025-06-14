@@ -236,7 +236,7 @@ export default function HomePage() {
 
           <section>
             <h2 className="font-bold text-gold">Course</h2>
-            {["SIA", "Capstone", "Compiler Design", "CS Thesis Writing"].map(
+            {["SIA", "Capstone", "Compiler Design", "Thesis Writing"].map(
               (c) => (
                 <div key={c} className="flex items-center gap-2 ml-2">
                   <Checkbox
@@ -355,8 +355,8 @@ export default function HomePage() {
                 {[
                   "SIA",
                   "Capstone",
-                  "Research Writing",
-                  "CS Thesis Writing",
+                  "Compiler Design",
+                  "Thesis Writing",
                 ].map((c) => (
                   <li key={c}>
                     <Checkbox

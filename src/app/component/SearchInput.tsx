@@ -325,7 +325,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                         
                         {paper.relevanceScore > 0 && (
                           <div className="text-xs text-green-500 font-medium">
-                            {(paper.relevanceScore * 10).toFixed(0)}%
+                            {Math.min((paper.relevanceScore * 10),100).toFixed(0)}%
                           </div>
                         )}
                       </div>
@@ -478,7 +478,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                       
                       {paper.relevanceScore > 0 && (
                         <div className="text-sm text-green-500 font-medium">
-                          {(paper.relevanceScore * 10).toFixed(0)}%
+                          {Math.min((paper.relevanceScore * 10),100).toFixed(0)}%
                         </div>
                       )}
                     </div>

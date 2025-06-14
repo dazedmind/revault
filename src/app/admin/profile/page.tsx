@@ -383,8 +383,8 @@ function AdminProfileContent() {
         <div>Failed to load profile.</div>
       )}
       <main className="flex flex-col dark:bg-secondary px-8 md:px-40 h-full">
-        <StatsSection allPapers={allPapers} />
-
+        <StatsSection allPapers={allPapers} loading={loadingAllPapers} />
+        
         <FilterBar
           departments={localFilters.departments}
           courses={localFilters.courses}
