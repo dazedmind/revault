@@ -499,7 +499,7 @@ function ViewFile() {
                           PDF Viewer Not Supported
                         </h3>
                         <p className="text-gray-600 dark:text-gray-400 mb-4">
-                          Your browser doesn't support inline PDF viewing.
+                          Your browser doesn&apos;t support inline PDF viewing.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-2 justify-center"></div>
                       </div>
@@ -531,7 +531,7 @@ function ViewFile() {
                             No PDF File Available
                           </h3>
                           <p className="text-gray-600 dark:text-gray-400 mb-4">
-                            This document doesn't have an associated PDF file.
+                            This document doesn&apos;t have an associated PDF file.
                           </p>
                         </>
                       )}

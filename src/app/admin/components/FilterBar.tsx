@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SearchInput } from "@/app/component/SearchInput";
+import SearchInput from "@/app/component/SearchInput";
 
 interface FilterBarProps {
   departments: string[];
@@ -50,7 +50,7 @@ export function FilterBar({
     <div className="flex justify-between">
       <div className="flex gap-4">
         {/* Sort / Search Input */}
-        <SearchInput defaultValue={""} />
+        <SearchInput placeholder="Search paper" />
 
         {/* If parent passed in a downloadComponent, render it here.
             Otherwise, fall back to the old static button. */}

@@ -48,7 +48,6 @@ function replacer (translationTable) {
     // Escaping regexp special chars.
     // @see Speed test for type casting to string http://jsperf.com/string-type-casting/2
     // @see http://closure-library.googlecode.com/svn/docs/closure_goog_string_string.js.source.html#line956
-    /* eslint-disable no-control-regex */
     const key1 = ('' + key).replace(/([-()[\]{}+?*.$^|,:#<!\\/])/g, '\\$1')
       .replace(/\x08/g, '\\x08')
 
