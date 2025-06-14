@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { logout } from "../../utils/auth";
 import { useEffect, useState } from "react";
-import { LogOut, Settings, User, SunMoon, ChevronRight, ChevronDown } from "lucide-react";
+import { LogOut, Settings, User, SunMoon, ChevronRight, ChevronDown, IdCard } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -121,10 +121,18 @@ export default function AdminNavBar() {
                     height={30}
                     className="rounded-full"
                   />
-                  <Link href="/admin/profile">{profile.users.name}</Link>
-                  
-                  <ChevronRight className="h-4 w-4" />  
+                  <Link href="/admin/profile" className="flex items-center gap-2">
+                    <span className="flex flex-col">
+                      <p className="text-sm font-[Inter]">{profile.users.name}</p>
+                      <p className="text-xs font-[Inter] flex items-center gap-1 text-gray-500"> 
+                        <IdCard className="text-xxs" strokeWidth={1.5} />
+                        {profile.employee_id}
+                      </p>
+                    </span>
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
                 </DropdownMenuItem>
+
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <Settings />

@@ -5,6 +5,16 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";   
 import { getTokenClientSide } from "@/app/utils/getTokenClientSide";
+import { GoEye, GoEyeClosed } from "react-icons/go";
+import { toast } from "sonner";
+
+interface PasswordValidation {
+  minLength: boolean;
+  hasUppercase: boolean;
+  hasLowercase: boolean;
+  hasNumber: boolean;
+  hasSymbol: boolean;
+}
 
 const ChangePassword = () => {
   const [mounted, setMounted] = useState(false);
@@ -19,10 +29,62 @@ const ChangePassword = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Validation states
+  const [passwordValidation, setPasswordValidation] = useState<PasswordValidation>({
+    minLength: false,
+    hasUppercase: false,
+    hasLowercase: false,
+    hasNumber: false,
+    hasSymbol: false,
+  });
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Validate password requirements
+  const validatePassword = (password: string): PasswordValidation => {
+    return {
+      minLength: password.length >= 9,
+      hasUppercase: /[A-Z]/.test(password),
+      hasLowercase: /[a-z]/.test(password),
+      hasNumber: /\d/.test(password),
+      hasSymbol: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    };
+  };
+
+  // Check if password is valid
+  const isPasswordValid = (validation: PasswordValidation): boolean => {
+    return Object.values(validation).every(Boolean);
+  };
+
+  // Handle new password change
+  useEffect(() => {
+    if (formData.newPassword) {
+      const validation = validatePassword(formData.newPassword);
+      setPasswordValidation(validation);
+    } else {
+      setPasswordValidation({
+        minLength: false,
+        hasUppercase: false,
+        hasLowercase: false,
+        hasNumber: false,
+        hasSymbol: false,
+      });
+    }
+  }, [formData.newPassword]);
+
+  // Handle confirm password change
+  useEffect(() => {
+    if (formData.confirmNewPassword) {
+      setPasswordsMatch(formData.newPassword === formData.confirmNewPassword);
+    } else {
+      setPasswordsMatch(true);
+    }
+  }, [formData.newPassword, formData.confirmNewPassword]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,27 +105,26 @@ const ChangePassword = () => {
     // Validation
     if (!formData.oldPassword || !formData.newPassword || !formData.confirmNewPassword) {
       setError("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
-    if (formData.newPassword !== formData.confirmNewPassword) {
+    if (!isPasswordValid(passwordValidation)) {
+      setError("New password does not meet all requirements");
+      toast.error("New password does not meet all requirements");
+      return;
+    }
+
+    if (!passwordsMatch) {
       setError("New passwords do not match");
+      toast.error("New passwords do not match");
       return;
     }
 
-    if (formData.newPassword.length < 9) {
-      setError("Password should be minimum of 9 characters");
-      return;
-    }
-
-    // Check password complexity
-    const hasUppercase = /[A-Z]/.test(formData.newPassword);
-    const hasLowercase = /[a-z]/.test(formData.newPassword);
-    const hasNumbers = /\d/.test(formData.newPassword);
-    const hasSymbols = /[!@#$%^&*(),.?":{}|<>]/.test(formData.newPassword);
-
-    if (!hasUppercase || !hasLowercase || !hasNumbers || !hasSymbols) {
-      setError("Password must contain uppercase letters, lowercase letters, numbers, and symbols");
+    // Check if new password is same as old password
+    if (formData.oldPassword === formData.newPassword) {
+      setError("New password must be different from current password");
+      toast.error("New password must be different from current password");
       return;
     }
 
@@ -76,6 +137,7 @@ const ChangePassword = () => {
       const token = getTokenClientSide();
       if (!token) {
         setError("Authentication required. Please log in again.");
+        toast.error("Authentication required. Please log in again.");
         return;
       }
 
@@ -95,17 +157,22 @@ const ChangePassword = () => {
 
       if (response.ok) {
         setSuccess("Password changed successfully!");
+        toast.success("Password changed successfully!");
         setFormData({
           oldPassword: "",
           newPassword: "",
           confirmNewPassword: ""
         });
       } else {
-        setError(data.error || "Failed to change password");
+        const errorMessage = data.error || "Failed to change password";
+        setError(errorMessage);
+        toast.error(errorMessage);
       }
     } catch (err) {
       console.error("Error changing password:", err);
-      setError("An error occurred. Please try again.");
+      const errorMessage = "An error occurred. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -123,45 +190,6 @@ const ChangePassword = () => {
       <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
 
       <form onSubmit={handleSubmit}>
-        <InputField
-          containerClassName="mt-5"
-          label="Enter Old Password"
-          type="password"
-          name="oldPassword"
-          placeholder="Enter Old Password"
-          inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
-          labelClassName="md:ml-5"
-          disabled={loading}
-          value={formData.oldPassword}
-          onChange={handleInputChange}
-        />
-
-        <InputField
-          containerClassName="mt-5"
-          label="Enter New Password"
-          type="password"
-          name="newPassword"
-          placeholder="Enter New Password"
-          inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
-          labelClassName="md:ml-5"
-          disabled={loading}
-          value={formData.newPassword}
-          onChange={handleInputChange}
-        />
-
-        <InputField
-          containerClassName="mt-5"
-          label="Confirm New Password"
-          type="password"
-          name="confirmNewPassword"
-          placeholder="Confirm New Password"
-          inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
-          labelClassName="md:ml-5"
-          disabled={loading}
-          value={formData.confirmNewPassword}
-          onChange={handleInputChange}
-        />
-
         {/* Error Message */}
         {error && (
           <div className="w-auto h-auto md:w-xl md:ml-4.5 mt-5 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -175,17 +203,107 @@ const ChangePassword = () => {
             {success}
           </div>
         )}
+
+        <InputField
+          containerClassName="mt-5"
+          label="Enter Old Password"
+          type={showPassword ? "text" : "password"}
+          name="oldPassword"
+          placeholder="Enter Old Password"
+          inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
+          labelClassName="md:ml-5"
+          disabled={loading}
+          value={formData.oldPassword}
+          onChange={handleInputChange}
+        />
+
+        <InputField
+          containerClassName="mt-5"
+          label="Enter New Password"
+          type={showPassword ? "text" : "password"}
+          name="newPassword"
+          placeholder="Enter New Password"
+          inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
+          labelClassName="md:ml-5"
+          disabled={loading}
+          value={formData.newPassword}
+          onChange={handleInputChange}
+        />
+
+        {/* Password Requirements Indicator */}
+        {formData.newPassword && (
+          <div className="w-auto md:w-sm md:ml-5 mt-2">
+            <div className="text-sm space-y-1">
+              <div className={`flex items-center gap-2 ${passwordValidation.minLength ? 'text-green-600' : 'text-red-600'}`}>
+                <span>{passwordValidation.minLength ? '✓' : '✗'}</span>
+                <span>At least 9 characters</span>
+              </div>
+              <div className={`flex items-center gap-2 ${passwordValidation.hasUppercase ? 'text-green-600' : 'text-red-600'}`}>
+                <span>{passwordValidation.hasUppercase ? '✓' : '✗'}</span>
+                <span>One uppercase letter</span>
+              </div>
+              <div className={`flex items-center gap-2 ${passwordValidation.hasLowercase ? 'text-green-600' : 'text-red-600'}`}>
+                <span>{passwordValidation.hasLowercase ? '✓' : '✗'}</span>
+                <span>One lowercase letter</span>
+              </div>
+              <div className={`flex items-center gap-2 ${passwordValidation.hasNumber ? 'text-green-600' : 'text-red-600'}`}>
+                <span>{passwordValidation.hasNumber ? '✓' : '✗'}</span>
+                <span>One number</span>
+              </div>
+              <div className={`flex items-center gap-2 ${passwordValidation.hasSymbol ? 'text-green-600' : 'text-red-600'}`}>
+                <span>{passwordValidation.hasSymbol ? '✓' : '✗'}</span>
+                <span>One symbol (!@#$%^&*)</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <InputField
+          containerClassName="mt-5"
+          label="Confirm New Password"
+          type={showPassword ? "text" : "password"}
+          name="confirmNewPassword"
+          placeholder="Confirm New Password"
+          inputClassName="w-auto md:w-sm md:ml-5 h-14 mt-1 dark:bg-secondary"
+          labelClassName="md:ml-5"
+          disabled={loading}
+          value={formData.confirmNewPassword}
+          onChange={handleInputChange}
+        />
+
+        {/* Password Match Indicator */}
+        {formData.confirmNewPassword && (
+          <div className="w-auto md:w-sm md:ml-5 mt-2">
+            <div className={`text-sm flex items-center gap-2 ${passwordsMatch ? 'text-green-600' : 'text-red-600'}`}>
+              <span>{passwordsMatch ? '✓' : '✗'}</span>
+              <span>{passwordsMatch ? 'Passwords match' : 'Passwords do not match'}</span>
+            </div>
+          </div>
+        )}
+
+        <div>
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="text-gray-500 hover:text-gray-700 flex flex-row items-center gap-1 md:ml-5 mt-5 cursor-pointer"
+          >
+            {showPassword ? <GoEyeClosed size={15} /> : <GoEye size={15} />}
+            <span className="text-gray-500 hover:text-gray-700">
+              {showPassword ? 'Hide Password' : 'Show Password'}
+            </span>
+          </button>
+        </div>
       
         <WarningMessage
           containerClassName="w-auto h-auto md:w-xl md:ml-4.5 mt-5"
           textClassName=""
-          message="Password should be minimum of 9 Characters with combination of uppercase letters, lowercase letters, numbers, and symbols."
+          message="Password should be minimum of 9 characters with combination of uppercase letters, lowercase letters, numbers, and symbols."
         />
         
         <span>
           <Button 
             type="submit"
-            disabled={loading}
+            disabled={loading || !isPasswordValid(passwordValidation) || !passwordsMatch || !formData.oldPassword || !formData.newPassword || !formData.confirmNewPassword}
             className="bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br font-inter cursor-pointer text-white text-base p-6 md:ml-4.5 mt-5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Saving..." : "Save Changes"}
