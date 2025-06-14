@@ -212,7 +212,9 @@ export async function GET(req: NextRequest) {
       status: log.status,
       user_agent: log.user_agent,
       user_id: log.user_id,
-      employee_id: typeof log.employee_id === 'bigint' ? log.employee_id.toString() : log.employee_id,
+      employee_id: log.employee_id != null 
+        ? (typeof log.employee_id === 'bigint' ? log.employee_id.toString() : String(log.employee_id))
+        : null,
       // Enhanced user info
       user_details: log.users
         ? {
@@ -223,9 +225,11 @@ export async function GET(req: NextRequest) {
         : null,
       librarian_details: log.librarian
         ? {
-            employee_id: typeof log.librarian.employee_id === 'bigint' 
-              ? log.librarian.employee_id.toString() 
-              : log.librarian.employee_id,
+            employee_id: log.librarian.employee_id != null
+              ? (typeof log.librarian.employee_id === 'bigint' 
+                ? log.librarian.employee_id.toString() 
+                : String(log.librarian.employee_id))
+              : null,
             position: log.librarian.position,
           }
         : null,
