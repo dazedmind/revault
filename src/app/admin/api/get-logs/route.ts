@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
   }
 
   // 2) Only allow admin/staff roles (updated to match new enum values)
-  const allowedRoles = ["ADMIN", "ASSISTANT", "LIBRARIAN"];
+  const allowedRoles = ["ADMIN", "ADMIN_ASSISTANT", "LIBRARIAN"];
   if (!allowedRoles.includes(payload.role)) {
     console.log("❌ Access denied for role:", payload.role);
     return new NextResponse(
@@ -99,7 +99,7 @@ export async function GET(req: NextRequest) {
       prisma.users.findMany({
         where: {
           role: {
-            in: ["ADMIN", "ASSISTANT", "LIBRARIAN"],
+            in: ["ADMIN", "ADMIN_ASSISTANT", "LIBRARIAN"],
           },
         },
         select: {
@@ -214,7 +214,7 @@ export async function GET(req: NextRequest) {
           total_admin_staff: formattedUsers.length,
           roles_breakdown: {
             ADMIN: formattedUsers.filter((u) => u.role === "ADMIN").length,
-            ASSISTANT: formattedUsers.filter((u) => u.role === "ASSISTANT")
+            ADMIN_ASSISTANT: formattedUsers.filter((u) => u.role === "ADMIN_ASSISTANT")
               .length,
             LIBRARIAN: formattedUsers.filter((u) => u.role === "LIBRARIAN")
               .length,

@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
     );
   }
   // 2) Only allow Admin/AdminAssistant/Librarian
-  if (!["ADMIN", "ASSISTANT"].includes(payload.role)) {
+  if (!["ADMIN", "ADMIN_ASSISTANT"].includes(payload.role)) {
     return new NextResponse(
       JSON.stringify({ success: false, message: "Forbidden" }),
       { status: 403, headers: { "Content-Type": "application/json" } },

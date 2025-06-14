@@ -181,7 +181,7 @@ export async function POST(req: NextRequest) {
           let employeeId = null;
           let userName = payload.firstName || 'Unknown User';
 
-          if (payload.role === 'LIBRARIAN' || payload.role === 'ADMIN' || payload.role === 'ASSISTANT') {
+          if (payload.role === 'LIBRARIAN' || payload.role === 'ADMIN' || payload.role === 'ADMIN_ASSISTANT') {
             const librarian = await prisma.librarian.findFirst({
               where: { user_id: parseInt(payload.user_id) },
               include: { users: true }
