@@ -126,83 +126,76 @@ export default function Form() {
     }
   };
 
-  const handleNext = async (e) => {
-    e.preventDefault();
+  // Updated handleNext function for RegistrationForm.tsx (Student Registration)
+const handleNext = async (e) => {
+  e.preventDefault();
+  
+  if (!isFormValid) {
+    return;
+  }
+
+  // Check if passwords match before proceeding
+  if (formData.password !== formData.confirmPassword) {
+    setPasswordError(true);
+    return;
+  }
+
+  // Check password requirements
+  if (!validatePassword(formData.password)) {
+    setPasswordRequirementsError(true);
+    return;
+  }
+
+  // Check student number format
+  if (!validateStudentNumber(formData.studentNumber)) {
+    setStudentNumberError(true);
+    return;
+  }
+
+  // Check email format
+  if (!validateEmail(formData.email)) {
+    setEmailError(true);
+    return;
+  }
+
+  // Send OTP before navigating to confirmation
+  try {
+    const userRole = localStorage.getItem("userType") || "STUDENT";
     
-    if (!isFormValid) {
-      return;
+    const res = await fetch("/api/send-otp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ 
+        email: formData.email,
+        role: userRole.toUpperCase()
+      }),
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      // Save form data and email to localStorage
+      localStorage.setItem("regEmail", formData.email);
+      localStorage.setItem(
+        "regForm",
+        JSON.stringify({
+          ...formData,
+          program: selectedProgram,
+        }),
+      );
+      
+      // Navigate to OTP confirmation page
+      router.push("/registration/otp-confirmation");
+    } else {
+      alert("Failed to send OTP. Try again.");
     }
-
-    // Check if passwords match before proceeding
-    if (formData.password !== formData.confirmPassword) {
-      setPasswordError(true);
-      return;
-    }
-
-    // Check password requirements
-    if (!validatePassword(formData.password)) {
-      setPasswordRequirementsError(true);
-      return;
-    }
-
-    // Check student number format
-    if (!validateStudentNumber(formData.studentNumber)) {
-      setStudentNumberError(true);
-      return;
-    }
-
-    // Check email format
-    if (!validateEmail(formData.email)) {
-      setEmailError(true);
-      return;
-    }
-
-    // Send OTP before navigating to confirmation
-    try {
-      const res = await fetch("/api/send-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: formData.email }),
-      });
-
-      const result = await res.json();
-
-      if (result.success) {
-        localStorage.setItem("regEmail", formData.email);
-        localStorage.setItem(
-          "regForm",
-          JSON.stringify({
-            ...formData,
-            program: selectedProgram,
-          }),
-        );
-        router.push("/registration/otp-confirmation");
-      } else {
-        alert("Failed to send OTP. Try again.");
-      }
-    } catch (err) {
-      console.error("OTP Send Error:", err);
-      alert("Something went wrong while sending OTP.");
-    }
-
-    // Check if the form data is properly populated
-    console.log("Form Data: ", formData); // For debugging
-    console.log("Selected Course: ", selectedProgram);
-
-    const query = new URLSearchParams({
-      firstName: formData.firstName || "",
-      middleName: formData.middleName || "",
-      lastName: formData.lastName || "",
-      ext: formData.ext || "",
-      studentNumber: formData.studentNumber || "",
-      program: selectedProgram || "",
-      email: formData.email || "",
-      password: formData.password || "",
-      confirmPassword: formData.confirmPassword || "",
-    }).toString();
-  };
+  } catch (err) {
+    console.error("OTP Send Error:", err);
+    alert("Something went wrong while sending OTP.");
+  }
+};
 
   return (
     <div className="max-w-lg mx-auto bg-accent border-2 p-6 md:p-10 rounded-lg shadow-lg mb-20">

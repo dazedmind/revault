@@ -120,6 +120,7 @@ export default function FacultyForm() {
     }
   };
 
+  // Updated handleNext function for FacultyRegistrationForm.tsx (Faculty Registration)
   const handleNext = async (e) => {
     e.preventDefault(); 
 
@@ -153,22 +154,30 @@ export default function FacultyForm() {
 
     // Send OTP before navigating to confirmation
     try {
+      const userRole = localStorage.getItem("userType") || "FACULTY";
+      
       const res = await fetch('/api/send-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: formData.email }),
+        body: JSON.stringify({ 
+          email: formData.email,
+          role: userRole.toUpperCase()
+        }),
       });
 
       const result = await res.json();
 
       if (result.success) {
+        // Save form data and email to localStorage
         localStorage.setItem("regEmail", formData.email);
         localStorage.setItem("regForm", JSON.stringify({
           ...formData,
           department: selectedDepartment,
         }));
+        
+        // Navigate to OTP confirmation page
         router.push("/registration/otp-confirmation");
       } else {
         alert("Failed to send OTP. Try again.");

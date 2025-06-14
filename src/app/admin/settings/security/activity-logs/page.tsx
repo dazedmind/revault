@@ -298,7 +298,21 @@ function ActivityLogContent() {
       //   theme === "light" ? "bg-secondary border-white-50" : "bg-midnight"
       // } p-6 mb-8 rounded-xl border-1 border-white-5`}
     >
+
+      <div className="flex flex-row items-center justify-between">
       <h1 className="text-2xl ml-1">Activity Logs</h1>
+
+      <div className="flex items-center gap-3">
+          <button
+            onClick={generatePDFReport}
+            className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-sm"
+            title="Preview PDF Report"
+          >
+            <FileText className="w-4 h-4" />
+            <span>Preview PDF</span>
+          </button>
+        </div>
+      </div>
 
       <div
         className={`h-0.5 w-auto my-4 ${
@@ -365,16 +379,7 @@ function ActivityLogContent() {
       </div>
 
       <div className="flex justify-end mb-6">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={generatePDFReport}
-            className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-sm"
-            title="Preview PDF Report"
-          >
-            <FileText className="w-4 h-4" />
-            <span>Preview PDF</span>
-          </button>
-        </div>
+    
       </div>
 
       {/* Activity Logs Table + Pagination */}
