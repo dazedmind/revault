@@ -1,4 +1,3 @@
-// /utils/gcpUploader.ts
 import { Storage } from "@google-cloud/storage";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
@@ -98,9 +97,10 @@ export async function testConnection(): Promise<boolean> {
   }
 }
 
+// Original upload function for PDF papers (UNCHANGED)
 export async function uploadFile(buffer: Buffer, originalFilename: string): Promise<string> {
   try {
-    console.log("📤 Starting file upload process...");
+    console.log("📤 Starting PDF file upload process...");
     console.log("📄 Original filename:", originalFilename);
     console.log("📊 Buffer size:", buffer.length, "bytes");
     
@@ -124,7 +124,7 @@ export async function uploadFile(buffer: Buffer, originalFilename: string): Prom
     const bucket = storage.bucket(bucketName);
     const file = bucket.file(filepath);
 
-    console.log("⬆️ Uploading file to Google Cloud Storage...");
+    console.log("⬆️ Uploading PDF file to Google Cloud Storage...");
     
     // Upload the file WITHOUT setting public: true (this causes the ACL error)
     await file.save(buffer, {
@@ -134,13 +134,14 @@ export async function uploadFile(buffer: Buffer, originalFilename: string): Prom
         // Add custom metadata for debugging
         uploadedAt: new Date().toISOString(),
         originalName: originalFilename,
+        fileType: "research_paper"
       },
       // Remove public: true - this causes the ACL error with uniform bucket access
       resumable: false,
       validation: 'crc32c',
     });
 
-    console.log("✅ File uploaded successfully!");
+    console.log("✅ PDF file uploaded successfully!");
     
     // Verify the file exists
     const [exists] = await file.exists();
@@ -167,7 +168,7 @@ export async function uploadFile(buffer: Buffer, originalFilename: string): Prom
     return publicUrl;
     
   } catch (error) {
-    console.error("❌ Error uploading file to GCP:");
+    console.error("❌ Error uploading PDF file to GCP:");
     console.error("Error type:", error.constructor.name);
     console.error("Error message:", error.message);
     
@@ -179,7 +180,135 @@ export async function uploadFile(buffer: Buffer, originalFilename: string): Prom
       console.error("Detailed errors:", error.errors);
     }
     
-    throw new Error(`Failed to upload file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(`Failed to upload PDF file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+// NEW: Upload function specifically for profile pictures
+export async function uploadProfilePicture(buffer: Buffer, originalFilename: string, userId: string): Promise<string> {
+  try {
+    console.log("📤 Starting profile picture upload process...");
+    console.log("📄 Original filename:", originalFilename);
+    console.log("👤 User ID:", userId);
+    console.log("📊 Buffer size:", buffer.length, "bytes");
+    
+    // Test connection first
+    const connectionOk = await testConnection();
+    if (!connectionOk) {
+      throw new Error("Google Cloud Storage connection failed");
+    }
+    
+    // Generate unique filename to avoid conflicts
+    const fileExtension = path.extname(originalFilename);
+    const baseName = path.basename(originalFilename, fileExtension);
+    const uniqueFilename = `${baseName}-${uuidv4()}${fileExtension}`;
+    
+    // Create profile folder structure: profiles/userId/filename
+    const filepath = `profiles/${userId}/${uniqueFilename}`;
+    
+    console.log("📁 Upload path:", filepath);
+
+    const bucket = storage.bucket(bucketName);
+    const file = bucket.file(filepath);
+
+    console.log("⬆️ Uploading profile picture to Google Cloud Storage...");
+    
+    // Determine content type based on file extension
+    const getContentType = (filename: string): string => {
+      const ext = path.extname(filename).toLowerCase();
+      switch (ext) {
+        case '.jpg':
+        case '.jpeg':
+          return 'image/jpeg';
+        case '.png':
+          return 'image/png';
+        case '.gif':
+          return 'image/gif';
+        case '.webp':
+          return 'image/webp';
+        default:
+          return 'image/jpeg';
+      }
+    };
+    
+    // Upload the file
+    await file.save(buffer, {
+      metadata: {
+        contentType: getContentType(originalFilename),
+        cacheControl: "public, max-age=31536000",
+        // Add custom metadata
+        uploadedAt: new Date().toISOString(),
+        originalName: originalFilename,
+        userId: userId,
+        fileType: "profile_picture"
+      },
+      resumable: false,
+      validation: 'crc32c',
+    });
+
+    console.log("✅ Profile picture uploaded successfully!");
+    
+    // Verify the file exists
+    const [exists] = await file.exists();
+    console.log("🔍 Profile picture exists after upload:", exists);
+    
+    if (!exists) {
+      throw new Error("Profile picture was not found after upload");
+    }
+    
+    // Get file metadata to confirm upload
+    const [metadata] = await file.getMetadata();
+    console.log("📋 Uploaded profile picture metadata:", {
+      name: metadata.name,
+      size: metadata.size,
+      contentType: metadata.contentType,
+      timeCreated: metadata.timeCreated,
+      md5Hash: metadata.md5Hash
+    });
+    
+    // Generate the public URL
+    const publicUrl = `https://storage.googleapis.com/${bucketName}/${filepath}`;
+    console.log("🌐 Profile picture public URL:", publicUrl);
+    
+    return publicUrl;
+    
+  } catch (error) {
+    console.error("❌ Error uploading profile picture to GCP:");
+    console.error("Error type:", error.constructor.name);
+    console.error("Error message:", error.message);
+    
+    if (error.code) {
+      console.error("Error code:", error.code);
+    }
+    
+    if (error.errors) {
+      console.error("Detailed errors:", error.errors);
+    }
+    
+    throw new Error(`Failed to upload profile picture: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+// Helper function to delete old profile pictures
+export async function deleteProfilePicture(userId: string, filename: string): Promise<boolean> {
+  try {
+    console.log("🗑️ Deleting old profile picture...");
+    console.log("👤 User ID:", userId);
+    console.log("📄 Filename:", filename);
+    
+    const filepath = `profiles/${userId}/${filename}`;
+    
+    const bucket = storage.bucket(bucketName);
+    const file = bucket.file(filepath);
+    
+    await file.delete();
+    
+    console.log("✅ Old profile picture deleted successfully!");
+    return true;
+    
+  } catch (error) {
+    console.error("❌ Failed to delete old profile picture:", error);
+    return false;
   }
 }
 
@@ -252,5 +381,24 @@ export async function listBucketFiles(): Promise<void> {
     }
   } catch (error) {
     console.error("❌ Error listing bucket files:", error);
+  }
+}
+
+// Debug function to list files by folder
+export async function listFilesByFolder(folderPrefix: string): Promise<void> {
+  try {
+    const bucket = storage.bucket(bucketName);
+    const [files] = await bucket.getFiles({ prefix: folderPrefix });
+    
+    console.log(`📁 Files in folder '${folderPrefix}':`);
+    if (files.length === 0) {
+      console.log("  (No files found)");
+    } else {
+      files.forEach(file => {
+        console.log(`  - ${file.name}`);
+      });
+    }
+  } catch (error) {
+    console.error(`❌ Error listing files in folder '${folderPrefix}':`, error);
   }
 }

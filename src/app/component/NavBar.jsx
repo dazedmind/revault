@@ -103,7 +103,7 @@ export default function NavBar() {
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
                 <DropdownMenuItem className="p-2">
-                  <Image src={avatar} alt="User profile picture" width={40} height={40} className="rounded-full border-gold border-2"/>
+                  <Image src={profile?.users?.profile_picture || avatar} alt="User profile picture" width={40} height={40} className="rounded-full border-gold border-2"/>
                   <Link href="/profile" className="flex items-center gap-2">
                     <span className="flex flex-col">
                       <p className="text-sm font-[Inter]">{profile.users.name}</p>
