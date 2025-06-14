@@ -7,6 +7,33 @@ import { user_role } from "@prisma/client";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
 
+// Helper function to convert BigInt values to strings for JSON serialization
+function serializeBigInt(obj: any): any {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+  
+  if (typeof obj === 'bigint') {
+    return obj.toString();
+  }
+  
+  if (Array.isArray(obj)) {
+    return obj.map(serializeBigInt);
+  }
+  
+  if (typeof obj === 'object') {
+    const result: any = {};
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        result[key] = serializeBigInt(obj[key]);
+      }
+    }
+    return result;
+  }
+  
+  return obj;
+}
+
 async function verifyAndGetPayload(req: NextRequest) {
   const token = req.cookies.get("authToken")?.value;
   if (!token) throw new Error("NO_TOKEN");
@@ -164,7 +191,7 @@ export async function GET(req: NextRequest) {
       currentPageLogs: logs.length,
     });
 
-    // Format admin/staff users for frontend
+    // Format admin/staff users for frontend - serialize BigInt values
     const formattedUsers = adminStaffUsers.map((user) => ({
       user_id: user.user_id,
       name: `${user.first_name || ""} ${user.last_name || ""}`.trim(),
@@ -174,18 +201,18 @@ export async function GET(req: NextRequest) {
       position: user.librarian?.position || "",
     }));
 
-    // Format logs with enhanced user information
+    // Format logs with enhanced user information - serialize BigInt values and dates
     const formattedLogs = logs.map((log) => ({
       act_id: log.act_id,
       name: log.name,
       activity: log.activity,
-      created_at: log.created_at,
+      created_at: log.created_at instanceof Date ? log.created_at.toISOString() : log.created_at,
       ip_address: log.ip_address,
       activity_type: log.activity_type,
       status: log.status,
       user_agent: log.user_agent,
       user_id: log.user_id,
-      employee_id: log.employee_id,
+      employee_id: typeof log.employee_id === 'bigint' ? log.employee_id.toString() : log.employee_id,
       // Enhanced user info
       user_details: log.users
         ? {
@@ -196,32 +223,37 @@ export async function GET(req: NextRequest) {
         : null,
       librarian_details: log.librarian
         ? {
-            employee_id: log.librarian.employee_id,
+            employee_id: typeof log.librarian.employee_id === 'bigint' 
+              ? log.librarian.employee_id.toString() 
+              : log.librarian.employee_id,
             position: log.librarian.position,
           }
         : null,
     }));
 
-    return new NextResponse(
-      JSON.stringify({
-        success: true,
-        total,
-        page,
-        limit,
-        logs: formattedLogs,
-        users: formattedUsers, // Admin/staff users for filtering
-        summary: {
-          total_logs: total,
-          total_admin_staff: formattedUsers.length,
-          roles_breakdown: {
-            ADMIN: formattedUsers.filter((u) => u.role === "ADMIN").length,
-            ASSISTANT: formattedUsers.filter((u) => u.role === "ASSISTANT")
-              .length,
-            LIBRARIAN: formattedUsers.filter((u) => u.role === "LIBRARIAN")
-              .length,
-          },
+    // Apply BigInt serialization to the entire response object
+    const responseData = serializeBigInt({
+      success: true,
+      total,
+      page,
+      limit,
+      logs: formattedLogs,
+      users: formattedUsers, // Admin/staff users for filtering
+      summary: {
+        total_logs: total,
+        total_admin_staff: formattedUsers.length,
+        roles_breakdown: {
+          ADMIN: formattedUsers.filter((u) => u.role === "ADMIN").length,
+          ASSISTANT: formattedUsers.filter((u) => u.role === "ASSISTANT")
+            .length,
+          LIBRARIAN: formattedUsers.filter((u) => u.role === "LIBRARIAN")
+            .length,
         },
-      }),
+      },
+    });
+
+    return new NextResponse(
+      JSON.stringify(responseData),
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
   } catch (dbErr) {

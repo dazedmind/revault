@@ -6,12 +6,12 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { useEffect, useState, useCallback, Suspense, useRef } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 function OTPContent() {
   const [otp, setOtp] = useState("");
-  const [isSent, setIsSent] = useState(false);
+  const [isSent, setIsSent] = useState(true); // Set to true since OTP was already sent from registration form
   const [timer, setTimer] = useState(30);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showFailureModal, setShowFailureModal] = useState(false);
@@ -22,14 +22,8 @@ function OTPContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const emailFromQuery = searchParams.get("email");
-  
-  // Use ref to prevent multiple initial sends
-  const hasInitialSent = useRef(false);
 
   useEffect(() => {
-    // Only run once when component mounts
-    if (hasInitialSent.current) return;
-    
     const storedRole = localStorage.getItem("userType") || "";
     setRole(storedRole.toUpperCase());
     
@@ -38,34 +32,12 @@ function OTPContent() {
     
     if (finalEmail) {
       setUserEmail(finalEmail);
-      
-      // Send initial OTP
-      sendInitialOTP(finalEmail, storedRole.toUpperCase());
-      hasInitialSent.current = true;
     }
     
     setIsInitialized(true);
   }, [emailFromQuery]);
 
-  const sendInitialOTP = async (email: string, userRole: string) => {
-    try {
-      const response = await fetch("/api/send-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, role: userRole.toUpperCase() }),
-      });
-
-      if (response.ok) {
-        setIsSent(true);
-        setTimer(30);
-      }
-    } catch (error) {
-      console.error("Failed to send initial OTP:", error);
-    }
-  };
-
+  // Manual resend OTP function (only when user clicks resend button)
   const handleSendOTP = useCallback(async () => {
     if (!userEmail) return;
 
@@ -174,7 +146,7 @@ function OTPContent() {
             onClick={handleSendOTP}
             className={`px-4 py-2 rounded-lg ${
               timer > 0
-                ? " cursor-not-allowed"
+                ? "bg-white-25 text-white-50 cursor-not-allowed"
                 : " border-2 border-gold hover:bg-gold transition-all text-gold duration-300 cursor-pointer"
             }`}
           >
