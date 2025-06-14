@@ -257,7 +257,7 @@ exports.Prisma.JsonNullValueFilter = {
 };
 exports.user_role = exports.$Enums.user_role = {
   ADMIN: 'ADMIN',
-  ADMIN_ASSISTANT: 'ADMIN_ASSISTANT',
+  ASSISTANT: 'ASSISTANT',
   LIBRARIAN: 'LIBRARIAN',
   STUDENT: 'STUDENT',
   FACULTY: 'FACULTY'

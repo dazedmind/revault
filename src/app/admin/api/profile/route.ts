@@ -36,7 +36,7 @@ export async function GET(req: Request) {
           },
         };
       }
-    } else if (payload.role === "ADMIN_ASSISTANT") {
+    } else if (payload.role === "ASSISTANT") {
       user = await prisma.librarian.findFirst({
         where: { employee_id: userNumber },
         include: { users: true },

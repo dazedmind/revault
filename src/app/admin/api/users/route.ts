@@ -10,7 +10,7 @@ export async function GET() {
     const users = await prisma.users.findMany({
       where: {
         role: {
-          in: ["ADMIN", "ADMIN_ASSISTANT", "LIBRARIAN"],
+          in: ["ADMIN", "ASSISTANT", "LIBRARIAN"],
         },
       },
       include: {
@@ -64,7 +64,7 @@ function getUserAccessFromRole(role: string): string {
   const roleMapping: { [key: string]: string } = {
     LIBRARIAN: "Librarian-in-Charge",
     ADMIN: "Admin",
-    ADMIN_ASSISTANT: "Admin Assistant",
+    ASSISTANT: "Admin Assistant",
   };
 
   return roleMapping[role] || role;

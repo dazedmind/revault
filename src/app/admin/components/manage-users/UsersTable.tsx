@@ -41,7 +41,7 @@ export default function UsersTable({
   onEditClick,
   theme,
 }: UsersTableProps) {
-  const VISIBLE_ROLES = ["ADMIN", "ADMIN_ASSISTANT", "LIBRARIAN"];
+  const VISIBLE_ROLES = ["ADMIN", "ASSISTANT", "LIBRARIAN"];
 
   // DEBUG: log every role coming in
   console.log("▶ raw users in UsersTable:", users);
@@ -75,7 +75,7 @@ export default function UsersTable({
         return `${baseClass} bg-blue-500/20 text-blue-500`;
       case "ADMIN":
         return `${baseClass} bg-purple-500/20 text-purple-500`;
-      case "ADMIN_ASSISTANT":
+      case "ASSISTANT":
         return `${baseClass} bg-yellow-500/20 text-yellow-500`;
       default:
         return `${baseClass} bg-gray-500/20 text-gray-500`;
