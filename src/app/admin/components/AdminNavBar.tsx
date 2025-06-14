@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchInput } from "../../component/SearchInput";
+import SearchInput from "@/app/component/SearchInput";
 import avatar from "../../img/user.png";
 import icon from "../../img/revault-icon.png";
 import { FaPlus } from "react-icons/fa6";
@@ -66,7 +66,7 @@ export default function AdminNavBar() {
   return (
     <>
       <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-8 px-10 md:px-16 dark:bg-primary">
-        <div className="flex align-middle items-center gap-10">
+        <div className="flex align-middle items-center gap-5">
           <Link
             href="/home"
             className="hidden md:flex gap-4 font-bold text-3xl text-gold"
@@ -79,7 +79,7 @@ export default function AdminNavBar() {
             <Image src={icon} className="md:hidden w-14" alt="revault-icon" />
           </Link>
 
-          <SearchInput defaultValue={""} />
+          <SearchInput placeholder="Search paper" />
         </div>
         <ul className="flex flex-row items-center gap-2 md:gap-4 text-lg">
           {(() => {

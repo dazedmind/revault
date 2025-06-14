@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { SearchInput } from "./SearchInput";
+import SearchInput from "./SearchInput";
 import avatar from "../img/user.png";
 import icon from "../img/revault-icon.png";
 import Image from "next/image";
@@ -69,7 +69,7 @@ export default function NavBar() {
   return (
     <>
       <header className="flex flex-row align-middle z-50 items-center justify-between text-xl font-mono w-full p-6 px-10 md:px-16 dark:bg-primary">
-        <div className="flex align-middle items-center gap-10">
+        <div className="flex align-middle items-center gap-5">
           <Link
             href="/home"
             className="hidden md:flex gap-4 font-bold text-3xl text-gold"
