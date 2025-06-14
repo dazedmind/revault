@@ -115,7 +115,7 @@ export default function AdminNavBar() {
               <DropdownMenuGroup>
                 <DropdownMenuItem className="p-2">
                   <Image
-                    src={avatar}
+                    src={profile?.users?.profile_picture || avatar}
                     alt="User profile picture"
                     width={30}
                     height={30}

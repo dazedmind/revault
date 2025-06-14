@@ -29,6 +29,25 @@ const DocsCard = (props) => {
   const { theme, setTheme } = useTheme("light");
   const { paper_id, savedFromProfile = false, viewFromAdmin = false } = props;
 
+  const checkBookmarkStatus = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
+    try {
+      const res = await fetch(`/api/bookmark/check/${paper_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setIsBookmarked(data.isBookmarked);
+      }
+    } catch (error) {
+      console.error("Error checking bookmark status:", error);
+    }
+  };
 
   const handleUnbookmark = async (paperId) => {
     const token = localStorage.getItem("authToken");
@@ -94,6 +113,8 @@ const DocsCard = (props) => {
       if (!token) {
         return router.push("/login");
       }
+
+      await checkBookmarkStatus();
 
       // 2. Fetch recent papers
       console.log("▶️ fetching /api/recent");
