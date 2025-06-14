@@ -12,16 +12,16 @@ function serializeBigInt(obj: any): any {
   if (obj === null || obj === undefined) {
     return obj;
   }
-  
-  if (typeof obj === 'bigint') {
+
+  if (typeof obj === "bigint") {
     return obj.toString();
   }
-  
+
   if (Array.isArray(obj)) {
     return obj.map(serializeBigInt);
   }
-  
-  if (typeof obj === 'object') {
+
+  if (typeof obj === "object") {
     const result: any = {};
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
@@ -30,7 +30,7 @@ function serializeBigInt(obj: any): any {
     }
     return result;
   }
-  
+
   return obj;
 }
 
@@ -55,7 +55,6 @@ async function verifyAndGetPayload(req: NextRequest) {
 export async function GET(req: NextRequest) {
   console.log("🔍 Get logs request received");
 
-  // 1) Verify JWT
   let payload;
   try {
     payload = await verifyAndGetPayload(req);
@@ -72,7 +71,6 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // 2) Only allow admin/staff roles (updated to match new enum values)
   const allowedRoles = ["ADMIN", "ASSISTANT", "LIBRARIAN"];
   if (!allowedRoles.includes(payload.role)) {
     console.log("❌ Access denied for role:", payload.role);
@@ -87,7 +85,6 @@ export async function GET(req: NextRequest) {
 
   console.log("✅ Role access granted:", payload.role);
 
-  // 3) Parse query params
   const { searchParams } = new URL(req.url);
   const userIdParam = searchParams.get("userId") || "all";
   const activityTypesParam = searchParams.get("activityTypes") || "all";
@@ -103,27 +100,22 @@ export async function GET(req: NextRequest) {
     skip,
   });
 
-  // 4) Build Prisma where-clause
   const where: any = {};
   if (userIdParam !== "all") {
-    // Filter by user_id in activity_logs
     where.user_id = Number(userIdParam);
   }
 
   if (activityTypesParam !== "all") {
-    // Split comma-separated values into array
     const typesArray = activityTypesParam.split(",").map((t) => t.trim());
     where.activity_type = { in: typesArray };
   }
 
   console.log("🔍 Database where clause:", where);
 
-  // 5) Fetch admin/staff users for dropdown/filtering
   try {
     console.log("📊 Fetching admin/staff users and activity logs...");
 
     const [adminStaffUsers, total, logs] = await prisma.$transaction([
-      // Get all admin/staff users with their librarian details
       prisma.users.findMany({
         where: {
           role: {
@@ -146,10 +138,8 @@ export async function GET(req: NextRequest) {
         orderBy: [{ role: "asc" }, { first_name: "asc" }],
       }),
 
-      // Count total logs matching criteria
       prisma.activity_logs.count({ where }),
 
-      // Fetch paginated logs with user and librarian details
       prisma.activity_logs.findMany({
         where,
         orderBy: { created_at: "desc" },
@@ -166,7 +156,6 @@ export async function GET(req: NextRequest) {
           user_agent: true,
           user_id: true,
           employee_id: true,
-          // Include user and librarian details
           users: {
             select: {
               first_name: true,
@@ -191,7 +180,6 @@ export async function GET(req: NextRequest) {
       currentPageLogs: logs.length,
     });
 
-    // Format admin/staff users for frontend - serialize BigInt values
     const formattedUsers = adminStaffUsers.map((user) => ({
       user_id: user.user_id,
       name: `${user.first_name || ""} ${user.last_name || ""}`.trim(),
@@ -201,65 +189,72 @@ export async function GET(req: NextRequest) {
       position: user.librarian?.position || "",
     }));
 
-    // Format logs with enhanced user information - serialize BigInt values and dates
-    const formattedLogs = logs.map((log) => ({
-      act_id: log.act_id,
-      name: log.name,
-      activity: log.activity,
-      created_at: log.created_at instanceof Date ? log.created_at.toISOString() : log.created_at,
-      ip_address: log.ip_address,
-      activity_type: log.activity_type,
-      status: log.status,
-      user_agent: log.user_agent,
-      user_id: log.user_id,
-      employee_id: log.employee_id != null 
-        ? (typeof log.employee_id === 'bigint' ? log.employee_id.toString() : String(log.employee_id))
-        : null,
-      // Enhanced user info
-      user_details: log.users
-        ? {
-            name: `${log.users.first_name || ""} ${log.users.last_name || ""}`.trim(),
-            email: log.users.email,
-            role: log.users.role,
-          }
-        : null,
-      librarian_details: log.librarian
-        ? {
-            employee_id: log.librarian.employee_id != null
-              ? (typeof log.librarian.employee_id === 'bigint' 
-                ? log.librarian.employee_id.toString() 
-                : String(log.librarian.employee_id))
-              : null,
-            position: log.librarian.position,
-          }
-        : null,
-    }));
+    const formattedLogs = logs.map((log) => {
+      const employeeId = log.employee_id as number | bigint | null;
+      const librarianEmployeeId = log.librarian?.employee_id as number | bigint | null;
 
-    // Apply BigInt serialization to the entire response object
+      return {
+        act_id: log.act_id,
+        name: log.name,
+        activity: log.activity,
+        created_at:
+          log.created_at instanceof Date
+            ? log.created_at.toISOString()
+            : log.created_at,
+        ip_address: log.ip_address,
+        activity_type: log.activity_type,
+        status: log.status,
+        user_agent: log.user_agent,
+        user_id: log.user_id,
+        employee_id:
+          employeeId != null
+            ? typeof employeeId === "bigint"
+              ? employeeId.toString()
+              : String(employeeId)
+            : null,
+        user_details: log.users
+          ? {
+              name: `${log.users.first_name || ""} ${log.users.last_name || ""}`.trim(),
+              email: log.users.email,
+              role: log.users.role,
+            }
+          : null,
+        librarian_details: log.librarian
+          ? {
+              employee_id:
+                librarianEmployeeId != null
+                  ? typeof librarianEmployeeId === "bigint"
+                    ? librarianEmployeeId.toString()
+                    : String(librarianEmployeeId)
+                  : null,
+              position: log.librarian.position,
+            }
+          : null,
+      };
+    });
+
     const responseData = serializeBigInt({
       success: true,
       total,
       page,
       limit,
       logs: formattedLogs,
-      users: formattedUsers, // Admin/staff users for filtering
+      users: formattedUsers,
       summary: {
         total_logs: total,
         total_admin_staff: formattedUsers.length,
         roles_breakdown: {
           ADMIN: formattedUsers.filter((u) => u.role === "ADMIN").length,
-          ASSISTANT: formattedUsers.filter((u) => u.role === "ASSISTANT")
-            .length,
-          LIBRARIAN: formattedUsers.filter((u) => u.role === "LIBRARIAN")
-            .length,
+          ASSISTANT: formattedUsers.filter((u) => u.role === "ASSISTANT").length,
+          LIBRARIAN: formattedUsers.filter((u) => u.role === "LIBRARIAN").length,
         },
       },
     });
 
-    return new NextResponse(
-      JSON.stringify(responseData),
-      { status: 200, headers: { "Content-Type": "application/json" } },
-    );
+    return new NextResponse(JSON.stringify(responseData), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (dbErr) {
     console.error("💥 Failed to fetch logs:", dbErr);
     return new NextResponse(
