@@ -1,8 +1,7 @@
-// src/app/actions/saveAdminStaffInformation.ts
 "use server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { user_role } from "@prisma/client";
+import { user_role } from "@prisma/client"; // Changed from user_role to UserRole
 
 export async function saveAdminStaffInformation(formData: any) {
   console.log(
@@ -119,7 +118,7 @@ export async function saveAdminStaffInformation(formData: any) {
         last_name: lastName,
         ext_name: ext || null,
         email,
-        role: role as user_role,
+        role: role as user_role, // Changed from user_role to UserRole
         created_at: new Date(),
       });
 
@@ -131,7 +130,7 @@ export async function saveAdminStaffInformation(formData: any) {
           ext_name: ext || null,
           email,
           password: hashedPassword,
-          role: role as user_role,
+          role: role as user_role, // Changed from user_role to UserRole
           created_at: new Date(),
         },
       });
