@@ -229,7 +229,7 @@ const DocsCardUser = (props) => {
             {/* Secondary Actions */}
             {(() => {
               const userType = localStorage.getItem("userType");
-              if (userType === "LIBRARIAN" || userType === "ADMIN") {
+              if (userType === "LIBRARIAN") {
                 return (
                   <Link href={`/edit-file/${paper_id}`} className="flex-shrink-0">
                     <button className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105 cursor-pointer ${

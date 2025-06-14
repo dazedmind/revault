@@ -220,7 +220,7 @@ export async function POST(req: NextRequest) {
       success: true,
       id: created.paper_id,
       url: uploadedUrl,
-      message: "Paper uploaded successfully to Google Cloud Storage and saved to database",
+      message: "Paper uploaded successfully!",
       paper: {
         id: created.paper_id,
         title: created.title,
