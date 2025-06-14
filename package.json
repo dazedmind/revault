@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "npx prisma generate --schema=./prisma/schema.prisma && cp node_modules/pdfjs-dist/build/pdf.worker.min.js public/pdf.worker.js"
+    "postinstall": "npx prisma generate --schema=./prisma/schema.prisma"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.16.0",
