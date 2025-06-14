@@ -95,9 +95,9 @@ const AdminLogin = () => {
           </span>
           {/* Title */}
           <div className="flex flex-col justify-center items-center">
-            <h1 className="text-4xl font-mono font-bold text-gold">ReVault</h1>
+            <h1 className="text-4xl font-mono font-bold text-yale-blue">ReVault</h1>
 
-            <div className="text-center bg-gradient-to-r from-gold-fg to-gold my-2 w-auto px-2 ">
+            <div className="text-center bg-gradient-to-r from-yale-blue-fg/80 to-yale-blue my-2 w-auto px-2 ">
               <h1 className="text-2xl font-mono font-bold text-white">
                 for Librarian
               </h1>
@@ -136,7 +136,7 @@ const AdminLogin = () => {
 
               {/* Remember Password & Forgot Password */}
               <div className="flex flex-row justify-end items-end m-5 md:my-4 md:mx-1 mt-5">
-                <p className="font-inter text-gold font-bold text-xs text-align cursor-pointer">
+                <p className="font-inter text-yale-blue font-bold text-xs text-align cursor-pointer">
                   Forgot Password?
                 </p>
               </div>
@@ -145,7 +145,7 @@ const AdminLogin = () => {
               <div className="flex flex-row justify-center mt-5">
                 <Button
                   type="submit"
-                  className="w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-gold-fg to-gold hover:bg-gradient-to-br font-inter cursor-pointer font-bold text-lg text-white"
+                  className="w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-yale-blue-fg/70 to-yale-blue hover:bg-gradient-to-br font-inter cursor-pointer font-bold text-lg text-white"
                 >
                   Log In
                 </Button>
@@ -158,10 +158,10 @@ const AdminLogin = () => {
       {showErrorModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-accent border-2 rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
-            <h2 className="text-2xl font-bold text-gold mb-4">Login Failed</h2>
+            <h2 className="text-2xl font-bold text-yale-blue mb-4">Login Failed</h2>
             <p className="mb-6">{errorMessage}</p>
             <button
-              className="cursor-pointer px-6 py-2 bg-gold hover:brightness-105 text-white rounded-lg font-semibold"
+              className="cursor-pointer px-6 py-2 bg-yale-blue hover:brightness-105 text-white rounded-lg font-semibold"
               onClick={() => setShowErrorModal(false)}
             >
               Okay
