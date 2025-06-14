@@ -281,7 +281,7 @@ function ViewFile() {
   return (
     <div className="dark:bg-secondary h-auto">
       {userType === "LIBRARIAN" ||
-      userType === "ADMIN_ASSISTANT" ||
+      userType === "ASSISTANT" ||
       userType === "ADMIN" ? (
         <AdminNavBar />
       ) : (
@@ -456,7 +456,7 @@ function ViewFile() {
 
                 {!viewFromAdmin &&
                   userType !== "ADMIN" &&
-                  userType !== "ADMIN_ASSISTANT" && (
+                  userType !== "ASSISTANT" && (
                     <>
                       {isBookmarked ? (
                         <FileMenuButton

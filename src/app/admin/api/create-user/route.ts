@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     // Only allow admin/staff roles in admin panel
-    const allowedRoles = ["LIBRARIAN", "ADMIN", "ADMIN_ASSISTANT"];
+    const allowedRoles = ["LIBRARIAN", "ADMIN", "ASSISTANT"];
     if (!allowedRoles.includes(role)) {
       console.log("❌ Invalid role:", role);
       return NextResponse.json(
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
 // Get endpoint for form requirements
 export async function GET() {
   return NextResponse.json({
-    validRoles: ["ADMIN", "ADMIN_ASSISTANT", "LIBRARIAN"], // Only admin panel roles
+    validRoles: ["ADMIN", "ASSISTANT", "LIBRARIAN"], // Only admin panel roles
     requiredFields: {
       all: ["firstName", "lastName", "email", "role", "password"],
       librarian: ["employeeID", "contactNum"],

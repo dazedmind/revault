@@ -337,7 +337,7 @@ const DocsCard = (props) => {
                         <GoPencil className="text-lg" />
                       </button>
                     );
-                  } else if (userType !== "ADMIN" && userType !== "ADMIN_ASSISTANT") {
+                  } else if (userType !== "ADMIN" && userType !== "ASSISTANT") {
                     return (
                       <button
                         onClick={() => isBookmarked ? handleUnbookmark(paper_id) : handleBookmark(paper_id)}

@@ -33,7 +33,7 @@ export default function SettingsLayout({
     {
       category: "Security",
       labels:
-        userType === "LIBRARIAN" || userType === "ADMIN_ASSISTANT"
+        userType === "LIBRARIAN" || userType === "ASSISTANT"
           ? ["Activity Logs", "About Revault"]
           : ["Manage Users", "Activity Logs", "About Revault"],
       icon: [<User key="user2" />, <Activity key="activity" />, <Info key="info" />],

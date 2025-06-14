@@ -55,7 +55,7 @@ export async function saveAdminStaffInformation(formData: any) {
     }
 
     // Role validation
-    const validRoles = ["LIBRARIAN", "ADMIN", "ADMIN_ASSISTANT"];
+    const validRoles = ["LIBRARIAN", "ADMIN", "ASSISTANT"];
     if (!validRoles.includes(role)) {
       console.log("❌ Invalid role:", role);
       throw new Error(

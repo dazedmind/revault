@@ -97,7 +97,7 @@ export type activity_type = (typeof activity_type)[keyof typeof activity_type]
 
 export const user_role: {
   ADMIN: 'ADMIN',
-  ADMIN_ASSISTANT: 'ADMIN_ASSISTANT',
+  ASSISTANT: 'ASSISTANT',
   LIBRARIAN: 'LIBRARIAN',
   STUDENT: 'STUDENT',
   FACULTY: 'FACULTY'

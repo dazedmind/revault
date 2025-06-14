@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 2) Only allow admin/staff roles
-    const allowedRoles = ["ADMIN", "ADMIN_ASSISTANT", "LIBRARIAN"];
+    const allowedRoles = ["ADMIN", "ASSISTANT", "LIBRARIAN"];
     if (!allowedRoles.includes(payload.role)) {
       console.log("❌ Access denied for role:", payload.role);
       return new NextResponse("Forbidden", { status: 403 });

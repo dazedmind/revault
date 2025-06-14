@@ -42,7 +42,7 @@ export default function DeleteConfirmationModal({
         return "text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30";
       case "ADMIN":
         return "text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-900/30";
-      case "ADMIN_ASSISTANT":
+      case "ASSISTANT":
         return "text-yellow-600 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/30";
       default:
         return "text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-900/30";

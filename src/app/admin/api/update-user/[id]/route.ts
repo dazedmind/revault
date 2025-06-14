@@ -121,11 +121,11 @@ export async function PUT(
     // Map userAccess to role
     const roleMapping: { [key: string]: string } = {
       "Librarian-in-Charge": "LIBRARIAN",
-      "Admin Assistant": "ADMIN_ASSISTANT",
+      "Admin Assistant": "ASSISTANT",
       Admin: "ADMIN",
       // Also handle direct role values
       LIBRARIAN: "LIBRARIAN",
-      ADMIN_ASSISTANT: "ADMIN_ASSISTANT",
+      ASSISTANT: "ASSISTANT",
       ADMIN: "ADMIN",
     };
 
