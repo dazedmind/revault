@@ -330,7 +330,7 @@ const DocsCard = (props) => {
                   if (userType === "LIBRARIAN") {
                     return (
                       <button
-                        onClick={() => router.push("/upload")}
+                        onClick={() => router.push(`/edit-file/${props.paper_id}`)}
                         className="p-2.5 text-gray-600 dark:text-gray-400 hover:text-gold hover:bg-gold/10 rounded-lg transition-all duration-200 cursor-pointer"
                         title="Edit paper"
                       >

@@ -4,23 +4,57 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 
-// Debug: Check if service account file exists
-const serviceAccountPath = path.join(process.cwd(), "gcp-service-key.json");
-console.log("🔍 Service account path:", serviceAccountPath);
-console.log("📁 Service account file exists:", fs.existsSync(serviceAccountPath));
-
-// Initialize Google Cloud Storage
+// Initialize Google Cloud Storage with environment variable fallback
 let storage: Storage;
 
 try {
-  if (fs.existsSync(serviceAccountPath)) {
-    console.log("✅ Using service account file for authentication");
+  // Check if we're in development (local) or production (Vercel)
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const serviceAccountPath = path.join(process.cwd(), "gcp-service-key.json");
+  
+  console.log("🔍 Environment:", process.env.NODE_ENV);
+  console.log("🔍 Service account path:", serviceAccountPath);
+  console.log("📁 Service account file exists:", fs.existsSync(serviceAccountPath));
+  console.log("🔑 Environment variables available:", {
+    projectId: !!process.env.GOOGLE_CLOUD_PROJECT_ID,
+    clientEmail: !!process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
+    privateKey: !!process.env.GOOGLE_CLOUD_PRIVATE_KEY,
+    credentialsBase64: !!process.env.GOOGLE_CLOUD_CREDENTIALS_BASE64
+  });
+
+  if (isDevelopment && fs.existsSync(serviceAccountPath)) {
+    // Development: Use service account file
+    console.log("✅ Using service account file for authentication (Development)");
     storage = new Storage({
       keyFilename: serviceAccountPath,
       projectId: "revault-system",
     });
+  } else if (process.env.GOOGLE_CLOUD_CREDENTIALS_BASE64) {
+    // Production: Use base64 encoded credentials
+    console.log("✅ Using base64 encoded credentials (Production)");
+    const credentialsJSON = Buffer.from(
+      process.env.GOOGLE_CLOUD_CREDENTIALS_BASE64,
+      'base64'
+    ).toString('utf-8');
+    const credentials = JSON.parse(credentialsJSON);
+    
+    storage = new Storage({
+      projectId: credentials.project_id || "revault-system",
+      credentials,
+    });
+  } else if (process.env.GOOGLE_CLOUD_PROJECT_ID && process.env.GOOGLE_CLOUD_CLIENT_EMAIL && process.env.GOOGLE_CLOUD_PRIVATE_KEY) {
+    // Production: Use individual environment variables
+    console.log("✅ Using individual environment variables (Production)");
+    storage = new Storage({
+      projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+      credentials: {
+        client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      },
+    });
   } else {
-    console.log("⚠️ Service account file not found, trying environment variables");
+    // Fallback: Use Application Default Credentials (if running on GCP)
+    console.log("⚠️ Using Application Default Credentials");
     storage = new Storage({
       projectId: "revault-system",
     });

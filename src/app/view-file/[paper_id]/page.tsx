@@ -289,16 +289,7 @@ function ViewFile() {
       )}
 
       <ProtectedRoute>
-        <span>
-          <p className="flex flex-col text-xl md:text-2xl font-bold bg-gold text-white p-6">
-            {paper.title}
-            <span className="flex gap-2 items-center text-sm font-normal text-gold-fg">
-              <User className="w-4 h-4" />
-              {paper.author}
-            </span>
-          </p>
-        </span>
-        <main className="flex flex-col-reverse md:flex-row h-auto justify-center">
+        <main className="w-full h-auto">
           <div className="flex flex-col md:flex-row gap-6 relative">
             {showMetadata && (
               <div
@@ -417,9 +408,9 @@ function ViewFile() {
               </div>
             </div>
 
-            {/* File Menu and Document View */}
-            <div className="flex flex-col md:flex-row">
-              <aside className="flex flex-row md:flex-col justify-end md:justify-start gap-4 md:gap-0 w-auto md:w-72 h-auto dark:bg-secondary p-8 pt-4">
+            {/* File Menu and Main Content */}
+            <div className="flex flex-col-reverse md:flex-row">
+              <aside className="flex flex-row md:flex-col justify-center md:justify-start gap-4 md:gap-0 w-auto md:w-72 h-auto dark:bg-secondary p-4 pt-2 md:p-8">
                 <h1 className="text-2xl font-bold  hidden md:block">
                   File Menu
                 </h1>
@@ -479,136 +470,162 @@ function ViewFile() {
                   )}
               </aside>
 
-              <div className="Document">
-                {pdfDisplayUrl && !pdfError ? (
-                  <object
-                    data={pdfDisplayUrl}
-                    type="application/pdf"
-                    width="100%"
-                    height="100%"
-                    className="h-screen w-screen md:w-3xl"
-                    onError={handlePdfError}
-                  >
-                    {/* Fallback content when PDF can't be displayed */}
-                    <div className="flex flex-col items-center justify-center h-full p-8 bg-gray-100 dark:bg-gray-800">
-                      <div className="text-center">
-                        <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <Download className="w-8 h-8 text-red-600 dark:text-red-400" />
+              {/* Main Content Area with Title Header */}
+              <div className="flex flex-col flex-1">
+                {/* Title Header */}
+                <span>
+                  <p className="flex flex-col text-xl md:text-2xl font-bold bg-gold text-white p-6">
+                    {paper.title}
+                    <span className="flex gap-2 items-center text-sm font-normal text-gold-fg">
+                      <User className="hidden md:block w-4 h-4" />
+                      {paper.author}
+                    </span>
+                  </p>
+                </span>
+
+                {/* Content Row - Document and Metadata Sidebar */}
+                <div className="flex flex-col lg:flex-row">
+                  {/* Document Viewer */}
+                  <div className="Document flex-1">
+                    {pdfDisplayUrl && !pdfError ? (
+                      <object
+                        data={pdfDisplayUrl}
+                        type="application/pdf"
+                        width="100%"
+                        height="100%"
+                        className="h-screen w-screen md:w-3xl"
+                        onError={handlePdfError}
+                      >
+                        {/* Fallback content when PDF can't be displayed */}
+                        <div className="flex flex-col items-center justify-center h-full p-8 bg-gray-100 dark:bg-gray-800">
+                          <div className="text-center">
+                            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                              <Download className="w-8 h-8 text-red-600 dark:text-red-400" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">
+                              PDF Viewer Not Supported
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400 mb-4">
+                              Your browser doesn&apos;t support inline PDF viewing.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-2 justify-center"></div>
+                          </div>
                         </div>
-                        <h3 className="text-lg font-semibold mb-2">
-                          PDF Viewer Not Supported
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-400 mb-4">
-                          Your browser doesn&apos;t support inline PDF viewing.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-2 justify-center"></div>
+                      </object>
+                    ) : (
+                      /* Show error state or loading */
+                      <div className="flex flex-col items-center justify-center h-screen p-8 bg-gray-100 dark:bg-gray-800">
+                        <div className="text-center">
+                          {pdfError ? (
+                            <>
+                              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
+                              </div>
+                              <h3 className="text-lg font-semibold mb-2">
+                                PDF Not Available
+                              </h3>
+                              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                The PDF file could not be loaded. It may have been
+                                moved or deleted.
+                              </p>
+                            </>
+                          ) : (
+                            <>
+                              <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Download className="w-8 h-8 text-gray-500" />
+                              </div>
+                              <h3 className="text-lg font-semibold mb-2">
+                                No PDF File Available
+                              </h3>
+                              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                This document doesn&apos;t have an associated PDF file.
+                              </p>
+                            </>
+                          )}
+                          <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                            <button
+                              onClick={() => router.back()}
+                              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                            >
+                              Go Back
+                            </button>
+                            {pdfError && (
+                              <button
+                                onClick={() => {
+                                  setPdfError(false);
+                                  window.location.reload();
+                                }}
+                                className="bg-gold hover:brightness-110 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                              >
+                                Retry
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right Sidebar - Metadata Preview */}
+                  <div className="p-8 pt-2 pb-0 relative w-full lg:w-full">
+                    <div className="flex flex-col gap-2 text-gray-600 dark:text-gray-400 my-4">
+                       <div className={`flex items-center gap-2 ${theme === "light" ? "bg-tertiary" : "bg-dusk"} p-2 rounded-md`}>
+                        <Building2 className="w-4 h-4 hidden md:block" />
+                        <span className="text-sm">{paper.department}</span>
+                       </div>
+                      
+                      <div className={`flex items-center gap-2 ${theme === "light" ? "bg-tertiary" : "bg-dusk"} p-2 rounded-md`}>
+                        <Calendar className="w-4 h-4 hidden md:block" />
+                        <span className="text-sm">{paper.year}</span>
+                      </div>
+
+
+                      <div className={`flex items-center gap-2 ${theme === "light" ? "bg-tertiary" : "bg-dusk"} p-2 rounded-md`}>
+                        <BookOpen className="w-4 h-4 hidden md:block" />
+                        <span className="text-sm">{paper.course}</span>
                       </div>
                     </div>
-                  </object>
-                ) : (
-                  /* Show error state or loading */
-                  <div className="flex flex-col items-center justify-center h-screen p-8 bg-gray-100 dark:bg-gray-800">
-                    <div className="text-center">
-                      {pdfError ? (
-                        <>
-                          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
-                          </div>
-                          <h3 className="text-lg font-semibold mb-2">
-                            PDF Not Available
-                          </h3>
-                          <p className="text-gray-600 dark:text-gray-400 mb-4">
-                            The PDF file could not be loaded. It may have been
-                            moved or deleted.
-                          </p>
-                        </>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Tags:</p>
+                      {Array.isArray(paper.keywords) ? (
+                        paper.keywords
+                          .flatMap(
+                            (keyword) =>
+                              keyword
+                                .split(/[,\s]+/) // Split by comma or whitespace
+                                .map((word) => word.trim()) // Trim whitespace
+                                .filter((word) => word.length > 0), // Remove empty strings
+                          )
+                          .map((keyword, keywordIndex) => (
+                            <span
+                              key={keywordIndex}
+                              className={`flex gap-1 items-center px-3 py-1 bg-yale-blue/10 text-yale-blue  rounded-md text-sm`}
+                            >
+                              <Tag className="w-3 h-3" />
+                              {keyword}
+                            </span>
+                          ))
                       ) : (
-                        <>
-                          <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Download className="w-8 h-8 text-gray-500" />
-                          </div>
-                          <h3 className="text-lg font-semibold mb-2">
-                            No PDF File Available
-                          </h3>
-                          <p className="text-gray-600 dark:text-gray-400 mb-4">
-                            This document doesn&apos;t have an associated PDF file.
-                          </p>
-                        </>
+                        <span className="text-white-25">No keywords available</span>
                       )}
-                      <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                        <button
-                          onClick={() => router.back()}
-                          className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                        >
-                          Go Back
-                        </button>
-                        {pdfError && (
-                          <button
-                            onClick={() => {
-                              setPdfError(false);
-                              window.location.reload();
-                            }}
-                            className="bg-gold hover:brightness-110 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                          >
-                            Retry
-                          </button>
-                        )}
-                      </div>
+                    </div>
+
+                    <div
+                      className={`
+                    [&::-webkit-scrollbar]:w-2
+                    [&::-webkit-scrollbar-track]:rounded-full
+                    [&::-webkit-scrollbar-track]:bg-card-foreground
+                    [&::-webkit-scrollbar-thumb]:rounded-full
+                    [&::-webkit-scrollbar-thumb]:bg-tertiary
+                    h-[400px] scrollbar-hide text-sm  border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 text-justify rounded-md mt-6 overflow-y-auto`}
+                    >
+                      <h1 className="text-xl font-bold mb-2">Abstract</h1>
+                      <p className="whitespace-pre-wrap">{paper.abstract}</p>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
-            </div>
-          </div>
-
-          <div className="p-8 pt-2 pb-0 relative">
-            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 my-4">
-              <Building2 className="w-4 h-4 hidden md:block" />
-              <span className="text-sm">{paper.department}</span>
-
-              <Calendar className="w-4 h-4 hidden md:block" />
-              <span className="text-sm">{paper.year}</span>
-
-              <BookOpen className="w-4 h-4 hidden md:block" />
-              <span className="text-sm">{paper.course}</span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <p className="text-sm text-gray-600 dark:text-gray-400">Tags:</p>
-              {Array.isArray(paper.keywords) ? (
-                paper.keywords
-                  .flatMap(
-                    (keyword) =>
-                      keyword
-                        .split(/[,\s]+/) // Split by comma or whitespace
-                        .map((word) => word.trim()) // Trim whitespace
-                        .filter((word) => word.length > 0), // Remove empty strings
-                  )
-                  .map((keyword, keywordIndex) => (
-                    <span
-                      key={keywordIndex}
-                      className={`flex gap-1 items-center px-3 py-1 bg-yale-blue/10 text-yale-blue  rounded-md text-sm`}
-                    >
-                      <Tag className="w-3 h-3" />
-                      {keyword}
-                    </span>
-                  ))
-              ) : (
-                <span className="text-white-25">No keywords available</span>
-              )}
-            </div>
-
-            <div
-              className={`
-            [&::-webkit-scrollbar]:w-2
-            [&::-webkit-scrollbar-track]:rounded-full
-            [&::-webkit-scrollbar-track]:bg-card-foreground
-            [&::-webkit-scrollbar-thumb]:rounded-full
-            [&::-webkit-scrollbar-thumb]:bg-tertiary
-            h-[400px] scrollbar-hide text-sm  border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 text-justify rounded-md mt-6 overflow-y-auto`}
-            >
-              <h1 className="text-xl font-bold mb-2">Abstract</h1>
-              <p className="whitespace-pre-wrap">{paper.abstract}</p>
             </div>
           </div>
         </main>

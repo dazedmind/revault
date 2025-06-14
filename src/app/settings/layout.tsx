@@ -4,9 +4,10 @@ import { useState } from "react";
 import NavBar from "../component/NavBar";
 import SettingsList from "../component/SettingsSideBar";
 import ProtectedRoute from "../component/ProtectedRoute";
-import { User, Settings, Info, SunMoon } from "lucide-react";
+import { User, Settings, Info, SunMoon, Upload } from "lucide-react";
 import { Toaster } from "sonner";
 import useAntiCopy from "../hooks/useAntiCopy";
+import { useTheme } from "next-themes";
 
 export default function SettingsLayout({
   children,
@@ -14,7 +15,7 @@ export default function SettingsLayout({
   children: React.ReactNode;
 }) {
   const [activeLabel, setActiveLabel] = useState("Edit Profile");
-
+  const { theme } = useTheme();
   // useAntiCopy();
 
   const settingsData = [
@@ -32,9 +33,24 @@ export default function SettingsLayout({
           <nav>
             <NavBar />
           </nav>
-          <div className="flex items-center gap-2 bg-gold p-4">
-            <h1 className="text-2xl text-white px-1 md:px-10 font-bold">System Settings</h1>
-          </div>
+            {/* Hero Section */}
+            <div
+              className={`${theme === "light" ? "border-b bg-tertiary" : "border-b bg-dusk"}`}
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
+                <div className="text-center">
+                  <div className="flex justify-center mb-4">
+                    <div className="p-3 bg-gold/20 rounded-full">
+                      <Settings className="w-8 h-8 text-gold" />
+                    </div>
+                  </div>
+                  <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                    System Settings
+                  </h1>
+                </div>
+              </div>
+            </div>
+
           <div className="flex flex-col md:flex-row min-h-screen dark:bg-secondary gap-8">
             <aside className="w-auto md:min-h-screen md:pl-17 mt-8 ml-5 md:ml-0">
               {/* <h1 className="text-4xl font-bold">System Settings</h1> */}
