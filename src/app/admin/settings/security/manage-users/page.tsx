@@ -1,8 +1,8 @@
-// File: src/app/admin/settings/security/manage-users/ManageUserSettings.tsx
+// File: src/app/admin/settings/security/manage-users/page.tsx
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState, ChangeEvent, Suspense } from "react";
+import { useEffect, useState, ChangeEvent, Suspense, useRef } from "react";
 import { Plus } from "lucide-react";
 
 import UsersTable from "@/app/admin/components/manage-users/UsersTable";
@@ -16,22 +16,24 @@ interface FrontendUser {
   middleName: string;
   lastName: string;
   extension: string;
-  employeeID: string; // Changed from employeeId
+  employeeID: string;
   email: string;
   role: string;
   status: string;
   userAccess: string;
-  contactNum: string; // Added
-  position: string; // Added
+  contactNum: string;
+  position: string;
   name: string;
 }
 
 function ManageUserContent() {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const usersFetched = useRef(false);
 
   // ─── Users state ───
   const [users, setUsers] = useState<FrontendUser[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // ─── Delete modal state ───
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -55,13 +57,13 @@ function ManageUserContent() {
     middleName: "",
     lastName: "",
     extension: "",
-    employeeID: "", // Changed from employeeId
+    employeeID: "",
     email: "",
-    role: "LIBRARIAN", // Changed to match enum
+    role: "LIBRARIAN",
     status: "Active",
-    userAccess: "Librarian-in-Charge", // Default to librarian
-    contactNum: "", // Added
-    position: "", // Added
+    userAccess: "Librarian-in-Charge",
+    contactNum: "",
+    position: "",
   });
   const [newUserPasswords, setNewUserPasswords] = useState({
     password: "",
@@ -73,35 +75,39 @@ function ManageUserContent() {
     setMounted(true);
   }, []);
 
-  // ─── Fetch admin/staff users ───
+  // ─── Fetch admin/staff users (only once) ───
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || usersFetched.current) return;
 
-    console.log("🔄 Fetching admin/staff users...");
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("/admin/api/users", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
 
-    fetch("/admin/api/users", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(`Failed to fetch users (${res.status})`);
-        return res.json();
-      })
-      .then((data) => {
-        console.log("✅ Users fetched successfully:", data);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch users (${res.status})`);
+        }
+
+        const data = await res.json();
         if (data.success && Array.isArray(data.users)) {
           setUsers(data.users);
+          usersFetched.current = true;
         } else {
-          console.error("❌ Invalid response format:", data);
+          console.error("Invalid response format:", data);
           setUsers([]);
         }
-      })
-      .catch((err) => {
-        console.error("💥 Error fetching users:", err);
+      } catch (err) {
+        console.error("Error fetching users:", err);
         setUsers([]);
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
   }, [mounted]);
 
   // ─── Delete handlers ───
@@ -109,25 +115,29 @@ function ManageUserContent() {
     setUserToDelete(id);
     setShowDeleteModal(true);
   };
-  const handleConfirmDelete = () => {
+
+  const handleConfirmDelete = async () => {
     if (userToDelete === null) return;
 
-    fetch(`/admin/api/delete-user/${userToDelete}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(`Failed to delete user (${res.status})`);
-        return res.json();
-      })
-      .then(() => {
-        setUsers((prev) => prev.filter((u) => u.id !== userToDelete));
-        setShowDeleteModal(false);
-        setUserToDelete(null);
-      })
-      .catch((err) => {
-        console.error("Error deleting user:", err);
+    try {
+      const res = await fetch(`/admin/api/delete-user/${userToDelete}`, {
+        method: "DELETE",
       });
+
+      if (!res.ok) {
+        throw new Error(`Failed to delete user (${res.status})`);
+      }
+
+      // Update local state immediately
+      setUsers((prev) => prev.filter((u) => u.id !== userToDelete));
+      setShowDeleteModal(false);
+      setUserToDelete(null);
+    } catch (err) {
+      console.error("Error deleting user:", err);
+      // TODO: Show error toast
+    }
   };
+
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
     setUserToDelete(null);
@@ -140,6 +150,7 @@ function ManageUserContent() {
     setPasswordError("");
     setShowEditModal(true);
   };
+
   const handleEditInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -147,13 +158,16 @@ function ManageUserContent() {
     const { name, value } = e.target;
     setCurrentEditUser((prev) => (prev ? { ...prev, [name]: value } : null));
   };
+
   const handleEditPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPasswords((prev) => ({ ...prev, [name]: value }));
   };
-  const handleSaveEdit = () => {
+
+  const handleSaveEdit = async () => {
     if (!currentEditUser) return;
 
+    // Validation
     if (passwords.newPassword || passwords.confirmPassword) {
       if (passwords.newPassword !== passwords.confirmPassword) {
         setPasswordError("Passwords do not match");
@@ -165,40 +179,46 @@ function ManageUserContent() {
       }
     }
 
-    fetch(`/admin/api/update-user/${currentEditUser.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fullName: currentEditUser.fullName,
-        middleName: currentEditUser.middleName,
-        lastName: currentEditUser.lastName,
-        extension: currentEditUser.extension,
-        employeeID: currentEditUser.employeeID, // Changed from employeeId
-        email: currentEditUser.email,
-        role: currentEditUser.role,
-        status: currentEditUser.status,
-        contactNum: currentEditUser.contactNum, // Added
-        position: currentEditUser.position, // Added
-        password: passwords.newPassword || undefined,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(`Failed to update user (${res.status})`);
-        return res.json();
-      })
-      .then((data: { user: FrontendUser }) => {
-        const updatedUser = data.user;
-        setUsers((prev) =>
-          prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)),
-        );
-        setShowEditModal(false);
-        setCurrentEditUser(null);
-        setPasswords({ newPassword: "", confirmPassword: "" });
-        setPasswordError("");
-      })
-      .catch((err) => {
-        console.error("Error updating user:", err);
+    try {
+      const res = await fetch(`/admin/api/update-user/${currentEditUser.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: currentEditUser.fullName,
+          middleName: currentEditUser.middleName,
+          lastName: currentEditUser.lastName,
+          extension: currentEditUser.extension,
+          employeeID: currentEditUser.employeeID,
+          email: currentEditUser.email,
+          role: currentEditUser.role,
+          status: currentEditUser.status,
+          contactNum: currentEditUser.contactNum,
+          position: currentEditUser.position,
+          password: passwords.newPassword || undefined,
+        }),
       });
+
+      if (!res.ok) {
+        throw new Error(`Failed to update user (${res.status})`);
+      }
+
+      const data = await res.json();
+      const updatedUser = data.user;
+
+      // Update local state immediately
+      setUsers((prev) =>
+        prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)),
+      );
+
+      // Close modal and reset state
+      setShowEditModal(false);
+      setCurrentEditUser(null);
+      setPasswords({ newPassword: "", confirmPassword: "" });
+      setPasswordError("");
+    } catch (err) {
+      console.error("Error updating user:", err);
+      setPasswordError("Failed to update user. Please try again.");
+    }
   };
 
   // ─── Add handlers ───
@@ -208,56 +228,33 @@ function ManageUserContent() {
       middleName: "",
       lastName: "",
       extension: "",
-      employeeID: "", // Changed from employeeId
+      employeeID: "",
       email: "",
-      role: "LIBRARIAN", // Changed to match enum
+      role: "LIBRARIAN",
       status: "Active",
-      userAccess: "Librarian-in-Charge", // Default selection
-      contactNum: "", // Added
-      position: "", // Added
+      userAccess: "Librarian-in-Charge",
+      contactNum: "",
+      position: "Librarian-in-Charge", // Auto-populate default
     });
     setNewUserPasswords({ password: "", confirmPassword: "" });
     setNewUserPasswordError("");
     setShowAddModal(true);
   };
+
   const handleNewUserInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setNewUser((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleNewUserPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewUserPasswords((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAddUser = () => {
-    // Validation
-    if (
-      !newUser.fullName ||
-      !newUser.lastName ||
-      !newUser.email ||
-      !newUser.employeeID ||
-      !newUser.userAccess
-    ) {
-      setNewUserPasswordError("Please fill in all required fields");
-      return;
-    }
-
-    if (!newUserPasswords.password || !newUserPasswords.confirmPassword) {
-      setNewUserPasswordError("Password is required");
-      return;
-    }
-    if (newUserPasswords.password !== newUserPasswords.confirmPassword) {
-      setNewUserPasswordError("Passwords do not match");
-      return;
-    }
-    if (newUserPasswords.password.length < 6) {
-      setNewUserPasswordError("Password must be at least 6 characters");
-      return;
-    }
-
-    // Map userAccess to API role format
+  const handleAddUser = async () => {
+    // Basic validation is handled in the modal component
     const roleMapping: { [key: string]: string } = {
       "Librarian-in-Charge": "LIBRARIAN",
       "Admin Assistant": "ASSISTANT",
@@ -269,79 +266,72 @@ function ManageUserContent() {
       midName: newUser.middleName,
       lastName: newUser.lastName,
       extName: newUser.extension,
-      employeeID: newUser.employeeID, // API expects this field name
+      employeeID: newUser.employeeID,
       email: newUser.email,
-      role: roleMapping[newUser.userAccess] || "LIBRARIAN", // Map to enum values
+      role: roleMapping[newUser.userAccess] || "LIBRARIAN",
       password: newUserPasswords.password,
       confirmPassword: newUserPasswords.confirmPassword,
       position: newUser.position,
-      // Removed contactNum since we don't need it
     };
 
-    console.log("Sending API payload:", {
-      ...apiPayload,
-      password: "***",
-      confirmPassword: "***",
-    });
-
-    fetch("/admin/api/create-user", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(apiPayload),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          return res.json().then((errorData) => {
-            throw new Error(
-              errorData.message || `Failed to create user (${res.status})`,
-            );
-          });
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("User created successfully:", data);
-
-        // Create frontend user object from API response
-        const createdUser: FrontendUser = {
-          id: data.user.userId,
-          fullName: data.user.fullName || newUser.fullName,
-          middleName: data.user.middleName || newUser.middleName,
-          lastName: data.user.lastName || newUser.lastName,
-          extension: data.user.extension || newUser.extension,
-          employeeID: data.user.employeeId || newUser.employeeID,
-          email: data.user.email,
-          role: data.user.role,
-          status: "Active",
-          userAccess: newUser.userAccess,
-          contactNum: "0", // Always 0 since we don't collect it
-          position: data.user.position || newUser.position,
-          name: `${newUser.fullName} ${newUser.lastName}${newUser.extension ? " " + newUser.extension : ""}`,
-        };
-
-        setUsers((prev) => [...prev, createdUser]);
-        setShowAddModal(false);
-        setNewUserPasswordError(""); // Clear any previous errors
-      })
-      .catch((err) => {
-        console.error("Error creating user:", err);
-        setNewUserPasswordError(
-          err.message || "Failed to create user. Please try again.",
-        );
+    try {
+      const res = await fetch("/admin/api/create-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(apiPayload),
       });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || `Failed to create user (${res.status})`,
+        );
+      }
+
+      const data = await res.json();
+
+      // Create frontend user object
+      const createdUser: FrontendUser = {
+        id: data.user.userId,
+        fullName: data.user.fullName || newUser.fullName,
+        middleName: data.user.middleName || newUser.middleName,
+        lastName: data.user.lastName || newUser.lastName,
+        extension: data.user.extension || newUser.extension,
+        employeeID: data.user.employeeId || newUser.employeeID,
+        email: data.user.email,
+        role: data.user.role,
+        status: "Active",
+        userAccess: newUser.userAccess,
+        contactNum: "0",
+        position: data.user.position || newUser.position,
+        name: `${newUser.fullName} ${newUser.lastName}${newUser.extension ? " " + newUser.extension : ""}`,
+      };
+
+      // Update local state immediately
+      setUsers((prev) => [...prev, createdUser]);
+
+      // Close modal and reset state
+      setShowAddModal(false);
+      setNewUserPasswordError("");
+    } catch (err) {
+      console.error("Error creating user:", err);
+      setNewUserPasswordError(
+        err instanceof Error
+          ? err.message
+          : "Failed to create user. Please try again.",
+      );
+    }
   };
 
   if (!mounted) {
     return (
-      <div className="flex flex-col w-auto bg-midnight p-6 rounded-xl border-1 border-white-5">
+      <div className="flex flex-col w-auto bg-midnight p-6 rounded-xl border-1 border-white-5 animate-pulse">
         <div className="flex justify-between w-auto">
-          <h1 className="text-2xl ml-1">Manage Users</h1>
-          <div className="bg-gold/20 p-2 px-4 rounded-lg">
-            <span className="text-sm">Loading...</span>
-          </div>
+          <div className="h-8 bg-gray-700 rounded w-48"></div>
+          <div className="h-10 bg-gray-700 rounded w-32"></div>
         </div>
         <div className="h-0.5 w-auto my-4 bg-dusk"></div>
-        <div className="animate-pulse space-y-4">
+        <div className="space-y-4">
           <div className="h-12 bg-gray-700 rounded"></div>
           <div className="h-12 bg-gray-700 rounded"></div>
           <div className="h-12 bg-gray-700 rounded"></div>
@@ -360,6 +350,7 @@ function ManageUserContent() {
       <DeleteConfirmationModal
         theme={theme}
         show={showDeleteModal}
+        userToDelete={users.find((u) => u.id === userToDelete) || null}
         onCancel={handleCancelDelete}
         onConfirm={handleConfirmDelete}
       />
@@ -400,10 +391,10 @@ function ManageUserContent() {
         <h1 className="text-2xl ml-1">Manage Users</h1>
         <button
           onClick={handleAddClick}
-          className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer"
+          className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200"
         >
           <span className="hidden md:block text-sm">Create New</span>
-          <Plus className="block md:hidden" />
+          <Plus className="w-4 h-4 md:hidden" />
         </button>
       </div>
 
@@ -412,12 +403,21 @@ function ManageUserContent() {
       />
 
       {/* ─── Users Table ─── */}
-      <UsersTable
-        users={users}
-        onDeleteClick={handleDeleteClick}
-        onEditClick={handleEditClick}
-        theme={theme}
-      />
+      {loading ? (
+        <div className="animate-pulse space-y-4">
+          <div className="h-12 bg-gray-300 dark:bg-gray-700 rounded"></div>
+          <div className="h-12 bg-gray-300 dark:bg-gray-700 rounded"></div>
+          <div className="h-12 bg-gray-300 dark:bg-gray-700 rounded"></div>
+          <div className="h-12 bg-gray-300 dark:bg-gray-700 rounded"></div>
+        </div>
+      ) : (
+        <UsersTable
+          users={users}
+          onDeleteClick={handleDeleteClick}
+          onEditClick={handleEditClick}
+          theme={theme}
+        />
+      )}
     </div>
   );
 }
@@ -425,11 +425,9 @@ function ManageUserContent() {
 function ManageUsersLoading() {
   return (
     <div className="flex flex-col w-auto bg-midnight p-6 rounded-xl border-1 border-white-5">
-      <div className="flex justify-between w-auto">
-        <h1 className="text-2xl ml-1">Manage Users</h1>
-        <div className="bg-gold/20 p-2 px-4 rounded-lg animate-pulse">
-          <span className="text-sm">Loading...</span>
-        </div>
+      <div className="flex justify-between w-auto animate-pulse">
+        <div className="h-8 bg-gray-700 rounded w-48"></div>
+        <div className="h-10 bg-gray-700 rounded w-32"></div>
       </div>
       <div className="h-0.5 w-auto my-4 bg-dusk"></div>
       <div className="animate-pulse space-y-4">

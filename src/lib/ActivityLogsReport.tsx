@@ -255,7 +255,8 @@ const ActivityLogsReport: React.FC<ActivityLogsReportProps> = ({
             College of Information Systems and Technology Management
           </Text>
           <Text style={styles.headerDate}>
-            Generated on {new Date().toLocaleDateString()}
+            Generated on {new Date().toLocaleDateString()} at{" "}
+            {new Date().toLocaleTimeString()}
           </Text>
         </View>
 

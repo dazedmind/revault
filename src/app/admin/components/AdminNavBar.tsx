@@ -3,11 +3,19 @@ import SearchInput from "@/app/component/SearchInput";
 import avatar from "../../img/user.png";
 import icon from "../../img/revault-icon.png";
 import { FaPlus } from "react-icons/fa6";
+import { FaFilePdf } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { logout } from "../../utils/auth";
 import { useEffect, useState } from "react";
-import { LogOut, Settings, SunMoon, ChevronRight, ChevronDown, IdCard } from "lucide-react";
+import {
+  LogOut,
+  Settings,
+  SunMoon,
+  ChevronRight,
+  ChevronDown,
+  IdCard,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,11 +92,29 @@ export default function AdminNavBar() {
         <ul className="flex flex-row items-center gap-2 md:gap-4 text-lg">
           {(() => {
             const userType = localStorage.getItem("userType");
-            if (userType !== "ADMIN" && userType !== "ASSISTANT" && userType == "LIBRARIAN") {
+            if (
+              userType !== "ADMIN" &&
+              userType !== "ASSISTANT" &&
+              userType == "LIBRARIAN"
+            ) {
               return (
                 <Link href="/upload">
                   <button className="bg-gradient-to-r from-gold to-gold-fg text-white hover:brightness-120 hover:shadow-lg hover:shadow-gold/80 transition-all duration-300 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
                     <FaPlus /> Upload
+                  </button>
+                </Link>
+              );
+            }
+            return null;
+          })()}
+
+          {(() => {
+            const userType = localStorage.getItem("userType");
+            if (userType == "ADMIN" && "ASSISTANT" && "LIBRARIAN") {
+              return (
+                <Link href="/admin/profile#manage-papers">
+                  <button className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+                    <FaFilePdf /> Manage Papers
                   </button>
                 </Link>
               );
@@ -106,9 +132,10 @@ export default function AdminNavBar() {
                   width={50}
                   height={50}
                 />
-                <span className="text-sm font-[Inter] hidden md:block">{profile.users.first_name}</span>
-                <ChevronDown className="h-4 w-4 hidden md:block" /> 
-
+                <span className="text-sm font-[Inter] hidden md:block">
+                  {profile.users.first_name}
+                </span>
+                <ChevronDown className="h-4 w-4 hidden md:block" />
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
@@ -121,10 +148,15 @@ export default function AdminNavBar() {
                     height={40}
                     className="rounded-full border-yale-blue border-3"
                   />
-                  <Link href="/admin/profile" className="flex items-center gap-2">
+                  <Link
+                    href="/admin/profile"
+                    className="flex items-center gap-2"
+                  >
                     <span className="flex flex-col">
-                      <p className="text-sm font-[Inter]">{profile.users.name}</p>
-                      <p className="text-xs font-[Inter] flex items-center gap-1 text-gray-500"> 
+                      <p className="text-sm font-[Inter]">
+                        {profile.users.name}
+                      </p>
+                      <p className="text-xs font-[Inter] flex items-center gap-1 text-gray-500">
                         <IdCard className="text-xxs" strokeWidth={1.5} />
                         {profile.employee_id}
                       </p>
