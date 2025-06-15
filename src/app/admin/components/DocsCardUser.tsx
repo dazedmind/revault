@@ -182,7 +182,7 @@ const DocsCardUser = (props) => {
               
               <div className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
-                <span>Last modified: {formatDate(new Date())}</span>
+                <span>Published: {formatDate(new Date())}</span>
               </div>
             </div>
 
@@ -193,22 +193,6 @@ const DocsCardUser = (props) => {
               </p>
             </div>
 
-     
-
-            {/* Tags
-            <div className="flex flex-wrap gap-2 mb-4">
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gold/10 text-gold">
-                {props.year}
-              </span>
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                {props.department}
-              </span>
-              {props.course && (
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300">
-                  {props.course}
-                </span>
-              )}
-            </div> */}
           </div>
         </div>
 
@@ -251,7 +235,7 @@ const DocsCardUser = (props) => {
            <div className="flex items-center gap-6 text-xs text-gray-500 dark:text-gray-400">
               <div className="flex items-center gap-1">
                 <FileText className="w-3 h-3" />
-                <span>12 pages</span>
+                <span>Published</span>
               </div>
             </div>
         </div>

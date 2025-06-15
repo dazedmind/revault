@@ -101,7 +101,7 @@ export default function AdminNavBar() {
               <div className="flex items-center gap-2 md:bg-accent rounded-lg p-2 cursor-pointer hover:bg-gold/80 transition-all duration-300">
                 <Image
                   src={profile?.users?.profile_picture || avatar}
-                  className="w-10 h-10 md:w-8 md:h-8 rounded-full cursor-pointer border-gold border-2"
+                  className="w-10 h-10 md:w-8 md:h-8 rounded-full cursor-pointer border-yale-blue border-3"
                   alt="User profile picture"
                   width={50}
                   height={50}
@@ -117,9 +117,9 @@ export default function AdminNavBar() {
                   <Image
                     src={profile?.users?.profile_picture || avatar}
                     alt="User profile picture"
-                    width={30}
-                    height={30}
-                    className="rounded-full"
+                    width={40}
+                    height={40}
+                    className="rounded-full border-yale-blue border-3"
                   />
                   <Link href="/admin/profile" className="flex items-center gap-2">
                     <span className="flex flex-col">

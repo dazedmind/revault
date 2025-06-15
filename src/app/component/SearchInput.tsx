@@ -205,7 +205,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
     queryTerms.forEach(term => {
       if (term.length > 1) {
         const regex = new RegExp(`(${term})`, 'gi');
-        highlightedText = highlightedText.replace(regex, '<strong class="text-gold">$1</strong>');
+        highlightedText = highlightedText.replace(regex, '<strong class="text-yale-blue">$1</strong>');
       }
     });
     

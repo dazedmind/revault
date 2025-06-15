@@ -91,19 +91,20 @@ export default function NavBar() {
               <div className="flex items-center gap-2 md:bg-accent rounded-lg p-2 cursor-pointer hover:bg-gold/80 transition-all duration-300">
                 <Image
                   src={profile?.users?.profile_picture || avatar}
-                  className="w-10 h-10 md:w-8 md:h-8 rounded-full cursor-pointer border-gold border-2"
+                  className="w-10 h-10 md:w-8 md:h-8 rounded-full cursor-pointer border-gold border-3"
                   alt="User profile picture"
                   width={50}
                   height={50}
                 />
+                <span className="text-sm font-[Inter] hidden md:block">{profile.users.last_name}</span>
+
                 <ChevronDown className="h-4 w-4 hidden md:block" /> 
-                {/* <span className="text-sm font-[Inter] hidden md:block">{profile.users.name}</span> */}
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
                 <DropdownMenuItem className="p-2">
-                  <Image src={profile?.users?.profile_picture || avatar} alt="User profile picture" width={40} height={40} className="rounded-full border-gold border-2"/>
+                  <Image src={profile?.users?.profile_picture || avatar} alt="User profile picture" width={40} height={40} className="rounded-full border-gold border-3"/>
                   <Link href="/profile" className="flex items-center gap-2">
                     <span className="flex flex-col">
                       <p className="text-sm font-[Inter]">{profile.users.name}</p>

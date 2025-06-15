@@ -89,14 +89,14 @@ export function StatsSection({
 
   // Loading skeleton component
   const LoadingSkeleton = () => (
-    <div className="animate-pulse">
-      <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-48 mb-4"></div>
+    <div className="animate-pulse my-10">
+      <div className="h-6 bg-gray-300 rounded w-48 my-4"></div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-gray-200 dark:bg-gray-800 p-6 rounded-lg">
-            <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-            <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-1/2 mb-2"></div>
-            <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded w-1/4"></div>
+          <div key={i} className="bg-gray-200  p-6 rounded-lg">
+            <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+            <div className="h-6 bg-gray-300 rounded w-1/2 mb-2"></div>
+            <div className="h-8 bg-gray-300 rounded w-1/4"></div>
           </div>
         ))}
       </div>
