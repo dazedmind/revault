@@ -33,7 +33,7 @@
   --secondary: #f2f2f2;
   --tertiary: #e5e5e5;
   --text-color: #121212;
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary-foreground: #e8e8e8;
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);

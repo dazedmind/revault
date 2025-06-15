@@ -360,9 +360,9 @@ export default function EditFilePage() {
                         <SelectContent>
                           <SelectGroup>
                             <SelectItem className="p-3" value="SIA">SIA</SelectItem>
-                            <SelectItem className="p-3" value="Capstone">Capstone</SelectItem>
+                            <SelectItem className="p-3" value="Capstone Project">Capstone Project</SelectItem>
                             <SelectItem className="p-3" value="Compiler Design">Compiler Design</SelectItem>
-                            <SelectItem className="p-3" value="CS Thesis Writing">CS Thesis Writing</SelectItem>
+                            <SelectItem className="p-3" value="Thesis Writing">Thesis Writing</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>

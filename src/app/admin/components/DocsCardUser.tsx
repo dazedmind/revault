@@ -99,12 +99,6 @@ const DocsCardUser = (props) => {
           : "bg-darker border border-white-5"
       } rounded-xl overflow-hidden`}
     >
-      {/* Status Bar */}
-      {/* <div className={`h-2 w-full ${
-        props.status === 'published' ? 'bg-green-500' :
-        props.status === 'draft' ? 'bg-yellow-500' :
-        props.status === 'review' ? 'bg-blue-500' : 'bg-gold'
-      }`} /> */}
 
       <div className="p-6">
         <div className="flex flex-col lg:flex-row gap-6">
