@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { FaFilter, FaMagnifyingGlass } from "react-icons/fa6";
+import { FaFilter } from "react-icons/fa6";
 import {
   Popover,
   PopoverContent,

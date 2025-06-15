@@ -3,11 +3,9 @@
 import Image from "next/image";
 import icon from "../img/revault-icon.png";
 import Link from "next/link";
-import { FaBuildingColumns, FaChevronRight, FaSun } from "react-icons/fa6";
+import { FaBuildingColumns, FaChevronRight } from "react-icons/fa6";
 import { usePathname } from "next/navigation"; // Import the hook
-import { Moon } from "lucide-react";
-import { FaMoon } from "react-icons/fa";
-import { Switch } from "@/components/ui/switch"
+
 
 const Header = () => {
   const pathname = usePathname(); // Get current route

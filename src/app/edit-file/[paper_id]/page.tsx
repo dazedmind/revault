@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import NavBar from "../../component/NavBar";
 import LoadingScreen from "../../component/LoadingScreen";
 import ProtectedRoute from "../../component/ProtectedRoute";
 import {
@@ -25,8 +24,6 @@ import {
   Tag,
   Edit3,
   Eye,
-  CheckCircle,
-  AlertCircle,
   FileCheck
 } from "lucide-react";
 import { useTheme } from "next-themes";

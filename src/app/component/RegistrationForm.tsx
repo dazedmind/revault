@@ -2,21 +2,18 @@
 
 import { useEffect, useState } from "react";
 import InputField from "./InputField";
-import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
 import WarningMessage from "./WarningMessage";
-import { GoEye } from "react-icons/go";
-import { GoEyeClosed } from "react-icons/go";
+import { GoEye, GoEyeClosed } from "react-icons/go";
 
 export default function Form() {
   const [role, setRole] = useState("student");

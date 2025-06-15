@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { logout } from "../../utils/auth";
 import { useEffect, useState } from "react";
-import { LogOut, Settings, User, SunMoon, ChevronRight, ChevronDown, IdCard } from "lucide-react";
+import { LogOut, Settings, SunMoon, ChevronRight, ChevronDown, IdCard } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,

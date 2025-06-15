@@ -85,7 +85,7 @@ export default function NavBar() {
           <SearchInput placeholder="Search paper" />
         </div>
 
-        <ul className="flex flex-row items-center gap-8 text-lg">
+        <div className="flex flex-row items-center gap-8 text-lg">
           <DropdownMenu>
           <DropdownMenuTrigger asChild>
               <div className="flex items-center gap-2 md:bg-accent rounded-lg p-2 cursor-pointer hover:bg-gold/80 transition-all duration-300">
@@ -134,7 +134,7 @@ export default function NavBar() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </ul>
+        </div>
       </header>
     </>
   );

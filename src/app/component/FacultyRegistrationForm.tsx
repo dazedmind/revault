@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from "react";
 import InputField from "./InputField";
-import Link from "next/link";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRouter } from 'next/navigation'
 import WarningMessage from "./WarningMessage";
 import { GoEye, GoEyeClosed } from "react-icons/go";

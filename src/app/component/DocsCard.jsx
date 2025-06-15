@@ -6,13 +6,9 @@ import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { 
   GoBookmark, 
-  GoBookmarkSlash, 
   GoEye, 
   GoPencil, 
   GoBookmarkFill, 
-  GoBookmarkSlashFill,
-  GoDownload,
-  GoShare
 } from "react-icons/go";
 import { Calendar, User, Building, Tag, BookOpen } from "lucide-react";
 import DocsLoader from "./DocsLoader";
@@ -23,8 +19,6 @@ const DocsCard = (props) => {
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [bookmarkCount, setBookmarkCount] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-  const [showDetails, setShowDetails] = useState(false);
   const router = useRouter();
   const { theme, setTheme } = useTheme("light");
   const { paper_id, savedFromProfile = false, viewFromAdmin = false } = props;
@@ -171,8 +165,7 @@ const DocsCard = (props) => {
           ? "bg-white border border-gray-200" 
           : "bg-darker border border-white-5"
       } rounded-2xl border-2 overflow-hidden`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+
     >
   
 

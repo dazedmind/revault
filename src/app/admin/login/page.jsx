@@ -5,7 +5,6 @@ import Header from "@/app/component/Header";
 import React, { useEffect, useState } from "react";
 import LogInInputField from "../../component/LogInInputField";
 import { Button } from "@/components/ui/button";
-import { LogInCheckBox } from "../../component/LogInCheckBox";
 import Link from "next/link";
 import { FaChevronLeft } from "react-icons/fa6";
 import { GoEyeClosed } from "react-icons/go";
