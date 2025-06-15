@@ -196,19 +196,7 @@ const DocsCard = (props) => {
             height={200}
           />
           
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-gold/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
-          {/* Quick Action Overlay */}
-          <div className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 ${
-            isHovered ? "backdrop-blur-sm" : ""
-          }`}>
-            <Link href={`/view-file/${props.paper_id}`}>
-              <button className="bg-white/90 dark:bg-gray-900/90 text-gray-900 dark:text-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 cursor-pointer">
-                <GoEye className="text-xl" />
-              </button>
-            </Link>
-          </div>
+     
         </div>
 
         {/* Content Section */}
