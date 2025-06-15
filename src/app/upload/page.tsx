@@ -45,7 +45,7 @@ const UploadFile = () => {
   const ref = useRef<HTMLInputElement>(null);
   const [isEditingAbstract, setIsEditingAbstract] = useState(false);
   const [keywords, setKeywords] = useState<string[]>([]);
-  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [isTermsAccepted, setIsTermsAccepted] = useState(true);
   const [pdfUrl, setPdfUrl] = useState("");
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
@@ -228,7 +228,7 @@ const UploadFile = () => {
     setIsEditingTitle(false);
     setIsEditingAuthors(false);
     setIsEditingAbstract(false);
-    setIsTermsAccepted(false);
+    setIsTermsAccepted(true);
   };
 
   useEffect(() => setMounted(true), []);
