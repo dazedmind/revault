@@ -12,7 +12,6 @@ import { StatsSection } from "../components/StatsSection";
 import { ProfileCard } from "../../component/ProfileCard";
 import avatar from "../../img/user.png";
 import AdminNavBar from "../components/AdminNavBar";
-import LoadingScreen from "@/app/component/LoadingScreen";
 import ProfileLoader from "@/app/component/ProfileLoader";
 
 // Custom hook to safely access localStorage

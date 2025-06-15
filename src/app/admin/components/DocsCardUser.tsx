@@ -8,7 +8,6 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { 
   GoEye, 
-  GoChevronRight,
   GoPencil,
 } from "react-icons/go";
 import { 
@@ -18,15 +17,12 @@ import {
   FileText, 
   Clock,
   MoreHorizontal,
-  Edit3,
   Eye,
-  Download
 } from "lucide-react";
 
 const DocsCardUser = (props) => {
   const [papers, setPapers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
   const { theme } = useTheme();
   const { paper_id } = props;
@@ -102,8 +98,6 @@ const DocsCardUser = (props) => {
           ? "bg-white border border-gray-200 " 
           : "bg-darker border border-white-5"
       } rounded-xl overflow-hidden`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Status Bar */}
       {/* <div className={`h-2 w-full ${
