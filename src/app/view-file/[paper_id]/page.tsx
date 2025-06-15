@@ -30,6 +30,22 @@ import {
   GoMoon,
   GoSun,
 } from "react-icons/go";
+import MobileFriendlyPDFViewer from "../../component/MobileFriendlyPDFViewer";
+
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent || navigator.vendor;
+      return /android|iphone|ipad|ipod|blackberry|iemobile/i.test(userAgent.toLowerCase());
+    };
+    
+    setIsMobile(checkMobile());
+  }, []);
+
+  return isMobile;
+};
 
 function ViewFile() {
   const { theme, setTheme } = useTheme();
@@ -38,7 +54,7 @@ function ViewFile() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userType, setUserType] = useState(null);
-
+  const isMobile = useIsMobile();
   const [paper, setPaper] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -485,84 +501,110 @@ function ViewFile() {
 
                 {/* Content Row - Document and Metadata Sidebar */}
                 <div className="flex flex-col lg:flex-row">
-                  {/* Document Viewer */}
+                  
+                {/* Document Viewer */}
                   <div className="Document flex-1">
-                    {pdfDisplayUrl && !pdfError ? (
-                      <object
-                        data={pdfDisplayUrl}
-                        type="application/pdf"
-                        width="100%"
-                        height="100%"
-                        className="h-screen w-screen md:w-3xl"
-                        onError={handlePdfError}
-                      >
-                        {/* Fallback content when PDF can't be displayed */}
-                        <div className="flex flex-col items-center justify-center h-full p-8 bg-gray-100 dark:bg-gray-800">
-                          <div className="text-center">
-                            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                              <Download className="w-8 h-8 text-red-600 dark:text-red-400" />
-                            </div>
-                            <h3 className="text-lg font-semibold mb-2">
-                              PDF Viewer Not Supported
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-400 mb-4">
-                              Your browser doesn&apos;t support inline PDF viewing.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-2 justify-center"></div>
-                          </div>
-                        </div>
-                      </object>
+                    {isMobile ? (
+                      <MobileFriendlyPDFViewer 
+                        pdfUrl={pdfUrl}
+                        pdfError={pdfError}
+                        handlePdfError={handlePdfError}
+                        theme={theme}
+                      />
                     ) : (
-                      /* Show error state or loading */
-                      <div className="flex flex-col items-center justify-center h-screen p-8 bg-gray-100 dark:bg-gray-800">
-                        <div className="text-center">
-                          {pdfError ? (
-                            <>
+                      // Desktop: Original object tag code
+                      pdfDisplayUrl && !pdfError ? (
+                        <object
+                          data={pdfDisplayUrl}
+                          type="application/pdf"
+                          width="100%"
+                          height="100%"
+                          className="h-screen w-screen md:w-3xl"
+                          onError={handlePdfError}
+                        >
+                          {/* Fallback content when PDF can't be displayed */}
+                          <div className="flex flex-col items-center justify-center h-full p-8 bg-gray-100 dark:bg-gray-800">
+                            <div className="text-center">
                               <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
+                                <Download className="w-8 h-8 text-red-600 dark:text-red-400" />
                               </div>
                               <h3 className="text-lg font-semibold mb-2">
-                                PDF Not Available
+                                PDF Viewer Not Supported
                               </h3>
                               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                                The PDF file could not be loaded. It may have been
-                                moved or deleted.
+                                Your browser doesn&apos;t support inline PDF viewing.
                               </p>
-                            </>
-                          ) : (
-                            <>
-                              <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Download className="w-8 h-8 text-gray-500" />
+                              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                                <a
+                                  href={pdfUrl}
+                                  download
+                                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                                >
+                                  Download PDF
+                                </a>
+                                <a
+                                  href={pdfUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                                >
+                                  Open in New Tab
+                                </a>
                               </div>
-                              <h3 className="text-lg font-semibold mb-2">
-                                No PDF File Available
-                              </h3>
-                              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                                This document doesn&apos;t have an associated PDF file.
-                              </p>
-                            </>
-                          )}
-                          <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                            <button
-                              onClick={() => router.back()}
-                              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                            >
-                              Go Back
-                            </button>
-                            {pdfError && (
-                              <button
-                                onClick={() => {
-                                  setPdfError(false);
-                                  window.location.reload();
-                                }}
-                                className="bg-gold hover:brightness-110 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                              >
-                                Retry
-                              </button>
+                            </div>
+                          </div>
+                        </object>
+                      ) : (
+                        // Error state for desktop
+                        <div className="flex flex-col items-center justify-center h-screen p-8 bg-gray-100 dark:bg-gray-800">
+                          <div className="text-center">
+                            {pdfError ? (
+                              <>
+                                <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                  <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
+                                </div>
+                                <h3 className="text-lg font-semibold mb-2">
+                                  PDF Not Available
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                  The PDF file could not be loaded. It may have been moved or deleted.
+                                </p>
+                              </>
+                            ) : (
+                              <>
+                                <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                                  <Download className="w-8 h-8 text-gray-500" />
+                                </div>
+                                <h3 className="text-lg font-semibold mb-2">
+                                  No PDF File Available
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                  This document doesn&apos;t have an associated PDF file.
+                                </p>
+                              </>
                             )}
+                            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                              <button
+                                onClick={() => router.back()}
+                                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                              >
+                                Go Back
+                              </button>
+                              {pdfError && (
+                                <button
+                                  onClick={() => {
+                                    setPdfError(false);
+                                    window.location.reload();
+                                  }}
+                                  className="bg-gold hover:brightness-110 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                                >
+                                  Retry
+                                </button>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )
                     )}
                   </div>
 

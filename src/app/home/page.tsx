@@ -196,7 +196,7 @@ export default function HomePage() {
 
           <section>
             <h2 className="font-bold text-gold">Publication Year</h2>
-            {["2025", "2024"].map((y) => (
+            {["2025", "2024", "2023", "2022","2021"].map((y) => (
               <div key={y} className="flex items-center gap-2 ml-2">
                 <Checkbox
                   id={`year-${y}`}
@@ -236,7 +236,7 @@ export default function HomePage() {
 
           <section>
             <h2 className="font-bold text-gold">Course</h2>
-            {["SIA", "Capstone", "Compiler Design", "Thesis Writing"].map(
+            {["SIA", "Capstone Project", "Compiler Design", "Thesis Writing"].map(
               (c) => (
                 <div key={c} className="flex items-center gap-2 ml-2">
                   <Checkbox
@@ -354,7 +354,7 @@ export default function HomePage() {
               <ul className="ml-1 flex flex-col gap-1">
                 {[
                   "SIA",
-                  "Capstone",
+                  "Capstone Project",
                   "Compiler Design",
                   "Thesis Writing",
                 ].map((c) => (

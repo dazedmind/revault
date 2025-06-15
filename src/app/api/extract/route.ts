@@ -124,8 +124,8 @@ export async function POST(req: Request) {
 
       1. The Title (Must be in the format of Title of the paper (Title of the paper must be in uppercase))
       2. The Author(s) (Usually followed by the word "by", extract names only and separate by comma. Format: Surname, F. M. (APA Format))
-      3. The Abstract (Get the first paragraph of the abstract or the first 6 sentences. If there is no abstract, generate a short abstract based on the title minimum of 100 words.)
-      4. The Course Subject (Strictly follow the format: SIA, Capstone, Compiler Design, Research Writing. If none, write "Cannot Determine")
+      3. The Abstract (Get the first paragraph of the abstract or the first 6 sentences. If there is no abstract, generate a short generic abstract based on the title minimum of 100 words. Do not mention any names or authors.)
+      4. The Course Subject (Strictly follow the format: SIA, Capstone Project, Compiler Design, Research Writing. If none, write "Cannot Determine")
       5. The Department (Information Technology, Computer Science)
       6. The Year (must be in the format YYYY)
 

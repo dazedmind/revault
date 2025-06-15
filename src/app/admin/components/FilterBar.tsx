@@ -124,7 +124,7 @@ export function FilterBar({
             {/* Course Checkboxes */}
             <p className="text-lg">Course</p>
             <ul className="ml-1 flex flex-col gap-1">
-              {["SIA", "Capstone", "Thesis Writing", "Compiler Design"].map(
+              {["SIA", "Capstone Project", "Thesis Writing", "Compiler Design"].map(
                 (c) => (
                   <li key={c} className="flex items-center gap-2">
                     <Checkbox
@@ -132,7 +132,7 @@ export function FilterBar({
                       checked={courses.includes(c)}
                       onCheckedChange={() => onToggleCourse(c)}
                       disabled={
-                        ((c === "SIA" || c === "Capstone") &&
+                        ((c === "SIA" || c === "Capstone Project") &&
                           !departments.includes("Information Technology")) ||
                         ((c === "Thesis Writing" ||
                           c === "Compiler Design") &&
