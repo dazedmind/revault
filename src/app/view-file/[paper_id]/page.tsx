@@ -28,6 +28,7 @@ import {
   GoBookmarkSlash,
   GoInfo,
   GoMoon,
+  GoPencil,
   GoSun,
 } from "react-icons/go";
 import MobileFriendlyPDFViewer from "../../component/MobileFriendlyPDFViewer";
@@ -461,8 +462,8 @@ function ViewFile() {
                 {viewFromAdmin && (
                   <>
                     <FileMenuButton
-                      icon={<Link className="text-xl text-yale-blue" />}
-                      label="Cite Paper"
+                      icon={<GoPencil className="text-xl text-yale-blue" />}
+                      label="Edit Paper"
                       onClick={() => {}}
                     />
                   </>
