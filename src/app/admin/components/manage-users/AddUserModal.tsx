@@ -40,6 +40,19 @@ export default function AddUserModal({
 }: AddUserModalProps) {
   if (!show) return null;
 
+  // Function to get automatic position based on user access
+  const getPositionFromUserAccess = (userAccess: string): string => {
+    const positionMapping: { [key: string]: string } = {
+      Admin: "Chief Librarian",
+      "Admin Assistant": "Chief's Secretary",
+      "Librarian-in-Charge": "Librarian-in-Charge",
+    };
+    return positionMapping[userAccess] || "";
+  };
+
+  // Get the automatic position for the current user access
+  const automaticPosition = getPositionFromUserAccess(newUser.userAccess);
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="p-6 rounded-lg dark:bg-primary border-1 dark:border-foreground w-full max-w-md relative z-10 max-h-[90vh] overflow-y-auto">
@@ -169,33 +182,57 @@ export default function AddUserModal({
               />
             </div>
 
-            {/* Position field - optional for all roles */}
+            {/* Position field - automatically set based on user access and disabled */}
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Position</label>
+              <label className="block text-sm font-medium mb-2">
+                Position *
+              </label>
               <input
                 type="text"
                 name="position"
-                value={newUser.position}
+                value={automaticPosition}
                 onChange={onInputChange}
-                placeholder="e.g. Head Librarian, Senior Admin"
-                className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px] cursor-not-allowed"
+                disabled
+                readOnly
               />
+              <p className="text-xs text-gray-400 mt-1">
+                Position is automatically assigned based on User Access role
+              </p>
             </div>
 
-            {/* Removed contact number field entirely */}
-          </div>
-
-          {/* Password Section */}
-          <div>
-            <h3 className="text-lg font-medium mb-4 text-gold">Password</h3>
+            {/* Contact Number - Now optional for all roles */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">
-                Create Password *
+                Contact Number (Optional)
+              </label>
+              <input
+                type="tel"
+                name="contactNum"
+                value={newUser.contactNum}
+                onChange={onInputChange}
+                placeholder="e.g. 09171234567"
+                className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Optional contact information
+              </p>
+            </div>
+          </div>
+
+          {/* Account Section */}
+          <div>
+            <h3 className="text-lg font-medium mb-4 text-gold">
+              Account Information
+            </h3>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2">
+                Password * (Minimum 6 characters)
               </label>
               <input
                 type="password"
                 name="password"
-                placeholder="Enter Password (min. 6 characters)"
+                placeholder="Enter Password (Minimum 6 characters)"
                 value={newUserPasswords.password}
                 onChange={onPasswordChange}
                 className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"

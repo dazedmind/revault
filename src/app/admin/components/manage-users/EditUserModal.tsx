@@ -43,15 +43,24 @@ export default function EditUserModal({
 }: EditUserModalProps) {
   if (!show || !user) return null;
 
-  // Check if librarian role is selected (need contact number)
-  const isLibrarian =
-    user.userAccess === "Librarian-in-Charge" || user.role === "LIBRARIAN";
+  // Function to get automatic position based on user access
+  const getPositionFromUserAccess = (userAccess: string): string => {
+    const positionMapping: { [key: string]: string } = {
+      Admin: "Chief Librarian",
+      "Admin Assistant": "Chief's Secretary",
+      "Librarian-in-Charge": "Librarian-in-Charge",
+    };
+    return positionMapping[userAccess] || "";
+  };
+
+  // Get the automatic position for the current user access
+  const automaticPosition = getPositionFromUserAccess(user.userAccess);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="dark:bg-primary w-full max-w-md relative z-10 max-h-[90vh] rounded-lg flex flex-col">
-        {/* Scrollable Content */}
-        <div className="p-6 overflow-y-auto flex-1">
+      <div className="p-6 rounded-lg dark:bg-primary w-full max-w-md relative z-10 max-h-[90vh] flex flex-col">
+        {/* Scrollable content area */}
+        <div className="flex-1 overflow-y-auto pr-2 -mr-2">
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-medium mb-4 text-gold">
@@ -184,41 +193,42 @@ export default function EditUserModal({
                 />
               </div>
 
-              {/* Position field - optional for all roles */}
+              {/* Position field - automatically set based on user access and disabled */}
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  Position
+                  Position *
                 </label>
                 <input
                   type="text"
                   name="position"
-                  value={user.position}
+                  value={automaticPosition}
                   onChange={onInputChange}
-                  placeholder="e.g. Head Librarian, Senior Admin"
-                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px] cursor-not-allowed"
+                  disabled
+                  readOnly
                 />
+                <p className="text-xs text-gray-400 mt-1">
+                  Position is automatically assigned based on User Access role
+                </p>
               </div>
 
-              {/* Contact Number - Required for Librarian */}
-              {isLibrarian && (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">
-                    Contact Number *
-                  </label>
-                  <input
-                    type="tel"
-                    name="contactNum"
-                    value={user.contactNum}
-                    onChange={onInputChange}
-                    placeholder="e.g. 09171234567"
-                    className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
-                    required={isLibrarian}
-                  />
-                  <p className="text-xs text-gray-400 mt-1">
-                    Required for Librarian role
-                  </p>
-                </div>
-              )}
+              {/* Contact Number - Now optional for all roles */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Contact Number (Optional)
+                </label>
+                <input
+                  type="tel"
+                  name="contactNum"
+                  value={user.contactNum}
+                  onChange={onInputChange}
+                  placeholder="e.g. 09171234567"
+                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Optional contact information
+                </p>
+              </div>
 
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Status</label>
@@ -246,7 +256,7 @@ export default function EditUserModal({
             </div>
 
             {/* Password Section */}
-            <div className="">
+            <div>
               <h3 className="text-lg font-medium mb-4 text-gold">
                 Change Password (Optional)
               </h3>
@@ -266,12 +276,12 @@ export default function EditUserModal({
               </div>
               <div>
                 <label className="block text-sm font-medium mb-4">
-                  Confirm New Password
+                  Confirm Password
                 </label>
                 <input
                   type="password"
                   name="confirmPassword"
-                  placeholder="Confirm new password"
+                  placeholder="Enter Password Again"
                   value={passwords.confirmPassword}
                   onChange={onPasswordChange}
                   className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
@@ -284,8 +294,8 @@ export default function EditUserModal({
           </div>
         </div>
 
-        {/* Sticky Buttons */}
-        <div className="border-t border-[#444] p-6 bg-primary rounded-b-lg">
+        {/* Sticky button section */}
+        <div className="sticky bottom-0 bg-inherit pt-4 mt-4 border-t border-gray-600">
           <div className="flex justify-end gap-4">
             <button
               onClick={onCancel}
