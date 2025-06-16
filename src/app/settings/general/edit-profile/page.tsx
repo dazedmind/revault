@@ -60,14 +60,25 @@ function EditProfileContent() {
     formData.append("user_id", profile.users.user_id.toString());
 
     try {
+      console.log("📤 Uploading to /api/upload-profile...");
+      
       const res = await fetch("/api/upload-profile", {
         method: "POST",
         body: formData,
       });
 
-      const data = await res.json();
+      console.log("📨 Upload response status:", res.status);
 
-      if (res.ok) {
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("❌ Upload failed:", res.status, errorText);
+        throw new Error(`Upload failed: ${res.status}`);
+      }
+
+      const data = await res.json();
+      console.log("✅ Upload response:", data);
+
+      if (data.success) {
         toast.success(data.message || "Profile picture updated successfully!");
         
         // Update the profile state with new image URL
@@ -83,14 +94,17 @@ function EditProfileContent() {
         setPreview(null);
         setSelectedFile(null);
         
-        // Optionally refresh the page to show updated image
-        // window.location.reload();
+        // Clean up the blob URL
+        if (preview) {
+          URL.revokeObjectURL(preview);
+        }
+        
       } else {
-        console.error("Upload failed:", data.error);
+        console.error("Upload failed:", data.message);
         toast.error(data.message || "Failed to update profile picture");
       }
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error("💥 Upload error:", error);
       toast.error("An error occurred while updating profile picture");
     } finally {
       setUploading(false);
@@ -101,28 +115,36 @@ function EditProfileContent() {
     if (!mounted || typeof window === "undefined") return;
     
     const token = localStorage.getItem("authToken");
-    if (!token) return;
+    if (!token) {
+      console.log("❌ No auth token found");
+      setLoading(false);
+      return;
+    }
 
     try {
+      console.log("🔍 Fetching profile...");
+      
       const res = await fetch("/api/profile", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      const data = await res.json();
+
+      console.log("📨 Profile response status:", res.status);
 
       if (!res.ok) {
-        console.error(
-          "Failed to fetch profile:",
-          data?.error || res.statusText,
-        );
+        const errorText = await res.text();
+        console.error("❌ Profile fetch failed:", res.status, errorText);
         return;
       }
 
+      const data = await res.json();
+      console.log("✅ Profile data:", data);
+      
       setProfile(data);
     } catch (err) {
-      console.error("Error fetching profile:", err);
+      console.error("💥 Error fetching profile:", err);
     } finally {
       setLoading(false);
     }
@@ -141,7 +163,20 @@ function EditProfileContent() {
   }
 
   if (!profile) {
-    return <div>Profile not found or failed to load.</div>;
+    return (
+      <div className="p-8 text-center">
+        <h1 className="text-2xl mb-4">Profile Loading Failed</h1>
+        <p className="text-gray-600">
+          Unable to load profile. Please try refreshing the page.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 bg-gold px-4 py-2 rounded"
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -254,6 +289,16 @@ function EditProfileContent() {
           </div>
         </div>
       </div>
+
+      {/* Debug info for development */}
+      {process.env.NODE_ENV === "development" && profile && (
+        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded text-xs">
+          <p><strong>Debug Info:</strong></p>
+          <p>User ID: {profile.users.user_id}</p>
+          <p>Profile Picture: {profile.users.profile_picture || "None"}</p>
+          <p>Selected File: {selectedFile ? selectedFile.name : "None"}</p>
+        </div>
+      )}
 
       <Toaster 
         position="top-right"
