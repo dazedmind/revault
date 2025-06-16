@@ -390,10 +390,10 @@ function AdminProfileContent() {
 
   return (
     <div>
-      <AdminNavBar/>
+      <AdminNavBar />
 
-     {/* <ProfileCard/> */}
-     {profile ? (
+      {/* <ProfileCard/> */}
+      {profile ? (
         <ProfileCard
           profile_picture={profile?.users?.profile_picture || avatar}
           name={`${profile.users.first_name} ${profile.users.last_name}`}
@@ -407,7 +407,7 @@ function AdminProfileContent() {
       )}
       <main className="flex flex-col dark:bg-secondary px-8 md:px-40 h-full">
         <StatsSection allPapers={allPapers} loading={loadingAllPapers} />
-        
+
         <FilterBar
           departments={localFilters.departments}
           courses={localFilters.courses}
@@ -421,7 +421,7 @@ function AdminProfileContent() {
           downloadComponent={
             <a href={previewHref} target="_blank" rel="noopener noreferrer">
               <button className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-                <p className="hidden md:block">Download</p>
+                <p className="hidden md:block">Generate Report</p>
               </button>
             </a>
           }
