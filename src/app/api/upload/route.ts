@@ -56,7 +56,8 @@ export async function POST(req: NextRequest) {
           console.log("❌ Invalid file type:", file.type);
           return NextResponse.json({
             success: false,
-            message: "Only PDF files are allowed"
+            message: "Only PDF files are allowed",
+            code: "INVALID_FILE_TYPE"
           }, { status: 400 });
         }
 
@@ -65,8 +66,9 @@ export async function POST(req: NextRequest) {
           console.log("❌ File too large:", file.size);
           return NextResponse.json({
             success: false,
-            message: "File size must be less than 50MB"
-          }, { status: 400 });
+            message: "File size must be less than 50MB",
+            code: "FILE_TOO_LARGE"
+          }, { status: 413 }); // Use 413 for payload too large
         }
 
         try {
@@ -85,6 +87,7 @@ export async function POST(req: NextRequest) {
             success: false,
             message: "Failed to upload file to cloud storage",
             error: uploadError.message,
+            code: "UPLOAD_FAILED",
             debug: {
               fileName: file.name,
               fileSize: file.size,
@@ -113,7 +116,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: false,
         message: "Expected multipart/form-data for file upload",
-        receivedContentType: contentType
+        receivedContentType: contentType,
+        code: "INVALID_CONTENT_TYPE"
       }, { status: 400 });
     }
 
@@ -134,7 +138,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: false,
         message: `Missing required fields: ${missingFields.join(', ')}`,
-        missingFields
+        missingFields,
+        code: "MISSING_FIELDS"
       }, { status: 400 });
     }
 
@@ -142,35 +147,90 @@ export async function POST(req: NextRequest) {
     if (isNaN(yearInt) || yearInt < 1900 || yearInt > new Date().getFullYear() + 10) {
       return NextResponse.json({
         success: false,
-        message: "Invalid year provided"
+        message: "Invalid year provided",
+        code: "INVALID_YEAR"
       }, { status: 400 });
     }
 
     console.log("💾 Creating paper record in database...");
     
-    // Create the paper record
-    const created = await prisma.papers.create({
-      data: {
-        title: title.trim(),
-        author: author.trim(),
-        abstract: abstract.trim(),
-        course: course.trim(),
-        department: department.trim(),
-        year: yearInt,
-        keywords: Array.isArray(keywords) ? keywords : [],
-        paper_url: uploadedUrl, // Store the GCS URL
-        created_at: new Date(),
-        updated_at: new Date()
-      },
-    });
+    // Create the paper record with proper error handling
+    let created;
+    try {
+      created = await prisma.papers.create({
+        data: {
+          title: title.trim(),
+          author: author.trim(),
+          abstract: abstract.trim(),
+          course: course.trim(),
+          department: department.trim(),
+          year: yearInt,
+          keywords: Array.isArray(keywords) ? keywords : [],
+          paper_url: uploadedUrl, // Store the GCS URL
+          created_at: new Date(),
+          updated_at: new Date()
+        },
+      });
 
-    console.log("✅ Paper created successfully:", {
-      id: created.paper_id,
-      title: created.title,
-      hasUrl: !!created.paper_url
-    });
+      console.log("✅ Paper created successfully:", {
+        id: created.paper_id,
+        title: created.title,
+        hasUrl: !!created.paper_url
+      });
 
-    // Activity logging
+    } catch (dbError: any) {
+      console.error("❌ Database error:", dbError);
+      
+      // Handle Prisma errors specifically
+      if (dbError.code === 'P2002') {
+        // Unique constraint violation
+        const target = dbError.meta?.target || ['unknown field'];
+        console.log("❌ Unique constraint violation on:", target);
+        
+        if (target.includes('title')) {
+          return NextResponse.json({
+            success: false,
+            message: "A paper with this title already exists. Please use a different title.",
+            code: "P2002",
+            field: "title",
+            constraint: "unique_title"
+          }, { status: 409 }); // 409 Conflict for duplicate resource
+        } else {
+          return NextResponse.json({
+            success: false,
+            message: "A paper with similar information already exists.",
+            code: "P2002",
+            field: target[0] || "unknown",
+            constraint: "unique_constraint"
+          }, { status: 409 });
+        }
+      } else if (dbError.code === 'P2003') {
+        // Foreign key constraint violation
+        return NextResponse.json({
+          success: false,
+          message: "Invalid reference data provided.",
+          code: "P2003",
+          field: dbError.meta?.field_name || "unknown"
+        }, { status: 400 });
+      } else if (dbError.code === 'P2025') {
+        // Record not found
+        return NextResponse.json({
+          success: false,
+          message: "Required record not found.",
+          code: "P2025"
+        }, { status: 404 });
+      } else {
+        // Other database errors
+        return NextResponse.json({
+          success: false,
+          message: "Database error occurred while saving paper.",
+          code: "DATABASE_ERROR",
+          error: process.env.NODE_ENV === 'development' ? dbError.message : undefined
+        }, { status: 500 });
+      }
+    }
+
+    // Activity logging (only if paper was created successfully)
     try {
       const authHeader = req.headers.get('authorization');
       const token = authHeader?.split(' ')[1] || req.cookies.get('authToken')?.value;
@@ -214,6 +274,7 @@ export async function POST(req: NextRequest) {
       }
     } catch (logError) {
       console.error("❌ Activity logging failed:", logError);
+      // Don't fail the entire request if logging fails
     }
 
     return NextResponse.json({
@@ -234,18 +295,39 @@ export async function POST(req: NextRequest) {
       }
     });
     
-  } catch (error) {
+  } catch (error: any) {
     console.error("❌ Upload API Error:", error);
     console.error("Error stack:", error.stack);
     
+    // Handle different types of errors
+    let statusCode = 500;
+    let errorCode = "INTERNAL_ERROR";
+    let message = "Upload failed";
+
+    if (error.name === 'JsonWebTokenError') {
+      statusCode = 401;
+      errorCode = "INVALID_TOKEN";
+      message = "Invalid authentication token";
+    } else if (error.message.includes('fetch')) {
+      statusCode = 503;
+      errorCode = "SERVICE_UNAVAILABLE";
+      message = "External service temporarily unavailable";
+    } else if (error.code === 'P2002') {
+      // Catch any P2002 errors that weren't handled above
+      statusCode = 409;
+      errorCode = "P2002";
+      message = "Duplicate entry detected";
+    }
+    
     return NextResponse.json({
       success: false,
-      message: error instanceof Error ? error.message : "Upload failed",
+      message: message,
+      code: errorCode,
       error: process.env.NODE_ENV === 'development' ? {
         message: error.message,
         stack: error.stack,
         name: error.constructor.name
       } : undefined
-    }, { status: 500 });
+    }, { status: statusCode });
   }
 }

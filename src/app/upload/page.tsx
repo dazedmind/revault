@@ -596,7 +596,7 @@ const UploadFile = () => {
                               className="p-3"
                               value="Thesis Writing"
                             >
-                              CS Thesis Writing
+                              Thesis Writing
                             </SelectItem>
                           </SelectGroup>
                         </SelectContent>
