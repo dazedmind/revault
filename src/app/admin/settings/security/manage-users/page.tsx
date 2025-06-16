@@ -4,6 +4,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState, ChangeEvent, Suspense, useRef } from "react";
 import { Plus } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
 import UsersTable from "@/app/admin/components/manage-users/UsersTable";
 import AddUserModal from "@/app/admin/components/manage-users/AddUserModal";
@@ -50,6 +51,86 @@ function ManageUserContent() {
   });
   const [passwordError, setPasswordError] = useState("");
 
+  // ─── Function to get automatic position based on user access ───
+  const getPositionFromUserAccess = (userAccess: string): string => {
+    const positionMapping: { [key: string]: string } = {
+      Admin: "Chief Librarian",
+      "Admin Assistant": "Chief's Secretary",
+      "Librarian-in-Charge": "Librarian-in-Charge",
+    };
+    return positionMapping[userAccess] || "";
+  };
+
+  // ─── Function to get role based on user access ───
+  const getRoleFromUserAccess = (userAccess: string): string => {
+    const roleMapping: { [key: string]: string } = {
+      "Librarian-in-Charge": "LIBRARIAN",
+      "Admin Assistant": "ASSISTANT",
+      Admin: "ADMIN",
+    };
+    return roleMapping[userAccess] || "LIBRARIAN";
+  };
+
+  // ─── Function to generate dynamic change messages ───
+  const generateChangeMessage = (
+    original: FrontendUser,
+    updated: FrontendUser,
+  ): string => {
+    const changes: string[] = [];
+
+    // Check each field for changes
+    if (original.fullName !== updated.fullName) {
+      changes.push(`First name "${original.fullName}" → "${updated.fullName}"`);
+    }
+    if (original.middleName !== updated.middleName) {
+      changes.push(
+        `Middle name "${original.middleName}" → "${updated.middleName}"`,
+      );
+    }
+    if (original.lastName !== updated.lastName) {
+      changes.push(`Last name "${original.lastName}" → "${updated.lastName}"`);
+    }
+    if (original.extension !== updated.extension) {
+      changes.push(
+        `Extension "${original.extension}" → "${updated.extension}"`,
+      );
+    }
+    if (original.email !== updated.email) {
+      changes.push(`Email "${original.email}" → "${updated.email}"`);
+    }
+    if (original.userAccess !== updated.userAccess) {
+      changes.push(`Role "${original.userAccess}" → "${updated.userAccess}"`);
+    }
+    if (original.position !== updated.position) {
+      changes.push(`Position "${original.position}" → "${updated.position}"`);
+    }
+    if (original.contactNum !== updated.contactNum) {
+      changes.push(
+        `Contact "${original.contactNum}" → "${updated.contactNum}"`,
+      );
+    }
+    if (original.status !== updated.status) {
+      changes.push(`Status "${original.status}" → "${updated.status}"`);
+    }
+
+    if (changes.length === 0) {
+      return "No changes detected";
+    }
+
+    const userName =
+      updated.fullName && updated.lastName
+        ? `${updated.fullName} ${updated.lastName}`
+        : `User #${updated.id}`;
+
+    if (changes.length === 1) {
+      return `${userName}: ${changes[0]} changed successfully`;
+    } else if (changes.length <= 3) {
+      return `${userName}: ${changes.join(", ")} changed successfully`;
+    } else {
+      return `${userName}: ${changes.length} fields updated successfully`;
+    }
+  };
+
   // ─── Add modal state ───
   const [showAddModal, setShowAddModal] = useState(false);
   const [newUser, setNewUser] = useState<Omit<FrontendUser, "id" | "name">>({
@@ -63,7 +144,7 @@ function ManageUserContent() {
     status: "Active",
     userAccess: "Librarian-in-Charge",
     contactNum: "",
-    position: "",
+    position: "Librarian-in-Charge", // Auto-populate default
   });
   const [newUserPasswords, setNewUserPasswords] = useState({
     password: "",
@@ -119,6 +200,12 @@ function ManageUserContent() {
   const handleConfirmDelete = async () => {
     if (userToDelete === null) return;
 
+    // Get user info for toast message
+    const userInfo = users.find((u) => u.id === userToDelete);
+    const userName = userInfo
+      ? `${userInfo.fullName} ${userInfo.lastName}`
+      : `User #${userToDelete}`;
+
     try {
       const res = await fetch(`/admin/api/delete-user/${userToDelete}`, {
         method: "DELETE",
@@ -128,13 +215,24 @@ function ManageUserContent() {
         throw new Error(`Failed to delete user (${res.status})`);
       }
 
+      // Show success toast
+      toast.success("User Deleted Successfully", {
+        description: `${userName} has been removed from the system.`,
+        duration: 4000,
+      });
+
       // Update local state immediately
       setUsers((prev) => prev.filter((u) => u.id !== userToDelete));
       setShowDeleteModal(false);
       setUserToDelete(null);
     } catch (err) {
       console.error("Error deleting user:", err);
-      // TODO: Show error toast
+
+      // Show error toast
+      toast.error("Failed to Delete User", {
+        description: `Could not delete ${userName}. Please try again.`,
+        duration: 4000,
+      });
     }
   };
 
@@ -154,9 +252,21 @@ function ManageUserContent() {
   const handleEditInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    if (!currentEditUser) return;
     const { name, value } = e.target;
-    setCurrentEditUser((prev) => (prev ? { ...prev, [name]: value } : null));
+
+    setCurrentEditUser((prev) => {
+      if (!prev) return prev;
+
+      const updatedUser = { ...prev, [name]: value };
+
+      // If userAccess changed, automatically update position and role
+      if (name === "userAccess") {
+        updatedUser.position = getPositionFromUserAccess(value);
+        updatedUser.role = getRoleFromUserAccess(value);
+      }
+
+      return updatedUser;
+    });
   };
 
   const handleEditPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -167,7 +277,11 @@ function ManageUserContent() {
   const handleSaveEdit = async () => {
     if (!currentEditUser) return;
 
-    // Validation
+    // Store original user data for comparison
+    const originalUser = users.find((u) => u.id === currentEditUser.id);
+    if (!originalUser) return;
+
+    // Password validation (if passwords are provided)
     if (passwords.newPassword || passwords.confirmPassword) {
       if (passwords.newPassword !== passwords.confirmPassword) {
         setPasswordError("Passwords do not match");
@@ -178,6 +292,12 @@ function ManageUserContent() {
         return;
       }
     }
+
+    // Get the automatic position and role
+    const automaticPosition = getPositionFromUserAccess(
+      currentEditUser.userAccess,
+    );
+    const automaticRole = getRoleFromUserAccess(currentEditUser.userAccess);
 
     try {
       const res = await fetch(`/admin/api/update-user/${currentEditUser.id}`, {
@@ -190,10 +310,10 @@ function ManageUserContent() {
           extension: currentEditUser.extension,
           employeeID: currentEditUser.employeeID,
           email: currentEditUser.email,
-          role: currentEditUser.role,
+          role: automaticRole, // Use automatic role
           status: currentEditUser.status,
           contactNum: currentEditUser.contactNum,
-          position: currentEditUser.position,
+          position: automaticPosition, // Use automatic position
           password: passwords.newPassword || undefined,
         }),
       });
@@ -203,7 +323,20 @@ function ManageUserContent() {
       }
 
       const data = await res.json();
-      const updatedUser = data.user;
+      const updatedUser = {
+        ...currentEditUser,
+        position: automaticPosition,
+        role: automaticRole,
+      };
+
+      // Generate dynamic success message
+      const changeMessage = generateChangeMessage(originalUser, updatedUser);
+
+      // Show success toast with changes
+      toast.success("User Updated Successfully", {
+        description: changeMessage,
+        duration: 4000,
+      });
 
       // Update local state immediately
       setUsers((prev) =>
@@ -218,6 +351,15 @@ function ManageUserContent() {
     } catch (err) {
       console.error("Error updating user:", err);
       setPasswordError("Failed to update user. Please try again.");
+
+      // Show error toast
+      toast.error("Failed to Update User", {
+        description:
+          err instanceof Error
+            ? err.message
+            : "An unexpected error occurred while updating the user.",
+        duration: 4000,
+      });
     }
   };
 
@@ -245,7 +387,18 @@ function ManageUserContent() {
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    setNewUser((prev) => ({ ...prev, [name]: value }));
+
+    setNewUser((prev) => {
+      const updatedUser = { ...prev, [name]: value };
+
+      // If userAccess changed, automatically update position and role
+      if (name === "userAccess") {
+        updatedUser.position = getPositionFromUserAccess(value);
+        updatedUser.role = getRoleFromUserAccess(value);
+      }
+
+      return updatedUser;
+    });
   };
 
   const handleNewUserPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -254,12 +407,41 @@ function ManageUserContent() {
   };
 
   const handleAddUser = async () => {
-    // Basic validation is handled in the modal component
+    // Validation
+    if (
+      !newUser.fullName ||
+      !newUser.lastName ||
+      !newUser.email ||
+      !newUser.employeeID ||
+      !newUser.userAccess
+    ) {
+      setNewUserPasswordError("Please fill in all required fields");
+      return;
+    }
+
+    if (!newUserPasswords.password || !newUserPasswords.confirmPassword) {
+      setNewUserPasswordError("Password is required");
+      return;
+    }
+    if (newUserPasswords.password !== newUserPasswords.confirmPassword) {
+      setNewUserPasswordError("Passwords do not match");
+      return;
+    }
+    if (newUserPasswords.password.length < 6) {
+      setNewUserPasswordError("Password must be at least 6 characters");
+      return;
+    }
+
+    // Map userAccess to API role format
     const roleMapping: { [key: string]: string } = {
       "Librarian-in-Charge": "LIBRARIAN",
       "Admin Assistant": "ASSISTANT",
       Admin: "ADMIN",
     };
+
+    // Get the automatic position and role
+    const automaticPosition = getPositionFromUserAccess(newUser.userAccess);
+    const automaticRole = getRoleFromUserAccess(newUser.userAccess);
 
     const apiPayload = {
       fullName: newUser.fullName,
@@ -268,58 +450,83 @@ function ManageUserContent() {
       extName: newUser.extension,
       employeeID: newUser.employeeID,
       email: newUser.email,
-      role: roleMapping[newUser.userAccess] || "LIBRARIAN",
+      role: automaticRole, // Use automatic role
       password: newUserPasswords.password,
       confirmPassword: newUserPasswords.confirmPassword,
-      position: newUser.position,
+      position: automaticPosition, // Use automatic position
     };
 
     try {
-      const res = await fetch("/admin/api/create-user", {
+      const res = await fetch("/admin/api/admin-staff", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(apiPayload),
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(
-          errorData.message || `Failed to create user (${res.status})`,
-        );
+        throw new Error(`Failed to create user (${res.status})`);
       }
 
       const data = await res.json();
 
-      // Create frontend user object
-      const createdUser: FrontendUser = {
-        id: data.user.userId,
-        fullName: data.user.fullName || newUser.fullName,
-        middleName: data.user.middleName || newUser.middleName,
-        lastName: data.user.lastName || newUser.lastName,
-        extension: data.user.extension || newUser.extension,
-        employeeID: data.user.employeeId || newUser.employeeID,
-        email: data.user.email,
-        role: data.user.role,
-        status: "Active",
-        userAccess: newUser.userAccess,
-        contactNum: "0",
-        position: data.user.position || newUser.position,
-        name: `${newUser.fullName} ${newUser.lastName}${newUser.extension ? " " + newUser.extension : ""}`,
-      };
+      if (data.success) {
+        // Generate user details for success message
+        const userName = `${newUser.fullName} ${newUser.lastName}${newUser.extension ? " " + newUser.extension : ""}`;
+        const userDetails = [
+          `Role: ${newUser.userAccess}`,
+          `Position: ${automaticPosition}`,
+          `Email: ${newUser.email}`,
+          `Employee ID: ${newUser.employeeID}`,
+        ].join(", ");
 
-      // Update local state immediately
-      setUsers((prev) => [...prev, createdUser]);
+        // Show success toast
+        toast.success("User Created Successfully", {
+          description: `${userName} has been added to the system. ${userDetails}`,
+          duration: 5000,
+        });
 
-      // Close modal and reset state
-      setShowAddModal(false);
-      setNewUserPasswordError("");
+        // Refresh users list
+        const usersRes = await fetch("/admin/api/users");
+        const usersData = await usersRes.json();
+
+        if (usersData.success) {
+          setUsers(usersData.users);
+        }
+
+        // Close modal and reset state
+        setShowAddModal(false);
+        setNewUser({
+          fullName: "",
+          middleName: "",
+          lastName: "",
+          extension: "",
+          employeeID: "",
+          email: "",
+          role: "LIBRARIAN",
+          status: "Active",
+          userAccess: "Librarian-in-Charge",
+          contactNum: "",
+          position: "Librarian-in-Charge",
+        });
+        setNewUserPasswords({ password: "", confirmPassword: "" });
+        setNewUserPasswordError("");
+      } else {
+        throw new Error(data.message || "Failed to create user");
+      }
     } catch (err) {
       console.error("Error creating user:", err);
-      setNewUserPasswordError(
+      const errorMessage =
         err instanceof Error
           ? err.message
-          : "Failed to create user. Please try again.",
-      );
+          : "Failed to create user. Please try again.";
+
+      setNewUserPasswordError(errorMessage);
+
+      // Show error toast
+      toast.error("Failed to Create User", {
+        description: errorMessage,
+        duration: 4000,
+      });
     }
   };
 
@@ -418,6 +625,20 @@ function ManageUserContent() {
           theme={theme}
         />
       )}
+
+      {/* Toaster positioned at bottom right */}
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: theme === "dark" ? "#1f2937" : "#ffffff",
+            color: theme === "dark" ? "#f9fafb" : "#111827",
+            border:
+              theme === "dark" ? "1px solid #374151" : "1px solid #e5e7eb",
+          },
+        }}
+        richColors
+      />
     </div>
   );
 }
