@@ -54,21 +54,19 @@ model librarian {
 }
 
 model papers {
-  paper_id         Int                @id @default(autoincrement())
-  title            String?            @unique
-  author           String?
-  year             Int?
-  department       String?
-  keywords         String[]
-  course           String?
-  abstract         String?
-  created_at       DateTime?
-  updated_at       DateTime?
-  paper_url        String?
-  paper_bm25_index paper_bm25_index[]
-  paper_metadata   paper_metadata[]
-  term_score       term_score[]
-  user_bookmarks   user_bookmarks[]
+  paper_id       Int              @id @default(autoincrement())
+  title          String?          @unique
+  author         String?
+  year           Int?
+  department     String?
+  keywords       String[]
+  course         String?
+  abstract       String?
+  created_at     DateTime?
+  updated_at     DateTime?
+  paper_url      String?
+  paper_metadata paper_metadata[]
+  user_bookmarks user_bookmarks[]
 }
 
 model paper_metadata {
@@ -102,24 +100,6 @@ model Otp {
   expiresAt DateTime
 }
 
-model paper_bm25_index {
-  index_id          Int    @id @default(autoincrement())
-  paper_id          Int
-  token_frequencies Json
-  document_length   Int
-  papers            papers @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
-}
-
-model term_score {
-  id       Int    @id @default(autoincrement())
-  term     String
-  tf       Float
-  tfidf    Float
-  bm25     Float
-  paper_id Int
-  papers   papers @relation(fields: [paper_id], references: [paper_id], onDelete: Cascade)
-}
-
 model activity_logs {
   name          String
   activity      String
@@ -133,13 +113,6 @@ model activity_logs {
   user_id       Int
   librarian     librarian      @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
   users         users          @relation(fields: [user_id], references: [user_id])
-}
-
-model global_stats {
-  id             Int      @id @default(autoincrement())
-  total_docs     Int
-  avg_doc_length Float
-  updated_at     DateTime @updatedAt
 }
 
 enum activity_type {
