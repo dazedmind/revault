@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { uploadProfilePicture, testConnection } from "@/app/utils/gcpUploader";
-import jwt from "jsonwebtoken";
-
-const SECRET_KEY = process.env.JWT_SECRET_KEY;
+import { testConnection } from "@/app/utils/gcpUploader";
 
 export async function GET() {
   return NextResponse.json({
@@ -57,7 +54,8 @@ export async function POST(req: NextRequest) {
     console.log("📄 File details:", {
       name: file.name,
       type: file.type,
-      size: file.size
+      size: file.size,
+      userId: userId
     });
     
     // Validate file type - allow common image formats
@@ -94,8 +92,8 @@ export async function POST(req: NextRequest) {
       
       console.log("📤 Starting upload to Google Cloud Storage...");
       
-      // Upload to profile folder instead of papers folder
-      const uploadedUrl = await handleProfilePictureUpload(buffer, file.name, userId);
+      // Upload to profile folder
+      const uploadedUrl = await uploadProfilePicture(buffer, file.name, userId);
       console.log("✅ Upload completed! URL:", uploadedUrl);
 
       // Update user's profile picture in database
@@ -120,7 +118,7 @@ export async function POST(req: NextRequest) {
       console.error("❌ Upload failed:", uploadError);
       return NextResponse.json({
         success: false,
-        message: "Failed to upload profile picture"
+        message: "Failed to upload profile picture: " + (uploadError instanceof Error ? uploadError.message : "Unknown error")
       }, { status: 500 });
     }
 
@@ -134,25 +132,51 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Custom upload function for profile pictures
-async function handleProfilePictureUpload(buffer: Buffer, originalFilename: string, userId: string): Promise<string> {
+// Upload function for profile pictures using your existing GCP setup
+async function uploadProfilePicture(buffer: Buffer, originalFilename: string, userId: string): Promise<string> {
   try {
     const { Storage } = require("@google-cloud/storage");
     const { v4: uuidv4 } = require("uuid");
     const path = require("path");
-    
-    // Initialize Google Cloud Storage
-    const storage = new Storage({
-      projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
-      keyFilename: process.env.GOOGLE_CLOUD_KEY_FILE,
-    });
-    
-    const bucketName = process.env.GOOGLE_CLOUD_STORAGE_BUCKET || "";
+    const fs = require("fs");
     
     console.log("📤 Starting profile picture upload process...");
     console.log("📄 Original filename:", originalFilename);
     console.log("👤 User ID:", userId);
     console.log("📊 Buffer size:", buffer.length, "bytes");
+    
+    // Initialize Google Cloud Storage using your existing environment setup
+    let storage;
+    
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const serviceAccountPath = path.join(process.cwd(), "gcp-service-key.json");
+    
+    if (isDevelopment && fs.existsSync(serviceAccountPath)) {
+      // Development: Use service account file
+      storage = new Storage({
+        keyFilename: serviceAccountPath,
+        projectId: "revault-system",
+      });
+    } else if (process.env.GOOGLE_CLOUD_CREDENTIALS_BASE64) {
+      // Production: Use base64 encoded credentials
+      const credentialsJSON = Buffer.from(
+        process.env.GOOGLE_CLOUD_CREDENTIALS_BASE64,
+        'base64'
+      ).toString('utf-8');
+      const credentials = JSON.parse(credentialsJSON);
+      
+      storage = new Storage({
+        projectId: credentials.project_id || "revault-system",
+        credentials,
+      });
+    } else {
+      // Fallback
+      storage = new Storage({
+        projectId: "revault-system",
+      });
+    }
+    
+    const bucketName = "revault-files";
     
     // Generate unique filename to avoid conflicts
     const fileExtension = path.extname(originalFilename);
@@ -169,10 +193,28 @@ async function handleProfilePictureUpload(buffer: Buffer, originalFilename: stri
 
     console.log("⬆️ Uploading profile picture to Google Cloud Storage...");
     
+    // Determine content type based on file extension
+    const getContentType = (filename: string): string => {
+      const ext = path.extname(filename).toLowerCase();
+      switch (ext) {
+        case '.jpg':
+        case '.jpeg':
+          return 'image/jpeg';
+        case '.png':
+          return 'image/png';
+        case '.gif':
+          return 'image/gif';
+        case '.webp':
+          return 'image/webp';
+        default:
+          return 'image/jpeg';
+      }
+    };
+    
     // Upload the file
     await file.save(buffer, {
       metadata: {
-        contentType: file.type || "image/jpeg",
+        contentType: getContentType(originalFilename),
         cacheControl: "public, max-age=31536000",
         // Add custom metadata
         uploadedAt: new Date().toISOString(),
