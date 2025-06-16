@@ -117,7 +117,7 @@ export default function AdminNavBar() {
             ) {
               return (
                 <Link href="/admin/profile#manage-papers">
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
+                  <button className="bg-yale-blue hover:brightness-120 hover:shadow-lg hover:shadow-yale-blue/80 transition-all duration-200 text-white p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
                     <FaFilePdf /> Manage
                   </button>
                 </Link>

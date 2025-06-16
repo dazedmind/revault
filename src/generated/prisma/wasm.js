@@ -195,22 +195,6 @@ exports.Prisma.OtpScalarFieldEnum = {
   expiresAt: 'expiresAt'
 };
 
-exports.Prisma.Paper_bm25_indexScalarFieldEnum = {
-  index_id: 'index_id',
-  paper_id: 'paper_id',
-  token_frequencies: 'token_frequencies',
-  document_length: 'document_length'
-};
-
-exports.Prisma.Term_scoreScalarFieldEnum = {
-  id: 'id',
-  term: 'term',
-  tf: 'tf',
-  tfidf: 'tfidf',
-  bm25: 'bm25',
-  paper_id: 'paper_id'
-};
-
 exports.Prisma.Activity_logsScalarFieldEnum = {
   name: 'name',
   activity: 'activity',
@@ -224,20 +208,9 @@ exports.Prisma.Activity_logsScalarFieldEnum = {
   user_id: 'user_id'
 };
 
-exports.Prisma.Global_statsScalarFieldEnum = {
-  id: 'id',
-  total_docs: 'total_docs',
-  avg_doc_length: 'avg_doc_length',
-  updated_at: 'updated_at'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
-};
-
-exports.Prisma.JsonNullValueInput = {
-  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -248,12 +221,6 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
-};
-
-exports.Prisma.JsonNullValueFilter = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull,
-  AnyNull: Prisma.AnyNull
 };
 exports.user_role = exports.$Enums.user_role = {
   ADMIN: 'ADMIN',
@@ -286,10 +253,7 @@ exports.Prisma.ModelName = {
   paper_metadata: 'paper_metadata',
   user_bookmarks: 'user_bookmarks',
   Otp: 'Otp',
-  paper_bm25_index: 'paper_bm25_index',
-  term_score: 'term_score',
-  activity_logs: 'activity_logs',
-  global_stats: 'global_stats'
+  activity_logs: 'activity_logs'
 };
 
 /**
