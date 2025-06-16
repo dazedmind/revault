@@ -10,7 +10,7 @@ import {
   GoPencil, 
   GoBookmarkFill, 
 } from "react-icons/go";
-import { Calendar, User, Building, Tag, BookOpen } from "lucide-react";
+import { Calendar, User, Building, BookOpen } from "lucide-react";
 import DocsLoader from "./DocsLoader";
 
 
@@ -187,6 +187,9 @@ const DocsCard = (props) => {
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
             width={256}
             height={200}
+            quality={80} 
+            priority={true}  
+            loading="eager"  
           />
           
      
@@ -236,7 +239,6 @@ const DocsCard = (props) => {
                   key={index}
                   className="inline-flex items-center gap-1 px-3 py-1 bg-yale-blue/30  text-yale-blue  rounded-full text-xs font-medium"
                 >
-                  <Tag className="w-3 h-3" />
                   {tag}
                 </span>
               ))
@@ -258,7 +260,6 @@ const DocsCard = (props) => {
                   key={index}
                   className="inline-flex items-center gap-1 px-3 py-1 bg-yale-blue/30  text-yale-blue  rounded-full text-xs font-medium"
                 >
-                  <Tag className="w-3 h-3" />
                   {tag}
                 </span>
               ))

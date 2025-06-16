@@ -31,6 +31,7 @@ import {
   GoSun,
 } from "react-icons/go";
 import MobileFriendlyPDFViewer from "../../component/MobileFriendlyPDFViewer";
+import { FaHamburger } from "react-icons/fa";
 
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -250,6 +251,7 @@ function ViewFile() {
 
         setPaper({
           ...data,
+          paper_id: data.paper_id || "",
           title: data.title?.replace(/"/g, "") || "",
           author: data.author?.replace(/"/g, "") || "",
           keywords: Array.isArray(data.keywords)
@@ -321,7 +323,7 @@ function ViewFile() {
                 dark:bg-accent overflow-y-auto`}
             >
               <span className="flex items-center text-center align-middle gap-2 justify-between mb-2 md:mb-6">
-                <h2 className="text-3xl p-4 md:p-0 font-bold">Metadata</h2>
+                <h2 className="text-3xl p-4 md:p-0 font-bold">Paper Information</h2>
 
                 <button
                   className="text-2xl px-4 rounded-md cursor-pointer transition-colors duration-200"
@@ -334,11 +336,16 @@ function ViewFile() {
               <div
                 className={`border-2 ${theme === "light" ? "border-white-50" : "border-white-5"} p-8 rounded-md`}
               >
-                <p className="font-bold text-2xl text-gold">Metadata</p>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <p className="text-lg">
-                      <strong>Title:</strong>
+                      <strong>Paper ID: </strong>
+                      {paper.paper_id}
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <p className="text-lg">
+                      <strong>Paper Title:</strong>
                       {paper.id} {paper.title}
                     </p>
                   </div>
@@ -426,14 +433,14 @@ function ViewFile() {
 
             {/* File Menu and Main Content */}
             <div className="flex flex-col-reverse md:flex-row">
-              <aside className="flex flex-row md:flex-col justify-center md:justify-start gap-4 md:gap-0 w-auto md:w-72 h-auto dark:bg-secondary p-4 pt-2 md:p-8">
-                <h1 className="text-2xl font-bold  hidden md:block">
-                  File Menu
-                </h1>
+              <aside className="flex flex-row md:flex-col justify-center md:justify-start gap-4 w-auto h-auto dark:bg-secondary p-4 ">
+                {/* <h1 className="text-2xl font-bold  hidden md:block">
+                  Menu
+                </h1> */}
 
                 <FileMenuButton
                   icon={<GoInfo className="text-2xl text-yale-blue" />}
-                  label="View Metadata"
+                  label="View Details"
                   onClick={() => setShowMetadata(!showMetadata)}
                 />
 
