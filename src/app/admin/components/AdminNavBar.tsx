@@ -110,11 +110,15 @@ export default function AdminNavBar() {
 
           {(() => {
             const userType = localStorage.getItem("userType");
-            if (userType == "!ADMIN" && "!ASSISTANT" && "LIBRARIAN") {
+            if (
+              userType !== "ADMIN" &&
+              userType !== "ASSISTANT" &&
+              userType == "LIBRARIAN"
+            ) {
               return (
                 <Link href="/admin/profile#manage-papers">
                   <button className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-                    <FaFilePdf /> Manage Papers
+                    <FaFilePdf /> Manage
                   </button>
                 </Link>
               );
