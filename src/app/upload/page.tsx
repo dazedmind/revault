@@ -106,6 +106,8 @@ const UploadFile = () => {
           "Upload successful! File uploaded to Google Cloud Storage.",
         );
         handleClearFile();
+      } else if (response.status === 413) {
+        toast.error("File too large! Please select a smaller file (max 50MB)");
       } else {
         console.error("Upload failed:", result);
         if (result.code === "P2002") {
@@ -193,6 +195,8 @@ const UploadFile = () => {
             duration: 6000
           });
           return; // Don't clear the form, let user fill manually
+        } else if (result.code === 413){
+          toast.error("File too large! Please select a smaller file (max 50MB)");
         } else {
           toast.error(result.error || "Failed to extract document information. You can fill in the details manually.", {
             duration: 4000
@@ -582,15 +586,15 @@ const UploadFile = () => {
                             <SelectItem className="p-3" value="SIA">
                               SIA
                             </SelectItem>
-                            <SelectItem className="p-3" value="Capstone">
-                              Capstone
+                            <SelectItem className="p-3" value="Capstone Project">
+                              Capstone Project
                             </SelectItem>
                             <SelectItem className="p-3" value="Compiler Design">
                               Compiler Design
                             </SelectItem>
                             <SelectItem
                               className="p-3"
-                              value="CS Thesis Writing"
+                              value="Thesis Writing"
                             >
                               CS Thesis Writing
                             </SelectItem>
