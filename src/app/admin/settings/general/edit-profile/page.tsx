@@ -43,7 +43,7 @@ function EditProfileContent() {
     formData.append("user_id", profile.users.user_id); // assuming this is the correct field
   
     try {
-      const res = await fetch("/admin/api/upload-profile", {
+      const res = await fetch("/api/upload-profile", {
         method: "POST",
         body: formData,
       });
