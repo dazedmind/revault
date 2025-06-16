@@ -56,14 +56,14 @@ export default function UsersTable({
 
   console.log("▶ filteredUsers:", filteredUsers);
 
-  // Helper function to format user display name with contact info
+  // Helper function to format user display name (removed contact info)
   const formatUserDisplayInfo = (user: User) => {
     const displayName =
       user.name ||
       `${user.fullName} ${user.lastName}${user.extension ? " " + user.extension : ""}`;
     return {
       name: displayName,
-      subtitle: user.contactNum || user.position || user.employeeID,
+      subtitle: user.position || user.employeeID, // Only show position or employee ID
     };
   };
 
@@ -130,8 +130,7 @@ export default function UsersTable({
                     <span className="font-medium">{userInfo.name}</span>
                     {userInfo.subtitle && (
                       <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {u.position && `${u.position} • `}
-                        {u.contactNum && `📞 ${u.contactNum}`}
+                        {u.position && `${u.position}`}
                       </span>
                     )}
                   </div>

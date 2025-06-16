@@ -40,9 +40,11 @@ const useIsMobile = () => {
   useEffect(() => {
     const checkMobile = () => {
       const userAgent = navigator.userAgent || navigator.vendor;
-      return /android|iphone|ipad|ipod|blackberry|iemobile/i.test(userAgent.toLowerCase());
+      return /android|iphone|ipad|ipod|blackberry|iemobile/i.test(
+        userAgent.toLowerCase(),
+      );
     };
-    
+
     setIsMobile(checkMobile());
   }, []);
 
@@ -324,7 +326,9 @@ function ViewFile() {
                 dark:bg-accent overflow-y-auto`}
             >
               <span className="flex items-center text-center align-middle gap-2 justify-between mb-2 md:mb-6">
-                <h2 className="text-3xl p-4 md:p-0 font-bold">Paper Information</h2>
+                <h2 className="text-3xl p-4 md:p-0 font-bold">
+                  Paper Information
+                </h2>
 
                 <button
                   className="text-2xl px-4 rounded-md cursor-pointer transition-colors duration-200"
@@ -509,135 +513,142 @@ function ViewFile() {
 
                 {/* Content Row - Document and Metadata Sidebar */}
                 <div className="flex flex-col lg:flex-row">
-                  
-                {/* Document Viewer */}
+                  {/* Document Viewer */}
                   <div className="Document flex-1">
                     {isMobile ? (
-                      <MobileFriendlyPDFViewer 
+                      <MobileFriendlyPDFViewer
                         pdfUrl={pdfUrl}
                         pdfError={pdfError}
                         handlePdfError={handlePdfError}
                         theme={theme}
                       />
-                    ) : (
-                      // Desktop: Original object tag code
-                      pdfDisplayUrl && !pdfError ? (
-                        <object
-                          data={pdfDisplayUrl}
-                          type="application/pdf"
-                          width="100%"
-                          height="100%"
-                          className="h-screen w-screen md:w-3xl"
-                          onError={handlePdfError}
-                        >
-                          {/* Fallback content when PDF can't be displayed */}
-                          <div className="flex flex-col items-center justify-center h-full p-8 bg-gray-100 dark:bg-gray-800">
-                            <div className="text-center">
-                              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Download className="w-8 h-8 text-red-600 dark:text-red-400" />
-                              </div>
-                              <h3 className="text-lg font-semibold mb-2">
-                                PDF Viewer Not Supported
-                              </h3>
-                              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                                Your browser doesn&apos;t support inline PDF viewing.
-                              </p>
-                              <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                                <a
-                                  href={pdfUrl}
-                                  download
-                                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                                >
-                                  Download PDF
-                                </a>
-                                <a
-                                  href={pdfUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                                >
-                                  Open in New Tab
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </object>
-                      ) : (
-                        // Error state for desktop
-                        <div className="flex flex-col items-center justify-center h-screen p-8 bg-gray-100 dark:bg-gray-800">
+                    ) : // Desktop: Original object tag code
+                    pdfDisplayUrl && !pdfError ? (
+                      <object
+                        data={pdfDisplayUrl}
+                        type="application/pdf"
+                        width="100%"
+                        height="100%"
+                        className="h-screen w-screen md:w-3xl"
+                        onError={handlePdfError}
+                      >
+                        {/* Fallback content when PDF can't be displayed */}
+                        <div className="flex flex-col items-center justify-center h-full p-8 bg-gray-100 dark:bg-gray-800">
                           <div className="text-center">
-                            {pdfError ? (
-                              <>
-                                <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                  <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
-                                </div>
-                                <h3 className="text-lg font-semibold mb-2">
-                                  PDF Not Available
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                                  The PDF file could not be loaded. It may have been moved or deleted.
-                                </p>
-                              </>
-                            ) : (
-                              <>
-                                <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                                  <Download className="w-8 h-8 text-gray-500" />
-                                </div>
-                                <h3 className="text-lg font-semibold mb-2">
-                                  No PDF File Available
-                                </h3>
-                                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                                  This document doesn&apos;t have an associated PDF file.
-                                </p>
-                              </>
-                            )}
+                            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                              <Download className="w-8 h-8 text-red-600 dark:text-red-400" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">
+                              PDF Viewer Not Supported
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-400 mb-4">
+                              Your browser doesn&apos;t support inline PDF
+                              viewing.
+                            </p>
                             <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                              <button
-                                onClick={() => router.back()}
-                                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                              <a
+                                href={pdfUrl}
+                                download
+                                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
                               >
-                                Go Back
-                              </button>
-                              {pdfError && (
-                                <button
-                                  onClick={() => {
-                                    setPdfError(false);
-                                    window.location.reload();
-                                  }}
-                                  className="bg-gold hover:brightness-110 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                                >
-                                  Retry
-                                </button>
-                              )}
+                                Download PDF
+                              </a>
+                              <a
+                                href={pdfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                              >
+                                Open in New Tab
+                              </a>
                             </div>
                           </div>
                         </div>
-                      )
+                      </object>
+                    ) : (
+                      // Error state for desktop
+                      <div className="flex flex-col items-center justify-center h-screen p-8 bg-gray-100 dark:bg-gray-800">
+                        <div className="text-center">
+                          {pdfError ? (
+                            <>
+                              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
+                              </div>
+                              <h3 className="text-lg font-semibold mb-2">
+                                PDF Not Available
+                              </h3>
+                              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                The PDF file could not be loaded. It may have
+                                been moved or deleted.
+                              </p>
+                            </>
+                          ) : (
+                            <>
+                              <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Download className="w-8 h-8 text-gray-500" />
+                              </div>
+                              <h3 className="text-lg font-semibold mb-2">
+                                No PDF File Available
+                              </h3>
+                              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                This document doesn&apos;t have an associated
+                                PDF file.
+                              </p>
+                            </>
+                          )}
+                          <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                            <button
+                              onClick={() => router.back()}
+                              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                            >
+                              Go Back
+                            </button>
+                            {pdfError && (
+                              <button
+                                onClick={() => {
+                                  setPdfError(false);
+                                  window.location.reload();
+                                }}
+                                className="bg-gold hover:brightness-110 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                              >
+                                Retry
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
 
                   {/* Right Sidebar - Metadata Preview */}
                   <div className="p-8 pt-2 pb-0 relative w-full lg:w-full">
                     <div className="flex flex-col gap-2 text-gray-600 dark:text-gray-400 my-4">
-                       <div className={`flex items-center gap-2 ${theme === "light" ? "bg-tertiary" : "bg-dusk"} p-2 rounded-md`}>
+                      <div
+                        className={`flex items-center gap-2 ${theme === "light" ? "bg-tertiary" : "bg-dusk"} p-2 rounded-md`}
+                      >
                         <Building2 className="w-4 h-4 hidden md:block" />
                         <span className="text-sm">{paper.department}</span>
-                       </div>
-                      
-                      <div className={`flex items-center gap-2 ${theme === "light" ? "bg-tertiary" : "bg-dusk"} p-2 rounded-md`}>
+                      </div>
+
+                      <div
+                        className={`flex items-center gap-2 ${theme === "light" ? "bg-tertiary" : "bg-dusk"} p-2 rounded-md`}
+                      >
                         <Calendar className="w-4 h-4 hidden md:block" />
                         <span className="text-sm">{paper.year}</span>
                       </div>
 
-
-                      <div className={`flex items-center gap-2 ${theme === "light" ? "bg-tertiary" : "bg-dusk"} p-2 rounded-md`}>
+                      <div
+                        className={`flex items-center gap-2 ${theme === "light" ? "bg-tertiary" : "bg-dusk"} p-2 rounded-md`}
+                      >
                         <BookOpen className="w-4 h-4 hidden md:block" />
                         <span className="text-sm">{paper.course}</span>
                       </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Tags:</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Tags:
+                      </p>
                       {Array.isArray(paper.keywords) ? (
                         paper.keywords
                           .flatMap(
@@ -657,7 +668,9 @@ function ViewFile() {
                             </span>
                           ))
                       ) : (
-                        <span className="text-white-25">No keywords available</span>
+                        <span className="text-white-25">
+                          No keywords available
+                        </span>
                       )}
                     </div>
 

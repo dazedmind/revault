@@ -35,7 +35,7 @@ export function StatsSection({
     const fetchUserCount = async () => {
       try {
         console.log("📊 Fetching total users count...");
-        
+
         // Get token from localStorage
         const token = localStorage.getItem("authToken");
         if (!token) {
@@ -44,12 +44,12 @@ export function StatsSection({
           setUserLoading(false);
           return;
         }
-        
+
         const response = await fetch("/admin/api/total-users", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -64,7 +64,7 @@ export function StatsSection({
         const data = await response.json();
         console.log("✅ User count API response:", data);
 
-        if (data.success && typeof data.total_users === 'number') {
+        if (data.success && typeof data.total_users === "number") {
           setTotalUsers(data.total_users);
           setUserError(null);
         } else {
@@ -150,7 +150,6 @@ export function StatsSection({
             />
           </CarouselItem>
         </CarouselContent>
-
       </Carousel>
 
       {/* Desktop: Grid */}
