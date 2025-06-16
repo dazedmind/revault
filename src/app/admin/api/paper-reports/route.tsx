@@ -64,12 +64,19 @@ export async function GET(request: Request) {
       department: item.department ?? "",
     }));
 
-    // 6) Create PDF element
+    // 6) Prepare filter information for PDF
+    const filters = {
+      department: deptParam || undefined,
+      course: courseParam || undefined,
+      sort: sortParam || undefined,
+    };
+
+    // 7) Create PDF element with filters
     const pdfElement = (
-      <PapersReport papers={papers} />
+      <PapersReport papers={papers} filters={filters} />
     ) as React.ReactElement<DocumentProps>;
 
-    // 7) Render to stream and buffer
+    // 8) Render to stream and buffer
     const pdfStream = await renderToStream(pdfElement);
     const buffers: Uint8Array[] = [];
     for await (const chunk of pdfStream) {
@@ -77,7 +84,7 @@ export async function GET(request: Request) {
     }
     const pdfBuffer = Buffer.concat(buffers);
 
-    // 8) Return PDF
+    // 9) Return PDF
     const headers: Record<string, string> = {
       "Content-Type": "application/pdf",
       "Content-Disposition": download
