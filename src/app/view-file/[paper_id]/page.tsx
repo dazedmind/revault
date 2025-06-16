@@ -145,6 +145,7 @@ function ViewFile() {
 
   const checkBookmarkStatus = useCallback(async () => {
     const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("authToken");
     if (!token) return;
 
     try {
@@ -301,6 +302,13 @@ function ViewFile() {
 
   return (
     <div className="dark:bg-secondary h-auto">
+      {userType === "LIBRARIAN" ||
+      userType === "ASSISTANT" ||
+      userType === "ADMIN" ? (
+        <AdminNavBar />
+      ) : (
+        <NavBar />
+      )}
       {userType === "LIBRARIAN" ||
       userType === "ASSISTANT" ||
       userType === "ADMIN" ? (
