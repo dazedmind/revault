@@ -15,7 +15,7 @@ const positionBadge = (position: string, college: string, programOrDept: string)
     } else {
       return (
         <p className="text-xs md:text-sm w-fit border border-gold-fg/40 bg-gold text-white rounded-md px-3 py-1 font-medium">
-          {college} - {programOrDept}
+          {userType === "FACULTY" ? position : college} - {programOrDept}
         </p>
       )
     }
