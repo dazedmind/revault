@@ -292,169 +292,169 @@ export default function HomePage() {
         </div>
       </aside>
 
-      {/* Mobile filter popover */}
-      <div className="md:hidden flex justify-between items-center p-6">
-        <h1 className="text-2xl font-bold">Recent Papers</h1>
-        <Popover>
-          <PopoverTrigger className="flex items-center gap-2 bg-gold text-midnight px-4 py-2 rounded-lg">
-            <FaFilter />
-            Filter
-          </PopoverTrigger>
-          <PopoverContent
-            className={`${
-              theme === "light"
-                ? "bg-accent border-white-50"
-                : "bg-dusk border-white-5"
-            }`}
-            align="end"
-          >
-            {/* Sort dropdown - moved to top and fixed default value */}
-            <div className="mb-4">
-              <p className="text-sm font-medium mb-2">Sort by</p>
-              <Select
-                onValueChange={() => {}}
-                value={""}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="year-recent">
-                      Publish Year (Most recent)
-                    </SelectItem>
-                    <SelectItem value="year-oldest">
-                      Publish Year (Oldest)
-                    </SelectItem>
-                    <SelectItem value="title-asc">Paper Title (A-Z)</SelectItem>
-                    <SelectItem value="title-desc">
-                      Paper Title (Z-A)
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div
-              className={`${
-                theme === "light" ? "bg-white-50" : "bg-white-5"
-              } h-0.5 w-auto my-2 mx-1`}
-            />
-
-            {/* Department Checkboxes */}
-            <div className="mb-4">
-              <p className="text-lg font-medium mb-2">Department</p>
-              <ul className="ml-1 flex flex-col gap-2">
-                {["Information Technology", "Computer Science"].map((d) => (
-                  <li key={d} className="flex items-center gap-2">
-                    <Checkbox
-                      id={`dept-${d}`}
-                      checked={departments.includes(d)}
-                      onCheckedChange={() => toggle(d, departments, setDepartments)}
-                    />
-                    <label
-                      htmlFor={`dept-${d}`}
-                      className="text-sm cursor-pointer select-none"
-                    >
-                      {d}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div
-              className={`${
-                theme === "light" ? "bg-white-50" : "bg-white-5"
-              } h-0.5 w-auto my-2 mx-1`}
-            />
-
-            {/* Course Checkboxes - Made independent */}
-            <div className="mb-4">
-              <p className="text-lg font-medium mb-2">Course</p>
-              <ul className="ml-1 flex flex-col gap-2">
-                {[
-                  { name: "SIA", department: "Information Technology" },
-                  { name: "Capstone", department: "Information Technology" },
-                  { name: "CS Thesis Writing", department: "Computer Science" },
-                  { name: "Compiler Design", department: "Computer Science" },
-                ].map((course) => (
-                  <li key={course.name} className="flex items-center gap-2">
-                    <Checkbox
-                      id={`course-${course.name}`}
-                      checked={courses.includes(course.name)}
-                      onCheckedChange={() => toggle(course.name, courses, setCourses)}
-                      // Removed the disabled condition to make filters independent
-                    />
-                    <label
-                      htmlFor={`course-${course.name}`}
-                      className="text-sm cursor-pointer select-none"
-                    >
-                      {course.name}
-                      <span className="text-xs text-gray-500 ml-1">
-                        (
-                        {course.department.includes("Information")
-                          ? "IT"
-                          : "CS"}
-                        )
-                      </span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Apply / Clear Buttons */}
-            <div className="flex gap-2 mt-4">
-              <button
-                onClick={clearAllFilters}
-                className={`${
-                  theme === "light"
-                    ? "bg-white-50 hover:bg-white-25"
-                    : "bg-white-5 hover:bg-white-10"
-                } p-2 w-full rounded-md cursor-pointer transition-colors duration-200 text-sm`}
-              >
-                Clear All
-              </button>
-              <button
-                onClick={applyFilters}
-                className="bg-gold hover:brightness-110 p-2 w-full rounded-md cursor-pointer transition-all duration-200 text-sm font-medium text-white"
-              >
-                Apply Filters
-              </button>
-            </div>
-
-            {/* Filter Summary */}
-            {(departments.length > 0 || courses.length > 0) && (
-              <div className="mt-3 p-2 bg-gold/10 rounded-md">
-                <p className="text-xs text-gold font-medium">Active Filters:</p>
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {departments.map((dept) => (
-                    <span
-                      key={dept}
-                      className="text-xs bg-gold/20 text-gold px-2 py-1 rounded"
-                    >
-                      {dept.includes("Information") ? "IT" : "CS"}
-                    </span>
-                  ))}
-                  {courses.map((course) => (
-                    <span
-                      key={course}
-                      className="text-xs bg-blue-500/20 text-blue-600 px-2 py-1 rounded"
-                    >
-                      {course}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </PopoverContent>
-        </Popover>
-      </div>
-
+    
       {/* Main content area */}
       <section className="flex-1 p-6">
-        <h1 className="text-3xl font-bold my-4">Recent Papers</h1>
+        <h1 className="text-3xl font-bold md:my-4 mb-4">Recent Papers</h1>
+
+      {/* Mobile filter popover */}
+      <div className="md:hidden flex justify-between items-center mb-6">
+            <Popover>
+              <PopoverTrigger className="flex items-center gap-2 bg-gold text-midnight px-4 py-2 rounded-lg">
+                <FaFilter />
+                Filter
+              </PopoverTrigger>
+              <PopoverContent
+                className={`${
+                  theme === "light"
+                    ? "bg-accent border-white-50"
+                    : "bg-dusk border-white-5"
+                }`}
+                align="start"
+              >
+                {/* Sort dropdown - moved to top and fixed default value */}
+                <div className="mb-4">
+                  <p className="text-sm font-medium mb-2">Sort by</p>
+                  <Select
+                    onValueChange={() => {}}
+                    value={""}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="year-recent">
+                          Publish Year (Most recent)
+                        </SelectItem>
+                        <SelectItem value="year-oldest">
+                          Publish Year (Oldest)
+                        </SelectItem>
+                        <SelectItem value="title-asc">Paper Title (A-Z)</SelectItem>
+                        <SelectItem value="title-desc">
+                          Paper Title (Z-A)
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div
+                  className={`${
+                    theme === "light" ? "bg-white-50" : "bg-white-5"
+                  } h-0.5 w-auto my-2 mx-1`}
+                />
+
+                {/* Department Checkboxes */}
+                <div className="mb-4">
+                  <p className="text-lg font-medium mb-2">Department</p>
+                  <ul className="ml-1 flex flex-col gap-2">
+                    {["Information Technology", "Computer Science"].map((d) => (
+                      <li key={d} className="flex items-center gap-2">
+                        <Checkbox
+                          id={`dept-${d}`}
+                          checked={departments.includes(d)}
+                          onCheckedChange={() => toggle(d, departments, setDepartments)}
+                        />
+                        <label
+                          htmlFor={`dept-${d}`}
+                          className="text-sm cursor-pointer select-none"
+                        >
+                          {d}
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div
+                  className={`${
+                    theme === "light" ? "bg-white-50" : "bg-white-5"
+                  } h-0.5 w-auto my-2 mx-1`}
+                />
+
+                {/* Course Checkboxes - Made independent */}
+                <div className="mb-4">
+                  <p className="text-lg font-medium mb-2">Course</p>
+                  <ul className="ml-1 flex flex-col gap-2">
+                    {[
+                      { name: "SIA", department: "Information Technology" },
+                      { name: "Capstone", department: "Information Technology" },
+                      { name: "CS Thesis Writing", department: "Computer Science" },
+                      { name: "Compiler Design", department: "Computer Science" },
+                    ].map((course) => (
+                      <li key={course.name} className="flex items-center gap-2">
+                        <Checkbox
+                          id={`course-${course.name}`}
+                          checked={courses.includes(course.name)}
+                          onCheckedChange={() => toggle(course.name, courses, setCourses)}
+                          // Removed the disabled condition to make filters independent
+                        />
+                        <label
+                          htmlFor={`course-${course.name}`}
+                          className="text-sm cursor-pointer select-none"
+                        >
+                          {course.name}
+                          <span className="text-xs text-gray-500 ml-1">
+                            (
+                            {course.department.includes("Information")
+                              ? "IT"
+                              : "CS"}
+                            )
+                          </span>
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Apply / Clear Buttons */}
+                <div className="flex gap-2 mt-4">
+                  <button
+                    onClick={clearAllFilters}
+                    className={`${
+                      theme === "light"
+                        ? "bg-white-50 hover:bg-white-25"
+                        : "bg-white-5 hover:bg-white-10"
+                    } p-2 w-full rounded-md cursor-pointer transition-colors duration-200 text-sm`}
+                  >
+                    Clear All
+                  </button>
+                  <button
+                    onClick={applyFilters}
+                    className="bg-gold hover:brightness-110 p-2 w-full rounded-md cursor-pointer transition-all duration-200 text-sm font-medium text-white"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+
+                {/* Filter Summary */}
+                {(departments.length > 0 || courses.length > 0) && (
+                  <div className="mt-3 p-2 bg-gold/10 rounded-md">
+                    <p className="text-xs text-gold font-medium">Active Filters:</p>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {departments.map((dept) => (
+                        <span
+                          key={dept}
+                          className="text-xs bg-gold/20 text-gold px-2 py-1 rounded"
+                        >
+                          {dept.includes("Information") ? "IT" : "CS"}
+                        </span>
+                      ))}
+                      {courses.map((course) => (
+                        <span
+                          key={course}
+                          className="text-xs bg-blue-500/20 text-blue-600 px-2 py-1 rounded"
+                        >
+                          {course}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </PopoverContent>
+            </Popover>
+          </div>
 
         <PapersArea
           filters={appliedFilters}
