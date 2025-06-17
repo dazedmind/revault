@@ -20,6 +20,7 @@ export default function FacultyForm() {
   const [isFormValid, setIsFormValid] = useState(false);
   const [employeeNumberError, setEmployeeNumberError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const storedRole = localStorage.getItem("userType");
@@ -127,27 +128,33 @@ export default function FacultyForm() {
       return;
     }
 
+    setIsLoading(true);
+
     // Check if passwords match before proceeding
     if (formData.password !== formData.confirmPassword) {
       setPasswordError(true);
+      setIsLoading(false);
       return;
     }
 
     // Check password requirements
     if (!validatePassword(formData.password)) {
       setPasswordRequirementsError(true);
+      setIsLoading(false);
       return;
     }
 
     // Check employee number format
     if (!validateEmployeeNumber(formData.employeeID)) {
       setEmployeeNumberError(true);
+      setIsLoading(false);
       return;
     }
 
     // Check email format
     if (!validateEmail(formData.email)) {
       setEmailError(true);
+      setIsLoading(false);
       return;
     }
 
@@ -180,10 +187,12 @@ export default function FacultyForm() {
         router.push("/registration/otp-confirmation");
       } else {
         alert("Failed to send OTP. Try again.");
+        setIsLoading(false);
       }
     } catch (err) {
       console.error("OTP Send Error:", err);
       alert("Something went wrong while sending OTP.");
+      setIsLoading(false);
     }
   };
 
@@ -362,14 +371,14 @@ export default function FacultyForm() {
         <div className="col-span-2">
           <button
             onClick={handleNext}
-            disabled={!isFormValid}
+            disabled={!isFormValid || isLoading}
             className={`block text-center w-full text-white mt-4 py-2 rounded-md font-inter text-lg font-bold ${
-              isFormValid 
+              isFormValid && !isLoading
                 ? "bg-gradient-to-r from-gold to-gold hover:bg-gradient-to-br cursor-pointer" 
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
-            Next
+            {isLoading ? "Please wait..." : "Next"}
           </button>
         </div>
       </form>

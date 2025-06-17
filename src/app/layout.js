@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/app/components/theme-provider";
 import { Providers } from "./providers";
 import { Inter, IBM_Plex_Mono } from 'next/font/google'
 
