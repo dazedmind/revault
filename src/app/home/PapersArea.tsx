@@ -11,7 +11,7 @@ interface Filters {
   end?: string;
   course?: string[];
   sort?: string;
-  search?: string; // Add search support
+  search?: string;
 }
 
 interface PapersAreaProps {
@@ -20,12 +20,15 @@ interface PapersAreaProps {
   onTotalPages: (n: number) => void;
 }
 
+const ITEMS_PER_PAGE = 5;
+
 export default function PapersArea({
   filters,
   page,
   onTotalPages,
 }: PapersAreaProps) {
   const [papers, setPapers] = useState<any[]>([]);
+  const [allPapers, setAllPapers] = useState<any[]>([]); // Store all papers for client-side pagination
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchPerformed, setSearchPerformed] = useState(false);
@@ -47,80 +50,117 @@ export default function PapersArea({
         let url: string;
         let queryParams = new URLSearchParams();
 
+        // Check if we have any filters or search applied
+        const hasSearch = filters.search && filters.search.trim();
+        const hasFilters =
+          (filters.department && filters.department.length > 0) ||
+          (filters.year && filters.year.length > 0) ||
+          (filters.start && filters.end) ||
+          (filters.course && filters.course.length > 0);
+
+        let isRecentPapers = false;
+
         // If there's a search query, use the search endpoint
-        if (filters.search && filters.search.trim()) {
-          url = '/api/papers/search';
-          queryParams.set('q', filters.search.trim());
-          queryParams.set('page', String(page));
-          queryParams.set('limit', '10');
+        if (hasSearch) {
+          url = "/api/search";
+          queryParams.set("q", filters.search.trim());
+          queryParams.set("page", String(page));
+          queryParams.set("limit", "5");
 
           // Add other filters to search
           if (filters.department?.length) {
-            queryParams.set('department', filters.department.join(','));
+            queryParams.set("department", filters.department.join(","));
           }
           if (filters.year?.length) {
-            queryParams.set('year', filters.year.join(','));
-          }
-          if (filters.course?.length) {
-            queryParams.set('course', filters.course.join(','));
-          }
-          if (filters.sort) {
-            queryParams.set('sortBy', filters.sort);
-          }
-        } else {
-          // Use regular papers endpoint
-          url = '/api/papers';
-          queryParams.set('page', String(page));
-
-          if (filters.department?.length) {
-            queryParams.set('department', filters.department.join(','));
-          }
-          if (filters.year?.length) {
-            queryParams.set('year', filters.year.join(','));
-          }
-          if (filters.course?.length) {
-            queryParams.set('course', filters.course.join(','));
+            queryParams.set("year", filters.year.join(","));
           }
           if (filters.start && filters.end) {
-            queryParams.set('start', filters.start);
-            queryParams.set('end', filters.end);
+            queryParams.set("start", filters.start);
+            queryParams.set("end", filters.end);
+          }
+          if (filters.course?.length) {
+            queryParams.set("course", filters.course.join(","));
           }
           if (filters.sort) {
-            queryParams.set('sort', filters.sort);
+            queryParams.set("sortBy", filters.sort);
           }
         }
+        // If we have filters but no search, use filtered papers endpoint
+        else if (hasFilters) {
+          url = "/api/papers";
+          queryParams.set("page", String(page));
 
-        const fullUrl = `${url}?${queryParams.toString()}`;
-        console.log('Fetching:', fullUrl);
+          if (filters.department?.length) {
+            queryParams.set("department", filters.department.join(","));
+          }
+          if (filters.year?.length) {
+            queryParams.set("year", filters.year.join(","));
+          }
+          if (filters.start && filters.end) {
+            queryParams.set("start", filters.start);
+            queryParams.set("end", filters.end);
+          }
+          if (filters.course?.length) {
+            queryParams.set("course", filters.course.join(","));
+          }
+          if (filters.sort) {
+            queryParams.set("sort", filters.sort);
+          }
+        }
+        // Default: show recent papers
+        else {
+          url = "/api/recent";
+          isRecentPapers = true;
+          // Recent papers endpoint doesn't use pagination
+        }
+
+        const fullUrl =
+          hasFilters || hasSearch ? `${url}?${queryParams.toString()}` : url;
+        console.log("Fetching:", fullUrl);
 
         const res = await fetch(fullUrl, { cache: "no-store" });
-        
+
         if (!res.ok) {
-          throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+          const errorText = await res.text();
+          throw new Error(`HTTP ${res.status}: ${errorText}`);
         }
 
         const json = await res.json();
-        console.log('API Response:', json);
+        console.log("API Response:", json);
 
         let rawArray: any[] = [];
         let totalPages = 1;
 
         // Handle search API response format
-        if (filters.search && json.success) {
+        if (hasSearch && json.success) {
           rawArray = json.results || [];
           totalPages = json.pagination?.totalPages || 1;
         }
-        // Handle regular papers API response format
-        else if (Array.isArray(json)) {
-          rawArray = json;
-          totalPages = 1;
-        } else if (Array.isArray(json.papers)) {
-          rawArray = json.papers;
-          totalPages = json.totalPages || 1;
-        } else {
-          console.error("Unexpected JSON shape:", json);
-          rawArray = [];
-          totalPages = 1;
+        // Handle regular papers API response format (with filters)
+        else if (hasFilters) {
+          if (Array.isArray(json)) {
+            rawArray = json;
+            totalPages = 1;
+          } else if (Array.isArray(json.papers)) {
+            rawArray = json.papers;
+            totalPages = json.totalPages || 1;
+          } else {
+            console.error("Unexpected JSON shape for filtered papers:", json);
+            rawArray = [];
+            totalPages = 1;
+          }
+        }
+        // Handle recent papers API response format (no filters, no search)
+        else {
+          if (Array.isArray(json)) {
+            rawArray = json;
+            // For recent papers, calculate total pages based on all papers
+            totalPages = Math.ceil(rawArray.length / ITEMS_PER_PAGE);
+          } else {
+            console.error("Unexpected JSON shape for recent papers:", json);
+            rawArray = [];
+            totalPages = 1;
+          }
         }
 
         onTotalPages(totalPages);
@@ -128,22 +168,40 @@ export default function PapersArea({
         // Normalize the paper data
         const normalized = rawArray.map((paper: any) => ({
           ...paper,
-          title: stripQuotes(paper.title || ''),
-          author: stripQuotes(paper.author || ''),
+          title: stripQuotes(paper.title || ""),
+          author: stripQuotes(paper.author || ""),
           keywords: normalizeKeywords(paper.keywords),
           tags: normalizeKeywords(paper.tags || paper.keywords),
-          abstract: stripQuotes(paper.abstract || ''),
-          department: paper.department || '',
-          course: paper.course || '',
-          year: paper.year || '',
+          abstract: stripQuotes(paper.abstract || ""),
+          department: paper.department || "",
+          course: paper.course || "",
+          year: paper.year || "",
         }));
 
-        setPapers(normalized);
+        // Sort recent papers by year (most recent first)
+        if (isRecentPapers) {
+          normalized.sort((a, b) => {
+            const yearA = parseInt(a.year) || 0;
+            const yearB = parseInt(b.year) || 0;
+            return yearB - yearA; // Descending order
+          });
+        }
 
+        // For recent papers, handle client-side pagination
+        if (isRecentPapers) {
+          setAllPapers(normalized);
+          const startIndex = (page - 1) * ITEMS_PER_PAGE;
+          const endIndex = startIndex + ITEMS_PER_PAGE;
+          setPapers(normalized.slice(startIndex, endIndex));
+        } else {
+          setPapers(normalized);
+          setAllPapers([]);
+        }
       } catch (err) {
         console.error("Error loading papers:", err);
-        setError(err instanceof Error ? err.message : 'Failed to load papers');
+        setError(err instanceof Error ? err.message : "Failed to load papers");
         setPapers([]);
+        setAllPapers([]);
         onTotalPages(1);
       } finally {
         setLoading(false);
@@ -153,9 +211,18 @@ export default function PapersArea({
     load();
   }, [filters, page, onTotalPages]);
 
+  // Handle pagination when page changes for recent papers
+  useEffect(() => {
+    if (allPapers.length > 0) {
+      const startIndex = (page - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      setPapers(allPapers.slice(startIndex, endIndex));
+    }
+  }, [page, allPapers]);
+
   // Helper functions
   const stripQuotes = (str: string) => {
-    if (!str) return '';
+    if (!str) return "";
     return str.replace(/^"|"$/g, "");
   };
 
@@ -163,7 +230,7 @@ export default function PapersArea({
     if (!keywords) return [];
     if (Array.isArray(keywords)) {
       return keywords.flatMap((k: string) =>
-        typeof k === 'string' ? k.split(",").map((item) => item.trim()) : []
+        typeof k === "string" ? k.split(",").map((item) => item.trim()) : [],
       );
     }
     return [];
@@ -173,9 +240,11 @@ export default function PapersArea({
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <LoadingScreen />
+        {/* <LoadingScreen /> */}
         <p className="mt-4 text-gray-600 dark:text-gray-400">
-          {filters.search ? `Searching for "${filters.search}"...` : 'Loading papers...'}
+          {filters.search
+            ? `Searching for "${filters.search}"...`
+            : "Loading papers..."}
         </p>
       </div>
     );
@@ -193,6 +262,7 @@ export default function PapersArea({
           {error}
         </p>
         <button
+          type="button"
           onClick={() => window.location.reload()}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
@@ -203,7 +273,7 @@ export default function PapersArea({
   }
 
   // No papers found
-  if (papers.length === 0) {
+  if (papers.length === 0 && !loading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         {searchPerformed ? (
@@ -213,7 +283,8 @@ export default function PapersArea({
               No Search Results
             </h3>
             <p className="text-gray-600 dark:text-gray-400 text-center max-w-md">
-              No papers found for &quot;{filters.search}&quot;. Try different keywords or check your spelling.
+              No papers found for &quot;{filters.search}&quot;. Try different
+              keywords or check your spelling.
             </p>
             <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
               <p>Search tips:</p>
@@ -232,7 +303,12 @@ export default function PapersArea({
               No Papers Found
             </h3>
             <p className="text-gray-600 dark:text-gray-400 text-center max-w-md">
-              No papers match your current filters. Try adjusting your filter criteria.
+              {filters.department?.length ||
+              filters.year?.length ||
+              filters.course?.length ||
+              (filters.start && filters.end)
+                ? "No papers match your current filters. Try adjusting your filter criteria."
+                : "No papers are currently available in the system."}
             </p>
           </>
         )}
@@ -253,7 +329,8 @@ export default function PapersArea({
             </span>
           </div>
           <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-            Found {papers.length} paper{papers.length !== 1 ? 's' : ''} matching your search
+            Found {papers.length} paper{papers.length !== 1 ? "s" : ""} matching
+            your search
           </p>
         </div>
       )}
@@ -270,7 +347,7 @@ export default function PapersArea({
             tags={paper.keywords || []}
             department={paper.department || "No department available"}
             paper_id={paper.paper_id}
-            viewFromAdmin={userType === "librarian"}
+            viewFromAdmin={userType === "LIBRARIAN"}
             year={paper.year || "No year available"}
             course={paper.course || "No course available"}
             searchQuery={filters.search} // Pass search query for highlighting
