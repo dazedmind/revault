@@ -17,7 +17,7 @@ const LogIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [theme, setTheme] = useState("light");
+  const [isLoading, setIsLoading] = useState(false);
 
   // useAntiCopy();
 
@@ -82,7 +82,7 @@ const LogIn = () => {
   });
 
   return (
-    <div className="font-Inter h-screen w-screen bg-tertiary overflow-hidden relative">
+    <div className="font-Inter h-screen w-screen bg-white overflow-hidden relative">
       {/* Background with Blur using background component */}
       <Background imageUrl="/login-bg.png" />
 
@@ -153,7 +153,10 @@ const LogIn = () => {
               <div className="flex flex-row justify-center mt-5">
                 <Button
                   type="submit"
-                  className="w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-[#8F8749] to-[#CFC369] hover:brightness-120 transition-all duration-300 font-inter cursor-pointer font-bold text-md md:text-lg text-white"
+                  className={`w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-[#8F8749] to-[#CFC369] hover:brightness-120 transition-all duration-300 font-inter cursor-pointer font-bold text-md md:text-lg text-white ${isLoading ? 'scale-95 brightness-50' : ''}`}
+                  onClick={() => setIsLoading(true)}
+                  onMouseUp={() => setIsLoading(false)}
+                  onMouseLeave={() => setIsLoading(false)}
                 >
                   Log In
                 </Button>
