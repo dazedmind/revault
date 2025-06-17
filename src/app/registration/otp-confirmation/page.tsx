@@ -114,11 +114,11 @@ function OTPContent() {
 
   return (
     <div className="flex-grow flex justify-center">
-      <div className="flex flex-col items-center w-5xl mt-28">
-        <h1 className="text-gold text-5xl font-bold font-mono">
+      <div className="flex flex-col items-center w-sm md:w-5xl mt-28">
+        <h1 className="text-gold text-4xl md:text-5xl font-bold font-mono">
           Check your email!
         </h1>
-        <p className="text-xl text-center w-lg mt-3">
+        <p className="text-md md:text-xl text-center w-lg mt-3 text-wrap px-20 md:px-0">
           We have sent an email to{" "}
           <span className="font-bold">{userEmail}</span>. Check your inbox for
           the One-Time-Passcode (OTP).
@@ -140,7 +140,7 @@ function OTPContent() {
           <p className="text-sm mt-2 text-gray-400">Resend in {timer}s</p>
         </div>
 
-        <div className="flex gap-4 mt-6">
+        <div className="flex flex-col md:flex-row gap-4 mt-6">
           <button
             disabled={timer > 0}
             onClick={handleSendOTP}
