@@ -15,6 +15,8 @@ import {
   ChevronRight,
   ChevronDown,
   IdCard,
+  File,
+  Plus,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -100,7 +102,8 @@ export default function AdminNavBar() {
               return (
                 <Link href="/upload">
                   <button className="bg-gradient-to-r from-gold to-gold-fg text-white hover:brightness-120 hover:shadow-lg hover:shadow-gold/80 transition-all duration-300 p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-                    <FaPlus /> Upload
+                    <Plus className="w-4 h-4" /> 
+                    <span className="text-md hidden md:block">Upload</span>
                   </button>
                 </Link>
               );
@@ -117,8 +120,9 @@ export default function AdminNavBar() {
             ) {
               return (
                 <Link href="/admin/profile#manage-papers">
-                  <button className="bg-yale-blue hover:brightness-120 hover:shadow-lg hover:shadow-yale-blue/80 transition-all duration-200 text-white p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer">
-                    <FaFilePdf /> Manage
+                  <button className="hidden md:flex bg-yale-blue hover:brightness-120 hover:shadow-lg hover:shadow-yale-blue/80 transition-all duration-200 text-white p-2 px-4 font-sans  items-center gap-2 rounded-lg cursor-pointer">
+                    <File className="w-4 h-4" /> 
+                    <span className="text-md hidden md:block">Manage</span>
                   </button>
                 </Link>
               );

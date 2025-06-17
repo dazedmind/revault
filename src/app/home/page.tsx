@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useTheme } from "next-themes";
 
 import PapersArea from "./PapersArea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,12 +30,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useTheme } from "next-themes";
 
 export default function HomePage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { theme } = useTheme();
 
   // useAntiCopy();
 
@@ -44,7 +45,6 @@ export default function HomePage() {
   const [startYear, setStartYear] = useState("");
   const [endYear, setEndYear] = useState("");
   const [courses, setCourses] = useState<string[]>([]);
-  const { theme } = useTheme();
 
   // — Applied filters (what actually gets sent to PapersArea)
   const [appliedFilters, setAppliedFilters] = useState({
@@ -56,23 +56,25 @@ export default function HomePage() {
   });
 
   // — Pagination state
-  // Read “page” from URL. If missing or invalid, default to 1.
   const rawPageParam = searchParams.get("page");
   const initialPage = rawPageParam ? parseInt(rawPageParam, 10) || 1 : 1;
   const [currentPage, setCurrentPage] = useState<number>(initialPage);
-
-  // We’ll store totalPages once PapersArea tells us
   const [totalPages, setTotalPages] = useState<number>(1);
 
-  // Whenever searchParams change (filters or page changed externally), update local UI state & page
-  useEffect(() => {
-    // 1) Sync filter controls from URL
-    const deps =
-      searchParams.get("department")?.split(",").filter(Boolean) || [];
+  // Memoize filter parsing to prevent unnecessary re-renders during theme changes
+  const parsedFilters = useMemo(() => {
+    const deps = searchParams.get("department")?.split(",").filter(Boolean) || [];
     const yrs = searchParams.get("year")?.split(",").filter(Boolean) || [];
     const start = searchParams.get("start") || "";
     const end = searchParams.get("end") || "";
     const crs = searchParams.get("course")?.split(",").filter(Boolean) || [];
+
+    return { deps, yrs, start, end, crs };
+  }, [searchParams]);
+
+  // Stabilize the effect dependencies to prevent theme-related re-renders
+  const updateFiltersFromUrl = useCallback(() => {
+    const { deps, yrs, start, end, crs } = parsedFilters;
 
     setDepartments(deps);
     setCourses(crs);
@@ -87,10 +89,24 @@ export default function HomePage() {
       setYears(yrs);
     }
 
-    // 2) Sync page from URL
+    // Update applied filters
+    setAppliedFilters({
+      department: deps,
+      year: start && end ? [] : yrs,
+      start,
+      end,
+      course: crs,
+    });
+
+    // Update page
     const p = rawPageParam ? parseInt(rawPageParam, 10) : 1;
     setCurrentPage(isNaN(p) || p < 1 ? 1 : p);
-  }, [searchParams, rawPageParam]);
+  }, [parsedFilters, rawPageParam]);
+
+  // Only update when URL actually changes, not on theme changes
+  useEffect(() => {
+    updateFiltersFromUrl();
+  }, [updateFiltersFromUrl]);
 
   const hasFilters =
     appliedFilters.department.length > 0 ||
@@ -99,18 +115,21 @@ export default function HomePage() {
     appliedFilters.course.length > 0;
 
   // Toggle helper for checkboxes
-  const toggle = (
-    value: string,
-    list: string[],
-    setList: React.Dispatch<React.SetStateAction<string[]>>,
-  ) => {
-    setList(
-      list.includes(value) ? list.filter((x) => x !== value) : [...list, value],
-    );
-  };
+  const toggle = useCallback(
+    (
+      value: string,
+      list: string[],
+      setList: React.Dispatch<React.SetStateAction<string[]>>,
+    ) => {
+      setList(
+        list.includes(value) ? list.filter((x) => x !== value) : [...list, value],
+      );
+    },
+    []
+  );
 
-  // When “Apply Filters” is clicked:
-  const applyFilters = () => {
+  // When "Apply Filters" is clicked:
+  const applyFilters = useCallback(() => {
     const qp = new URLSearchParams();
 
     if (departments.length) qp.set("department", departments.join(","));
@@ -135,10 +154,10 @@ export default function HomePage() {
       end: endYear,
       course: courses,
     });
-  };
+  }, [departments, years, startYear, endYear, courses, pathname, router]);
 
-  // “Clear All Filters” (also resets page to 1 by removing ?page= entirely)
-  const clearAllFilters = () => {
+  // "Clear All Filters" (also resets page to 1 by removing ?page= entirely)
+  const clearAllFilters = useCallback(() => {
     setDepartments([]);
     setYears([]);
     setCourses([]);
@@ -154,10 +173,10 @@ export default function HomePage() {
       end: "",
       course: [],
     });
-  };
+  }, [pathname, router]);
 
   // When the user clicks a new page number (or Next/Previous), we update ?page= in the URL
-  const goToPage = (newPage: number) => {
+  const goToPage = useCallback((newPage: number) => {
     if (newPage < 1) newPage = 1;
     if (newPage > totalPages) newPage = totalPages;
 
@@ -171,7 +190,7 @@ export default function HomePage() {
     }
     router.replace(`${pathname}?${qp.toString()}`, { scroll: false });
     setCurrentPage(newPage);
-  };
+  }, [totalPages, searchParams, pathname, router]);
 
   return (
     <main className="flex flex-col md:flex-row">
@@ -196,7 +215,7 @@ export default function HomePage() {
 
           <section>
             <h2 className="font-bold text-gold">Publication Year</h2>
-            {["2025", "2024", "2023", "2022","2021"].map((y) => (
+            {["2025", "2024", "2023", "2022", "2021"].map((y) => (
               <div key={y} className="flex items-center gap-2 ml-2">
                 <Checkbox
                   id={`year-${y}`}
@@ -257,211 +276,132 @@ export default function HomePage() {
             >
               Apply Filters
             </button>
-            <button
-              onClick={clearAllFilters}
-              className={`${
-                theme === "light" ? "border-white-5" : "border-white-50"
-              } border transition-all duration-300 p-2 rounded-md cursor-pointer`}
-            >
-              Clear Filters
-            </button>
+            {hasFilters && (
+              <button
+                onClick={clearAllFilters}
+                className={`${
+                  theme === "light"
+                    ? "bg-white-25 hover:bg-white-50"
+                    : "bg-white-5 hover:bg-white-10"
+                } transition-all duration-300 p-2 rounded-md cursor-pointer`}
+              >
+                Clear All Filters
+              </button>
+            )}
           </div>
         </div>
       </aside>
 
-      {/* Results area */}
-      <div className="flex-1 p-8 flex flex-col gap-5">
-        <h1 className="text-3xl font-bold">
-          {hasFilters ? "Filtered Papers" : "Recent Papers"}
-        </h1>
-        {/* Mobile filter popover */}
-        <div className="flex md:hidden">
-          <Popover>
-            <PopoverTrigger className="flex items-center gap-2 cursor-pointer">
-              Filter <FaFilter />
-            </PopoverTrigger>
-            <PopoverContent
-              className={`${
-                theme === "light"
-                  ? "bg-accent border-white-50"
-                  : "bg-dusk border-white-5"
-              }`}
-              align="start"
-            >
-              <Select>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="title-asc">Paper Title (A-Z)</SelectItem>
-                    <SelectItem value="title-des">Paper Title (Z-A)</SelectItem>
-                    <SelectItem value="year-recent">
-                      Publish Year (Most recent)
-                    </SelectItem>
-                    <SelectItem value="year-oldest">
-                      Publish Year (Oldest)
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
-              {/* divider */}
-              <div
-                className={`${
-                  theme === "light" ? "bg-white-50" : "bg-white-5"
-                } h-0.5 w-auto mb-2 mt-2 mx-1`}
-              ></div>
-
-              <p className="text-lg">Department</p>
-              <ul className="ml-1 flex flex-col gap-1">
-                <li>
-                  <Checkbox
-                    id="dept-it-mobile"
-                    checked={departments.includes("Information Technology")}
-                    onCheckedChange={() =>
-                      toggle(
-                        "Information Technology",
-                        departments,
-                        setDepartments,
-                      )
-                    }
-                  />
-                  <label htmlFor="dept-it-mobile">
-                    {" "}
-                    Information Technology
-                  </label>
-                </li>
-                <li>
-                  <Checkbox
-                    id="dept-cs-mobile"
-                    checked={departments.includes("Computer Science")}
-                    onCheckedChange={() =>
-                      toggle("Computer Science", departments, setDepartments)
-                    }
-                  />
-                  <label htmlFor="dept-cs-mobile"> Computer Science</label>
-                </li>
-              </ul>
-              {/* divider */}
-              <div
-                className={`${
-                  theme === "light" ? "bg-white-50" : "bg-white-5"
-                } h-0.5 w-auto mb-2 mt-2 mx-2`}
-              ></div>
-
-              <p className="text-lg">Course</p>
-              <ul className="ml-1 flex flex-col gap-1">
-                {[
-                  "SIA",
-                  "Capstone Project",
-                  "Compiler Design",
-                  "Thesis Writing",
-                ].map((c) => (
-                  <li key={c}>
+      {/* Mobile filter popover */}
+      <div className="md:hidden flex justify-between items-center p-4">
+        <h1 className="text-xl font-bold">Research Papers</h1>
+        <Popover>
+          <PopoverTrigger className="flex items-center gap-2 bg-gold text-midnight px-4 py-2 rounded-lg">
+            <FaFilter />
+            Filter
+          </PopoverTrigger>
+          <PopoverContent className="w-80">
+            <div className="space-y-4">
+              <section>
+                <h3 className="font-bold text-gold mb-2">Program</h3>
+                {["Information Technology", "Computer Science"].map((d) => (
+                  <div key={d} className="flex items-center gap-2 ml-2">
                     <Checkbox
-                      id={`course-${c}-mobile`}
-                      checked={courses.includes(c)}
-                      onCheckedChange={() => toggle(c, courses, setCourses)}
+                      id={`mobile-dept-${d}`}
+                      checked={departments.includes(d)}
+                      onCheckedChange={() => toggle(d, departments, setDepartments)}
                     />
-                    <label htmlFor={`course-${c}-mobile`}> {c}</label>
-                  </li>
+                    <label
+                      htmlFor={`mobile-dept-${d}`}
+                      className="text-sm font-medium"
+                    >
+                      {d}
+                    </label>
+                  </div>
                 ))}
-              </ul>
-              <div className="flex flex-col gap-2 mt-4">
-                <button
-                  onClick={clearAllFilters}
-                  className={`${
-                    theme === "light" ? "bg-white-50" : "bg-white-5"
-                  } p-2 w-full rounded-sm cursor-pointer`}
-                >
-                  Clear Filters
-                </button>
-                <button
-                  onClick={() => {
-                    applyFilters();
-                    // close popover if needed (depending on your Popover component)
-                  }}
-                  className="bg-gold p-2 w-full rounded-sm cursor-pointer"
-                >
-                  Apply Filters
-                </button>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
+              </section>
 
-        {/* ←———— Here is the fix: pass page and onTotalPages ————→ */}
+              <div className="flex gap-2 mt-4">
+                <button
+                  onClick={applyFilters}
+                  className="flex-1 bg-gold text-midnight px-4 py-2 rounded-lg font-medium"
+                >
+                  Apply
+                </button>
+                {hasFilters && (
+                  <button
+                    onClick={clearAllFilters}
+                    className="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg font-medium"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* Main content area */}
+      <section className="flex-1 p-6">
         <PapersArea
           filters={appliedFilters}
           page={currentPage}
-          onTotalPages={(n) => setTotalPages(n)}
+          onTotalPages={setTotalPages}
         />
 
-        <Pagination>
-          <PaginationContent>
-            {/* ─────────────── “PREVIOUS” ─────────────── */}
-            <PaginationItem>
-              <PaginationPrevious
-                href="#"
-                className={
-                  currentPage <= 1
-                    ? "dark:text-card opacity-50 pointer-events-none"
-                    : "dark:text-card"
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (currentPage > 1) {
-                    goToPage(currentPage - 1);
-                  }
-                }}
-              />
-            </PaginationItem>
-
-            {/* ─────────────── Page Numbers (1…totalPages) ─────────────── */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <PaginationItem key={p}>
-                <PaginationLink
-                  href="#"
-                  isActive={p === currentPage}
-                  className={
-                    p === currentPage ? "dark:text-card" : "dark:text-card"
-                  }
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (p !== currentPage) {
-                      goToPage(p);
-                    }
-                  }}
-                >
-                  {p}
-                </PaginationLink>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <Pagination className="mt-8">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => goToPage(currentPage - 1)}
+                  className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
               </PaginationItem>
-            ))}
 
-            {/* If you have a lot of pages, you can drop in
-                <PaginationEllipsis /> at the spots you prefer. */}
-
-            {/* ─────────────── “NEXT” ─────────────── */}
-            <PaginationItem>
-              <PaginationNext
-                href="#"
-                className={
-                  currentPage >= totalPages
-                    ? "dark:text-card opacity-50 pointer-events-none"
-                    : "dark:text-card"
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
                 }
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (currentPage < totalPages) {
-                    goToPage(currentPage + 1);
-                  }
-                }}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
+
+                return (
+                  <PaginationItem key={pageNum}>
+                    <PaginationLink
+                      onClick={() => goToPage(pageNum)}
+                      isActive={currentPage === pageNum}
+                      className="cursor-pointer"
+                    >
+                      {pageNum}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+
+              {totalPages > 5 && currentPage < totalPages - 2 && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => goToPage(currentPage + 1)}
+                  className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
+      </section>
     </main>
   );
 }
