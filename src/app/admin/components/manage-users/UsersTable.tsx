@@ -26,6 +26,7 @@ interface User {
   userAccess: string;
   contactNum: string; // Added
   position: string; // Added
+  profileURL: string;
 }
 
 interface UsersTableProps {
@@ -61,6 +62,7 @@ export default function UsersTable({
     const displayName =
       user.name ||
       `${user.fullName} ${user.lastName}${user.extension ? " " + user.extension : ""}`;
+    const userProfile = user.profileURL || userAvatar;
     return {
       name: displayName,
       subtitle: user.position || user.employeeID, // Only show position or employee ID
@@ -116,7 +118,7 @@ export default function UsersTable({
                 <TableCell className="py-3 align-middle">
                   <div className="flex justify-center">
                     <Image
-                      src={userAvatar}
+                      src={u.profileURL || userAvatar}
                       alt="avatar"
                       width={40}
                       height={40}

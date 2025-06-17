@@ -2,6 +2,57 @@
 
 import { NextResponse } from "next/server";
 import { saveAdminStaffInformation } from "../../../actions/saveAdminStaffInformation";
+import { prisma } from "@/lib/prisma";
+import jwt from "jsonwebtoken";
+import { activity_type } from "@prisma/client";
+
+const SECRET_KEY = process.env.JWT_SECRET_KEY!;
+
+// Helper function to extract admin info from JWT token
+async function getAdminInfo(request: Request) {
+  try {
+    const authHeader = request.headers.get('authorization');
+    const cookieHeader = request.headers.get('cookie');
+    
+    let token: string | null = null;
+
+    // Try to get token from Authorization header first
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7);
+    }
+    // Fallback to cookie
+    else if (cookieHeader) {
+      const tokenMatch = cookieHeader.match(/authToken=([^;]+)/);
+      if (tokenMatch) {
+        token = tokenMatch[1];
+      }
+    }
+
+    if (!token) {
+      return null;
+    }
+
+    const payload = jwt.verify(token, SECRET_KEY) as any;
+    
+    // Get admin user details from database
+    const adminUser = await prisma.users.findUnique({
+      where: { user_id: payload.user_id },
+      include: {
+        librarian: {
+          select: {
+            employee_id: true,
+            position: true
+          }
+        }
+      }
+    });
+
+    return adminUser;
+  } catch (error) {
+    console.error("Error extracting admin info:", error);
+    return null;
+  }
+}
 
 export async function POST(req: Request) {
   console.log("🚀 API Route called: /admin/api/create-user");
@@ -9,6 +60,12 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     console.log("📥 Raw request body:", JSON.stringify(body, null, 2));
+
+    // Get admin info for activity logging
+    const adminUser = await getAdminInfo(req);
+    if (!adminUser) {
+      console.log("❌ Could not identify admin user for activity logging");
+    }
 
     // Normalize the role
     const role = body.role?.toUpperCase();
@@ -69,6 +126,39 @@ export async function POST(req: Request) {
     const result = await saveAdminStaffInformation(formData);
     console.log("✅ Action completed successfully:", result);
 
+    // 🚨 ADD ACTIVITY LOG for user creation by ADMIN
+    if (adminUser && adminUser.role === "ADMIN" && result.success) {
+      try {
+        const newUserName = `${formData.firstName} ${formData.lastName}${formData.ext ? " " + formData.ext : ""}`.trim();
+        const userDetails = [
+          `Name: ${newUserName}`,
+          `Email: ${formData.email}`,
+          `Role: ${role}`,
+          `Employee ID: ${formData.employeeID}`,
+          formData.position && `Position: ${formData.position}`
+        ].filter(Boolean).join(", ");
+
+        await prisma.activity_logs.create({
+          data: {
+            employee_id: adminUser.librarian?.employee_id,
+            user_id: adminUser.user_id,
+            name: `${adminUser.first_name} ${adminUser.last_name}`.trim(),
+            activity: `Created new user account: ${userDetails}`,
+            activity_type: activity_type.ADD_USER,
+            user_agent: req.headers.get('user-agent') || '',
+            ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown',
+            status: "success",
+            created_at: new Date(),
+          },
+        });
+
+        console.log("✅ Activity log created for user creation");
+      } catch (logError) {
+        console.error("❌ Failed to create activity log:", logError);
+        // Don't fail the request, just log the error
+      }
+    }
+
     return NextResponse.json(
       {
         success: true,
@@ -85,34 +175,37 @@ export async function POST(req: Request) {
     );
 
     const errorMessage =
-      error instanceof Error ? error.message : "Failed to create user";
+      error instanceof Error ? error.message : "Unknown error occurred";
+
+    // 🚨 ADD ACTIVITY LOG for failed user creation
+    try {
+      const adminUser = await getAdminInfo(req);
+      if (adminUser && adminUser.role === "ADMIN") {
+        await prisma.activity_logs.create({
+          data: {
+            employee_id: adminUser.librarian?.employee_id,
+            user_id: adminUser.user_id,
+            name: `${adminUser.first_name} ${adminUser.last_name}`.trim(),
+            activity: `Failed to create user account: ${errorMessage}`,
+            activity_type: activity_type.ADD_USER,
+            user_agent: req.headers.get('user-agent') || '',
+            ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown',
+            status: "failed",
+            created_at: new Date(),
+          },
+        });
+        console.log("✅ Activity log created for failed user creation");
+      }
+    } catch (logError) {
+      console.error("❌ Failed to create failure activity log:", logError);
+    }
 
     return NextResponse.json(
       {
         success: false,
         message: errorMessage,
       },
-      { status: 400 },
+      { status: 500 },
     );
   }
-}
-
-// Get endpoint for form requirements
-export async function GET() {
-  return NextResponse.json({
-    validRoles: ["ADMIN", "ASSISTANT", "LIBRARIAN"], // Only admin panel roles
-    requiredFields: {
-      all: ["firstName", "lastName", "email", "role", "password"],
-      librarian: ["employeeID", "contactNum"],
-      admin: ["employeeID"], // Optional but recommended
-      assistant: ["employeeID"], // Optional but recommended
-      optional: ["middleName", "ext", "position"],
-    },
-    fieldMapping: {
-      fullName: "firstName",
-      midName: "middleName",
-      extName: "ext",
-    },
-    note: "This endpoint is for admin panel user creation only. Students and faculty register through the public registration flow.",
-  });
 }

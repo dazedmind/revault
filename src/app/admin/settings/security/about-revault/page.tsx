@@ -44,7 +44,7 @@ const AboutRevault = () => {
             </span>
           </p>
           <p className="text-sm font-mono bg-gold/10 text-gold px-2 py-1 rounded inline-block">
-            Version 1.3.0-alpha
+            Version 1.7.0-alpha
           </p>
         </div>
 

@@ -66,10 +66,10 @@ export default function DeleteConfirmationModal({
         </div>
 
         <div className="text-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          <h2 className="text-xl font-semibold mb-2">
             Delete User Account
           </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm">
             Are you sure you want to permanently delete this user account?
           </p>
         </div>
@@ -87,8 +87,8 @@ export default function DeleteConfirmationModal({
               {/* Name and Role */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <User className="w-4 h-4 text-gray-500" />
-                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                  <User className="w-4 h-4" />
+                  <span className="font-medium">
                     {userToDelete.name}
                   </span>
                 </div>
@@ -101,16 +101,16 @@ export default function DeleteConfirmationModal({
 
               {/* Email */}
               <div className="flex items-center space-x-2">
-                <Mail className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">
+                <Mail className="w-4 h-4" />
+                <span className="text-sm">
                   {userToDelete.email}
                 </span>
               </div>
 
               {/* Employee ID */}
               <div className="flex items-center space-x-2">
-                <IdCard className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                <IdCard className="w-4 h-4" />
+                <span className="text-sm font-mono">
                   ID: {userToDelete.employeeID}
                 </span>
               </div>
@@ -118,8 +118,8 @@ export default function DeleteConfirmationModal({
               {/* Contact Number (if available) */}
               {userToDelete.contactNum && (
                 <div className="flex items-center space-x-2">
-                  <Phone className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <Phone className="w-4 h-4" />
+                  <span className="text-sm">
                     {userToDelete.contactNum}
                   </span>
                 </div>
@@ -128,8 +128,8 @@ export default function DeleteConfirmationModal({
               {/* Position (if available) */}
               {userToDelete.position && (
                 <div className="flex items-center space-x-2">
-                  <Briefcase className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <Briefcase className="w-4 h-4" />
+                  <span className="text-sm">
                     {userToDelete.position}
                   </span>
                 </div>
@@ -169,7 +169,7 @@ export default function DeleteConfirmationModal({
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}
-            className={`px-4 py-2 rounded-md border transition-colors ${
+            className={`px-4 py-2 rounded-md border transition-colors cursor-pointer ${
               theme === "light"
                 ? "border-gray-300 hover:bg-gray-50 text-gray-700"
                 : "border-gray-600 hover:bg-gray-700 text-gray-300"
@@ -179,7 +179,7 @@ export default function DeleteConfirmationModal({
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors focus:ring-2 focus:ring-red-500 focus:ring-offset-2 cursor-pointer"
           >
             Delete User
           </button>

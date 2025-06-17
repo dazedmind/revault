@@ -57,14 +57,15 @@ export default function EditUserModal({
   const automaticPosition = getPositionFromUserAccess(user.userAccess);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="p-6 rounded-lg dark:bg-primary w-full max-w-md relative z-10 max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50 z-50">
+      <div className={`p-6 m-4 rounded-lg bg-accent w-full max-w-md relative z-10 max-h-[90vh]  flex flex-col border-2 ${theme === "light" ? "border-white-50" : "border-white-5"}`}>
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto pr-2 -mr-2">
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium mb-4 text-gold">
-                Edit User - Personal Information
+              <h1 className="text-3xl font-bold mb-4 text-gold">Edit User</h1>
+              <h3 className="text-lg font-bold mb-4 text-gold">
+                Personal Information
               </h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
@@ -76,7 +77,7 @@ export default function EditUserModal({
                     name="fullName"
                     value={user.fullName}
                     onChange={onInputChange}
-                    className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                     required
                   />
                 </div>
@@ -89,7 +90,7 @@ export default function EditUserModal({
                     name="middleName"
                     value={user.middleName}
                     onChange={onInputChange}
-                    className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                   />
                 </div>
               </div>
@@ -103,7 +104,7 @@ export default function EditUserModal({
                     name="lastName"
                     value={user.lastName}
                     onChange={onInputChange}
-                    className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                     required
                   />
                 </div>
@@ -116,15 +117,17 @@ export default function EditUserModal({
                     name="extension"
                     value={user.extension}
                     onChange={onInputChange}
-                    className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                   />
                 </div>
               </div>
             </div>
 
+            <div className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}></div>
+
             {/* Employee Information Section */}
             <div>
-              <h3 className="text-lg font-medium mb-4 text-gold">
+              <h3 className="text-lg font-bold mb-4 text-gold">
                 Employee Information
               </h3>
               <div className="grid grid-cols-2 gap-4 mb-4">
@@ -140,7 +143,7 @@ export default function EditUserModal({
                     placeholder="e.g. 1234567890"
                     maxLength={10}
                     pattern="[0-9]{10}"
-                    className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                     required
                   />
                   <p className="text-xs text-gray-400 mt-1">
@@ -156,7 +159,7 @@ export default function EditUserModal({
                       name="userAccess"
                       value={user.userAccess}
                       onChange={onInputChange}
-                      className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px] pr-8 appearance-none"
+                      className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] pr-8 appearance-none"
                       required
                     >
                       <option value="">Select Role</option>
@@ -188,7 +191,7 @@ export default function EditUserModal({
                   name="email"
                   value={user.email}
                   onChange={onInputChange}
-                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                   required
                 />
               </div>
@@ -203,7 +206,7 @@ export default function EditUserModal({
                   name="position"
                   value={automaticPosition}
                   onChange={onInputChange}
-                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px] cursor-not-allowed"
+                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] cursor-not-allowed"
                   disabled
                   readOnly
                 />
@@ -223,7 +226,7 @@ export default function EditUserModal({
                   value={user.contactNum}
                   onChange={onInputChange}
                   placeholder="e.g. 09171234567"
-                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                 />
                 <p className="text-xs text-gray-400 mt-1">
                   Optional contact information
@@ -237,7 +240,7 @@ export default function EditUserModal({
                     name="status"
                     value={user.status}
                     onChange={onInputChange}
-                    className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px] pr-8 appearance-none"
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] pr-8 appearance-none"
                   >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -255,9 +258,11 @@ export default function EditUserModal({
               </div>
             </div>
 
+            <div className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}></div>
+
             {/* Password Section */}
             <div>
-              <h3 className="text-lg font-medium mb-4 text-gold">
+              <h3 className="text-lg font-bold mb-4 text-gold">
                 Change Password (Optional)
               </h3>
               <div className="mb-4">
@@ -270,7 +275,7 @@ export default function EditUserModal({
                   placeholder="Leave blank to keep current password"
                   value={passwords.newPassword}
                   onChange={onPasswordChange}
-                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                   minLength={6}
                 />
               </div>
@@ -284,7 +289,7 @@ export default function EditUserModal({
                   placeholder="Enter Password Again"
                   value={passwords.confirmPassword}
                   onChange={onPasswordChange}
-                  className="w-full p-2 pl-3 dark:bg-primary border border-[#444] rounded-xl text-sm h-[45px]"
+                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                 />
               </div>
               {passwordError && (
@@ -299,13 +304,13 @@ export default function EditUserModal({
           <div className="flex justify-end gap-4">
             <button
               onClick={onCancel}
-              className="px-4 py-2 rounded-[12px] bg-transparent border border-gray-600 hover:bg-opacity-10 hover:bg-gray-600 transition-colors"
+              className="px-4 py-2 rounded-[12px] bg-transparent border border-gray-600 hover:bg-opacity-10 hover:bg-gray-600 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={onSave}
-              className="px-4 py-2 rounded-[12px] transition-colors bg-gold hover:opacity-90"
+              className="px-4 py-2 rounded-[12px] transition-colors bg-gold hover:opacity-90 cursor-pointer"
             >
               Save Changes
             </button>
