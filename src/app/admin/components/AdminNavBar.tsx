@@ -135,7 +135,7 @@ export default function AdminNavBar() {
               <div className="flex items-center gap-2 md:bg-accent rounded-lg p-2 cursor-pointer hover:bg-gold/80 transition-all duration-300">
                 <Image
                   src={profile?.users?.profile_picture || avatar}
-                  className="w-10 h-10 md:w-8 md:h-8 rounded-full cursor-pointer border-yale-blue border-3"
+                  className="w-10 h-10 md:w-8 md:h-8 rounded-full cursor-pointer border-yale-blue border-3 object-cover"
                   alt="User profile picture"
                   width={50}
                   height={50}
@@ -148,49 +148,52 @@ export default function AdminNavBar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
-                <DropdownMenuItem className="p-2">
-                  <Image
-                    src={profile?.users?.profile_picture || avatar}
-                    alt="User profile picture"
-                    width={40}
-                    height={40}
-                    className="rounded-full border-yale-blue border-3"
-                  />
-                  <Link
+              <Link
                     href="/admin/profile"
                     className="flex items-center gap-2"
                   >
-                    <span className="flex flex-col">
-                      <p className="text-sm font-[Inter]">
-                        {profile.users.name}
-                      </p>
-                      <p className="text-xs font-[Inter] flex items-center gap-1 text-gray-500">
-                        <IdCard className="text-xxs" strokeWidth={1.5} />
-                        {profile.employee_id}
-                      </p>
-                    </span>
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </DropdownMenuItem>
+                  <DropdownMenuItem className="p-2 cursor-pointer">
+                    <Image
+                      src={profile?.users?.profile_picture || avatar}
+                      alt="User profile picture"
+                      width={40}
+                      height={40}
+                      className="rounded-full border-yale-blue border-3 w-10 h-10 object-cover"
+                    />
+                  
+                      <span className="flex flex-col">
+                        <p className="text-sm font-[Inter]">
+                          {profile.users.name}
+                        </p>
+                        <p className="text-xs font-[Inter] flex items-center gap-1 text-gray-500">
+                          <IdCard className="text-xxs" strokeWidth={1.5} />
+                          {profile.employee_id}
+                        </p>
+                      </span>
+                      <ChevronRight className="h-4 w-4" />
+                  </DropdownMenuItem>
+                </Link>
 
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <Link href="/admin/settings/general/edit-profile">
+                <DropdownMenuItem className="cursor-pointer">
                   <Settings />
-                  <Link href="/admin/settings/general/edit-profile">
                     Settings
-                  </Link>
-                </DropdownMenuItem>
+                  </DropdownMenuItem>
+                </Link>
+                
                 <DropdownMenuItem
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className="cursor-pointer"
                 >
                   <SunMoon className="h-4 w-4" />
-                  <span className="cursor-pointer">
+                  <span>
                     {theme === "dark" ? "Light Mode" : "Dark Mode"}
                   </span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout}>
+              <DropdownMenuItem onClick={logout} className="cursor-pointer">
                 <LogOut />
                 <span>Log Out</span>
               </DropdownMenuItem>

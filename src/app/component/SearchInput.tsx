@@ -250,17 +250,27 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMobileSearchOpen]);
 
-  // Prevent body scroll when mobile search is open
+  // Prevent body scroll when mobile search is open - FIXED
   useEffect(() => {
     if (isMobileSearchOpen) {
+      // Store original body styles
+      const originalStyle = window.getComputedStyle(document.body);
+      const originalOverflow = originalStyle.overflow;
+      const originalPaddingRight = originalStyle.paddingRight;
+      
+      // Calculate scrollbar width to prevent layout shift
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      
+      // Apply styles to prevent body scroll
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      
+      return () => {
+        // Restore original styles
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
+      };
     }
-
-    return () => {
-      document.body.style.overflow = "unset";
-    };
   }, [isMobileSearchOpen]);
 
   // Highlight matching text
@@ -331,7 +341,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
         {/* Desktop Search Results Dropdown */}
         {isOpen && query.length >= 2 && (
           <div
-            className="absolute top-full left-0 right-0 mt-2 w-136 dark:bg-secondary border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto
+            className="absolute top-full left-0 right-0 mt-2 w-3xl bg-accent border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto
             [&::-webkit-scrollbar]:w-2
             [&::-webkit-scrollbar-track]:rounded-full
             [&::-webkit-scrollbar-track]:bg-card-foreground
@@ -352,7 +362,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                       <div
                         key={paper.paper_id}
                         onClick={() => handleResultClick(paper)}
-                        className={`px-4 py-3 cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gold/80 transition-colors ${
+                        className={`px-4 py-3 cursor-pointer border-gray-100 dark:border-gray-700  hover:bg-gold/80 transition-colors ${
                           selectedIndex === index
                             ? "bg-gold/10 dark:bg-gold/20"
                             : ""
@@ -430,7 +440,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                 </div>
 
                 {!results.some((r) => r.isError) && (
-                  <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-3 bg-secondary">
+                  <div className="border-t border-gray-200 px-4 py-3 bg-secondary">
                     <button
                       onClick={handleViewAllResults}
                       className="cursor-pointer w-full text-left text-sm text-gold hover:text-gold/80 font-medium flex items-center justify-between transition-colors"
@@ -464,11 +474,11 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
         <Search className="w-5 h-5 text-gray-400 dark:text-gray-500" />
       </button>
 
-      {/* Mobile Search Overlay */}
+      {/* Mobile Search Overlay - FIXED LAYOUT */}
       {isMobileSearchOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-primary font-[Inter]">
-          {/* Mobile Search Header */}
-          <div className="flex items-center gap-3 p-4 border-b border-white-5 dark:border-gray-700">
+        <div className="md:hidden fixed inset-0 z-50 bg-primary font-[Inter] flex flex-col">
+          {/* Mobile Search Header - Fixed */}
+          <div className="flex-shrink-0 flex items-center gap-3 p-4 border-b border-white-5">
             <button
               onClick={handleMobileSearchClose}
               className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gold/10 transition-colors"
@@ -485,7 +495,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
-                className="w-full pl-10 pr-10 py-3 bg-primary dark:bg-secondary border border-white-5 dark:border-gray-600 rounded-lg text-base transition-all duration-200 focus:ring-2 focus:ring-gold focus:border-transparent"
+                className="w-full pl-10 pr-10 py-3 bg-accent rounded-lg text-base transition-all duration-200 focus:ring-2 focus:ring-gold focus:border-transparent"
                 autoComplete="off"
                 autoFocus
               />
@@ -508,8 +518,8 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
             </div>
           </div>
 
-          {/* Mobile Search Results */}
-          <div className="flex-1 overflow-y-auto bg-primary">
+          {/* Mobile Search Results - Scrollable */}
+          <div className="flex-1 min-h-0 overflow-y-auto bg-accent">
             {loading && results.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <Loader2 className="w-8 h-8 animate-spin mb-4 text-gold" />

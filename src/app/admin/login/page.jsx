@@ -14,6 +14,7 @@ const AdminLogin = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     idNumber: "",
@@ -27,6 +28,7 @@ const AdminLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     // Debugging line to log form data before sending it
     console.log("Form Data: ", formData);
@@ -47,16 +49,16 @@ const AdminLogin = () => {
     if (!response.ok) {
       setErrorMessage("Login failed. Please check your credentials.");
       setShowErrorModal(true);
+      setIsLoading(false);
       return;
     }
 
     // Try to parse the response body
     const result = await response.json().catch((error) => {
       console.error("Failed to parse JSON:", error);
+      setIsLoading(false);
       return null; // return null if parsing fails
     });
-
-    // Parse the response from the API (assuming it's JSON)
 
     // Handle login result
     if (result.success) {
@@ -67,6 +69,7 @@ const AdminLogin = () => {
     } else {
       // Alert the user if login failed
       alert("Login failed: " + result.message);
+      setIsLoading(false);
     }
   };
 
@@ -144,9 +147,10 @@ const AdminLogin = () => {
               <div className="flex flex-row justify-center mt-5">
                 <Button
                   type="submit"
-                  className="w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-yale-blue-fg/70 to-yale-blue hover:bg-gradient-to-br font-inter cursor-pointer font-bold text-lg text-white"
+                  disabled={isLoading}
+                  className={`w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-yale-blue-fg/70 to-yale-blue hover:bg-gradient-to-br font-inter cursor-pointer font-bold text-lg text-white ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
-                  Log In
+                  {isLoading ? "Please wait..." : "Log In"}
                 </Button>
               </div>
             </form>

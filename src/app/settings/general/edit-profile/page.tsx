@@ -181,12 +181,12 @@ function EditProfileContent() {
 
   return (
     <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mb-8 rounded-xl border-1 border-white-5`}>
-      <h1 className="text-2xl ml-1">Edit Profile</h1>
+      <h1 className="text-2xl ml-1">Profile Information</h1>
       
       {/* divider */}
-      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-10' : 'bg-white-5'}`}></div>
+      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-white-5'}`}></div>
 
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-12 mt-5">
         {/* Profile Picture Section */}
         <div className="flex flex-col items-center space-y-4">
           <div className="relative">
@@ -236,9 +236,9 @@ function EditProfileContent() {
             placeholder={profile.users.first_name || "Enter first name"}
             value={profile.users.first_name || ""}
             onChange={() => {}}
-            inputClassName="w-full h-14 mt-1 dark:bg-secondary"
+            inputClassName="w-full md:w-lg h-14 mt-1 dark:bg-secondary"
             labelClassName=""
-            disabled={false}
+            disabled={true}
           />
 
           <InputField
@@ -249,9 +249,22 @@ function EditProfileContent() {
             placeholder={profile.users.last_name || "Enter last name"}
             value={profile.users.last_name || ""}
             onChange={() => {}}
-            inputClassName="w-full h-14 mt-1 dark:bg-secondary"
+            inputClassName="w-full md:w-lg h-14 mt-1 dark:bg-secondary"
             labelClassName=""
-            disabled={false}
+            disabled={true}
+          />
+
+          <InputField
+            containerClassName="pt-4"
+            label="Student Number"
+            type="text"
+            name="student_num"
+            placeholder={profile.student_num || "Enter student number"}
+            value={profile.student_num || ""}
+            onChange={() => {}}
+            inputClassName="w-full md:w-lg h-14 mt-1 dark:bg-secondary"
+            labelClassName=""
+            disabled={true}
           />
 
           <InputField
@@ -262,9 +275,9 @@ function EditProfileContent() {
             placeholder={profile.users.email || "Enter email"}
             value={profile.users.email || ""}
             onChange={() => {}}
-            inputClassName="w-full h-14 mt-1 dark:bg-secondary"
+            inputClassName="w-full md:w-lg h-14 mt-1 dark:bg-secondary"
             labelClassName=""
-            disabled={true} // Email should typically be read-only
+            disabled={false}
           />
 
           {/* Save Button */}

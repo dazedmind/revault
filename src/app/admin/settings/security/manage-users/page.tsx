@@ -25,6 +25,7 @@ interface FrontendUser {
   contactNum: string;
   position: string;
   name: string;
+  profileURL: string; 
 }
 
 function ManageUserContent() {
@@ -145,6 +146,7 @@ function ManageUserContent() {
     userAccess: "Librarian-in-Charge",
     contactNum: "",
     position: "Librarian-in-Charge", // Auto-populate default
+    profileURL: "",
   });
   const [newUserPasswords, setNewUserPasswords] = useState({
     password: "",
@@ -276,6 +278,7 @@ function ManageUserContent() {
 
   const handleSaveEdit = async () => {
     if (!currentEditUser) return;
+    setShowEditModal(false);
 
     // Store original user data for comparison
     const originalUser = users.find((u) => u.id === currentEditUser.id);
@@ -344,7 +347,6 @@ function ManageUserContent() {
       );
 
       // Close modal and reset state
-      setShowEditModal(false);
       setCurrentEditUser(null);
       setPasswords({ newPassword: "", confirmPassword: "" });
       setPasswordError("");
@@ -377,6 +379,7 @@ function ManageUserContent() {
       userAccess: "Librarian-in-Charge",
       contactNum: "",
       position: "Librarian-in-Charge", // Auto-populate default
+      profileURL: "",
     });
     setNewUserPasswords({ password: "", confirmPassword: "" });
     setNewUserPasswordError("");
@@ -507,6 +510,7 @@ function ManageUserContent() {
           userAccess: "Librarian-in-Charge",
           contactNum: "",
           position: "Librarian-in-Charge",
+          profileURL: "",
         });
         setNewUserPasswords({ password: "", confirmPassword: "" });
         setNewUserPasswordError("");

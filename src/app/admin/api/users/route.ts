@@ -38,6 +38,7 @@ export async function GET() {
       contactNum: user.librarian?.contact_num?.toString() || "0",
       position: user.librarian?.position || "",
       name: `${user.first_name || ""} ${user.last_name || ""}${user.ext_name ? " " + user.ext_name : ""}`.trim(),
+      profileURL: user.profile_picture || "",
     }));
 
     console.log("📋 Mapped users:", mappedUsers.length);
