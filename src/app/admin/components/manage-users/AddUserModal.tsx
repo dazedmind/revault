@@ -68,7 +68,9 @@ export default function AddUserModal({
 
         <div className="space-y-6">
           <div>
-            <h1 className="text-3xl font-bold mb-4 text-gold">Add New Librarian</h1>
+            <h1 className="text-3xl font-bold mb-4 text-gold">
+              Add New Librarian
+            </h1>
             <h3 className="text-lg font-bold mb-4 text-gold">
               Personal Information
             </h3>
@@ -127,8 +129,10 @@ export default function AddUserModal({
               </div>
             </div>
           </div>
-          
-          <div className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}></div>
+
+          <div
+            className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}
+          ></div>
 
           {/* Employee Information Section */}
           <div>
@@ -233,7 +237,9 @@ export default function AddUserModal({
             </div>
           </div>
 
-          <div className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}></div>
+          <div
+            className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}
+          ></div>
           {/* Account Section */}
           <div>
             <h3 className="text-lg font-bold mb-4 text-gold">
@@ -289,7 +295,6 @@ export default function AddUserModal({
               Add User
             </button>
           </div>
-        </div>
         </div>
       </div>
     </div>

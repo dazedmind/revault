@@ -56,7 +56,6 @@ export default function UsersTable({
     const displayName =
       user.name ||
       `${user.fullName} ${user.lastName}${user.extension ? " " + user.extension : ""}`;
-    const userProfile = user.profileURL || userAvatar;
     return {
       name: displayName,
       subtitle: user.position || user.employeeID,
@@ -147,7 +146,7 @@ export default function UsersTable({
                 <TableCell className="py-3 align-middle">
                   <div className="flex justify-center">
                     <Image
-                      src={u.profileURL || userAvatar}
+                      src={userAvatar}
                       alt="avatar"
                       width={40}
                       height={40}
