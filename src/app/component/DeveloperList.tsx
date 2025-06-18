@@ -33,7 +33,7 @@ const DeveloperList = ({ onClick }: { onClick: () => void }) => {
       color: "from-blue-500 to-cyan-500"
     },
     {
-      name: "Valena, John Allen Troy E.",
+      name: "Valeña, John Allen Troy E.",
       role: "Lead Programmer & System Designer",
       icon: "🚀",
       color: "from-blue-500 to-cyan-500"
