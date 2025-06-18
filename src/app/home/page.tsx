@@ -1,11 +1,9 @@
+// app/home/page.tsx
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useTheme } from "next-themes";
-
 import PapersArea from "./PapersArea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { FaFilter } from "react-icons/fa";
 import {
   Popover,
@@ -21,15 +19,19 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import useAntiCopy from "../hooks/useAntiCopy";
+import { useTheme } from "next-themes";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  FilterSection,
+  MobileFilterSection,
+  type FilterState,
+} from "@/app/component/FilterSection";
+
+// Helper component for filter tags
+const FilterTag = ({ label }: { label: string }) => (
+  <span className="px-2 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 rounded text-xs">
+    {label}
+  </span>
+);
 
 export default function HomePage() {
   const router = useRouter();
@@ -37,483 +39,349 @@ export default function HomePage() {
   const searchParams = useSearchParams();
   const { theme } = useTheme();
 
-  // useAntiCopy();
-
-  // — UI state for the filter controls (mirrors URL)
-  const [departments, setDepartments] = useState<string[]>([]);
-  const [years, setYears] = useState<string[]>([]);
-  const [startYear, setStartYear] = useState("");
-  const [endYear, setEndYear] = useState("");
-  const [courses, setCourses] = useState<string[]>([]);
-
-  // — Applied filters (what actually gets sent to PapersArea)
-  const [appliedFilters, setAppliedFilters] = useState({
-    department: [] as string[],
-    year: [] as string[],
-    start: "",
-    end: "",
-    course: [] as string[],
+  // UI state for filters (temporary state, doesn't trigger API calls)
+  const [filterState, setFilterState] = useState<FilterState>({
+    departments: [],
+    years: [],
+    startYear: "",
+    endYear: "",
+    courses: [],
+    sortOption: "",
   });
 
-  // — Pagination state
+  // Applied filters - ONLY derived from URL, never from filterState
+  // This ensures PapersArea only re-renders when filters are actually applied
+  const appliedFilters = useMemo(() => {
+    const deps =
+      searchParams.get("department")?.split(",").filter(Boolean) || [];
+    const yrs = searchParams.get("year")?.split(",").filter(Boolean) || [];
+    const start = searchParams.get("start") || "";
+    const end = searchParams.get("end") || "";
+    const crs = searchParams.get("course")?.split(",").filter(Boolean) || [];
+    const sort = searchParams.get("sort") || "";
+    const search = searchParams.get("q") || "";
+
+    return {
+      department: deps,
+      year: start && end ? [] : yrs,
+      start: start,
+      end: end,
+      course: crs,
+      sort: sort,
+      search: search,
+    };
+  }, [searchParams]); // Only depends on URL params, not filterState
+
+  // Pagination
   const rawPageParam = searchParams.get("page");
   const initialPage = rawPageParam ? parseInt(rawPageParam, 10) || 1 : 1;
   const [currentPage, setCurrentPage] = useState<number>(initialPage);
   const [totalPages, setTotalPages] = useState<number>(1);
 
-  // Memoize filter parsing to prevent unnecessary re-renders during theme changes
-  const parsedFilters = useMemo(() => {
-    const deps = searchParams.get("department")?.split(",").filter(Boolean) || [];
+  // Sync UI filterState from URL (when URL changes)
+  useEffect(() => {
+    const deps =
+      searchParams.get("department")?.split(",").filter(Boolean) || [];
     const yrs = searchParams.get("year")?.split(",").filter(Boolean) || [];
     const start = searchParams.get("start") || "";
     const end = searchParams.get("end") || "";
     const crs = searchParams.get("course")?.split(",").filter(Boolean) || [];
+    const sort = searchParams.get("sort") || "";
 
-    return { deps, yrs, start, end, crs };
-  }, [searchParams]);
-
-  // Stabilize the effect dependencies to prevent theme-related re-renders
-  const updateFiltersFromUrl = useCallback(() => {
-    const { deps, yrs, start, end, crs } = parsedFilters;
-
-    setDepartments(deps);
-    setCourses(crs);
-
-    if (start && end) {
-      setStartYear(start);
-      setEndYear(end);
-      setYears([]); // clear individual‐year checkboxes
-    } else {
-      setStartYear("");
-      setEndYear("");
-      setYears(yrs);
-    }
-
-    // Update applied filters
-    setAppliedFilters({
-      department: deps,
-      year: start && end ? [] : yrs,
-      start,
-      end,
-      course: crs,
+    setFilterState({
+      departments: deps,
+      courses: crs,
+      sortOption: sort,
+      startYear: start && end ? start : "",
+      endYear: start && end ? end : "",
+      years: start && end ? [] : yrs,
     });
 
-    // Update page
     const p = rawPageParam ? parseInt(rawPageParam, 10) : 1;
     setCurrentPage(isNaN(p) || p < 1 ? 1 : p);
-  }, [parsedFilters, rawPageParam]);
+  }, [searchParams, rawPageParam]);
 
-  // Only update when URL actually changes, not on theme changes
-  useEffect(() => {
-    updateFiltersFromUrl();
-  }, [updateFiltersFromUrl]);
-
+  // Helper functions
   const hasFilters =
     appliedFilters.department.length > 0 ||
     appliedFilters.year.length > 0 ||
     (appliedFilters.start !== "" && appliedFilters.end !== "") ||
-    appliedFilters.course.length > 0;
+    appliedFilters.course.length > 0 ||
+    appliedFilters.search !== "";
 
-  // Toggle helper for checkboxes
-  const toggle = useCallback(
-    (
-      value: string,
-      list: string[],
-      setList: React.Dispatch<React.SetStateAction<string[]>>,
-    ) => {
-      setList(
-        list.includes(value) ? list.filter((x) => x !== value) : [...list, value],
-      );
-    },
-    []
-  );
+  const hasPendingChanges = () => {
+    const compareArrays = (a: string[], b: string[]) =>
+      JSON.stringify(a.slice().sort()) !== JSON.stringify(b.slice().sort());
 
-  // When "Apply Filters" is clicked:
-  const applyFilters = useCallback(() => {
+    return (
+      compareArrays(filterState.departments, appliedFilters.department) ||
+      compareArrays(filterState.years, appliedFilters.year) ||
+      filterState.startYear !== appliedFilters.start ||
+      filterState.endYear !== appliedFilters.end ||
+      compareArrays(filterState.courses, appliedFilters.course) ||
+      filterState.sortOption !== appliedFilters.sort
+    );
+  };
+
+  const buildFilterURL = (resetPage = true) => {
     const qp = new URLSearchParams();
 
-    if (departments.length) qp.set("department", departments.join(","));
-    if (startYear && endYear) {
-      qp.set("start", startYear);
-      qp.set("end", endYear);
-    } else if (years.length) {
-      qp.set("year", years.join(","));
+    if (filterState.departments.length)
+      qp.set("department", filterState.departments.join(","));
+    if (filterState.startYear && filterState.endYear) {
+      qp.set("start", filterState.startYear);
+      qp.set("end", filterState.endYear);
+    } else if (filterState.years.length) {
+      qp.set("year", filterState.years.join(","));
     }
-    if (courses.length) qp.set("course", courses.join(","));
+    if (filterState.courses.length)
+      qp.set("course", filterState.courses.join(","));
+    if (filterState.sortOption) qp.set("sort", filterState.sortOption);
 
-    // Reset to page=1 whenever filters change:
-    qp.set("page", "1");
+    const currentSearch = searchParams.get("q");
+    if (currentSearch) qp.set("q", currentSearch);
 
-    const href = `${pathname}?${qp.toString()}`;
-    router.replace(href, { scroll: false });
+    if (!resetPage && currentPage > 1) qp.set("page", String(currentPage));
 
-    setAppliedFilters({
-      department: departments,
-      year: startYear && endYear ? [] : years,
-      start: startYear,
-      end: endYear,
-      course: courses,
+    return qp.toString() ? `${pathname}?${qp.toString()}` : pathname;
+  };
+
+  // Handle filter changes - ONLY updates UI state, doesn't trigger API calls
+  const handleFiltersChange = (updates: Partial<FilterState>) => {
+    setFilterState((prev) => ({ ...prev, ...updates }));
+  };
+
+  // Apply filters - ONLY this function triggers URL change and API calls
+  const applyFilters = () => {
+    const href = buildFilterURL(true);
+    router.push(href, { scroll: false });
+  };
+
+  const clearAllFilters = () => {
+    setFilterState({
+      departments: [],
+      years: [],
+      startYear: "",
+      endYear: "",
+      courses: [],
+      sortOption: "",
     });
-  }, [departments, years, startYear, endYear, courses, pathname, router]);
 
-  // "Clear All Filters" (also resets page to 1 by removing ?page= entirely)
-  const clearAllFilters = useCallback(() => {
-    setDepartments([]);
-    setYears([]);
-    setCourses([]);
-    setStartYear("");
-    setEndYear("");
+    const currentSearch = searchParams.get("q");
+    const href = currentSearch ? `${pathname}?q=${currentSearch}` : pathname;
+    router.push(href, { scroll: false });
+  };
 
-    router.replace(pathname, { scroll: false });
+  const goToPage = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return;
 
-    setAppliedFilters({
-      department: [],
-      year: [],
-      start: "",
-      end: "",
-      course: [],
-    });
-  }, [pathname, router]);
+    const qp = new URLSearchParams();
 
-  // When the user clicks a new page number (or Next/Previous), we update ?page= in the URL
-  const goToPage = useCallback((newPage: number) => {
-    if (newPage < 1) newPage = 1;
-    if (newPage > totalPages) newPage = totalPages;
-
-    const qp = new URLSearchParams(
-      searchParams as any as Record<string, string>,
-    );
-    if (newPage === 1) {
-      qp.delete("page");
-    } else {
-      qp.set("page", String(newPage));
+    // Preserve current APPLIED filters (from URL, not filterState)
+    if (appliedFilters.department.length)
+      qp.set("department", appliedFilters.department.join(","));
+    if (appliedFilters.start && appliedFilters.end) {
+      qp.set("start", appliedFilters.start);
+      qp.set("end", appliedFilters.end);
+    } else if (appliedFilters.year.length) {
+      qp.set("year", appliedFilters.year.join(","));
     }
-    router.replace(`${pathname}?${qp.toString()}`, { scroll: false });
+    if (appliedFilters.course.length)
+      qp.set("course", appliedFilters.course.join(","));
+    if (appliedFilters.sort) qp.set("sort", appliedFilters.sort);
+    if (appliedFilters.search) qp.set("q", appliedFilters.search);
+
+    if (newPage > 1) qp.set("page", String(newPage));
+
+    const href = qp.toString() ? `${pathname}?${qp.toString()}` : pathname;
+    router.push(href, { scroll: false });
     setCurrentPage(newPage);
-  }, [totalPages, searchParams, pathname, router]);
+  };
+
+  const getPageTitle = () => {
+    if (appliedFilters.search)
+      return `Search Results for "${appliedFilters.search}"`;
+    if (hasFilters) return "Filtered Papers";
+    return "Recent Papers";
+  };
+
+  // Render pagination
+  const renderPagination = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+
+    const addPage = (pageNum: number) => (
+      <PaginationItem key={pageNum}>
+        <PaginationLink
+          href="#"
+          isActive={pageNum === currentPage}
+          className="dark:text-card cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault();
+            if (pageNum !== currentPage) goToPage(pageNum);
+          }}
+        >
+          {pageNum}
+        </PaginationLink>
+      </PaginationItem>
+    );
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) pages.push(addPage(i));
+    } else {
+      pages.push(addPage(1));
+
+      if (currentPage > 3) {
+        pages.push(
+          <PaginationItem key="ellipsis1">
+            <PaginationEllipsis />
+          </PaginationItem>,
+        );
+      }
+
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        if (i !== 1 && i !== totalPages) pages.push(addPage(i));
+      }
+
+      if (currentPage < totalPages - 2) {
+        pages.push(
+          <PaginationItem key="ellipsis2">
+            <PaginationEllipsis />
+          </PaginationItem>,
+        );
+      }
+
+      if (totalPages > 1) pages.push(addPage(totalPages));
+    }
+
+    return pages;
+  };
 
   return (
     <main className="flex flex-col md:flex-row">
-      {/* Sidebar (desktop) */}
+      {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-80 p-10">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-bold ">Filter Results</h1>
-
-          <section>
-            <h2 className="font-bold text-gold">Program</h2>
-            {["Information Technology", "Computer Science"].map((d) => (
-              <div key={d} className="flex items-center gap-2 ml-2">
-                <Checkbox
-                  id={`dept-${d}`}
-                  checked={departments.includes(d)}
-                  onCheckedChange={() => toggle(d, departments, setDepartments)}
-                />
-                <label htmlFor={`dept-${d}`}>{d}</label>
-              </div>
-            ))}
-          </section>
-
-          <section>
-            <h2 className="font-bold text-gold">Publication Year</h2>
-            {["2025", "2024", "2023", "2022", "2021"].map((y) => (
-              <div key={y} className="flex items-center gap-2 ml-2">
-                <Checkbox
-                  id={`year-${y}`}
-                  checked={years.includes(y)}
-                  onCheckedChange={() => toggle(y, years, setYears)}
-                  disabled={Boolean(startYear && endYear)}
-                />
-                <label htmlFor={`year-${y}`}>{y}</label>
-              </div>
-            ))}
-            <div className="flex flex-col gap-2 ml-2 mt-2">
-              <p className="text-sm">Custom Range:</p>
-              <span className="flex gap-2">
-                <input
-                  type="number"
-                  placeholder="Start year"
-                  value={startYear}
-                  onChange={(e) => {
-                    setStartYear(e.target.value);
-                    if (e.target.value && endYear) setYears([]); // clear years if custom
-                  }}
-                  className="border p-1 rounded-md text-sm w-20"
-                />
-                <input
-                  type="number"
-                  placeholder="End year"
-                  value={endYear}
-                  onChange={(e) => {
-                    setEndYear(e.target.value);
-                    if (e.target.value && startYear) setYears([]); // clear years if custom
-                  }}
-                  className="border p-1 rounded-md text-sm w-20"
-                />
-              </span>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="font-bold text-gold">Course</h2>
-            {["SIA", "Capstone Project", "Compiler Design", "Thesis Writing"].map(
-              (c) => (
-                <div key={c} className="flex items-center gap-2 ml-2">
-                  <Checkbox
-                    id={`course-${c}`}
-                    checked={courses.includes(c)}
-                    onCheckedChange={() => toggle(c, courses, setCourses)}
-                  />
-                  <label htmlFor={`course-${c}`}>{c}</label>
-                </div>
-              ),
-            )}
-          </section>
-
-          <div className="flex flex-col gap-2 mt-4">
-            <button
-              onClick={applyFilters}
-              className="bg-yale-blue/50 hover:brightness-110 transition-all duration-300 p-2 rounded-md cursor-pointer"
-            >
-              Apply Filters
-            </button>
-            {hasFilters && (
-              <button
-                onClick={clearAllFilters}
-                className={`${
-                  theme === "light"
-                    ? "bg-white-25 hover:bg-white-50"
-                    : "bg-white-5 hover:bg-white-10"
-                } transition-all duration-300 p-2 rounded-md cursor-pointer`}
-              >
-                Clear All Filters
-              </button>
-            )}
-          </div>
-        </div>
+        <FilterSection
+          filters={filterState}
+          onFiltersChange={handleFiltersChange}
+          onApplyFilters={applyFilters}
+          onClearFilters={clearAllFilters}
+          hasPendingChanges={hasPendingChanges()}
+          theme={theme}
+        />
       </aside>
 
-    
-      {/* Main content area */}
-      <section className="flex-1 p-6">
-        <h1 className="text-3xl font-bold md:my-4 mb-4">Recent Papers</h1>
+      {/* Results Area */}
+      <div className="flex-1 p-8 flex flex-col gap-5">
+        <h1 className="text-3xl font-bold">{getPageTitle()}</h1>
 
-      {/* Mobile filter popover */}
-      <div className="md:hidden flex justify-between items-center mb-6">
-            <Popover>
-              <PopoverTrigger className="flex items-center gap-2 bg-gold text-midnight px-4 py-2 rounded-lg">
-                <FaFilter />
-                Filter
-              </PopoverTrigger>
-              <PopoverContent
-                className={`${
-                  theme === "light"
-                    ? "bg-accent border-white-50"
-                    : "bg-dusk border-white-5"
-                }`}
-                align="start"
-              >
-                {/* Sort dropdown - moved to top and fixed default value */}
-                <div className="mb-4">
-                  <p className="text-sm font-medium mb-2">Sort by</p>
-                  <Select
-                    onValueChange={() => {}}
-                    value={""}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="year-recent">
-                          Publish Year (Most recent)
-                        </SelectItem>
-                        <SelectItem value="year-oldest">
-                          Publish Year (Oldest)
-                        </SelectItem>
-                        <SelectItem value="title-asc">Paper Title (A-Z)</SelectItem>
-                        <SelectItem value="title-desc">
-                          Paper Title (Z-A)
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
+        {/* Mobile Filter Popover */}
+        <div className="flex md:hidden">
+          <Popover>
+            <PopoverTrigger className="flex items-center gap-2 cursor-pointer">
+              Filter <FaFilter />
+              {hasPendingChanges() && (
+                <span className="text-yellow-500">⚡</span>
+              )}
+            </PopoverTrigger>
+            <PopoverContent
+              className={`${theme === "light" ? "bg-accent border-white-50" : "bg-dusk border-white-5"}`}
+              align="start"
+            >
+              <MobileFilterSection
+                filters={filterState}
+                onFiltersChange={handleFiltersChange}
+                onApplyFilters={applyFilters}
+                onClearFilters={clearAllFilters}
+                hasPendingChanges={hasPendingChanges()}
+                theme={theme}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
 
-                <div
-                  className={`${
-                    theme === "light" ? "bg-white-50" : "bg-white-5"
-                  } h-0.5 w-auto my-2 mx-1`}
-                />
-
-                {/* Department Checkboxes */}
-                <div className="mb-4">
-                  <p className="text-lg font-medium mb-2">Department</p>
-                  <ul className="ml-1 flex flex-col gap-2">
-                    {["Information Technology", "Computer Science"].map((d) => (
-                      <li key={d} className="flex items-center gap-2">
-                        <Checkbox
-                          id={`dept-${d}`}
-                          checked={departments.includes(d)}
-                          onCheckedChange={() => toggle(d, departments, setDepartments)}
-                        />
-                        <label
-                          htmlFor={`dept-${d}`}
-                          className="text-sm cursor-pointer select-none"
-                        >
-                          {d}
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div
-                  className={`${
-                    theme === "light" ? "bg-white-50" : "bg-white-5"
-                  } h-0.5 w-auto my-2 mx-1`}
-                />
-
-                {/* Course Checkboxes - Made independent */}
-                <div className="mb-4">
-                  <p className="text-lg font-medium mb-2">Course</p>
-                  <ul className="ml-1 flex flex-col gap-2">
-                    {[
-                      { name: "SIA", department: "Information Technology" },
-                      { name: "Capstone", department: "Information Technology" },
-                      { name: "CS Thesis Writing", department: "Computer Science" },
-                      { name: "Compiler Design", department: "Computer Science" },
-                    ].map((course) => (
-                      <li key={course.name} className="flex items-center gap-2">
-                        <Checkbox
-                          id={`course-${course.name}`}
-                          checked={courses.includes(course.name)}
-                          onCheckedChange={() => toggle(course.name, courses, setCourses)}
-                          // Removed the disabled condition to make filters independent
-                        />
-                        <label
-                          htmlFor={`course-${course.name}`}
-                          className="text-sm cursor-pointer select-none"
-                        >
-                          {course.name}
-                          <span className="text-xs text-gray-500 ml-1">
-                            (
-                            {course.department.includes("Information")
-                              ? "IT"
-                              : "CS"}
-                            )
-                          </span>
-                        </label>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Apply / Clear Buttons */}
-                <div className="flex gap-2 mt-4">
-                  <button
-                    onClick={clearAllFilters}
-                    className={`${
-                      theme === "light"
-                        ? "bg-white-50 hover:bg-white-25"
-                        : "bg-white-5 hover:bg-white-10"
-                    } p-2 w-full rounded-md cursor-pointer transition-colors duration-200 text-sm`}
-                  >
-                    Clear All
-                  </button>
-                  <button
-                    onClick={applyFilters}
-                    className="bg-gold hover:brightness-110 p-2 w-full rounded-md cursor-pointer transition-all duration-200 text-sm font-medium text-white"
-                  >
-                    Apply Filters
-                  </button>
-                </div>
-
-                {/* Filter Summary */}
-                {(departments.length > 0 || courses.length > 0) && (
-                  <div className="mt-3 p-2 bg-gold/10 rounded-md">
-                    <p className="text-xs text-gold font-medium">Active Filters:</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {departments.map((dept) => (
-                        <span
-                          key={dept}
-                          className="text-xs bg-gold/20 text-gold px-2 py-1 rounded"
-                        >
-                          {dept.includes("Information") ? "IT" : "CS"}
-                        </span>
-                      ))}
-                      {courses.map((course) => (
-                        <span
-                          key={course}
-                          className="text-xs bg-blue-500/20 text-blue-600 px-2 py-1 rounded"
-                        >
-                          {course}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </PopoverContent>
-            </Popover>
+        {/* Active Filters Display */}
+        {hasFilters && (
+          <div className="flex flex-wrap gap-2 p-3  rounded-lg border-2 border-white-50 ">
+            <span className="text-sm font-medium ">
+              Active filters:
+            </span>
+            {appliedFilters.department.map((dept) => (
+              <FilterTag key={dept} label={dept} />
+            ))}
+            {appliedFilters.year.map((year) => (
+              <FilterTag key={year} label={year} />
+            ))}
+            {appliedFilters.start && appliedFilters.end && (
+              <FilterTag
+                label={`${appliedFilters.start}-${appliedFilters.end}`}
+              />
+            )}
+            {appliedFilters.course.map((course) => (
+              <FilterTag key={course} label={course} />
+            ))}
+            {appliedFilters.sort && (
+              <FilterTag label={`Sort: ${appliedFilters.sort}`} />
+            )}
+            <button
+              type="button"
+              onClick={clearAllFilters}
+              className="px-2 py-1 bg-red-100 hover:bg-red-200 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-800 rounded text-xs cursor-pointer"
+            >
+              Clear all
+            </button>
           </div>
+        )}
 
+        {/* PapersArea - Now only receives URL-based appliedFilters */}
         <PapersArea
           filters={appliedFilters}
           page={currentPage}
-          onTotalPages={setTotalPages}
+          onTotalPages={(n) => setTotalPages(n)}
         />
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <Pagination className="mt-8">
+          <Pagination>
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  onClick={() => goToPage(currentPage - 1)}
-                  className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  href="#"
+                  className={
+                    currentPage <= 1
+                      ? "dark:text-card opacity-50 pointer-events-none"
+                      : "dark:text-card cursor-pointer"
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage > 1) goToPage(currentPage - 1);
+                  }}
                 />
               </PaginationItem>
 
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                let pageNum;
-                if (totalPages <= 5) {
-                  pageNum = i + 1;
-                } else if (currentPage <= 3) {
-                  pageNum = i + 1;
-                } else if (currentPage >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i;
-                } else {
-                  pageNum = currentPage - 2 + i;
-                }
-
-                return (
-                  <PaginationItem key={pageNum}>
-                    <PaginationLink
-                      onClick={() => goToPage(pageNum)}
-                      isActive={currentPage === pageNum}
-                      className="cursor-pointer"
-                    >
-                      {pageNum}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              })}
-
-              {totalPages > 5 && currentPage < totalPages - 2 && (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              )}
+              {renderPagination()}
 
               <PaginationItem>
                 <PaginationNext
-                  onClick={() => goToPage(currentPage + 1)}
-                  className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  href="#"
+                  className={
+                    currentPage >= totalPages
+                      ? "dark:text-card opacity-50 pointer-events-none"
+                      : "dark:text-card cursor-pointer"
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (currentPage < totalPages) goToPage(currentPage + 1);
+                  }}
                 />
               </PaginationItem>
             </PaginationContent>
           </Pagination>
         )}
-      </section>
+      </div>
     </main>
   );
 }

@@ -1,6 +1,7 @@
 // app/admin/components/manage-users/AddUserModal.tsx
 "use client";
 import { Dispatch, SetStateAction, ChangeEvent } from "react";
+import { X } from "lucide-react";
 
 interface NewUser {
   fullName: string;
@@ -54,72 +55,83 @@ export default function AddUserModal({
   const automaticPosition = getPositionFromUserAccess(newUser.userAccess);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50 z-50">
-      <div className={`p-6 m-4 rounded-lg bg-accent w-full max-w-md relative z-10 max-h-[90vh]  flex flex-col border-2 ${theme === "light" ? "border-white-50" : "border-white-5"}`}>
-      <div className="flex-1 overflow-y-auto pr-2 -mr-2">
-        <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold mb-4 text-gold">Add New Librarian</h1>
-            <h3 className="text-lg font-bold mb-4 text-gold">
-              Personal Information
-            </h3>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+    <div className="fixed inset-0 flex items-center bg-black/50 backdrop-blur-sm justify-center z-50">
+      <div className={`p-6 rounded-lg bg-accent border-1 ${theme === "light" ? "border-white-50" : "border-white-5"} w-full max-w-md relative z-10 max-h-[90vh] overflow-y-auto`}>
+        {/* Close Button */}
+        <button
+          onClick={onCancel}
+          className="absolute top-4 right-4 p-1 rounded-full hover:bg-tertiary cursor-pointer transition-colors z-20"
+          title="Close"
+        >
+          <X className="w-5 h-5 " />
+        </button>
+
+        <div className="flex-1 overflow-y-auto pr-2 -mr-2">
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  First Name *
-                </label>
-                <input
-                  type="text"
-                  name="fullName"
-                  value={newUser.fullName}
-                  onChange={onInputChange}
-                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md  text-sm h-[45px]"
-                  required
-                />
+              <h3 className="text-lg font-bold mb-4 text-gold">
+                Personal Information
+              </h3>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={newUser.fullName}
+                    onChange={onInputChange}
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md  text-sm h-[45px]"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Middle Name
+                  </label>
+                  <input
+                    type="text"
+                    name="middleName"
+                    value={newUser.middleName}
+                    onChange={onInputChange}
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Middle Name
-                </label>
-                <input
-                  type="text"
-                  name="middleName"
-                  value={newUser.middleName}
-                  onChange={onInputChange}
-                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Last Name *
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={newUser.lastName}
-                  onChange={onInputChange}
-                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Ext. (e.g. III, Sr.)
-                </label>
-                <input
-                  type="text"
-                  name="extension"
-                  value={newUser.extension}
-                  onChange={onInputChange}
-                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={newUser.lastName}
+                    onChange={onInputChange}
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Ext. (e.g. III, Sr.)
+                  </label>
+                  <input
+                    type="text"
+                    name="extension"
+                    value={newUser.extension}
+                    onChange={onInputChange}
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
+                  />
+                </div>
               </div>
             </div>
           </div>
-          
-          <div className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}></div>
+
+          <div
+            className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}
+          ></div>
 
           {/* Employee Information Section */}
           <div>
@@ -224,7 +236,9 @@ export default function AddUserModal({
             </div>
           </div>
 
-          <div className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}></div>
+          <div
+            className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}
+          ></div>
           {/* Account Section */}
           <div>
             <h3 className="text-lg font-bold mb-4 text-gold">
@@ -280,7 +294,6 @@ export default function AddUserModal({
               Add User
             </button>
           </div>
-        </div>
         </div>
       </div>
     </div>

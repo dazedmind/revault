@@ -1,7 +1,7 @@
 // File: components/manage-users/UsersTable.tsx
 "use client";
 import Image from "next/image";
-import { FaPen, FaTrash } from "react-icons/fa";
+import { FaPen } from "react-icons/fa";
 import userAvatar from "../../../img/user.png";
 import {
   Table,
@@ -22,50 +22,44 @@ interface User {
   middleName: string;
   lastName: string;
   extension: string;
-  employeeID: string; // Changed from employeeId
+  employeeID: string;
   userAccess: string;
-  contactNum: string; // Added
-  position: string; // Added
+  contactNum: string;
+  position: string;
   profileURL: string;
 }
 
 interface UsersTableProps {
   users: User[];
-  onDeleteClick: (id: number) => void;
   onEditClick: (user: User) => void;
   theme: string;
+  selectedUserId?: number | null; // New prop to track selected user
+  editingUserId?: number | null; // New prop to track user being edited
 }
 
 export default function UsersTable({
   users,
-  onDeleteClick,
   onEditClick,
   theme,
+  selectedUserId,
+  editingUserId,
 }: UsersTableProps) {
   const VISIBLE_ROLES = ["ADMIN", "ASSISTANT", "LIBRARIAN"];
 
-  // DEBUG: log every role coming in
-  console.log("▶ raw users in UsersTable:", users);
-
+  // Filter users based on visible roles
   const filteredUsers = users.filter((u) => {
     const normalizedRole = u.role?.trim().toUpperCase() ?? "";
-    console.log(
-      `Checking user id=${u.id}, raw role="${u.role}", normalized="${normalizedRole}"`,
-    );
     return VISIBLE_ROLES.includes(normalizedRole);
   });
 
-  console.log("▶ filteredUsers:", filteredUsers);
-
-  // Helper function to format user display name (removed contact info)
+  // Helper function to format user display name
   const formatUserDisplayInfo = (user: User) => {
     const displayName =
       user.name ||
       `${user.fullName} ${user.lastName}${user.extension ? " " + user.extension : ""}`;
-    const userProfile = user.profileURL || userAvatar;
     return {
       name: displayName,
-      subtitle: user.position || user.employeeID, // Only show position or employee ID
+      subtitle: user.position || user.employeeID,
     };
   };
 
@@ -84,6 +78,30 @@ export default function UsersTable({
     }
   };
 
+  // Helper function to get row styling based on state
+  const getRowClass = (userId: number) => {
+    const baseClass = "cursor-pointer transition-all duration-200";
+
+    // User being edited (highest priority)
+    if (editingUserId === userId) {
+      return `${baseClass} bg-blue-100 dark:bg-blue-900/30 border-l-4 border-blue-500 shadow-md`;
+    }
+
+    // User row selected/clicked
+    if (selectedUserId === userId) {
+      return `${baseClass} bg-gray-100 dark:bg-gray-800/70 border-l-2 border-gray-400`;
+    }
+
+    // Default hover state
+    return `${baseClass} hover:bg-card-foreground`;
+  };
+
+  // Handle row click
+  const handleRowClick = (user: User, event: React.MouseEvent) => {
+    // Trigger edit for the clicked user
+    onEditClick(user);
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -94,31 +112,42 @@ export default function UsersTable({
           <TableHead className="w-[120px]">Employee ID</TableHead>
           <TableHead className="w-[120px]">Role</TableHead>
           <TableHead className="w-[100px]">Status</TableHead>
-          <TableHead className="text-center w-[120px]">Actions</TableHead>
         </TableRow>
       </TableHeader>
 
       <TableBody>
         {filteredUsers.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={7} className="text-center py-8">
+            <TableCell colSpan={6} className="text-center py-8">
               <p className="text-gray-500 dark:text-gray-400">
                 No users found matching the criteria.
               </p>
             </TableCell>
           </TableRow>
         ) : (
-          filteredUsers.map((u) => {
-            const userInfo = formatUserDisplayInfo(u);
+          filteredUsers.map((user) => {
+            const userInfo = formatUserDisplayInfo(user);
+            const isSelected = selectedUserId === user.id;
+            const isEditing = editingUserId === user.id;
+
             return (
               <TableRow
-                key={u.id}
-                className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                key={user.id}
+                className={getRowClass(user.id)}
+                onClick={(e) => handleRowClick(user, e)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleRowClick(user, e as any);
+                  }
+                }}
               >
                 <TableCell className="py-3 align-middle">
                   <div className="flex justify-center">
                     <Image
-                      src={u.profileURL || userAvatar}
+                      src={user.profileURL || userAvatar}
                       alt="avatar"
                       width={40}
                       height={40}
@@ -129,58 +158,43 @@ export default function UsersTable({
 
                 <TableCell className="py-3 align-middle">
                   <div className="flex flex-col">
-                    <span className="font-medium">{userInfo.name}</span>
+                    <span
+                      className={`font-medium ${isEditing ? "text-blue-600 dark:text-blue-400" : ""}`}
+                    >
+                      {userInfo.name}
+                    </span>
                     {userInfo.subtitle && (
                       <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {u.position && `${u.position}`}
+                        {user.position && `${user.position}`}
                       </span>
                     )}
                   </div>
                 </TableCell>
 
                 <TableCell className="py-3 align-middle">
-                  <span className="text-sm">{u.email}</span>
+                  <span className="text-sm">{user.email}</span>
                 </TableCell>
 
                 <TableCell className="py-3 align-middle">
-                  <span className="text-sm font-mono">{u.employeeID}</span>
+                  <span className="text-sm font-mono">{user.employeeID}</span>
                 </TableCell>
 
                 <TableCell className="py-3 align-middle">
-                  <span className={getRoleBadgeClass(u.role)}>
-                    {u.role.trim()}
+                  <span className={getRoleBadgeClass(user.role)}>
+                    {user.role.trim()}
                   </span>
                 </TableCell>
 
                 <TableCell className="py-3 align-middle">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      u.status === "Active"
+                      user.status === "Active"
                         ? "bg-green-500/20 text-green-500"
                         : "bg-red-500/20 text-red-500"
                     }`}
                   >
-                    {u.status}
+                    {user.status}
                   </span>
-                </TableCell>
-
-                <TableCell className="py-3 align-middle">
-                  <div className="flex gap-2 justify-center">
-                    <button
-                      onClick={() => onEditClick(u)}
-                      className="cursor-pointer bg-dusk text-white p-2 rounded-md hover:bg-blue-700 transition-colors"
-                      title={`Edit ${userInfo.name}`}
-                    >
-                      <FaPen />
-                    </button>
-                    <button
-                      onClick={() => onDeleteClick(u.id)}
-                      className="cursor-pointer bg-red-warning text-white p-2 rounded-md hover:bg-red-700 transition-colors"
-                      title={`Delete ${userInfo.name}`}
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
                 </TableCell>
               </TableRow>
             );
