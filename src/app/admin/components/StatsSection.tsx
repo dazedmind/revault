@@ -9,43 +9,45 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 
+interface StatsData {
+  totalPapers: number;
+  departments: {
+    "Information Technology": number;
+    "Computer Science": number;
+  };
+  totalUsers: number;
+  recentPapers: number;
+  lastUpdated: string;
+}
+
 interface StatsSectionProps {
-  allPapers: Array<{ department: string }>;
+  // ❌ REMOVED: No longer needs allPapers prop
+  // allPapers: Array<{ department: string }>;
   loading?: boolean;
 }
 
-export function StatsSection({
-  allPapers,
-  loading = false,
-}: StatsSectionProps) {
-  const [totalUsers, setTotalUsers] = useState<number>(0);
-  const [userLoading, setUserLoading] = useState(true);
-  const [userError, setUserError] = useState<string | null>(null);
+export function StatsSection({ loading = false }: StatsSectionProps) {
+  const [stats, setStats] = useState<StatsData | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Calculate paper statistics
-  const itCount = allPapers.filter(
-    (p) => p.department === "Information Technology",
-  ).length;
-  const csCount = allPapers.filter(
-    (p) => p.department === "Computer Science",
-  ).length;
-
-  // Fetch total users count
+  // ✅ OPTIMIZED: Single API call for all statistics
   useEffect(() => {
-    const fetchUserCount = async () => {
+    const fetchStats = async () => {
+      if (loading) return; // Wait for parent loading to complete
+
       try {
-        console.log("📊 Fetching total users count...");
+        console.log("📊 Fetching optimized stats...");
+        setStatsLoading(true);
+        setError(null);
 
         // Get token from localStorage
         const token = localStorage.getItem("authToken");
         if (!token) {
-          console.log("❌ No auth token found");
-          setUserError("Authentication required");
-          setUserLoading(false);
-          return;
+          throw new Error("Authentication required");
         }
 
-        const response = await fetch("/admin/api/total-users", {
+        const response = await fetch("/admin/api/stats", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -53,100 +55,119 @@ export function StatsSection({
           },
         });
 
-        console.log("📨 User count API response status:", response.status);
-
         if (!response.ok) {
           const errorText = await response.text();
-          console.error("❌ User count API error:", response.status, errorText);
-          throw new Error(`Failed to fetch user count (${response.status})`);
+          throw new Error(
+            `Stats API failed (${response.status}): ${errorText}`,
+          );
         }
 
-        const data = await response.json();
-        console.log("✅ User count API response:", data);
+        const result = await response.json();
 
-        if (data.success && typeof data.total_users === "number") {
-          setTotalUsers(data.total_users);
-          setUserError(null);
-        } else {
-          console.error("❌ Invalid user count response format:", data);
-          setUserError("Invalid response format");
+        if (!result.success) {
+          throw new Error(result.error || "Failed to fetch statistics");
         }
-      } catch (error) {
-        console.error("💥 Error fetching user count:", error);
-        setUserError(error instanceof Error ? error.message : "Unknown error");
+
+        console.log("✅ Stats loaded successfully:", result.data);
+        setStats(result.data);
+      } catch (err) {
+        console.error("💥 Error fetching stats:", err);
+        setError(err instanceof Error ? err.message : "Unknown error");
+
+        // ✅ Fallback: Set default stats to prevent UI breaking
+        setStats({
+          totalPapers: 0,
+          departments: {
+            "Information Technology": 0,
+            "Computer Science": 0,
+          },
+          totalUsers: 0,
+          recentPapers: 0,
+          lastUpdated: new Date().toISOString(),
+        });
       } finally {
-        setUserLoading(false);
+        setStatsLoading(false);
       }
     };
 
-    // Only fetch if not already loading other data
-    if (!loading) {
-      fetchUserCount();
-    }
-  }, [loading]);
+    fetchStats();
+  }, [loading]); // Only depends on parent loading state
 
-  // Loading skeleton component
+  // ✅ IMPROVED: Better loading skeleton
   const LoadingSkeleton = () => (
     <div className="animate-pulse my-10">
-      <div className="h-6 bg-gray-300 rounded w-48 my-4"></div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-gray-200  p-6 rounded-lg">
-            <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-            <div className="h-6 bg-gray-300 rounded w-1/2 mb-2"></div>
-            <div className="h-8 bg-gray-300 rounded w-1/4"></div>
+          <div key={i} className="bg-tertiary p-6 rounded-lg">
+            <div className="h-4 bg-accent rounded w-3/4 mb-2"></div>
+            <div className="h-6 bg-accent rounded w-1/2 mb-2"></div>
+            <div className="h-8 bg-accent rounded w-1/4"></div>
           </div>
         ))}
       </div>
     </div>
   );
 
-  // Show loading state if either papers or user count are loading
-  if (loading || userLoading) {
+  // Show loading state
+  if (loading || statsLoading) {
+    return <LoadingSkeleton />;
+  }
+
+  // Show error state with retry option
+  if (error) {
+    return (
+      <div className="my-10 p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
+          Statistics Unavailable
+        </h3>
+        <p className="text-red-600 dark:text-red-300 text-sm mb-4">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  // Ensure stats exist before rendering
+  if (!stats) {
     return <LoadingSkeleton />;
   }
 
   return (
     <>
-      {/* Error message for user count (if any) */}
-      {userError && (
-        <div className="my-4 p-3 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded-lg">
-          <p className="text-red-700 dark:text-red-300 text-sm">
-            ⚠️ User count unavailable: {userError}
-          </p>
-        </div>
-      )}
-
       {/* Mobile: Carousel */}
       <Carousel className="md:hidden p-5 mb-5">
         <h1 className="text-2xl font-bold mb-4">Statistics</h1>
         <CarouselContent>
           <CarouselItem>
             <StatsCard
-              department="Uploaded Papers"
-              description="Total Number of Papers"
-              totalPapers={allPapers.length}
+              department="Total Papers"
+              description="All Uploaded Papers"
+              totalPapers={stats.totalPapers}
             />
           </CarouselItem>
           <CarouselItem>
             <StatsCard
               department="Information Technology"
-              description="Total Number of Papers"
-              totalPapers={itCount}
+              description="IT Department Papers"
+              totalPapers={stats.departments["Information Technology"]}
             />
           </CarouselItem>
           <CarouselItem>
             <StatsCard
               department="Computer Science"
-              description="Total Number of Papers"
-              totalPapers={csCount}
+              description="CS Department Papers"
+              totalPapers={stats.departments["Computer Science"]}
             />
           </CarouselItem>
           <CarouselItem>
             <StatsCard
               department="Total Users"
-              description="All Registered Users"
-              totalPapers={totalUsers}
+              description="Registered Users"
+              totalPapers={stats.totalUsers}
             />
           </CarouselItem>
         </CarouselContent>
@@ -155,25 +176,32 @@ export function StatsSection({
       {/* Desktop: Grid */}
       <div className="hidden md:flex flex-row gap-4 my-10">
         <StatsCard
+          department="Total Users"
+          description="Registered Users"
+          totalPapers={stats.totalUsers}
+        />
+
+        <StatsCard
           department="Information Technology"
-          description="Total Number of Papers"
-          totalPapers={itCount}
+          description="IT Department Papers"
+          totalPapers={stats.departments["Information Technology"]}
         />
         <StatsCard
           department="Computer Science"
-          description="Total Number of Papers"
-          totalPapers={csCount}
+          description="CS Department Papers"
+          totalPapers={stats.departments["Computer Science"]}
         />
+
         <StatsCard
-          department="Total Users"
-          description="All Registered Users"
-          totalPapers={totalUsers}
+          department="Total Papers"
+          description="All Uploaded Papers"
+          totalPapers={stats.totalPapers}
         />
-        <StatsCard
-          department="Uploaded Papers"
-          description="Total Number of Papers"
-          totalPapers={allPapers.length}
-        />
+      </div>
+
+      {/* ✅ BONUS: Show last updated time */}
+      <div className="text-xs text-gray-500 dark:text-gray-400 text-center mb-4">
+        Last updated: {new Date(stats.lastUpdated).toLocaleString()}
       </div>
     </>
   );

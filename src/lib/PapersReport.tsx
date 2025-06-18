@@ -22,6 +22,7 @@ type Paper = {
   author: string; // raw string of authors, separated by two spaces
   year: number;
   department: string;
+  created_at?: Date | string; // uploaded date
 };
 
 type Props = {
@@ -33,26 +34,28 @@ type Props = {
   };
 };
 
-/** How many data-rows per page for A4 size (accounting for smaller page height). */
-const ROWS_PER_PAGE = 18;
+/** How many data-rows per page for A4 size (accounting for larger rows with full content). */
+const ROWS_PER_PAGE = 12; // Reduced further to accommodate larger rows with full content
 
 const styles = StyleSheet.create({
   page: {
     fontFamily: "Helvetica",
     fontSize: 10,
     paddingTop: 70,
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingLeft: 20,
+    paddingRight: 20,
     paddingBottom: 50,
     lineHeight: 1.4,
+    minHeight: "100vh", // Ensure full page height
+    height: "100%", // Take full available height
   },
 
   // Header container - pinned at the top of every page
   headerContainer: {
     position: "absolute",
     top: 15,
-    left: 30,
-    right: 30,
+    left: 20,
+    right: 20,
     textAlign: "center",
     borderBottom: "2px solid #000",
     paddingBottom: 8,
@@ -132,21 +135,23 @@ const styles = StyleSheet.create({
   table: {
     width: "100%",
     marginBottom: 20,
+    minHeight: 400, // Ensure table takes minimum space even with few rows
+    flexGrow: 1, // Allow table to grow and fill available space
   },
   tableHeader: {
     flexDirection: "row",
     backgroundColor: "#f0f0f0",
     borderBottom: "2px solid #000",
-    paddingVertical: 6,
+    paddingVertical: 8,
     paddingHorizontal: 4,
   },
   tableRow: {
     flexDirection: "row",
     borderBottom: "1px solid #ddd",
-    paddingVertical: 4,
+    paddingVertical: 6,
     paddingHorizontal: 3,
-    minHeight: 28,
-    maxHeight: 40,
+    minHeight: 40,
+    // Remove maxHeight to allow rows to expand for full content
     wrap: false, // Prevent row from breaking across pages
     break: false, // Ensure entire row moves to next page if it doesn't fit
     orphans: 0, // Prevent orphaned parts of rows
@@ -155,11 +160,11 @@ const styles = StyleSheet.create({
   tableRowAlt: {
     flexDirection: "row",
     borderBottom: "1px solid #ddd",
-    paddingVertical: 4,
+    paddingVertical: 6,
     paddingHorizontal: 3,
     backgroundColor: "#f9f9f9",
-    minHeight: 28,
-    maxHeight: 40,
+    minHeight: 40,
+    // Remove maxHeight to allow rows to expand for full content
     wrap: false,
     break: false, // Ensure entire row moves to next page if it doesn't fit
     orphans: 0,
@@ -180,70 +185,52 @@ const styles = StyleSheet.create({
     textAlign: "left",
     paddingHorizontal: 2,
     paddingVertical: 2,
-    lineHeight: 1.1,
-    overflow: "hidden",
-    wrap: false, // Prevent text wrapping within cells that could cause row overflow
+    lineHeight: 1.2,
+    // Remove overflow property - not supported in react-pdf
+    wrap: true, // Allow text wrapping to show full content
   },
 
-  // Column widths (adjusted for A4 size)
+  // Updated column widths - smaller authors column, larger title column
   colNum: {
-    width: "6%",
+    width: "4%",
     textAlign: "center",
     fontWeight: "bold",
   },
   colTitle: {
-    width: "45%",
+    width: "50%", // Increased from 40% to accommodate longer titles
     paddingLeft: 3,
     paddingRight: 3,
     fontWeight: "bold",
   },
   colAuthors: {
-    width: "28%",
+    width: "20%", // Reduced from 30% to make room for longer titles
     paddingLeft: 3,
     paddingRight: 3,
   },
   colDepartment: {
-    width: "11%",
+    width: "8%",
     textAlign: "center",
   },
   colYear: {
-    width: "10%",
+    width: "6%",
     textAlign: "center",
     fontWeight: "bold",
+  },
+  colUploadedDate: {
+    width: "12%", // New column for uploaded date
+    textAlign: "center",
   },
 
   // Special text styles
   authorsText: {
-    lineHeight: 1.1,
-    wrap: false,
-    overflow: "hidden",
+    lineHeight: 1.2,
+    wrap: true, // Allow wrapping to show full author names
   },
   titleText: {
     fontWeight: "bold",
-    lineHeight: 1.1,
-    overflow: "hidden",
+    lineHeight: 1.2,
+    wrap: true, // Allow title text to wrap for better readability
   },
-
-  // Footer - REMOVED
-  // footerContainer: {
-  //   position: "absolute",
-  //   bottom: 15,
-  //   left: 30,
-  //   right: 30,
-  //   textAlign: "center",
-  //   borderTop: "1px solid #ddd",
-  //   paddingTop: 4,
-  // },
-  // footerText: {
-  //   fontSize: 8,
-  //   color: "#666",
-  // },
-  // pageNumber: {
-  //   fontSize: 8,
-  //   color: "#666",
-  //   textAlign: "right",
-  //   marginTop: 5,
-  // },
 });
 
 const PapersReport: React.FC<Props> = ({ papers, filters }) => {
@@ -280,66 +267,54 @@ const PapersReport: React.FC<Props> = ({ papers, filters }) => {
     )[0];
   };
 
-  const truncateText = (text: string, maxLength: number = 30) => {
-    if (!text || text.length <= maxLength) return text || "";
-    return text.substring(0, maxLength) + "...";
-  };
-
   const departmentCounts = getDepartmentCounts();
 
-  // Helper function to format filter display
+  // Utility function to truncate text - but we'll allow longer titles now
+  const truncateText = (text: string, maxLength: number): string => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength - 3) + "...";
+  };
+
+  // Utility function to format date
+  const formatDate = (date: Date | string | undefined): string => {
+    if (!date) return "N/A";
+    const d = typeof date === "string" ? new Date(date) : date;
+    if (isNaN(d.getTime())) return "N/A";
+    return d.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+    });
+  };
+
+  // Function to format filters for display
   const formatFilters = () => {
     if (!filters) return null;
 
-    const hasFilters =
-      filters.department ||
-      filters.course ||
-      (filters.sort && filters.sort !== "recent");
+    const filterInfo: string[] = [];
 
-    if (!hasFilters) {
-      return {
-        title: "Applied Filters",
-        info: [
-          "Department Filter: All Departments",
-          "Course Filter: All Courses",
-          "Sort Order: Most Recent (Default)",
-          "Status: No filters applied - showing all papers",
-        ],
+    if (filters.department && filters.department !== "") {
+      const depts = filters.department.split(",").map((d) => d.trim());
+      filterInfo.push(`Department(s): ${depts.join(", ")}`);
+    }
+
+    if (filters.course && filters.course !== "") {
+      const courses = filters.course.split(",").map((c) => c.trim());
+      filterInfo.push(`Course(s): ${courses.join(", ")}`);
+    }
+
+    if (filters.sort && filters.sort !== "") {
+      const sortMap: Record<string, string> = {
+        "title-asc": "Title (A-Z)",
+        "title-desc": "Title (Z-A)",
+        "year-asc": "Year (Oldest first)",
+        "year-desc": "Year (Newest first)",
       };
+      filterInfo.push(`Sort: ${sortMap[filters.sort] || filters.sort}`);
     }
-
-    const filterInfo = [];
-
-    if (filters.department) {
-      filterInfo.push(
-        `Department Filter: ${filters.department.split(",").join(", ")}`,
-      );
-    } else {
-      filterInfo.push("Department Filter: All Departments");
-    }
-
-    if (filters.course) {
-      filterInfo.push(`Course Filter: ${filters.course.split(",").join(", ")}`);
-    } else {
-      filterInfo.push("Course Filter: All Courses");
-    }
-
-    const sortLabels: Record<string, string> = {
-      "title-asc": "Paper Title (A-Z)",
-      "title-desc": "Paper Title (Z-A)",
-      "year-recent": "Publish Year (Most Recent)",
-      "year-oldest": "Publish Year (Oldest)",
-      recent: "Most Recent (Default)",
-    };
-
-    const sortLabel =
-      sortLabels[filters.sort || "recent"] ||
-      filters.sort ||
-      "Most Recent (Default)";
-    filterInfo.push(`Sort Order: ${sortLabel}`);
 
     filterInfo.push(
-      `Status: ${hasFilters ? "Filtered results" : "All papers shown"}`,
+      `Status: ${filterInfo.length > 1 ? "Filtered results" : "All papers shown"}`,
     );
 
     return {
@@ -374,138 +349,176 @@ const PapersReport: React.FC<Props> = ({ papers, filters }) => {
             </Text>
           </View>
 
-          {/* Report Title */}
-          <View>
-            <Text style={styles.reportTitle}>Research Papers Report</Text>
-          </View>
-
-          {/* Filter Information - only on first page */}
-          {pageIndex === 0 && filterData && (
-            <View style={styles.filterInfo}>
-              <Text style={styles.filterTitle}>{filterData.title}:</Text>
-              {filterData.info.map((item, index) => (
-                <Text key={index} style={styles.filterText}>
-                  {item}
-                </Text>
-              ))}
-            </View>
-          )}
-
-          {/* Summary Statistics - only on first page */}
-          {pageIndex === 0 && (
-            <View style={styles.summaryContainer}>
-              <Text style={styles.summaryTitle}>Summary Statistics</Text>
-              <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>Total Papers in Report:</Text>
-                <Text style={styles.summaryValue}>{papers.length}</Text>
-              </View>
-              <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>Year Range:</Text>
-                <Text style={styles.summaryValue}>{getYearRange()}</Text>
-              </View>
-              <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>Most Common Department:</Text>
-                <Text style={styles.summaryValue}>
-                  {getMostCommonDepartment()}
-                </Text>
-              </View>
-              <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>IT Papers:</Text>
-                <Text style={styles.summaryValue}>
-                  {departmentCounts["Information Technology"] || 0}
-                </Text>
-              </View>
-              <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>CS Papers:</Text>
-                <Text style={styles.summaryValue}>
-                  {departmentCounts["Computer Science"] || 0}
-                </Text>
-              </View>
-            </View>
-          )}
-
-          {/* ─── TABLE ───────────────────────────────────────────────── */}
-          <View style={styles.table}>
-            {/* Table Header (repeated on every page) */}
-            <View style={styles.tableHeader}>
-              <Text style={[styles.headerCell, styles.colNum]}>#</Text>
-              <Text style={[styles.headerCell, styles.colTitle]}>
-                RESEARCH TITLE
-              </Text>
-              <Text style={[styles.headerCell, styles.colAuthors]}>
-                AUTHORS
-              </Text>
-              <Text style={[styles.headerCell, styles.colDepartment]}>
-                DEPARTMENT
-              </Text>
-              <Text style={[styles.headerCell, styles.colYear]}>YEAR</Text>
+          {/* Main content container to ensure full page usage */}
+          <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            {/* Report Title */}
+            <View>
+              <Text style={styles.reportTitle}>Research Papers Report</Text>
             </View>
 
-            {/* Rows for this page (each uses wrap=false) */}
-            {chunk.map((p, idx) => {
-              // 1) Split raw author string on double-spaces:
-              const rawAuthors = p.author || "";
-              const authorChunks = rawAuthors
-                .split("  ")
-                .map((a) => a.trim())
-                .filter((a) => a !== "");
-
-              // 2) Flip "Last, First" → "First Last":
-              const formattedAuthors = authorChunks.map((a) => {
-                const parts = a.split(",");
-                if (parts.length === 2) {
-                  return `${parts[1].trim()} ${parts[0].trim()}`;
-                }
-                return a;
-              });
-
-              // 3) Number each author on its own line, but truncate heavily for A4 portrait
-              const maxAuthors = 3; // Reduced for smaller page
-              const displayAuthors = formattedAuthors.slice(0, maxAuthors);
-              const numberedAuthors = displayAuthors
-                .map((name, i) => `${i + 1}. ${truncateText(name, 15)}`) // Shorter names for A4
-                .join("\n");
-
-              const additionalAuthors =
-                formattedAuthors.length > maxAuthors
-                  ? `\n+${formattedAuthors.length - maxAuthors} more`
-                  : "";
-
-              const departmentAbbr =
-                p.department === "Information Technology"
-                  ? "IT"
-                  : p.department === "Computer Science"
-                    ? "CS"
-                    : truncateText(p.department || "", 6);
-
-              return (
-                <View
-                  style={idx % 2 === 0 ? styles.tableRow : styles.tableRowAlt}
-                  key={p.paper_id}
-                >
-                  <Text style={[styles.cell, styles.colNum]}>
-                    {pageIndex * ROWS_PER_PAGE + idx + 1}
+            {/* Filter Information - only on first page */}
+            {pageIndex === 0 && filterData && (
+              <View style={styles.filterInfo}>
+                <Text style={styles.filterTitle}>{filterData.title}:</Text>
+                {filterData.info.map((item, index) => (
+                  <Text key={index} style={styles.filterText}>
+                    {item}
                   </Text>
-                  <Text
-                    style={[styles.cell, styles.colTitle, styles.titleText]}
-                  >
-                    {truncateText(p.title || "", 50)}
+                ))}
+              </View>
+            )}
+
+            {/* Summary Statistics - only on first page */}
+            {pageIndex === 0 && (
+              <View style={styles.summaryContainer}>
+                <Text style={styles.summaryTitle}>Summary Statistics</Text>
+                <View style={styles.summaryRow}>
+                  <Text style={styles.summaryLabel}>
+                    Total Papers in Report:
                   </Text>
-                  <Text
-                    style={[styles.cell, styles.colAuthors, styles.authorsText]}
-                    wrap={false}
-                  >
-                    {numberedAuthors + additionalAuthors}
+                  <Text style={styles.summaryValue}>{papers.length}</Text>
+                </View>
+                <View style={styles.summaryRow}>
+                  <Text style={styles.summaryLabel}>Year Range:</Text>
+                  <Text style={styles.summaryValue}>{getYearRange()}</Text>
+                </View>
+                <View style={styles.summaryRow}>
+                  <Text style={styles.summaryLabel}>
+                    Most Common Department:
                   </Text>
-                  <Text style={[styles.cell, styles.colDepartment]}>
-                    {departmentAbbr}
-                  </Text>
-                  <Text style={[styles.cell, styles.colYear]}>
-                    {p.year || "N/A"}
+                  <Text style={styles.summaryValue}>
+                    {getMostCommonDepartment()}
                   </Text>
                 </View>
-              );
-            })}
+                <View style={styles.summaryRow}>
+                  <Text style={styles.summaryLabel}>IT Papers:</Text>
+                  <Text style={styles.summaryValue}>
+                    {departmentCounts["Information Technology"] || 0}
+                  </Text>
+                </View>
+                <View style={styles.summaryRow}>
+                  <Text style={styles.summaryLabel}>CS Papers:</Text>
+                  <Text style={styles.summaryValue}>
+                    {departmentCounts["Computer Science"] || 0}
+                  </Text>
+                </View>
+              </View>
+            )}
+
+            {/* ─── TABLE ───────────────────────────────────────────────── */}
+            <View style={styles.table}>
+              {/* Table Header (repeated on every page) */}
+              <View style={styles.tableHeader}>
+                <Text style={[styles.headerCell, styles.colNum]}>#</Text>
+                <Text style={[styles.headerCell, styles.colTitle]}>
+                  RESEARCH TITLE
+                </Text>
+                <Text style={[styles.headerCell, styles.colAuthors]}>
+                  AUTHORS
+                </Text>
+                <Text style={[styles.headerCell, styles.colDepartment]}>
+                  DEPT
+                </Text>
+                <Text style={[styles.headerCell, styles.colYear]}>YEAR</Text>
+                <Text style={[styles.headerCell, styles.colUploadedDate]}>
+                  UPLOADED
+                </Text>
+              </View>
+
+              {/* Rows for this page */}
+              {chunk.map((p, idx) => {
+                // 1) Parse author string based on your format examples:
+                // "Besabe, F. M., Francisco, M. A. C. P., Guanzon, J. C. A., Sarmiento, J. P. R."
+                const rawAuthors = p.author || "";
+
+                // Split by comma and space, then reconstruct full author names
+                const parts = rawAuthors
+                  .split(", ")
+                  .filter((part) => part.trim() !== "");
+
+                const formattedAuthors: string[] = [];
+                let currentAuthor = "";
+
+                for (let i = 0; i < parts.length; i++) {
+                  const part = parts[i].trim();
+
+                  if (currentAuthor === "") {
+                    // This is a last name (start of new author)
+                    currentAuthor = part;
+                  } else {
+                    // This is initials, add to current author
+                    currentAuthor += ", " + part;
+
+                    // If this part ends with a period, the author is complete
+                    if (part.endsWith(".")) {
+                      formattedAuthors.push(currentAuthor);
+                      currentAuthor = "";
+                    }
+                  }
+                }
+
+                // If there's a remaining author (in case the last one doesn't end with period)
+                if (currentAuthor !== "") {
+                  if (!currentAuthor.endsWith(".")) {
+                    currentAuthor += ".";
+                  }
+                  formattedAuthors.push(currentAuthor);
+                }
+
+                // 2) Sort authors alphabetically by last name and number them
+                const sortedAuthors = [...formattedAuthors].sort();
+
+                // Show all authors with full names, numbered, each on a new line
+                const numberedAuthors = sortedAuthors
+                  .map((name, i) => `${i + 1}. ${name}`)
+                  .join("\n"); // Each author on a new line
+
+                const departmentAbbr =
+                  p.department === "Information Technology"
+                    ? "IT"
+                    : p.department === "Computer Science"
+                      ? "CS"
+                      : p.department || "N/A"; // Show full department name or N/A
+
+                return (
+                  <View
+                    style={idx % 2 === 0 ? styles.tableRow : styles.tableRowAlt}
+                    key={p.paper_id}
+                  >
+                    <Text style={[styles.cell, styles.colNum]}>
+                      {pageIndex * ROWS_PER_PAGE + idx + 1}
+                    </Text>
+                    <Text
+                      style={[styles.cell, styles.colTitle, styles.titleText]}
+                    >
+                      {p.title || "Untitled"}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.cell,
+                        styles.colAuthors,
+                        styles.authorsText,
+                      ]}
+                      wrap={true}
+                    >
+                      {numberedAuthors}
+                    </Text>
+                    <Text style={[styles.cell, styles.colDepartment]}>
+                      {departmentAbbr}
+                    </Text>
+                    <Text style={[styles.cell, styles.colYear]}>
+                      {p.year || "N/A"}
+                    </Text>
+                    <Text style={[styles.cell, styles.colUploadedDate]}>
+                      {formatDate(p.created_at)}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+
+            {/* Spacer to push content and ensure full page height */}
+            <View style={{ flexGrow: 1 }} />
           </View>
 
           {/* Footer removed - no longer needed */}

@@ -304,11 +304,11 @@ function ActivityLogContent() {
         <div className="flex items-center gap-3">
           <button
             onClick={generatePDFReport}
-            className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-sm"
+            className=" cursor-pointer flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-sm"
             title="Preview PDF Report"
           >
             <FileText className="w-4 h-4" />
-            <span>Generate Audit</span>
+            <span>Generate Audit Trail</span>
           </button>
         </div>
       </div>
