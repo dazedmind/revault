@@ -135,10 +135,6 @@ const DocsCard = (props) => {
     return text;
   };
 
-  // ❌ REMOVED: No more loading state needed
-  // if (loading) {
-  //   return <DocsLoader message="Loading Recent Papers" />;
-  // }
 
   return (
     <div
@@ -148,37 +144,18 @@ const DocsCard = (props) => {
           : "bg-darker border border-white-5 hover:shadow-lg"
       } rounded-xl overflow-hidden`}
     >
+
+      {/* Bookmark Status Indicator */}
+      {isBookmarked && (
+        <div className="absolute top-0 right-2 z-10">
+          <div className="bg-blue-500 text-white p-2 h-10 rounded-b-sm shadow-xl">
+            <GoBookmarkFill className="text-2xl" />
+          </div>
+        </div>
+      )}
       <div className="p-6">
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Document Preview */}
-          <div className="lg:w-32 xl:w-40 flex-shrink-0">
-            <div className="relative group/image">
-              <div
-                className={`relative overflow-hidden rounded-lg transition-all duration-300 ${
-                  theme === "light"
-                    ? "bg-gradient-to-br from-gold/10 to-gold-fg/10 border border-gold/20"
-                    : "bg-gradient-to-br from-gold/20 to-gold-fg/20 border border-gold/30"
-                }`}
-              >
-                <div className="aspect-[3/4] flex items-center justify-center">
-                  <Image
-                    src={props.img}
-                    alt="Document preview"
-                    width={120}
-                    height={160}
-                    className="object-contain transition-transform duration-300 group-hover/image:scale-105"
-                  />
-                </div>
-
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-3">
-                  <span className="text-white text-xs font-medium">
-                    Preview
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+    
 
           {/* Content */}
           <div className="flex-1 min-w-0 space-y-4">
@@ -221,23 +198,19 @@ const DocsCard = (props) => {
             {/* Keywords/Tags */}
             {props.tags && props.tags.length > 0 && (
               <div className="flex flex-wrap gap-1">
-                {props.tags.slice(0, 3).map((tag, index) => (
+                {props.tags.slice(0, 5).map((tag, index) => (
                   <span
                     key={index}
                     className={`px-2 py-1 text-xs rounded-full border ${
                       theme === "light"
-                        ? "bg-gold/10 text-gold border-gold/20"
-                        : "bg-gold/20 text-gold border-gold/30"
+                        ? "bg-yale-blue/10 text-yale-blue border-gold/20"
+                        : "bg-yale-blue/20 text-yale-blue border-gold/30"
                     }`}
                   >
                     {tag}
                   </span>
                 ))}
-                {props.tags.length > 3 && (
-                  <span className="px-2 py-1 text-xs text-gray-500 dark:text-gray-400">
-                    +{props.tags.length - 3} more
-                  </span>
-                )}
+           
               </div>
             )}
 

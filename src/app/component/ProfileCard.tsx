@@ -42,7 +42,7 @@ export const ProfileCard = ({
               className={`w-30 h-30 rounded-full object-cover border-4 ${userType === "LIBRARIAN" || userType === "ADMIN" || userType === "ASSISTANT" ? "border-yale-blue" : "border-gold"}`}
             />
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col items-center md:items-start gap-1">
             <h1 className="text-lg md:text-3xl font-bold">{name}</h1>
             {positionBadge(position, college, programOrDept)}
             <p className="text-xs md:text-sm">{number}</p>
