@@ -308,7 +308,7 @@ function ActivityLogContent() {
             title="Preview PDF Report"
           >
             <FileText className="w-4 h-4" />
-            <span>Generate Audit</span>
+            <span>Generate Audit Trail</span>
           </button>
         </div>
       </div>

@@ -9,6 +9,7 @@ import { FilterBar } from "../components/FilterBar";
 import { PapersList } from "../components/PapersList";
 import { PaginationControls } from "../components/PaginationControls";
 import { StatsSection } from "../components/StatsSection";
+import { PapersDisplayHeader } from "../components/PapersDisplayHeader";
 import { ProfileCard } from "../../component/ProfileCard";
 import avatar from "../../img/user.png";
 import AdminNavBar from "../components/AdminNavBar";
@@ -62,8 +63,12 @@ function AdminProfileContent() {
   const [papers, setPapers] = useState<any[]>([]);
   const [loadingPapers, setLoadingPapers] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [allPapers, setAllPapers] = useState<any[]>([]);
-  const [loadingAllPapers, setLoadingAllPapers] = useState<boolean>(true);
+  const [totalPapersCount, setTotalPapersCount] = useState<number>(0);
+
+  // ❌ REMOVED: No more allPapers and loadingAllPapers - major performance improvement!
+  // const [allPapers, setAllPapers] = useState<any[]>([]);
+  // const [loadingAllPapers, setLoadingAllPapers] = useState<boolean>(true);
+
   const [profile, setProfile] = useState<any>(null);
   const [loadingProfile, setLoadingProfile] = useState<boolean>(true);
 
@@ -196,6 +201,7 @@ function AdminProfileContent() {
         console.log("📋 Papers response:", {
           papersCount: Array.isArray(json.papers) ? json.papers.length : 0,
           totalPages: json.totalPages,
+          totalCount: json.totalCount,
           currentPage: json.currentPage,
           sort: urlState.sortOpt,
         });
@@ -203,6 +209,13 @@ function AdminProfileContent() {
         setPapers(Array.isArray(json.papers) ? json.papers : []);
         setTotalPages(
           typeof json.totalPages === "number" ? json.totalPages : 1,
+        );
+        setTotalPapersCount(
+          typeof json.totalCount === "number"
+            ? json.totalCount
+            : Array.isArray(json.papers)
+              ? json.papers.length
+              : 0,
         );
       } catch (err) {
         console.error("💥 Failed to load papers:", err);
@@ -216,52 +229,31 @@ function AdminProfileContent() {
     fetchPapers();
   }, [urlState, loadingProfile, tokenLoaded]);
 
-  // ── Fetch all papers for stats (only once)
-  useEffect(() => {
-    const fetchAllPapers = async () => {
-      if (loadingProfile || !tokenLoaded) return;
-
-      console.log("🔍 Fetching all papers for stats...");
-      setLoadingAllPapers(true);
-
-      try {
-        let allPapersData: any[] = [];
-        let page = 1;
-        let totalPagesCount = 1;
-
-        do {
-          const res = await fetch(`/api/papers?page=${page}&sort=recent`, {
-            cache: "no-store",
-          });
-
-          if (!res.ok) {
-            throw new Error(
-              `Papers API returned ${res.status} for page ${page}`,
-            );
-          }
-
-          const json = await res.json();
-          const pagePapers = Array.isArray(json.papers) ? json.papers : [];
-          allPapersData.push(...pagePapers);
-          totalPagesCount =
-            typeof json.totalPages === "number" ? json.totalPages : 1;
-
-          console.log(`📋 Stats page ${page}: ${pagePapers.length} papers`);
-          page += 1;
-        } while (page <= totalPagesCount);
-
-        console.log(`✅ Loaded ${allPapersData.length} total papers for stats`);
-        setAllPapers(allPapersData);
-      } catch (err) {
-        console.error("💥 Failed to load all papers for stats:", err);
-        setAllPapers([]);
-      } finally {
-        setLoadingAllPapers(false);
-      }
-    };
-
-    fetchAllPapers();
-  }, [loadingProfile, tokenLoaded]);
+  // ❌ REMOVED: This entire useEffect was the performance bottleneck!
+  // useEffect(() => {
+  //   const fetchAllPapers = async () => {
+  //     if (loadingProfile || !tokenLoaded) return;
+  //     console.log("🔍 Fetching all papers for stats...");
+  //     setLoadingAllPapers(true);
+  //     try {
+  //       let allPapersData: any[] = [];
+  //       let page = 1;
+  //       let totalPagesCount = 1;
+  //       do {
+  //         const res = await fetch(`/api/papers?page=${page}&sort=recent`);
+  //         // ... this was fetching EVERY page - very slow!
+  //         page += 1;
+  //       } while (page <= totalPagesCount);
+  //       setAllPapers(allPapersData);
+  //     } catch (err) {
+  //       console.error("💥 Failed to load all papers for stats:", err);
+  //       setAllPapers([]);
+  //     } finally {
+  //       setLoadingAllPapers(false);
+  //     }
+  //   };
+  //   fetchAllPapers();
+  // }, [loadingProfile, tokenLoaded]);
 
   // ── Filter handlers (update local state only)
   const toggleDepartment = (dept: string) => {
@@ -406,7 +398,8 @@ function AdminProfileContent() {
         <div>Failed to load profile.</div>
       )}
       <main className="flex flex-col dark:bg-secondary px-8 md:px-40 h-full">
-        <StatsSection allPapers={allPapers} loading={loadingAllPapers} />
+        {/* ✅ OPTIMIZED: StatsSection now loads independently and fast! */}
+        <StatsSection loading={loadingProfile} />
 
         <FilterBar
           departments={localFilters.departments}
@@ -432,6 +425,19 @@ function AdminProfileContent() {
             theme === "light" ? "border-white-50" : "border-white-5"
           }`}
         >
+          {/* Papers Display Header - NEW COMPONENT */}
+          <PapersDisplayHeader
+            papersCount={papers.length}
+            totalPapers={totalPapersCount}
+            totalPages={totalPages}
+            currentPage={urlState.currentPage}
+            departments={urlState.departments}
+            courses={urlState.courses}
+            sortOpt={urlState.sortOpt}
+            theme={theme}
+            onClearFilters={clearAllFilters}
+          />
+
           <PapersList papers={papers} loading={loadingPapers} theme={theme} />
 
           <div
@@ -448,7 +454,7 @@ function AdminProfileContent() {
         </div>
       </main>
 
-      {/* Debug Panel */}
+      {/* ✅ SIMPLIFIED: Debug Panel without allPapers references */}
       {process.env.NODE_ENV === "development" && (
         <div className="fixed bottom-4 right-4 bg-black/80 text-white p-3 rounded text-xs max-w-sm">
           <h4 className="font-bold mb-2">Debug Info:</h4>
@@ -457,7 +463,7 @@ function AdminProfileContent() {
           <p>
             Papers: {papers.length} | Page: {urlState.currentPage}/{totalPages}
           </p>
-          <p>All Papers: {allPapers.length}</p>
+          <p>Total Papers Count: {totalPapersCount}</p>
           <p>Sort: {urlState.sortOpt}</p>
           <p>
             URL Filters: D:{urlState.departments.length} C:
@@ -467,10 +473,7 @@ function AdminProfileContent() {
             Local Filters: D:{localFilters.departments.length} C:
             {localFilters.courses.length}
           </p>
-          <p>
-            Loading: P:{loadingPapers ? "⏳" : "✅"} A:
-            {loadingAllPapers ? "⏳" : "✅"}
-          </p>
+          <p>Loading Papers: {loadingPapers ? "⏳" : "✅"}</p>
           <p>
             Filters Match:{" "}
             {JSON.stringify(urlState.departments) ===

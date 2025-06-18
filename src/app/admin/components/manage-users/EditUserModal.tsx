@@ -1,6 +1,7 @@
 // app/admin/components/manage-users/EditUserModal.tsx
 "use client";
 import { Dispatch, SetStateAction, ChangeEvent } from "react";
+import { X } from "lucide-react";
 
 interface User {
   id: number;
@@ -57,8 +58,17 @@ export default function EditUserModal({
   const automaticPosition = getPositionFromUserAccess(user.userAccess);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/50 z-50">
-      <div className={`p-6 m-4 rounded-lg bg-accent w-full max-w-md relative z-10 max-h-[90vh]  flex flex-col border-2 ${theme === "light" ? "border-white-50" : "border-white-5"}`}>
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div className="p-6 rounded-lg dark:bg-primary w-full max-w-md relative z-10 max-h-[90vh] flex flex-col">
+        {/* Close Button */}
+        <button
+          onClick={onCancel}
+          className="absolute top-5 right-11 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors z-20"
+          title="Close"
+        >
+          <X className="w-5 h-5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" />
+        </button>
+
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto pr-2 -mr-2">
           <div className="space-y-6">
@@ -122,8 +132,6 @@ export default function EditUserModal({
                 </div>
               </div>
             </div>
-
-            <div className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}></div>
 
             {/* Employee Information Section */}
             <div>
@@ -257,8 +265,6 @@ export default function EditUserModal({
                 </div>
               </div>
             </div>
-
-            <div className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}></div>
 
             {/* Password Section */}
             <div>

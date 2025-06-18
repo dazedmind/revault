@@ -3,12 +3,12 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState, ChangeEvent, Suspense, useRef } from "react";
-import { Plus } from "lucide-react";
+import { Plus, ChevronDown, ChevronUp } from "lucide-react";
 import { toast, Toaster } from "sonner";
 
 import UsersTable from "@/app/admin/components/manage-users/UsersTable";
+import NormalUsersTable from "@/app/admin/components/manage-users/NormalUsersTable";
 import AddUserModal from "@/app/admin/components/manage-users/AddUserModal";
-import DeleteConfirmationModal from "@/app/admin/components/manage-users/DeleteConfirmationModal";
 import EditUserModal from "@/app/admin/components/manage-users/EditUserModal";
 
 interface FrontendUser {
@@ -25,7 +25,23 @@ interface FrontendUser {
   contactNum: string;
   position: string;
   name: string;
-  profileURL: string; 
+}
+
+interface NormalUser {
+  id: number;
+  fullName: string;
+  middleName?: string;
+  lastName: string;
+  extension?: string;
+  email: string;
+  role: "STUDENT" | "FACULTY";
+  studentNumber?: string;
+  employeeID?: string;
+  program?: string;
+  department?: string;
+  position?: string;
+  college?: string;
+  yearLevel?: number;
 }
 
 function ManageUserContent() {
@@ -35,11 +51,16 @@ function ManageUserContent() {
 
   // ─── Users state ───
   const [users, setUsers] = useState<FrontendUser[]>([]);
+  const [normalUsers, setNormalUsers] = useState<NormalUser[]>([]);
   const [loading, setLoading] = useState(true);
+  const [normalUsersLoading, setNormalUsersLoading] = useState(true);
 
-  // ─── Delete modal state ───
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<number | null>(null);
+  // ─── Selection and editing state ───
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [editingUserId, setEditingUserId] = useState<number | null>(null);
+
+  // ─── Normal users dropdown state ───
+  const [showNormalUsers, setShowNormalUsers] = useState(false);
 
   // ─── Edit modal state ───
   const [showEditModal, setShowEditModal] = useState(false);
@@ -52,7 +73,28 @@ function ManageUserContent() {
   });
   const [passwordError, setPasswordError] = useState("");
 
-  // ─── Function to get automatic position based on user access ───
+  // ─── Add modal state ───
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newUser, setNewUser] = useState<Omit<FrontendUser, "id" | "name">>({
+    fullName: "",
+    middleName: "",
+    lastName: "",
+    extension: "",
+    employeeID: "",
+    email: "",
+    role: "LIBRARIAN",
+    status: "Active",
+    userAccess: "Librarian-in-Charge",
+    contactNum: "",
+    position: "Librarian-in-Charge",
+  });
+  const [newUserPasswords, setNewUserPasswords] = useState({
+    password: "",
+    confirmPassword: "",
+  });
+  const [newUserPasswordError, setNewUserPasswordError] = useState("");
+
+  // ─── Helper functions ───
   const getPositionFromUserAccess = (userAccess: string): string => {
     const positionMapping: { [key: string]: string } = {
       Admin: "Chief Librarian",
@@ -62,7 +104,6 @@ function ManageUserContent() {
     return positionMapping[userAccess] || "";
   };
 
-  // ─── Function to get role based on user access ───
   const getRoleFromUserAccess = (userAccess: string): string => {
     const roleMapping: { [key: string]: string } = {
       "Librarian-in-Charge": "LIBRARIAN",
@@ -72,7 +113,6 @@ function ManageUserContent() {
     return roleMapping[userAccess] || "LIBRARIAN";
   };
 
-  // ─── Function to generate dynamic change messages ───
   const generateChangeMessage = (
     original: FrontendUser,
     updated: FrontendUser,
@@ -81,41 +121,25 @@ function ManageUserContent() {
 
     // Check each field for changes
     if (original.fullName !== updated.fullName) {
-      changes.push(`First name "${original.fullName}" → "${updated.fullName}"`);
-    }
-    if (original.middleName !== updated.middleName) {
       changes.push(
-        `Middle name "${original.middleName}" → "${updated.middleName}"`,
+        `first name from "${original.fullName}" to "${updated.fullName}"`,
       );
     }
     if (original.lastName !== updated.lastName) {
-      changes.push(`Last name "${original.lastName}" → "${updated.lastName}"`);
-    }
-    if (original.extension !== updated.extension) {
       changes.push(
-        `Extension "${original.extension}" → "${updated.extension}"`,
+        `last name from "${original.lastName}" to "${updated.lastName}"`,
       );
     }
     if (original.email !== updated.email) {
-      changes.push(`Email "${original.email}" → "${updated.email}"`);
+      changes.push(`email from "${original.email}" to "${updated.email}"`);
     }
     if (original.userAccess !== updated.userAccess) {
-      changes.push(`Role "${original.userAccess}" → "${updated.userAccess}"`);
-    }
-    if (original.position !== updated.position) {
-      changes.push(`Position "${original.position}" → "${updated.position}"`);
-    }
-    if (original.contactNum !== updated.contactNum) {
       changes.push(
-        `Contact "${original.contactNum}" → "${updated.contactNum}"`,
+        `access level from "${original.userAccess}" to "${updated.userAccess}"`,
       );
     }
     if (original.status !== updated.status) {
-      changes.push(`Status "${original.status}" → "${updated.status}"`);
-    }
-
-    if (changes.length === 0) {
-      return "No changes detected";
+      changes.push(`status from "${original.status}" to "${updated.status}"`);
     }
 
     const userName =
@@ -132,33 +156,11 @@ function ManageUserContent() {
     }
   };
 
-  // ─── Add modal state ───
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [newUser, setNewUser] = useState<Omit<FrontendUser, "id" | "name">>({
-    fullName: "",
-    middleName: "",
-    lastName: "",
-    extension: "",
-    employeeID: "",
-    email: "",
-    role: "LIBRARIAN",
-    status: "Active",
-    userAccess: "Librarian-in-Charge",
-    contactNum: "",
-    position: "Librarian-in-Charge", // Auto-populate default
-    profileURL: "",
-  });
-  const [newUserPasswords, setNewUserPasswords] = useState({
-    password: "",
-    confirmPassword: "",
-  });
-  const [newUserPasswordError, setNewUserPasswordError] = useState("");
-
+  // ─── Effects ───
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // ─── Fetch admin/staff users (only once) ───
   useEffect(() => {
     if (!mounted || usersFetched.current) return;
 
@@ -190,61 +192,44 @@ function ManageUserContent() {
       }
     };
 
-    fetchUsers();
-  }, [mounted]);
+    const fetchNormalUsers = async () => {
+      try {
+        setNormalUsersLoading(true);
+        const res = await fetch("/admin/api/normal-users", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
 
-  // ─── Delete handlers ───
-  const handleDeleteClick = (id: number) => {
-    setUserToDelete(id);
-    setShowDeleteModal(true);
-  };
+        if (!res.ok) {
+          throw new Error(`Failed to fetch normal users (${res.status})`);
+        }
 
-  const handleConfirmDelete = async () => {
-    if (userToDelete === null) return;
-
-    // Get user info for toast message
-    const userInfo = users.find((u) => u.id === userToDelete);
-    const userName = userInfo
-      ? `${userInfo.fullName} ${userInfo.lastName}`
-      : `User #${userToDelete}`;
-
-    try {
-      const res = await fetch(`/admin/api/delete-user/${userToDelete}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error(`Failed to delete user (${res.status})`);
+        const data = await res.json();
+        if (data.success && Array.isArray(data.users)) {
+          setNormalUsers(data.users);
+        } else {
+          console.error("Invalid normal users response format:", data);
+          setNormalUsers([]);
+        }
+      } catch (err) {
+        console.error("Error fetching normal users:", err);
+        setNormalUsers([]);
+      } finally {
+        setNormalUsersLoading(false);
       }
+    };
 
-      // Show success toast
-      toast.success("User Deleted Successfully", {
-        description: `${userName} has been removed from the system.`,
-        duration: 4000,
-      });
-
-      // Update local state immediately
-      setUsers((prev) => prev.filter((u) => u.id !== userToDelete));
-      setShowDeleteModal(false);
-      setUserToDelete(null);
-    } catch (err) {
-      console.error("Error deleting user:", err);
-
-      // Show error toast
-      toast.error("Failed to Delete User", {
-        description: `Could not delete ${userName}. Please try again.`,
-        duration: 4000,
-      });
-    }
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteModal(false);
-    setUserToDelete(null);
-  };
+    fetchUsers();
+    fetchNormalUsers();
+  }, [mounted]);
 
   // ─── Edit handlers ───
   const handleEditClick = (user: FrontendUser) => {
+    // Set both selected and editing states
+    setSelectedUserId(user.id);
+    setEditingUserId(user.id);
+
+    // Prepare edit modal
     setCurrentEditUser({ ...user });
     setPasswords({ newPassword: "", confirmPassword: "" });
     setPasswordError("");
@@ -261,7 +246,7 @@ function ManageUserContent() {
 
       const updatedUser = { ...prev, [name]: value };
 
-      // If userAccess changed, automatically update position and role
+      // Auto-update position and role when userAccess changes
       if (name === "userAccess") {
         updatedUser.position = getPositionFromUserAccess(value);
         updatedUser.role = getRoleFromUserAccess(value);
@@ -280,93 +265,84 @@ function ManageUserContent() {
     if (!currentEditUser) return;
     setShowEditModal(false);
 
-    // Store original user data for comparison
-    const originalUser = users.find((u) => u.id === currentEditUser.id);
-    if (!originalUser) return;
-
-    // Password validation (if passwords are provided)
+    // Validate passwords if provided
     if (passwords.newPassword || passwords.confirmPassword) {
       if (passwords.newPassword !== passwords.confirmPassword) {
         setPasswordError("Passwords do not match");
         return;
       }
       if (passwords.newPassword.length < 6) {
-        setPasswordError("Password must be at least 6 characters");
+        setPasswordError("Password must be at least 6 characters long");
         return;
       }
     }
 
-    // Get the automatic position and role
-    const automaticPosition = getPositionFromUserAccess(
-      currentEditUser.userAccess,
-    );
-    const automaticRole = getRoleFromUserAccess(currentEditUser.userAccess);
-
     try {
+      const updateData: any = { ...currentEditUser };
+      if (passwords.newPassword) {
+        updateData.password = passwords.newPassword;
+      }
+
       const res = await fetch(`/admin/api/update-user/${currentEditUser.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: currentEditUser.fullName,
-          middleName: currentEditUser.middleName,
-          lastName: currentEditUser.lastName,
-          extension: currentEditUser.extension,
-          employeeID: currentEditUser.employeeID,
-          email: currentEditUser.email,
-          role: automaticRole, // Use automatic role
-          status: currentEditUser.status,
-          contactNum: currentEditUser.contactNum,
-          position: automaticPosition, // Use automatic position
-          password: passwords.newPassword || undefined,
-        }),
+        body: JSON.stringify(updateData),
       });
 
       if (!res.ok) {
         throw new Error(`Failed to update user (${res.status})`);
       }
 
-      const data = await res.json();
-      const updatedUser = {
-        ...currentEditUser,
-        position: automaticPosition,
-        role: automaticRole,
-      };
+      // Find original user for change message
+      const originalUser = users.find((u) => u.id === currentEditUser.id);
+      const changeMessage = originalUser
+        ? generateChangeMessage(originalUser, currentEditUser)
+        : `User updated successfully`;
 
-      // Generate dynamic success message
-      const changeMessage = generateChangeMessage(originalUser, updatedUser);
-
-      // Show success toast with changes
+      // Show success toast
       toast.success("User Updated Successfully", {
         description: changeMessage,
         duration: 4000,
       });
 
-      // Update local state immediately
+      // Update local state
       setUsers((prev) =>
-        prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)),
+        prev.map((u) =>
+          u.id === currentEditUser.id ? { ...currentEditUser } : u,
+        ),
       );
 
-      // Close modal and reset state
+      // Close modal and reset states
+      setShowEditModal(false);
       setCurrentEditUser(null);
+      setEditingUserId(null);
+      setSelectedUserId(null);
       setPasswords({ newPassword: "", confirmPassword: "" });
       setPasswordError("");
     } catch (err) {
       console.error("Error updating user:", err);
-      setPasswordError("Failed to update user. Please try again.");
+      const errorMessage =
+        err instanceof Error ? err.message : "Please try again.";
 
-      // Show error toast
       toast.error("Failed to Update User", {
-        description:
-          err instanceof Error
-            ? err.message
-            : "An unexpected error occurred while updating the user.",
+        description: errorMessage,
         duration: 4000,
       });
     }
   };
 
-  // ─── Add handlers ───
+  const handleCancelEdit = () => {
+    setShowEditModal(false);
+    setCurrentEditUser(null);
+    setEditingUserId(null);
+    setSelectedUserId(null);
+    setPasswords({ newPassword: "", confirmPassword: "" });
+    setPasswordError("");
+  };
+
+  // ─── Add user handlers ───
   const handleAddClick = () => {
+    // Reset form and show modal
     setNewUser({
       fullName: "",
       middleName: "",
@@ -378,8 +354,7 @@ function ManageUserContent() {
       status: "Active",
       userAccess: "Librarian-in-Charge",
       contactNum: "",
-      position: "Librarian-in-Charge", // Auto-populate default
-      profileURL: "",
+      position: "Librarian-in-Charge",
     });
     setNewUserPasswords({ password: "", confirmPassword: "" });
     setNewUserPasswordError("");
@@ -394,7 +369,7 @@ function ManageUserContent() {
     setNewUser((prev) => {
       const updatedUser = { ...prev, [name]: value };
 
-      // If userAccess changed, automatically update position and role
+      // Auto-update position and role when userAccess changes
       if (name === "userAccess") {
         updatedUser.position = getPositionFromUserAccess(value);
         updatedUser.role = getRoleFromUserAccess(value);
@@ -410,113 +385,76 @@ function ManageUserContent() {
   };
 
   const handleAddUser = async () => {
-    // Validation
+    // Validate required fields
     if (
       !newUser.fullName ||
       !newUser.lastName ||
       !newUser.email ||
-      !newUser.employeeID ||
-      !newUser.userAccess
+      !newUser.employeeID
     ) {
       setNewUserPasswordError("Please fill in all required fields");
       return;
     }
 
+    // Validate passwords
     if (!newUserPasswords.password || !newUserPasswords.confirmPassword) {
       setNewUserPasswordError("Password is required");
       return;
     }
+
     if (newUserPasswords.password !== newUserPasswords.confirmPassword) {
       setNewUserPasswordError("Passwords do not match");
       return;
     }
+
     if (newUserPasswords.password.length < 6) {
-      setNewUserPasswordError("Password must be at least 6 characters");
+      setNewUserPasswordError("Password must be at least 6 characters long");
       return;
     }
-
-    // Map userAccess to API role format
-    const roleMapping: { [key: string]: string } = {
-      "Librarian-in-Charge": "LIBRARIAN",
-      "Admin Assistant": "ASSISTANT",
-      Admin: "ADMIN",
-    };
-
-    // Get the automatic position and role
-    const automaticPosition = getPositionFromUserAccess(newUser.userAccess);
-    const automaticRole = getRoleFromUserAccess(newUser.userAccess);
-
-    const apiPayload = {
-      fullName: newUser.fullName,
-      midName: newUser.middleName,
-      lastName: newUser.lastName,
-      extName: newUser.extension,
-      employeeID: newUser.employeeID,
-      email: newUser.email,
-      role: automaticRole, // Use automatic role
-      password: newUserPasswords.password,
-      confirmPassword: newUserPasswords.confirmPassword,
-      position: automaticPosition, // Use automatic position
-    };
 
     try {
       const res = await fetch("/admin/api/create-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(apiPayload),
+        body: JSON.stringify({
+          ...newUser,
+          password: newUserPasswords.password,
+        }),
       });
 
       if (!res.ok) {
-        throw new Error(`Failed to create user (${res.status})`);
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to create user");
       }
 
-      const data = await res.json();
+      const result = await res.json();
 
-      if (data.success) {
-        // Generate user details for success message
-        const userName = `${newUser.fullName} ${newUser.lastName}${newUser.extension ? " " + newUser.extension : ""}`;
-        const userDetails = [
-          `Role: ${newUser.userAccess}`,
-          `Position: ${automaticPosition}`,
-          `Email: ${newUser.email}`,
-          `Employee ID: ${newUser.employeeID}`,
-        ].join(", ");
+      // Show success toast
+      toast.success("User Created Successfully", {
+        description: `${newUser.fullName} ${newUser.lastName} has been added to the system.`,
+        duration: 4000,
+      });
 
-        // Show success toast
-        toast.success("User Created Successfully", {
-          description: `${userName} has been added to the system. ${userDetails}`,
-          duration: 5000,
-        });
+      // Update local state
+      setUsers((prev) => [...prev, result.user]);
 
-        // Refresh users list
-        const usersRes = await fetch("/admin/api/users");
-        const usersData = await usersRes.json();
-
-        if (usersData.success) {
-          setUsers(usersData.users);
-        }
-
-        // Close modal and reset state
-        setShowAddModal(false);
-        setNewUser({
-          fullName: "",
-          middleName: "",
-          lastName: "",
-          extension: "",
-          employeeID: "",
-          email: "",
-          role: "LIBRARIAN",
-          status: "Active",
-          userAccess: "Librarian-in-Charge",
-          contactNum: "",
-          position: "Librarian-in-Charge",
-          profileURL: "",
-        });
-        setNewUserPasswords({ password: "", confirmPassword: "" });
-        setNewUserPasswordError("");
-      } else {
-        throw new Error(data.message || "Failed to create user");
-      }
+      // Close modal and reset form
+      setShowAddModal(false);
+      setNewUser({
+        fullName: "",
+        middleName: "",
+        lastName: "",
+        extension: "",
+        employeeID: "",
+        email: "",
+        role: "LIBRARIAN",
+        status: "Active",
+        userAccess: "Librarian-in-Charge",
+        contactNum: "",
+        position: "Librarian-in-Charge",
+      });
+      setNewUserPasswords({ password: "", confirmPassword: "" });
+      setNewUserPasswordError("");
     } catch (err) {
       console.error("Error creating user:", err);
       const errorMessage =
@@ -526,7 +464,6 @@ function ManageUserContent() {
 
       setNewUserPasswordError(errorMessage);
 
-      // Show error toast
       toast.error("Failed to Create User", {
         description: errorMessage,
         duration: 4000,
@@ -534,6 +471,7 @@ function ManageUserContent() {
     }
   };
 
+  // ─── Render ───
   if (!mounted) {
     return (
       <div className="flex flex-col w-auto bg-midnight p-6 rounded-xl border-1 border-white-5 animate-pulse">
@@ -557,15 +495,6 @@ function ManageUserContent() {
         theme === "light" ? "bg-secondary border-white-50" : "bg-midnight"
       } p-6 rounded-xl border-1 border-white-5`}
     >
-      {/* ─── Delete Confirmation Modal ─── */}
-      <DeleteConfirmationModal
-        theme={theme}
-        show={showDeleteModal}
-        userToDelete={users.find((u) => u.id === userToDelete) || null}
-        onCancel={handleCancelDelete}
-        onConfirm={handleConfirmDelete}
-      />
-
       {/* ─── Edit User Modal ─── */}
       <EditUserModal
         theme={theme}
@@ -575,12 +504,7 @@ function ManageUserContent() {
         passwordError={passwordError}
         onInputChange={handleEditInputChange}
         onPasswordChange={handleEditPasswordChange}
-        onCancel={() => {
-          setShowEditModal(false);
-          setCurrentEditUser(null);
-          setPasswords({ newPassword: "", confirmPassword: "" });
-          setPasswordError("");
-        }}
+        onCancel={handleCancelEdit}
         onSave={handleSaveEdit}
       />
 
@@ -599,40 +523,133 @@ function ManageUserContent() {
 
       {/* ─── Header + Create New Button ─── */}
       <div className="flex justify-between w-auto">
-        <h1 className="text-2xl ml-1">Manage Librarians</h1>
+        <h1 className="text-2xl ml-1">Manage Users</h1>
         <button
           onClick={handleAddClick}
           className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200"
         >
-          <span className="hidden md:block text-sm">Create New</span>
+          <span className="hidden md:block text-sm">Create New Staff</span>
           <Plus className="w-4 h-4 md:hidden" />
         </button>
       </div>
 
       <div
-        className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-dusk"}`}
-      />
+        className={`h-0.5 w-auto my-4 ${
+          theme === "light" ? "bg-white-50" : "bg-dusk"
+        }`}
+      ></div>
 
-      {/* ─── Users Table ─── */}
-      {loading ? (
-        <div className="animate-pulse space-y-4">
-          <div className="h-12 bg-gray-300 dark:bg-gray-700 rounded"></div>
-          <div className="h-12 bg-gray-300 dark:bg-gray-700 rounded"></div>
-          <div className="h-12 bg-gray-300 dark:bg-gray-700 rounded"></div>
-          <div className="h-12 bg-gray-300 dark:bg-gray-700 rounded"></div>
+      {/* ─── Admin/Staff Section ─── */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Staff Members</h2>
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            {loading ? "Loading..." : `${users.length} staff members`}
+          </div>
         </div>
-      ) : (
-        <UsersTable
-          users={users}
-          onDeleteClick={handleDeleteClick}
-          onEditClick={handleEditClick}
-          theme={theme}
-        />
-      )}
 
-      {/* Toaster positioned at bottom right */}
+        {/* ─── Instruction Text ─── */}
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+            💡 Click on any user row to edit their information
+          </p>
+        </div>
+
+        {/* ─── Users Table ─── */}
+        {loading ? (
+          <div className="space-y-4">
+            <div className="h-12 bg-gray-700 rounded animate-pulse"></div>
+            <div className="h-12 bg-gray-700 rounded animate-pulse"></div>
+            <div className="h-12 bg-gray-700 rounded animate-pulse"></div>
+          </div>
+        ) : (
+          <UsersTable
+            users={users}
+            onEditClick={handleEditClick}
+            theme={theme}
+            selectedUserId={selectedUserId}
+            editingUserId={editingUserId}
+          />
+        )}
+      </div>
+
+      {/* ─── Normal Users Section ─── */}
+      <div>
+        {/* Separator */}
+        <div className="flex items-center my-8">
+          <div
+            className={`flex-1 h-px ${theme === "light" ? "bg-gray-200" : "bg-gray-600"}`}
+          ></div>
+          <div className="px-4">
+            <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+              Normal Users
+            </span>
+          </div>
+          <div
+            className={`flex-1 h-px ${theme === "light" ? "bg-gray-200" : "bg-gray-600"}`}
+          ></div>
+        </div>
+
+        {/* Collapsible Header */}
+        <div
+          className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-all duration-200 hover:shadow-md ${
+            theme === "light"
+              ? "bg-gray-50 border-gray-200 hover:bg-gray-100"
+              : "bg-gray-800/50 border-gray-600 hover:bg-gray-800/70"
+          }`}
+          onClick={() => setShowNormalUsers(!showNormalUsers)}
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              {showNormalUsers ? (
+                <ChevronUp className="w-5 h-5 text-gray-500" />
+              ) : (
+                <ChevronDown className="w-5 h-5 text-gray-500" />
+              )}
+              <h2 className="text-xl font-semibold">Students & Faculty</h2>
+            </div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              {normalUsersLoading ? (
+                "Loading..."
+              ) : (
+                <>
+                  {normalUsers.filter((u) => u.role === "STUDENT").length}{" "}
+                  students,{" "}
+                  {normalUsers.filter((u) => u.role === "FACULTY").length}{" "}
+                  faculty
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="text-sm text-gray-400 italic">
+            {showNormalUsers ? "Click to hide" : "Click to view"}
+          </div>
+        </div>
+
+        {/* Collapsible Content */}
+        {showNormalUsers && (
+          <div className="mt-4 space-y-4">
+            {/* ─── Info Text ─── */}
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                📖 Read-only view of registered students and faculty members
+              </p>
+            </div>
+
+            {/* ─── Normal Users Table ─── */}
+            <NormalUsersTable
+              users={normalUsers}
+              loading={normalUsersLoading}
+              theme={theme}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Toast notifications */}
       <Toaster
-        position="bottom-right"
+        position="top-right"
         toastOptions={{
           style: {
             background: theme === "dark" ? "#1f2937" : "#ffffff",
@@ -641,32 +658,14 @@ function ManageUserContent() {
               theme === "dark" ? "1px solid #374151" : "1px solid #e5e7eb",
           },
         }}
-        richColors
       />
     </div>
   );
 }
 
-function ManageUsersLoading() {
+export default function ManageUsersPage() {
   return (
-    <div className="flex flex-col w-auto bg-midnight p-6 rounded-xl border-1 border-white-5">
-      <div className="flex justify-between w-auto animate-pulse">
-        <div className="h-8 bg-gray-700 rounded w-48"></div>
-        <div className="h-10 bg-gray-700 rounded w-32"></div>
-      </div>
-      <div className="h-0.5 w-auto my-4 bg-dusk"></div>
-      <div className="animate-pulse space-y-4">
-        <div className="h-12 bg-gray-700 rounded"></div>
-        <div className="h-12 bg-gray-700 rounded"></div>
-        <div className="h-12 bg-gray-700 rounded"></div>
-      </div>
-    </div>
-  );
-}
-
-export default function ManageUserSettings() {
-  return (
-    <Suspense fallback={<ManageUsersLoading />}>
+    <Suspense fallback={<div>Loading...</div>}>
       <ManageUserContent />
     </Suspense>
   );

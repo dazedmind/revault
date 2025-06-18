@@ -1,4 +1,4 @@
-// app/admin/api/generate-pdf/route.tsx
+// app/admin/api/paper-reports/route.tsx
 
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
@@ -50,18 +50,36 @@ export async function GET(request: Request) {
       case "year-desc":
         orderBy = { year: "desc" };
         break;
+      case "upload-asc":
+        orderBy = { created_at: "asc" };
+        break;
+      case "upload-desc":
+        orderBy = { created_at: "desc" };
+        break;
     }
 
-    // 4) Fetch all matching papers
-    const rawPapers = await prisma.papers.findMany({ where, orderBy });
+    // 4) Fetch all matching papers with created_at field
+    const rawPapers = await prisma.papers.findMany({
+      where,
+      orderBy,
+      select: {
+        paper_id: true,
+        title: true,
+        author: true,
+        year: true,
+        department: true,
+        created_at: true, // Include the uploaded date
+      },
+    });
 
-    // 5) Map DB results to the non-nullable shape expected by PapersReport
+    // 5) Map DB results to the shape expected by PapersReport
     const papers = rawPapers.map((item) => ({
       paper_id: item.paper_id,
       title: item.title ?? "",
       author: item.author ?? "",
       year: item.year ?? 0,
       department: item.department ?? "",
+      created_at: item.created_at, // Include uploaded date
     }));
 
     // 6) Prepare filter information for PDF
@@ -93,7 +111,7 @@ export async function GET(request: Request) {
     };
     return new NextResponse(pdfBuffer, { status: 200, headers });
   } catch (error) {
-    console.error("API /admin/api/generate-pdf error:", error);
+    console.error("API /admin/api/paper-reports error:", error);
     return NextResponse.json(
       { error: "Failed to generate PDF" },
       { status: 500 },
