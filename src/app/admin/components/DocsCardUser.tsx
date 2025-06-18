@@ -88,7 +88,7 @@ const DocsCardUser: React.FC<DocsCardUserProps> = (props) => {
 
   return (
     <div
-      className={`group relative transition-all duration-300 hover:shadow-lg mb-4 ${
+      className={`group relative transition-all duration-300 hover:shadow-lg ${
         theme === "light"
           ? "bg-white border border-gray-200 "
           : "bg-darker border border-white-5"
@@ -96,35 +96,7 @@ const DocsCardUser: React.FC<DocsCardUserProps> = (props) => {
     >
       <div className="p-6">
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Document Preview */}
-          <div className="lg:w-32 xl:w-40 flex-shrink-0">
-            <div className="relative group/image">
-              <div
-                className={`relative overflow-hidden rounded-lg transition-all duration-300 ${
-                  theme === "light"
-                    ? "bg-gradient-to-br from-gold/10 to-gold-fg/10 border border-gold/20"
-                    : "bg-gradient-to-br from-gold/20 to-gold-fg/20 border border-gold/30"
-                }`}
-              >
-                <div className="aspect-[3/4] flex items-center justify-center">
-                  <Image
-                    src={img}
-                    alt="Document preview"
-                    width={120}
-                    height={160}
-                    className="object-contain transition-transform duration-300 group-hover/image:scale-105"
-                  />
-                </div>
-
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-3">
-                  <span className="text-white text-xs font-medium">
-                    Preview
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+      
 
           {/* Content */}
           <div className="flex-1 min-w-0 space-y-4">

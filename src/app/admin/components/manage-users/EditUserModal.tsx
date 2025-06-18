@@ -58,22 +58,22 @@ export default function EditUserModal({
   const automaticPosition = getPositionFromUserAccess(user.userAccess);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="p-6 rounded-lg dark:bg-primary w-full max-w-md relative z-10 max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 flex items-center bg-black/50 backdrop-blur-sm justify-center z-50">
+      <div className={`p-6 rounded-lg bg-accent border-1 ${theme === "light" ? "border-white-50" : "border-white-5"} w-full max-w-md relative z-10 max-h-[90vh] flex flex-col`}>
         {/* Close Button */}
         <button
           onClick={onCancel}
-          className="absolute top-5 right-11 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors z-20"
+          className="absolute top-5 right-11 p-1 rounded-full hover:bg-tertiary cursor-pointer transition-colors z-20"
           title="Close"
         >
-          <X className="w-5 h-5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" />
+          <X className="w-5 h-5 " />
         </button>
 
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto pr-2 -mr-2">
           <div className="space-y-6">
             <div>
-              <h1 className="text-3xl font-bold mb-4 text-gold">Edit User</h1>
+              <h1 className="text-3xl font-bold mb-4 text-gold">Update User</h1>
               <h3 className="text-lg font-bold mb-4 text-gold">
                 Personal Information
               </h3>

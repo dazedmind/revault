@@ -2,6 +2,7 @@ import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 import { TfIdf } from '@/lib/tfidf';
 import EnhancedAutoTagger from '@/lib/tfidf/enhanced-tagger';
+import { truncateSync } from 'fs';
 
 // Validate API key
 if (!process.env.GROQ_API_KEY) {
@@ -123,8 +124,8 @@ export async function POST(req: Request) {
       Given the following extracted sections from a research paper, extract:
 
       1. The Title (Must be in the format of Title of the paper (Title of the paper must be in uppercase))
-      2. The Author(s) (Usually followed by the word "by", extract names only and separate by comma. Format: Surname, F. M. (APA Format))
-      3. The Abstract (Get the first paragraph of the abstract or the first 6 sentences. If there is no abstract, generate a short generic abstract based on the title minimum of 100 words. Do not mention any names or authors.)
+      2. The Author(s) (Usually followed by the word "by", extract names only and separate by semi-colon. Format: Surname, F. M. (APA Format))
+      3. The Abstract (Get the first paragraph of the abstract or the first 6 sentences. You are tasked with creating a formal academic abstract. First, carefully examine the provided document and locate the Table of Contents. Then, identify the very first major section that appears immediately after the Table of Contents - this will typically be marked with roman numeral "I" and will have a title containing words such as "Overview," "Introduction," "System Overview," "Program Introduction," "Language Overview," or similar introductory terms. Focus exclusively on this identified section and ignore all other content in the document. Read and analyze this section thoroughly to understand the core concepts, purpose, and design philosophy presented. Based solely on your analysis of this introductory section, write exactly one paragraph containing precisely 100 words that serves as a formal academic summary. Your summary must accomplish the following requirements: use a formal, professional, and academic tone throughout; clearly identify and emphasize the primary unique characteristic or innovation that distinguishes this language, compiler, or system from others in its field; describe the key features, characteristics, and capabilities that define the system; explicitly mention any existing programming languages, technologies, or systems that served as inspiration or influence for this work; explain the underlying purpose, motivation, or design philosophy behind the creation of this system; focus particularly on what makes this system novel, innovative, or different from existing solutions; maintain objectivity and avoid any subjective language; under no circumstances should you include, reference, or mention any author names, team member names, researcher names, or any other personal identifiers in your summary. Ensure your response is exactly 100 words, no more and no less.)
       4. The Course Subject (Strictly follow the format: SIA, Capstone Project, Compiler Design, Research Writing. If none, write "Cannot Determine")
       5. The Department (Information Technology, Computer Science)
       6. The Year (must be in the format YYYY)
@@ -151,8 +152,11 @@ export async function POST(req: Request) {
     const completion = await openai.chat.completions.create({
       model: 'llama-3.1-8b-instant',
       messages: [{ role: 'user', content: prompt }],
-      temperature: 0.3,
-      max_tokens: 1000, // Limit response tokens
+      temperature: 1,
+      max_tokens: 1024, // Limit response tokens
+      top_p: 1,
+      stream: false, // Changed to false to get complete response
+      stop:null,
     });
 
     const raw = completion.choices[0].message.content || '';

@@ -25,6 +25,7 @@ interface FrontendUser {
   contactNum: string;
   position: string;
   name: string;
+  profileURL: string;
 }
 
 interface NormalUser {
@@ -42,6 +43,7 @@ interface NormalUser {
   position?: string;
   college?: string;
   yearLevel?: number;
+  profileURL: string;
 }
 
 function ManageUserContent() {
@@ -87,6 +89,7 @@ function ManageUserContent() {
     userAccess: "Librarian-in-Charge",
     contactNum: "",
     position: "Librarian-in-Charge",
+    profileURL: "",
   });
   const [newUserPasswords, setNewUserPasswords] = useState({
     password: "",
@@ -355,6 +358,7 @@ function ManageUserContent() {
       userAccess: "Librarian-in-Charge",
       contactNum: "",
       position: "Librarian-in-Charge",
+      profileURL: "",
     });
     setNewUserPasswords({ password: "", confirmPassword: "" });
     setNewUserPasswordError("");
@@ -385,6 +389,8 @@ function ManageUserContent() {
   };
 
   const handleAddUser = async () => {
+    setShowAddModal(false);
+
     // Validate required fields
     if (
       !newUser.fullName ||
@@ -439,7 +445,6 @@ function ManageUserContent() {
       setUsers((prev) => [...prev, result.user]);
 
       // Close modal and reset form
-      setShowAddModal(false);
       setNewUser({
         fullName: "",
         middleName: "",
@@ -452,6 +457,7 @@ function ManageUserContent() {
         userAccess: "Librarian-in-Charge",
         contactNum: "",
         position: "Librarian-in-Charge",
+        profileURL: "",
       });
       setNewUserPasswords({ password: "", confirmPassword: "" });
       setNewUserPasswordError("");
@@ -528,7 +534,7 @@ function ManageUserContent() {
           onClick={handleAddClick}
           className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200"
         >
-          <span className="hidden md:block text-sm">Create New Staff</span>
+          <span className="hidden md:block text-sm">Create New</span>
           <Plus className="w-4 h-4 md:hidden" />
         </button>
       </div>
@@ -541,26 +547,20 @@ function ManageUserContent() {
 
       {/* ─── Admin/Staff Section ─── */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Staff Members</h2>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            {loading ? "Loading..." : `${users.length} staff members`}
-          </div>
-        </div>
+
 
         {/* ─── Instruction Text ─── */}
         <div className="mb-4">
           <p className="text-sm text-gray-600 dark:text-gray-400 italic">
-            💡 Click on any user row to edit their information
+            💡 Click on any user to select them and update their information.
           </p>
         </div>
 
         {/* ─── Users Table ─── */}
         {loading ? (
           <div className="space-y-4">
-            <div className="h-12 bg-gray-700 rounded animate-pulse"></div>
-            <div className="h-12 bg-gray-700 rounded animate-pulse"></div>
-            <div className="h-12 bg-gray-700 rounded animate-pulse"></div>
+            <div className="h-12 bg-secondary rounded animate-pulse"></div>
+            <div className="h-12 bg-secondary rounded animate-pulse"></div>
           </div>
         ) : (
           <UsersTable
@@ -606,7 +606,7 @@ function ManageUserContent() {
               ) : (
                 <ChevronDown className="w-5 h-5 text-gray-500" />
               )}
-              <h2 className="text-xl font-semibold">Students & Faculty</h2>
+              <h2 className="text-xl font-semibold">View Users</h2>
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
               {normalUsersLoading ? (

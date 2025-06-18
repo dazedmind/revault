@@ -26,6 +26,7 @@ interface NormalUser {
   position?: string; // For faculty
   college?: string; // For students
   yearLevel?: number; // For students
+  profileURL: string;
 }
 
 interface NormalUsersTableProps {
@@ -96,10 +97,10 @@ export default function NormalUsersTable({
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-12 bg-gray-700 rounded animate-pulse"></div>
-        <div className="h-12 bg-gray-700 rounded animate-pulse"></div>
-        <div className="h-12 bg-gray-700 rounded animate-pulse"></div>
-        <div className="h-12 bg-gray-700 rounded animate-pulse"></div>
+        <div className="h-12 bg-accent rounded animate-pulse"></div>
+        <div className="h-12 bg-accent rounded animate-pulse"></div>
+        <div className="h-12 bg-accent rounded animate-pulse"></div>
+        <div className="h-12 bg-accent rounded animate-pulse"></div>
       </div>
     );
   }
@@ -138,7 +139,7 @@ export default function NormalUsersTable({
                 <TableCell className="py-3 align-middle">
                   <div className="flex justify-center">
                     <Image
-                      src={userAvatar}
+                      src={user.profileURL || userAvatar}
                       alt="avatar"
                       width={36}
                       height={36}
