@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// app/home/PapersArea.tsx
+import React, { useEffect, useState, useRef } from "react";
 import DocsCard from "../component/DocsCard";
 import LoadingScreen from "../component/LoadingScreen";
 import document from "../img/document.png";
@@ -28,13 +29,15 @@ export default function PapersArea({
   onTotalPages,
 }: PapersAreaProps) {
   const [papers, setPapers] = useState<any[]>([]);
-  const [allPapers, setAllPapers] = useState<any[]>([]); // Store all papers for client-side pagination
+  const [allPapers, setAllPapers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchPerformed, setSearchPerformed] = useState(false);
 
-  // Pull userType from localStorage (for viewFromAdmin toggle)
+  // Track the last applied filters to prevent unnecessary loading
+  const lastAppliedFiltersRef = useRef<string>("");
   const [userType, setUserType] = useState<string | null>(null);
+
   useEffect(() => {
     const ut = localStorage.getItem("userType");
     setUserType(ut);
@@ -42,160 +45,99 @@ export default function PapersArea({
 
   useEffect(() => {
     async function load() {
+      // Create a stable string representation of current filters for comparison
+      const currentFiltersString = JSON.stringify({
+        department: filters.department?.sort() || [],
+        year: filters.year?.sort() || [],
+        start: filters.start || "",
+        end: filters.end || "",
+        course: filters.course?.sort() || [],
+        sort: filters.sort || "",
+        search: filters.search || "",
+        page: page,
+      });
+
+      // Only load if filters have actually changed (this prevents loading on UI filter changes)
+      if (currentFiltersString === lastAppliedFiltersRef.current) {
+        return;
+      }
+
+      console.log("🔄 Loading papers with applied filters:", filters);
+      lastAppliedFiltersRef.current = currentFiltersString;
+
       setLoading(true);
       setError(null);
       setSearchPerformed(!!filters.search);
 
       try {
-        let url: string;
-        let queryParams = new URLSearchParams();
+        const qp = new URLSearchParams();
 
-        // Check if we have any filters or search applied
-        const hasSearch = filters.search && filters.search.trim();
-        const hasFilters =
-          (filters.department && filters.department.length > 0) ||
-          (filters.year && filters.year.length > 0) ||
-          (filters.start && filters.end) ||
-          (filters.course && filters.course.length > 0);
-
-        let isRecentPapers = false;
-
-        // If there's a search query, use the search endpoint
-        if (hasSearch) {
-          url = "/api/search";
-          queryParams.set("q", filters.search.trim());
-          queryParams.set("page", String(page));
-          queryParams.set("limit", "5");
-
-          // Add other filters to search
-          if (filters.department?.length) {
-            queryParams.set("department", filters.department.join(","));
-          }
-          if (filters.year?.length) {
-            queryParams.set("year", filters.year.join(","));
-          }
-          if (filters.start && filters.end) {
-            queryParams.set("start", filters.start);
-            queryParams.set("end", filters.end);
-          }
-          if (filters.course?.length) {
-            queryParams.set("course", filters.course.join(","));
-          }
-          if (filters.sort) {
-            queryParams.set("sortBy", filters.sort);
-          }
+        // Build query parameters
+        if (filters.department?.length) {
+          qp.set("department", filters.department.join(","));
         }
-        // If we have filters but no search, use filtered papers endpoint
-        else if (hasFilters) {
-          url = "/api/papers";
-          queryParams.set("page", String(page));
-
-          if (filters.department?.length) {
-            queryParams.set("department", filters.department.join(","));
-          }
-          if (filters.year?.length) {
-            queryParams.set("year", filters.year.join(","));
-          }
-          if (filters.start && filters.end) {
-            queryParams.set("start", filters.start);
-            queryParams.set("end", filters.end);
-          }
-          if (filters.course?.length) {
-            queryParams.set("course", filters.course.join(","));
-          }
-          if (filters.sort) {
-            queryParams.set("sort", filters.sort);
-          }
+        if (filters.year?.length) {
+          qp.set("year", filters.year.join(","));
         }
-        // Default: show recent papers
-        else {
-          url = "/api/recent";
-          isRecentPapers = true;
-          // Recent papers endpoint doesn't use pagination
+        if (filters.start && filters.end) {
+          qp.set("start", filters.start);
+          qp.set("end", filters.end);
+        }
+        if (filters.course?.length) {
+          qp.set("course", filters.course.join(","));
+        }
+        if (filters.sort) {
+          qp.set("sort", filters.sort);
+        }
+        if (filters.search) {
+          qp.set("q", filters.search);
         }
 
-        const fullUrl =
-          hasFilters || hasSearch ? `${url}?${queryParams.toString()}` : url;
-        console.log("Fetching:", fullUrl);
-
-        const res = await fetch(fullUrl, { cache: "no-store" });
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(`HTTP ${res.status}: ${errorText}`);
-        }
-
-        const json = await res.json();
-        console.log("API Response:", json);
-
-        let rawArray: any[] = [];
-        let totalPages = 1;
-
-        // Handle search API response format
-        if (hasSearch && json.success) {
-          rawArray = json.results || [];
-          totalPages = json.pagination?.totalPages || 1;
-        }
-        // Handle regular papers API response format (with filters)
-        else if (hasFilters) {
-          if (Array.isArray(json)) {
-            rawArray = json;
-            totalPages = 1;
-          } else if (Array.isArray(json.papers)) {
-            rawArray = json.papers;
-            totalPages = json.totalPages || 1;
-          } else {
-            console.error("Unexpected JSON shape for filtered papers:", json);
-            rawArray = [];
-            totalPages = 1;
-          }
-        }
-        // Handle recent papers API response format (no filters, no search)
-        else {
-          if (Array.isArray(json)) {
-            rawArray = json;
-            // For recent papers, calculate total pages based on all papers
-            totalPages = Math.ceil(rawArray.length / ITEMS_PER_PAGE);
-          } else {
-            console.error("Unexpected JSON shape for recent papers:", json);
-            rawArray = [];
-            totalPages = 1;
-          }
-        }
-
-        onTotalPages(totalPages);
-
-        // Normalize the paper data
-        const normalized = rawArray.map((paper: any) => ({
-          ...paper,
-          title: stripQuotes(paper.title || ""),
-          author: stripQuotes(paper.author || ""),
-          keywords: normalizeKeywords(paper.keywords),
-          tags: normalizeKeywords(paper.tags || paper.keywords),
-          abstract: stripQuotes(paper.abstract || ""),
-          department: paper.department || "",
-          course: paper.course || "",
-          year: paper.year || "",
-        }));
-
-        // Sort recent papers by year (most recent first)
-        if (isRecentPapers) {
-          normalized.sort((a, b) => {
-            const yearA = parseInt(a.year) || 0;
-            const yearB = parseInt(b.year) || 0;
-            return yearB - yearA; // Descending order
+        // For search queries, fetch all results at once
+        if (filters.search) {
+          qp.set("search_all", "true");
+          const response = await fetch(`/api/papers?${qp.toString()}`, {
+            cache: "no-store",
           });
-        }
 
-        // For recent papers, handle client-side pagination
-        if (isRecentPapers) {
-          setAllPapers(normalized);
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: Failed to fetch papers`);
+          }
+
+          const data = await response.json();
+          const fetchedPapers = Array.isArray(data.papers) ? data.papers : [];
+
+          setAllPapers(fetchedPapers);
+
+          // Calculate pagination for search results
+          const totalPagesCalculated = Math.ceil(
+            fetchedPapers.length / ITEMS_PER_PAGE,
+          );
+          onTotalPages(totalPagesCalculated);
+
+          // Set current page papers
           const startIndex = (page - 1) * ITEMS_PER_PAGE;
           const endIndex = startIndex + ITEMS_PER_PAGE;
-          setPapers(normalized.slice(startIndex, endIndex));
+          setPapers(fetchedPapers.slice(startIndex, endIndex));
         } else {
-          setPapers(normalized);
-          setAllPapers([]);
+          // For regular filtering, use pagination
+          qp.set("page", page.toString());
+
+          const response = await fetch(`/api/papers?${qp.toString()}`, {
+            cache: "no-store",
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: Failed to fetch papers`);
+          }
+
+          const data = await response.json();
+
+          setPapers(Array.isArray(data.papers) ? data.papers : []);
+          setAllPapers(Array.isArray(data.papers) ? data.papers : []);
+          onTotalPages(
+            typeof data.totalPages === "number" ? data.totalPages : 1,
+          );
         }
       } catch (err) {
         console.error("Error loading papers:", err);
@@ -211,14 +153,14 @@ export default function PapersArea({
     load();
   }, [filters, page, onTotalPages]);
 
-  // Handle pagination when page changes for recent papers
+  // Handle pagination when page changes for search results
   useEffect(() => {
-    if (allPapers.length > 0) {
+    if (filters.search && allPapers.length > 0) {
       const startIndex = (page - 1) * ITEMS_PER_PAGE;
       const endIndex = startIndex + ITEMS_PER_PAGE;
       setPapers(allPapers.slice(startIndex, endIndex));
     }
-  }, [page, allPapers]);
+  }, [page, allPapers, filters.search]);
 
   // Helper functions
   const stripQuotes = (str: string) => {
@@ -240,7 +182,6 @@ export default function PapersArea({
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        {/* <LoadingScreen /> */}
         <p className="mt-4 text-gray-600 dark:text-gray-400">
           {filters.search
             ? `Searching for "${filters.search}"...`
@@ -286,15 +227,6 @@ export default function PapersArea({
               No papers found for &quot;{filters.search}&quot;. Try different
               keywords or check your spelling.
             </p>
-            <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-              <p>Search tips:</p>
-              <ul className="list-disc list-inside mt-2 space-y-1">
-                <li>Try broader or more general terms</li>
-                <li>Check spelling and try synonyms</li>
-                <li>Use fewer keywords</li>
-                <li>Search by author name or department</li>
-              </ul>
-            </div>
           </>
         ) : (
           <>
@@ -303,12 +235,8 @@ export default function PapersArea({
               No Papers Found
             </h3>
             <p className="text-gray-600 dark:text-gray-400 text-center max-w-md">
-              {filters.department?.length ||
-              filters.year?.length ||
-              filters.course?.length ||
-              (filters.start && filters.end)
-                ? "No papers match your current filters. Try adjusting your filter criteria."
-                : "No papers are currently available in the system."}
+              No papers match your current filters. Try adjusting your search
+              criteria.
             </p>
           </>
         )}
@@ -316,21 +244,15 @@ export default function PapersArea({
     );
   }
 
-  // Render papers
   return (
-    <div className="space-y-4">
-      {/* Search results header */}
-      {searchPerformed && (
-        <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-          <div className="flex items-center gap-2">
-            <Search className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-              Search Results for &quot;{filters.search}&quot;
-            </span>
-          </div>
-          <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-            Found {papers.length} paper{papers.length !== 1 ? "s" : ""} matching
-            your search
+    <div className="space-y-6">
+      {/* Results summary */}
+      {(filters.search || papers.length > 0) && (
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            {searchPerformed
+              ? `Found ${allPapers.length} result${allPapers.length !== 1 ? "s" : ""} for "${filters.search}"`
+              : `Showing ${papers.length} paper${papers.length !== 1 ? "s" : ""}`}
           </p>
         </div>
       )}
