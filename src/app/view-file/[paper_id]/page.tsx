@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
+import WatermarkOverlay, { useEnhancedAntiCopy } from '../../component/WatermarkOverlay';
 import { useRouter } from "next/navigation";
 import NavBar from "../../component/NavBar";
 import AdminNavBar from "../../admin/components/AdminNavBar";
@@ -32,7 +33,6 @@ import {
   GoSun,
 } from "react-icons/go";
 import MobileFriendlyPDFViewer from "../../component/MobileFriendlyPDFViewer";
-import { FaHamburger } from "react-icons/fa";
 
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -63,14 +63,16 @@ function ViewFile() {
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [pdfError, setPdfError] = useState(false);
-
+  const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const [selectedPaperIndex, setSelectedPaperIndex] = useState(null);
   const { paper_id } = useParams(); // grab it from URL
 
   const [viewFromAdmin, setViewFromAdmin] = useState(null);
 
-  // useAntiCopy();
-
+  // Enable enhanced anti-copy protection
+  useEnhancedAntiCopy(userEmail, paper_id as string);
+  useAntiCopy();
   const decode = (token: string) => {
     try {
       const base64Url = token.split(".")[1];
@@ -206,6 +208,9 @@ function ViewFile() {
           if (decoded.exp > currentTime) {
             setIsAuthenticated(true);
             setUserType(storedUserType);
+            // Extract user information for watermarking
+            setUserEmail(decoded.email || '');
+            setUserName(decoded.name || `${decoded.first_name || ''} ${decoded.last_name || ''}`.trim());
           } else {
             alert("Token expired. Please log in again.");
             localStorage.removeItem("authToken");
@@ -521,14 +526,25 @@ function ViewFile() {
 
                 {/* Content Row - Document and Metadata Sidebar */}
                 <div className="flex flex-col lg:flex-row">
-                  {/* Document Viewer */}
-                  <div className="Document flex-1">
+                  {/* Document Viewer with Watermark */}
+                  <div className="Document flex-1 relative pdf-viewer-container">
+                    {/* Watermark Overlay */}
+                    {userEmail && (
+                      <WatermarkOverlay
+                        userEmail={userEmail}
+                        userName={userName}
+                        documentId={paper_id as string}
+                        theme={theme}
+                      />
+                    )}
+                    
                     {isMobile ? (
                       <MobileFriendlyPDFViewer
                         pdfUrl={pdfUrl}
                         pdfError={pdfError}
                         handlePdfError={handlePdfError}
                         theme={theme}
+                       
                       />
                     ) : // Desktop: Original object tag code
                     pdfDisplayUrl && !pdfError ? (

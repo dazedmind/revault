@@ -101,13 +101,7 @@ const MobileFriendlyPDFViewer = ({ pdfUrl, pdfError, handlePdfError, theme }) =>
               Your browser doesn&apos;t support inline PDF viewing.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 justify-center">
-              <a
-                href={pdfUrl}
-                download
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
-              >
-                Download PDF
-              </a>
+
               <a
                 href={pdfUrl}
                 target="_blank"
@@ -129,8 +123,8 @@ const MobileFriendlyPDFViewer = ({ pdfUrl, pdfError, handlePdfError, theme }) =>
   // Mobile options menu
   if (viewMode === 'auto') {
     return (
-      <div className="flex flex-col items-center justify-center h-screen p-4 bg-gray-100 dark:bg-gray-800">
-        <div className="text-center max-w-sm w-full">
+      <div className="flex flex-col items-center justify-center h-dvh p-4 bg-gray-100 dark:bg-gray-800">
+        <div className="text-center max-w-sm w-fu0ll">
           <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-3">
             <Smartphone className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </div>
@@ -160,15 +154,6 @@ const MobileFriendlyPDFViewer = ({ pdfUrl, pdfError, handlePdfError, theme }) =>
               Try Direct View
             </button>
             
-            {/* Download Option */}
-            <a
-              href={pdfUrl}
-              download
-              className="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 text-xs"
-            >
-              <Download className="w-3 h-3" />
-              Download PDF
-            </a>
             
             {/* Open in New Tab */}
             <a

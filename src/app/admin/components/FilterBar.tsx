@@ -157,7 +157,7 @@ export function FilterBar({
                 {[
                   { name: "SIA", department: "Information Technology" },
                   { name: "Capstone", department: "Information Technology" },
-                  { name: "CS Thesis Writing", department: "Computer Science" },
+                  { name: "Thesis Writing", department: "Computer Science" },
                   { name: "Compiler Design", department: "Computer Science" },
                 ].map((course) => (
                   <li key={course.name} className="flex items-center gap-2">
