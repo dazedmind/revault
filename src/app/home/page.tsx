@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
 
@@ -37,23 +37,38 @@ export default function HomePage() {
   const searchParams = useSearchParams();
   const { theme } = useTheme();
 
-  // useAntiCopy();
-
-  // — UI state for the filter controls (mirrors URL)
-  const [departments, setDepartments] = useState<string[]>([]);
-  const [years, setYears] = useState<string[]>([]);
-  const [startYear, setStartYear] = useState("");
-  const [endYear, setEndYear] = useState("");
-  const [courses, setCourses] = useState<string[]>([]);
-
-  // — Applied filters (what actually gets sent to PapersArea)
-  const [appliedFilters, setAppliedFilters] = useState({
-    department: [] as string[],
-    year: [] as string[],
-    start: "",
-    end: "",
-    course: [] as string[],
+  // UI state for filters (temporary state, doesn't trigger API calls)
+  const [filterState, setFilterState] = useState<FilterState>({
+    departments: [],
+    years: [],
+    startYear: "",
+    endYear: "",
+    courses: [],
+    sortOption: "",
   });
+
+  // Applied filters - ONLY derived from URL, never from filterState
+  // This ensures PapersArea only re-renders when filters are actually applied
+  const appliedFilters = useMemo(() => {
+    const deps =
+      searchParams.get("department")?.split(",").filter(Boolean) || [];
+    const yrs = searchParams.get("year")?.split(",").filter(Boolean) || [];
+    const start = searchParams.get("start") || "";
+    const end = searchParams.get("end") || "";
+    const crs = searchParams.get("course")?.split(",").filter(Boolean) || [];
+    const sort = searchParams.get("sort") || "";
+    const search = searchParams.get("q") || "";
+
+    return {
+      department: deps,
+      year: start && end ? [] : yrs,
+      start: start,
+      end: end,
+      course: crs,
+      sort: sort,
+      search: search,
+    };
+  }, [searchParams]); // Only depends on URL params, not filterState
 
   // — Pagination state
   const rawPageParam = searchParams.get("page");
@@ -61,47 +76,28 @@ export default function HomePage() {
   const [currentPage, setCurrentPage] = useState<number>(initialPage);
   const [totalPages, setTotalPages] = useState<number>(1);
 
-  // Memoize filter parsing to prevent unnecessary re-renders during theme changes
-  const parsedFilters = useMemo(() => {
-    const deps = searchParams.get("department")?.split(",").filter(Boolean) || [];
+  // Sync UI filterState from URL (when URL changes)
+  useEffect(() => {
+    const deps =
+      searchParams.get("department")?.split(",").filter(Boolean) || [];
     const yrs = searchParams.get("year")?.split(",").filter(Boolean) || [];
     const start = searchParams.get("start") || "";
     const end = searchParams.get("end") || "";
     const crs = searchParams.get("course")?.split(",").filter(Boolean) || [];
+    const sort = searchParams.get("sort") || "";
 
-    return { deps, yrs, start, end, crs };
-  }, [searchParams]);
-
-  // Stabilize the effect dependencies to prevent theme-related re-renders
-  const updateFiltersFromUrl = useCallback(() => {
-    const { deps, yrs, start, end, crs } = parsedFilters;
-
-    setDepartments(deps);
-    setCourses(crs);
-
-    if (start && end) {
-      setStartYear(start);
-      setEndYear(end);
-      setYears([]); // clear individual‐year checkboxes
-    } else {
-      setStartYear("");
-      setEndYear("");
-      setYears(yrs);
-    }
-
-    // Update applied filters
-    setAppliedFilters({
-      department: deps,
-      year: start && end ? [] : yrs,
-      start,
-      end,
-      course: crs,
+    setFilterState({
+      departments: deps,
+      courses: crs,
+      sortOption: sort,
+      startYear: start && end ? start : "",
+      endYear: start && end ? end : "",
+      years: start && end ? [] : yrs,
     });
 
-    // Update page
     const p = rawPageParam ? parseInt(rawPageParam, 10) : 1;
     setCurrentPage(isNaN(p) || p < 1 ? 1 : p);
-  }, [parsedFilters, rawPageParam]);
+  }, [searchParams, rawPageParam]);
 
   // Only update when URL actually changes, not on theme changes
   useEffect(() => {
@@ -144,51 +140,63 @@ export default function HomePage() {
     // Reset to page=1 whenever filters change:
     qp.set("page", "1");
 
-    const href = `${pathname}?${qp.toString()}`;
-    router.replace(href, { scroll: false });
+    const currentSearch = searchParams.get("q");
+    if (currentSearch) qp.set("q", currentSearch);
 
-    setAppliedFilters({
-      department: departments,
-      year: startYear && endYear ? [] : years,
-      start: startYear,
-      end: endYear,
-      course: courses,
+    if (!resetPage && currentPage > 1) qp.set("page", String(currentPage));
+
+    return qp.toString() ? `${pathname}?${qp.toString()}` : pathname;
+  };
+
+  // Handle filter changes - ONLY updates UI state, doesn't trigger API calls
+  const handleFiltersChange = (updates: Partial<FilterState>) => {
+    setFilterState((prev) => ({ ...prev, ...updates }));
+  };
+
+  // Apply filters - ONLY this function triggers URL change and API calls
+  const applyFilters = () => {
+    const href = buildFilterURL(true);
+    router.push(href, { scroll: false });
+  };
+
+  const clearAllFilters = () => {
+    setFilterState({
+      departments: [],
+      years: [],
+      startYear: "",
+      endYear: "",
+      courses: [],
+      sortOption: "",
     });
-  }, [departments, years, startYear, endYear, courses, pathname, router]);
 
-  // "Clear All Filters" (also resets page to 1 by removing ?page= entirely)
-  const clearAllFilters = useCallback(() => {
-    setDepartments([]);
-    setYears([]);
-    setCourses([]);
-    setStartYear("");
-    setEndYear("");
+    const currentSearch = searchParams.get("q");
+    const href = currentSearch ? `${pathname}?q=${currentSearch}` : pathname;
+    router.push(href, { scroll: false });
+  };
 
-    router.replace(pathname, { scroll: false });
+  const goToPage = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return;
 
-    setAppliedFilters({
-      department: [],
-      year: [],
-      start: "",
-      end: "",
-      course: [],
-    });
-  }, [pathname, router]);
+    const qp = new URLSearchParams();
 
-  // When the user clicks a new page number (or Next/Previous), we update ?page= in the URL
-  const goToPage = useCallback((newPage: number) => {
-    if (newPage < 1) newPage = 1;
-    if (newPage > totalPages) newPage = totalPages;
-
-    const qp = new URLSearchParams(
-      searchParams as any as Record<string, string>,
-    );
-    if (newPage === 1) {
-      qp.delete("page");
-    } else {
-      qp.set("page", String(newPage));
+    // Preserve current APPLIED filters (from URL, not filterState)
+    if (appliedFilters.department.length)
+      qp.set("department", appliedFilters.department.join(","));
+    if (appliedFilters.start && appliedFilters.end) {
+      qp.set("start", appliedFilters.start);
+      qp.set("end", appliedFilters.end);
+    } else if (appliedFilters.year.length) {
+      qp.set("year", appliedFilters.year.join(","));
     }
-    router.replace(`${pathname}?${qp.toString()}`, { scroll: false });
+    if (appliedFilters.course.length)
+      qp.set("course", appliedFilters.course.join(","));
+    if (appliedFilters.sort) qp.set("sort", appliedFilters.sort);
+    if (appliedFilters.search) qp.set("q", appliedFilters.search);
+
+    if (newPage > 1) qp.set("page", String(newPage));
+
+    const href = qp.toString() ? `${pathname}?${qp.toString()}` : pathname;
+    router.push(href, { scroll: false });
     setCurrentPage(newPage);
   }, [totalPages, searchParams, pathname, router]);
 
@@ -456,6 +464,7 @@ export default function HomePage() {
             </Popover>
           </div>
 
+        {/* PapersArea - Now only receives URL-based appliedFilters */}
         <PapersArea
           filters={appliedFilters}
           page={currentPage}
