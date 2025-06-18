@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
 import WatermarkOverlay, { useEnhancedAntiCopy } from '../../component/WatermarkOverlay';
+import PDFProtection from '../../component/PDFProtection';
 import { useRouter } from "next/navigation";
 import NavBar from "../../component/NavBar";
 import AdminNavBar from "../../admin/components/AdminNavBar";
@@ -73,6 +74,7 @@ function ViewFile() {
   // Enable enhanced anti-copy protection
   useEnhancedAntiCopy(userEmail, paper_id as string);
   useAntiCopy();
+  
   const decode = (token: string) => {
     try {
       const base64Url = token.split(".")[1];
@@ -324,6 +326,14 @@ function ViewFile() {
 
       <ProtectedRoute>
         <main className="w-full h-auto">
+          {userEmail && (
+            <PDFProtection
+              userEmail={userEmail}
+              documentId={paper_id as string}
+              enabled={true}
+            />
+          )}
+          
           <div className="flex flex-col md:flex-row gap-6 relative">
             {showMetadata && (
               <div
@@ -544,7 +554,7 @@ function ViewFile() {
                         pdfError={pdfError}
                         handlePdfError={handlePdfError}
                         theme={theme}
-                       
+
                       />
                     ) : // Desktop: Original object tag code
                     pdfDisplayUrl && !pdfError ? (
@@ -553,8 +563,16 @@ function ViewFile() {
                         type="application/pdf"
                         width="100%"
                         height="100%"
-                        className="h-screen w-screen md:w-3xl"
+                        className="h-screen w-screen md:w-3xl pointer-events-none"
                         onError={handlePdfError}
+                        tabIndex={-1}
+                        onContextMenu={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          return false;
+                        }} // This disables right-click
+                        onMouseDown={(e) => e.preventDefault()} // This disables double-click text selection
+                        onDragStart={(e) => e.preventDefault()} // This disables drag operations
                       >
                         {/* Fallback content when PDF can't be displayed */}
                         <div className="flex flex-col items-center justify-center h-full p-8 bg-gray-100 dark:bg-gray-800">
