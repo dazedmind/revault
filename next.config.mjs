@@ -1,10 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config) => {
+    // Disable problematic aliases
     config.resolve.alias.canvas = false;
     config.resolve.alias.encoding = false;
+ 
+    
     return config;
   },
+
   images: {
     remotePatterns: [
       {
