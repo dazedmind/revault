@@ -171,7 +171,7 @@ const DocsCard = (props) => {
 
       {/* Bookmark Status Indicator */}
       {isBookmarked && (
-        <div className="absolute top-0 left-2 z-10">
+        <div className="absolute top-0 right-2 z-10">
           <div className="bg-blue-500 text-white p-2 h-10 rounded-b-sm shadow-xl">
             <GoBookmarkFill className="text-2xl" />
           </div>
@@ -180,7 +180,7 @@ const DocsCard = (props) => {
 
       <div className="flex flex-col md:flex-row">
         {/* Image Section with Overlay */}
-        <div className="relative md:w-64 h-48 md:h-auto overflow-hidden">
+        {/* <div className="relative md:w-64 h-48 md:h-auto overflow-hidden">
           <Image 
             src={props.img} 
             alt="Research Paper" 
@@ -193,7 +193,7 @@ const DocsCard = (props) => {
           />
           
      
-        </div>
+        </div> */}
 
         {/* Content Section */}
         <div className="flex-1 p-6 space-y-4">
