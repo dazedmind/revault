@@ -1,6 +1,6 @@
 // src/app/api/papers/[paper_id]/recent-viewers/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma"; // ✅ Use the same import as other files
+import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
@@ -49,7 +49,7 @@ export async function GET(
     const { paper_id } = await params;
     console.log("🔍 Fetching recent viewers for paper:", paper_id);
 
-    // 1) Verify JWT and get user info (optional for this endpoint, but we'll keep it for security)
+    // 1) Verify JWT and get user info
     try {
       await verifyAndGetPayload(req);
     } catch (err: any) {
@@ -61,6 +61,7 @@ export async function GET(
     }
 
     // 2) Get recent viewers from user_activity_logs for this specific paper
+    // ✅ ONLY STUDENTS AND FACULTY - NO LIBRARIANS!
     const recentLogs = await prisma.user_activity_logs.findMany({
       where: {
         paper_id: parseInt(paper_id), // Filter by the specific paper_id
@@ -78,6 +79,14 @@ export async function GET(
                 student_num: true,
               },
             },
+            faculty: {
+              select: {
+                employee_id: true,
+                position: true,
+                department: true,
+              },
+            },
+            // ❌ NO LIBRARIAN RELATION AT ALL!
           },
         },
       },
@@ -107,10 +116,16 @@ export async function GET(
           name: `${log.users.first_name} ${log.users.last_name || ''}`.trim(),
           role: log.users.role,
           last_viewed: log.created_at,
-          // Add additional info based on role
+          // ✅ ONLY STUDENT AND FACULTY INFO - NO LIBRARIAN!
           ...(log.users.students && {
             student_number: log.users.students.student_num?.toString(),
           }),
+          ...(log.users.faculty && {
+            employee_id: log.users.faculty.employee_id?.toString(),
+            position: log.users.faculty.position,
+            department: log.users.faculty.department,
+          }),
+          // ❌ NO LIBRARIAN INFO AT ALL!
         };
 
         viewerMap.set(userId, viewer);
@@ -142,8 +157,5 @@ export async function GET(
       },
       { status: 500 }
     );
-  } finally {
-    // ✅ Remove prisma disconnect since we're using the centralized instance
-    // The centralized prisma instance handles connection management
   }
 }
