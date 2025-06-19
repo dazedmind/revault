@@ -70,60 +70,89 @@ export default function PapersArea({
       setSearchPerformed(!!filters.search);
 
       try {
-        const qp = new URLSearchParams();
+        let response;
+        let data;
 
-        // Build query parameters
-        if (filters.department?.length) {
-          qp.set("department", filters.department.join(","));
-        }
-        if (filters.year?.length) {
-          qp.set("year", filters.year.join(","));
-        }
-        if (filters.start && filters.end) {
-          qp.set("start", filters.start);
-          qp.set("end", filters.end);
-        }
-        if (filters.course?.length) {
-          qp.set("course", filters.course.join(","));
-        }
-        if (filters.sort) {
-          qp.set("sort", filters.sort);
-        }
+        // ✅ USE BETTER SEARCH API FOR SEARCH QUERIES
         if (filters.search) {
-          qp.set("q", filters.search);
-        }
+          console.log("🔍 Using advanced search API for query:", filters.search);
+          
+          const searchParams = new URLSearchParams();
+          searchParams.set("q", filters.search);
+          searchParams.set("limit", "100"); // Get more results for local pagination
+          searchParams.set("sortBy", "relevance"); // Use relevance sorting
+          
+          // Add additional filters to search API
+          if (filters.department?.length) {
+            searchParams.set("department", filters.department.join(","));
+          }
+          if (filters.year?.length) {
+            searchParams.set("year", filters.year.join(","));
+          }
+          if (filters.course?.length) {
+            searchParams.set("course", filters.course.join(","));
+          }
 
-        // For search queries, fetch all results at once
-        if (filters.search) {
-          qp.set("search_all", "true");
-          const response = await fetch(`/api/papers?${qp.toString()}`, {
+          response = await fetch(`/api/search?${searchParams.toString()}`, {
             cache: "no-store",
           });
 
           if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: Failed to fetch papers`);
+            throw new Error(`HTTP ${response.status}: Failed to search papers`);
           }
 
-          const data = await response.json();
-          const fetchedPapers = Array.isArray(data.papers) ? data.papers : [];
+          data = await response.json();
+          
+          if (data.success) {
+            const fetchedPapers = Array.isArray(data.results) ? data.results : [];
+            
+            // Filter out papers with low relevance scores (less than 1.0)
+            const relevantPapers = fetchedPapers.filter(paper => 
+              paper.relevanceScore >= 1.0
+            );
 
-          setAllPapers(fetchedPapers);
+            console.log(`📊 Search results: ${fetchedPapers.length} total, ${relevantPapers.length} relevant`);
 
-          // Calculate pagination for search results
-          const totalPagesCalculated = Math.ceil(
-            fetchedPapers.length / ITEMS_PER_PAGE,
-          );
-          onTotalPages(totalPagesCalculated);
+            setAllPapers(relevantPapers);
 
-          // Set current page papers
-          const startIndex = (page - 1) * ITEMS_PER_PAGE;
-          const endIndex = startIndex + ITEMS_PER_PAGE;
-          setPapers(fetchedPapers.slice(startIndex, endIndex));
+            // Calculate pagination for search results
+            const totalPagesCalculated = Math.ceil(relevantPapers.length / ITEMS_PER_PAGE);
+            onTotalPages(totalPagesCalculated);
+
+            // Set current page papers
+            const startIndex = (page - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            setPapers(relevantPapers.slice(startIndex, endIndex));
+          } else {
+            throw new Error(data.error || "Search failed");
+          }
         } else {
-          // For regular filtering, use pagination
+          // ✅ USE REGULAR API FOR NON-SEARCH QUERIES (FILTERING, BROWSING)
+          console.log("📋 Using papers API for filtering/browsing");
+          
+          const qp = new URLSearchParams();
+
+          // Build query parameters for regular filtering
+          if (filters.department?.length) {
+            qp.set("department", filters.department.join(","));
+          }
+          if (filters.year?.length) {
+            qp.set("year", filters.year.join(","));
+          }
+          if (filters.start && filters.end) {
+            qp.set("start", filters.start);
+            qp.set("end", filters.end);
+          }
+          if (filters.course?.length) {
+            qp.set("course", filters.course.join(","));
+          }
+          if (filters.sort) {
+            qp.set("sort", filters.sort);
+          }
+
           qp.set("page", page.toString());
 
-          const response = await fetch(`/api/papers?${qp.toString()}`, {
+          response = await fetch(`/api/papers?${qp.toString()}`, {
             cache: "no-store",
           });
 
@@ -131,7 +160,7 @@ export default function PapersArea({
             throw new Error(`HTTP ${response.status}: Failed to fetch papers`);
           }
 
-          const data = await response.json();
+          data = await response.json();
 
           setPapers(Array.isArray(data.papers) ? data.papers : []);
           setAllPapers(Array.isArray(data.papers) ? data.papers : []);
@@ -224,7 +253,7 @@ export default function PapersArea({
               No Search Results
             </h3>
             <p className="text-gray-600 dark:text-gray-400 text-center max-w-md">
-              No papers found for &quot;{filters.search}&quot;. Try different
+              No relevant papers found for &quot;{filters.search}&quot;. Try different
               keywords or check your spelling.
             </p>
           </>
@@ -251,7 +280,7 @@ export default function PapersArea({
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {searchPerformed
-              ? `Found ${allPapers.length} result${allPapers.length !== 1 ? "s" : ""} for "${filters.search}"`
+              ? `Found ${allPapers.length} relevant result${allPapers.length !== 1 ? "s" : ""} for "${filters.search}"`
               : `Showing ${papers.length} paper${papers.length !== 1 ? "s" : ""}`}
           </p>
         </div>
@@ -265,7 +294,7 @@ export default function PapersArea({
             img={document}
             title={paper.title || "Untitled"}
             author={paper.author || "No author available"}
-            description={paper.abstract || "No abstract available"}
+            description={paper.abstract || paper.highlights?.abstract || "No abstract available"}
             tags={paper.keywords || []}
             department={paper.department || "No department available"}
             paper_id={paper.paper_id}
@@ -273,6 +302,7 @@ export default function PapersArea({
             year={paper.year || "No year available"}
             course={paper.course || "No course available"}
             searchQuery={filters.search} // Pass search query for highlighting
+            relevanceScore={paper.relevanceScore} // ✅ Pass relevance score for search results
           />
         ))}
       </div>
@@ -281,8 +311,13 @@ export default function PapersArea({
       {searchPerformed && papers.length > 0 && (
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Showing results for &quot;{filters.search}&quot;
+            Showing relevant results for &quot;{filters.search}&quot;
           </p>
+          {allPapers.length > 0 && (
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Results sorted by relevance • Minimum relevance score: 1.0
+            </p>
+          )}
         </div>
       )}
     </div>

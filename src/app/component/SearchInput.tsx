@@ -130,9 +130,9 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
       console.log("🔍 Searching on homepage, updating URL to:", newUrl);
       router.replace(newUrl, { scroll: false });
     } else {
-      // Navigate to search page if not on homepage
+      // Navigate to home page if not on homepage
       const searchParamsNew = new URLSearchParams({ q: query.trim() });
-      router.push(`/search?${searchParamsNew}`);
+      router.push(`/home?${searchParamsNew}`);
     }
   };
 
