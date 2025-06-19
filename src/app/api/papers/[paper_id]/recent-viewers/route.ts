@@ -78,12 +78,6 @@ export async function GET(
                 student_num: true,
               },
             },
-            librarian: {
-              select: {
-                employee_id: true,
-                position: true,
-              },
-            },
           },
         },
       },
@@ -116,10 +110,6 @@ export async function GET(
           // Add additional info based on role
           ...(log.users.students && {
             student_number: log.users.students.student_num?.toString(),
-          }),
-          ...(log.users.librarian && {
-            employee_id: log.users.librarian.employee_id?.toString(),
-            position: log.users.librarian.position,
           }),
         };
 
