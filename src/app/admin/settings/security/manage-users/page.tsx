@@ -529,7 +529,7 @@ function ManageUserContent() {
 
       {/* ─── Header + Create New Button ─── */}
       <div className="flex justify-between w-auto">
-        <h1 className="text-2xl ml-1">Manage Users</h1>
+        <h1 className="text-2xl ml-1">Manage Librarians</h1>
         <button
           onClick={handleAddClick}
           className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200"
