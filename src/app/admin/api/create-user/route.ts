@@ -54,6 +54,23 @@ async function getAdminInfo(request: Request) {
   }
 }
 
+function replacer(key: string, value: any) {
+  return typeof value === "bigint" ? value.toString() : value;
+}
+
+function convertBigIntToString(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(convertBigIntToString);
+  } else if (obj && typeof obj === "object") {
+    return Object.fromEntries(
+      Object.entries(obj).map(([k, v]) => [k, convertBigIntToString(v)])
+    );
+  } else if (typeof obj === "bigint") {
+    return obj.toString();
+  }
+  return obj;
+}
+
 export async function POST(req: Request) {
   console.log("🚀 API Route called: /admin/api/create-user");
 
@@ -140,8 +157,8 @@ export async function POST(req: Request) {
 
         await prisma.activity_logs.create({
           data: {
-            employee_id: adminUser.librarian?.employee_id,
-            user_id: adminUser.user_id,
+            employee_id: Number(adminUser.librarian?.employee_id),
+            user_id: Number(adminUser.user_id),
             name: `${adminUser.first_name} ${adminUser.last_name}`.trim(),
             activity: `Created new user account: ${userDetails}`,
             activity_type: activity_type.ADD_USER,
@@ -159,13 +176,13 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.json(
-      {
+    return new NextResponse(
+      JSON.stringify({
         success: true,
         message: result.message,
         user: result.data,
-      },
-      { status: 201 },
+      }, replacer),
+      { status: 201, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
     console.error("💥 Error in create-user route:", error);
