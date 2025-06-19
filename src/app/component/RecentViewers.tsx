@@ -125,7 +125,6 @@ const RecentViewers: React.FC<RecentViewersProps> = ({ paperId, theme = "light" 
     return (
       <div className={`border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 rounded-md mt-4`}>
         <div className="flex items-center gap-2 mb-3">
-          <Eye className="w-4 h-4 text-yale-blue" />
           <h2 className="text-lg font-semibold">Recently Viewed By</h2>
         </div>
         <div className="animate-pulse space-y-2">
@@ -147,7 +146,6 @@ const RecentViewers: React.FC<RecentViewersProps> = ({ paperId, theme = "light" 
     return (
       <div className={`border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 rounded-md mt-4`}>
         <div className="flex items-center gap-2 mb-3">
-          <Eye className="w-4 h-4 text-yale-blue" />
           <h2 className="text-lg font-semibold">Recently Viewed By</h2>
         </div>
         <p className="text-sm text-red-500 dark:text-red-400">
@@ -161,7 +159,6 @@ const RecentViewers: React.FC<RecentViewersProps> = ({ paperId, theme = "light" 
     return (
       <div className={`border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 rounded-md mt-4`}>
         <div className="flex items-center gap-2 mb-3">
-          <Eye className="w-4 h-4 text-yale-blue" />
           <h2 className="text-lg font-semibold">Recently Viewed By</h2>
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -174,7 +171,6 @@ const RecentViewers: React.FC<RecentViewersProps> = ({ paperId, theme = "light" 
   return (
     <div className={`border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 rounded-md mt-4`}>
       <div className="flex items-center gap-2 mb-3">
-        <Eye className="w-4 h-4 text-yale-blue" />
         <h2 className="text-lg font-semibold">Recently Viewed By</h2>
       </div>
       
