@@ -75,6 +75,8 @@ function ActivityLogContent() {
   const [users, setUsers] = useState<UserOption[]>([]);
   const [total, setTotal] = useState<number>(0);
 
+  const currentUserRole = typeof window !== "undefined" ? localStorage.getItem("userType") : null;
+
   const generatePDFReport = () => {
     // Build query parameters for PDF generation
     const params = new URLSearchParams();
@@ -300,17 +302,19 @@ function ActivityLogContent() {
     >
       <div className="flex flex-row items-center justify-between">
         <h1 className="text-2xl ml-1">Activity Logs</h1>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={generatePDFReport}
-            className=" cursor-pointer flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-sm"
-            title="Preview PDF Report"
-          >
-            <FileText className="w-4 h-4" />
-            <span>Generate Audit Trail</span>
-          </button>
-        </div>
+        
+        {(currentUserRole === "ADMIN" || currentUserRole === "ASSISTANT") && (
+          <div className="flex items-center gap-3">
+            <button
+              onClick={generatePDFReport}
+              className=" cursor-pointer flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-sm"
+              title="Preview PDF Report"
+            >
+              <FileText className="w-4 h-4" />
+              <span>Generate Audit Trail</span>
+            </button>
+          </div>
+        )}
       </div>
 
       <div
