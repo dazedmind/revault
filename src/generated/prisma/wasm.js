@@ -208,6 +208,19 @@ exports.Prisma.Activity_logsScalarFieldEnum = {
   user_id: 'user_id'
 };
 
+exports.Prisma.User_activity_logsScalarFieldEnum = {
+  activity_id: 'activity_id',
+  user_id: 'user_id',
+  name: 'name',
+  activity: 'activity',
+  created_at: 'created_at',
+  activity_type: 'activity_type',
+  status: 'status',
+  user_agent: 'user_agent',
+  employee_id: 'employee_id',
+  student_num: 'student_num'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -253,7 +266,8 @@ exports.Prisma.ModelName = {
   paper_metadata: 'paper_metadata',
   user_bookmarks: 'user_bookmarks',
   Otp: 'Otp',
-  activity_logs: 'activity_logs'
+  activity_logs: 'activity_logs',
+  user_activity_logs: 'user_activity_logs'
 };
 
 /**

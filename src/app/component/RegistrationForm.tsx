@@ -205,10 +205,18 @@ const handleNext = async (e) => {
 
   return (
     <div className="max-w-lg mx-auto bg-accent border-2 p-6 md:p-10 rounded-lg shadow-lg mb-20">
-      <form onSubmit={handleNext} className="grid grid-cols-2 gap-4 min-w-0">
         <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">
           Personal Information
         </h1>
+     
+        {/* ─── Instruction Text ─── */}
+        <div className="mb-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+            Please use information as indicated in your school ID as you will not be able to change this except for your email.
+          </p>
+        </div>
+      <form onSubmit={handleNext} className="grid grid-cols-2 gap-4 min-w-0">
+      
         <div className="bg-white-50 h-0.5 w-full col-span-2"></div>
 
         <InputField

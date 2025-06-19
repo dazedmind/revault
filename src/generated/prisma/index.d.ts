@@ -58,6 +58,11 @@ export type Otp = $Result.DefaultSelection<Prisma.$OtpPayload>
  * 
  */
 export type activity_logs = $Result.DefaultSelection<Prisma.$activity_logsPayload>
+/**
+ * Model user_activity_logs
+ * 
+ */
+export type user_activity_logs = $Result.DefaultSelection<Prisma.$user_activity_logsPayload>
 
 /**
  * Enums
@@ -314,6 +319,16 @@ export class PrismaClient<
     * ```
     */
   get activity_logs(): Prisma.activity_logsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.user_activity_logs`: Exposes CRUD operations for the **user_activity_logs** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more User_activity_logs
+    * const user_activity_logs = await prisma.user_activity_logs.findMany()
+    * ```
+    */
+  get user_activity_logs(): Prisma.user_activity_logsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -762,7 +777,8 @@ export namespace Prisma {
     paper_metadata: 'paper_metadata',
     user_bookmarks: 'user_bookmarks',
     Otp: 'Otp',
-    activity_logs: 'activity_logs'
+    activity_logs: 'activity_logs',
+    user_activity_logs: 'user_activity_logs'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -781,7 +797,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "faculty" | "students" | "librarian" | "papers" | "paper_metadata" | "user_bookmarks" | "otp" | "activity_logs"
+      modelProps: "users" | "faculty" | "students" | "librarian" | "papers" | "paper_metadata" | "user_bookmarks" | "otp" | "activity_logs" | "user_activity_logs"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1451,6 +1467,80 @@ export namespace Prisma {
           }
         }
       }
+      user_activity_logs: {
+        payload: Prisma.$user_activity_logsPayload<ExtArgs>
+        fields: Prisma.user_activity_logsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.user_activity_logsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.user_activity_logsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload>
+          }
+          findFirst: {
+            args: Prisma.user_activity_logsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.user_activity_logsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload>
+          }
+          findMany: {
+            args: Prisma.user_activity_logsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload>[]
+          }
+          create: {
+            args: Prisma.user_activity_logsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload>
+          }
+          createMany: {
+            args: Prisma.user_activity_logsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.user_activity_logsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload>[]
+          }
+          delete: {
+            args: Prisma.user_activity_logsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload>
+          }
+          update: {
+            args: Prisma.user_activity_logsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload>
+          }
+          deleteMany: {
+            args: Prisma.user_activity_logsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.user_activity_logsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.user_activity_logsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload>[]
+          }
+          upsert: {
+            args: Prisma.user_activity_logsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_activity_logsPayload>
+          }
+          aggregate: {
+            args: Prisma.User_activity_logsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUser_activity_logs>
+          }
+          groupBy: {
+            args: Prisma.user_activity_logsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<User_activity_logsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.user_activity_logsCountArgs<ExtArgs>
+            result: $Utils.Optional<User_activity_logsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1544,6 +1634,7 @@ export namespace Prisma {
     user_bookmarks?: user_bookmarksOmit
     otp?: OtpOmit
     activity_logs?: activity_logsOmit
+    user_activity_logs?: user_activity_logsOmit
   }
 
   /* Types for Logging */
@@ -1638,12 +1729,12 @@ export namespace Prisma {
    */
 
   export type UsersCountOutputType = {
-    activity_logs: number
+    user_activity_logs: number
     user_bookmarks: number
   }
 
   export type UsersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    activity_logs?: boolean | UsersCountOutputTypeCountActivity_logsArgs
+    user_activity_logs?: boolean | UsersCountOutputTypeCountUser_activity_logsArgs
     user_bookmarks?: boolean | UsersCountOutputTypeCountUser_bookmarksArgs
   }
 
@@ -1661,8 +1752,8 @@ export namespace Prisma {
   /**
    * UsersCountOutputType without action
    */
-  export type UsersCountOutputTypeCountActivity_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: activity_logsWhereInput
+  export type UsersCountOutputTypeCountUser_activity_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: user_activity_logsWhereInput
   }
 
   /**
@@ -1986,7 +2077,7 @@ export namespace Prisma {
     password?: boolean
     created_at?: boolean
     role?: boolean
-    activity_logs?: boolean | users$activity_logsArgs<ExtArgs>
+    user_activity_logs?: boolean | users$user_activity_logsArgs<ExtArgs>
     faculty?: boolean | users$facultyArgs<ExtArgs>
     librarian?: boolean | users$librarianArgs<ExtArgs>
     students?: boolean | users$studentsArgs<ExtArgs>
@@ -2035,7 +2126,7 @@ export namespace Prisma {
 
   export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "first_name" | "mid_name" | "last_name" | "ext_name" | "email" | "profile_picture" | "password" | "created_at" | "role", ExtArgs["result"]["users"]>
   export type usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    activity_logs?: boolean | users$activity_logsArgs<ExtArgs>
+    user_activity_logs?: boolean | users$user_activity_logsArgs<ExtArgs>
     faculty?: boolean | users$facultyArgs<ExtArgs>
     librarian?: boolean | users$librarianArgs<ExtArgs>
     students?: boolean | users$studentsArgs<ExtArgs>
@@ -2048,7 +2139,7 @@ export namespace Prisma {
   export type $usersPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "users"
     objects: {
-      activity_logs: Prisma.$activity_logsPayload<ExtArgs>[]
+      user_activity_logs: Prisma.$user_activity_logsPayload<ExtArgs>[]
       faculty: Prisma.$facultyPayload<ExtArgs> | null
       librarian: Prisma.$librarianPayload<ExtArgs> | null
       students: Prisma.$studentsPayload<ExtArgs> | null
@@ -2459,7 +2550,7 @@ export namespace Prisma {
    */
   export interface Prisma__usersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    activity_logs<T extends users$activity_logsArgs<ExtArgs> = {}>(args?: Subset<T, users$activity_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$activity_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user_activity_logs<T extends users$user_activity_logsArgs<ExtArgs> = {}>(args?: Subset<T, users$user_activity_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     faculty<T extends users$facultyArgs<ExtArgs> = {}>(args?: Subset<T, users$facultyArgs<ExtArgs>>): Prisma__facultyClient<$Result.GetResult<Prisma.$facultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     librarian<T extends users$librarianArgs<ExtArgs> = {}>(args?: Subset<T, users$librarianArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     students<T extends users$studentsArgs<ExtArgs> = {}>(args?: Subset<T, users$studentsArgs<ExtArgs>>): Prisma__studentsClient<$Result.GetResult<Prisma.$studentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2891,27 +2982,27 @@ export namespace Prisma {
   }
 
   /**
-   * users.activity_logs
+   * users.user_activity_logs
    */
-  export type users$activity_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type users$user_activity_logsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the activity_logs
+     * Select specific fields to fetch from the user_activity_logs
      */
-    select?: activity_logsSelect<ExtArgs> | null
+    select?: user_activity_logsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the activity_logs
+     * Omit specific fields from the user_activity_logs
      */
-    omit?: activity_logsOmit<ExtArgs> | null
+    omit?: user_activity_logsOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: activity_logsInclude<ExtArgs> | null
-    where?: activity_logsWhereInput
-    orderBy?: activity_logsOrderByWithRelationInput | activity_logsOrderByWithRelationInput[]
-    cursor?: activity_logsWhereUniqueInput
+    include?: user_activity_logsInclude<ExtArgs> | null
+    where?: user_activity_logsWhereInput
+    orderBy?: user_activity_logsOrderByWithRelationInput | user_activity_logsOrderByWithRelationInput[]
+    cursor?: user_activity_logsWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: Activity_logsScalarFieldEnum | Activity_logsScalarFieldEnum[]
+    distinct?: User_activity_logsScalarFieldEnum | User_activity_logsScalarFieldEnum[]
   }
 
   /**
@@ -10996,7 +11087,6 @@ export namespace Prisma {
     employee_id?: boolean
     user_id?: boolean
     librarian?: boolean | librarianDefaultArgs<ExtArgs>
-    users?: boolean | usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activity_logs"]>
 
   export type activity_logsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11011,7 +11101,6 @@ export namespace Prisma {
     employee_id?: boolean
     user_id?: boolean
     librarian?: boolean | librarianDefaultArgs<ExtArgs>
-    users?: boolean | usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activity_logs"]>
 
   export type activity_logsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11026,7 +11115,6 @@ export namespace Prisma {
     employee_id?: boolean
     user_id?: boolean
     librarian?: boolean | librarianDefaultArgs<ExtArgs>
-    users?: boolean | usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["activity_logs"]>
 
   export type activity_logsSelectScalar = {
@@ -11045,22 +11133,18 @@ export namespace Prisma {
   export type activity_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"name" | "activity" | "created_at" | "act_id" | "activity_type" | "ip_address" | "status" | "user_agent" | "employee_id" | "user_id", ExtArgs["result"]["activity_logs"]>
   export type activity_logsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     librarian?: boolean | librarianDefaultArgs<ExtArgs>
-    users?: boolean | usersDefaultArgs<ExtArgs>
   }
   export type activity_logsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     librarian?: boolean | librarianDefaultArgs<ExtArgs>
-    users?: boolean | usersDefaultArgs<ExtArgs>
   }
   export type activity_logsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     librarian?: boolean | librarianDefaultArgs<ExtArgs>
-    users?: boolean | usersDefaultArgs<ExtArgs>
   }
 
   export type $activity_logsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "activity_logs"
     objects: {
       librarian: Prisma.$librarianPayload<ExtArgs>
-      users: Prisma.$usersPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       name: string
@@ -11468,7 +11552,6 @@ export namespace Prisma {
   export interface Prisma__activity_logsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     librarian<T extends librarianDefaultArgs<ExtArgs> = {}>(args?: Subset<T, librarianDefaultArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    users<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11923,6 +12006,1175 @@ export namespace Prisma {
 
 
   /**
+   * Model user_activity_logs
+   */
+
+  export type AggregateUser_activity_logs = {
+    _count: User_activity_logsCountAggregateOutputType | null
+    _avg: User_activity_logsAvgAggregateOutputType | null
+    _sum: User_activity_logsSumAggregateOutputType | null
+    _min: User_activity_logsMinAggregateOutputType | null
+    _max: User_activity_logsMaxAggregateOutputType | null
+  }
+
+  export type User_activity_logsAvgAggregateOutputType = {
+    activity_id: number | null
+    user_id: number | null
+    employee_id: number | null
+    student_num: number | null
+  }
+
+  export type User_activity_logsSumAggregateOutputType = {
+    activity_id: number | null
+    user_id: number | null
+    employee_id: bigint | null
+    student_num: bigint | null
+  }
+
+  export type User_activity_logsMinAggregateOutputType = {
+    activity_id: number | null
+    user_id: number | null
+    name: string | null
+    activity: string | null
+    created_at: Date | null
+    activity_type: $Enums.activity_type | null
+    status: string | null
+    user_agent: string | null
+    employee_id: bigint | null
+    student_num: bigint | null
+  }
+
+  export type User_activity_logsMaxAggregateOutputType = {
+    activity_id: number | null
+    user_id: number | null
+    name: string | null
+    activity: string | null
+    created_at: Date | null
+    activity_type: $Enums.activity_type | null
+    status: string | null
+    user_agent: string | null
+    employee_id: bigint | null
+    student_num: bigint | null
+  }
+
+  export type User_activity_logsCountAggregateOutputType = {
+    activity_id: number
+    user_id: number
+    name: number
+    activity: number
+    created_at: number
+    activity_type: number
+    status: number
+    user_agent: number
+    employee_id: number
+    student_num: number
+    _all: number
+  }
+
+
+  export type User_activity_logsAvgAggregateInputType = {
+    activity_id?: true
+    user_id?: true
+    employee_id?: true
+    student_num?: true
+  }
+
+  export type User_activity_logsSumAggregateInputType = {
+    activity_id?: true
+    user_id?: true
+    employee_id?: true
+    student_num?: true
+  }
+
+  export type User_activity_logsMinAggregateInputType = {
+    activity_id?: true
+    user_id?: true
+    name?: true
+    activity?: true
+    created_at?: true
+    activity_type?: true
+    status?: true
+    user_agent?: true
+    employee_id?: true
+    student_num?: true
+  }
+
+  export type User_activity_logsMaxAggregateInputType = {
+    activity_id?: true
+    user_id?: true
+    name?: true
+    activity?: true
+    created_at?: true
+    activity_type?: true
+    status?: true
+    user_agent?: true
+    employee_id?: true
+    student_num?: true
+  }
+
+  export type User_activity_logsCountAggregateInputType = {
+    activity_id?: true
+    user_id?: true
+    name?: true
+    activity?: true
+    created_at?: true
+    activity_type?: true
+    status?: true
+    user_agent?: true
+    employee_id?: true
+    student_num?: true
+    _all?: true
+  }
+
+  export type User_activity_logsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which user_activity_logs to aggregate.
+     */
+    where?: user_activity_logsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_activity_logs to fetch.
+     */
+    orderBy?: user_activity_logsOrderByWithRelationInput | user_activity_logsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: user_activity_logsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_activity_logs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_activity_logs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned user_activity_logs
+    **/
+    _count?: true | User_activity_logsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: User_activity_logsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: User_activity_logsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: User_activity_logsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: User_activity_logsMaxAggregateInputType
+  }
+
+  export type GetUser_activity_logsAggregateType<T extends User_activity_logsAggregateArgs> = {
+        [P in keyof T & keyof AggregateUser_activity_logs]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUser_activity_logs[P]>
+      : GetScalarType<T[P], AggregateUser_activity_logs[P]>
+  }
+
+
+
+
+  export type user_activity_logsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: user_activity_logsWhereInput
+    orderBy?: user_activity_logsOrderByWithAggregationInput | user_activity_logsOrderByWithAggregationInput[]
+    by: User_activity_logsScalarFieldEnum[] | User_activity_logsScalarFieldEnum
+    having?: user_activity_logsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: User_activity_logsCountAggregateInputType | true
+    _avg?: User_activity_logsAvgAggregateInputType
+    _sum?: User_activity_logsSumAggregateInputType
+    _min?: User_activity_logsMinAggregateInputType
+    _max?: User_activity_logsMaxAggregateInputType
+  }
+
+  export type User_activity_logsGroupByOutputType = {
+    activity_id: number
+    user_id: number
+    name: string
+    activity: string
+    created_at: Date | null
+    activity_type: $Enums.activity_type | null
+    status: string | null
+    user_agent: string | null
+    employee_id: bigint
+    student_num: bigint
+    _count: User_activity_logsCountAggregateOutputType | null
+    _avg: User_activity_logsAvgAggregateOutputType | null
+    _sum: User_activity_logsSumAggregateOutputType | null
+    _min: User_activity_logsMinAggregateOutputType | null
+    _max: User_activity_logsMaxAggregateOutputType | null
+  }
+
+  type GetUser_activity_logsGroupByPayload<T extends user_activity_logsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<User_activity_logsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof User_activity_logsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], User_activity_logsGroupByOutputType[P]>
+            : GetScalarType<T[P], User_activity_logsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type user_activity_logsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    activity_id?: boolean
+    user_id?: boolean
+    name?: boolean
+    activity?: boolean
+    created_at?: boolean
+    activity_type?: boolean
+    status?: boolean
+    user_agent?: boolean
+    employee_id?: boolean
+    student_num?: boolean
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user_activity_logs"]>
+
+  export type user_activity_logsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    activity_id?: boolean
+    user_id?: boolean
+    name?: boolean
+    activity?: boolean
+    created_at?: boolean
+    activity_type?: boolean
+    status?: boolean
+    user_agent?: boolean
+    employee_id?: boolean
+    student_num?: boolean
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user_activity_logs"]>
+
+  export type user_activity_logsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    activity_id?: boolean
+    user_id?: boolean
+    name?: boolean
+    activity?: boolean
+    created_at?: boolean
+    activity_type?: boolean
+    status?: boolean
+    user_agent?: boolean
+    employee_id?: boolean
+    student_num?: boolean
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user_activity_logs"]>
+
+  export type user_activity_logsSelectScalar = {
+    activity_id?: boolean
+    user_id?: boolean
+    name?: boolean
+    activity?: boolean
+    created_at?: boolean
+    activity_type?: boolean
+    status?: boolean
+    user_agent?: boolean
+    employee_id?: boolean
+    student_num?: boolean
+  }
+
+  export type user_activity_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"activity_id" | "user_id" | "name" | "activity" | "created_at" | "activity_type" | "status" | "user_agent" | "employee_id" | "student_num", ExtArgs["result"]["user_activity_logs"]>
+  export type user_activity_logsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }
+  export type user_activity_logsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }
+  export type user_activity_logsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    users?: boolean | usersDefaultArgs<ExtArgs>
+  }
+
+  export type $user_activity_logsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "user_activity_logs"
+    objects: {
+      users: Prisma.$usersPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      activity_id: number
+      user_id: number
+      name: string
+      activity: string
+      created_at: Date | null
+      activity_type: $Enums.activity_type | null
+      status: string | null
+      user_agent: string | null
+      employee_id: bigint
+      student_num: bigint
+    }, ExtArgs["result"]["user_activity_logs"]>
+    composites: {}
+  }
+
+  type user_activity_logsGetPayload<S extends boolean | null | undefined | user_activity_logsDefaultArgs> = $Result.GetResult<Prisma.$user_activity_logsPayload, S>
+
+  type user_activity_logsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<user_activity_logsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: User_activity_logsCountAggregateInputType | true
+    }
+
+  export interface user_activity_logsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['user_activity_logs'], meta: { name: 'user_activity_logs' } }
+    /**
+     * Find zero or one User_activity_logs that matches the filter.
+     * @param {user_activity_logsFindUniqueArgs} args - Arguments to find a User_activity_logs
+     * @example
+     * // Get one User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends user_activity_logsFindUniqueArgs>(args: SelectSubset<T, user_activity_logsFindUniqueArgs<ExtArgs>>): Prisma__user_activity_logsClient<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one User_activity_logs that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {user_activity_logsFindUniqueOrThrowArgs} args - Arguments to find a User_activity_logs
+     * @example
+     * // Get one User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends user_activity_logsFindUniqueOrThrowArgs>(args: SelectSubset<T, user_activity_logsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__user_activity_logsClient<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first User_activity_logs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_activity_logsFindFirstArgs} args - Arguments to find a User_activity_logs
+     * @example
+     * // Get one User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends user_activity_logsFindFirstArgs>(args?: SelectSubset<T, user_activity_logsFindFirstArgs<ExtArgs>>): Prisma__user_activity_logsClient<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first User_activity_logs that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_activity_logsFindFirstOrThrowArgs} args - Arguments to find a User_activity_logs
+     * @example
+     * // Get one User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends user_activity_logsFindFirstOrThrowArgs>(args?: SelectSubset<T, user_activity_logsFindFirstOrThrowArgs<ExtArgs>>): Prisma__user_activity_logsClient<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more User_activity_logs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_activity_logsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.findMany()
+     * 
+     * // Get first 10 User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.findMany({ take: 10 })
+     * 
+     * // Only select the `activity_id`
+     * const user_activity_logsWithActivity_idOnly = await prisma.user_activity_logs.findMany({ select: { activity_id: true } })
+     * 
+     */
+    findMany<T extends user_activity_logsFindManyArgs>(args?: SelectSubset<T, user_activity_logsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a User_activity_logs.
+     * @param {user_activity_logsCreateArgs} args - Arguments to create a User_activity_logs.
+     * @example
+     * // Create one User_activity_logs
+     * const User_activity_logs = await prisma.user_activity_logs.create({
+     *   data: {
+     *     // ... data to create a User_activity_logs
+     *   }
+     * })
+     * 
+     */
+    create<T extends user_activity_logsCreateArgs>(args: SelectSubset<T, user_activity_logsCreateArgs<ExtArgs>>): Prisma__user_activity_logsClient<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many User_activity_logs.
+     * @param {user_activity_logsCreateManyArgs} args - Arguments to create many User_activity_logs.
+     * @example
+     * // Create many User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends user_activity_logsCreateManyArgs>(args?: SelectSubset<T, user_activity_logsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many User_activity_logs and returns the data saved in the database.
+     * @param {user_activity_logsCreateManyAndReturnArgs} args - Arguments to create many User_activity_logs.
+     * @example
+     * // Create many User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many User_activity_logs and only return the `activity_id`
+     * const user_activity_logsWithActivity_idOnly = await prisma.user_activity_logs.createManyAndReturn({
+     *   select: { activity_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends user_activity_logsCreateManyAndReturnArgs>(args?: SelectSubset<T, user_activity_logsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a User_activity_logs.
+     * @param {user_activity_logsDeleteArgs} args - Arguments to delete one User_activity_logs.
+     * @example
+     * // Delete one User_activity_logs
+     * const User_activity_logs = await prisma.user_activity_logs.delete({
+     *   where: {
+     *     // ... filter to delete one User_activity_logs
+     *   }
+     * })
+     * 
+     */
+    delete<T extends user_activity_logsDeleteArgs>(args: SelectSubset<T, user_activity_logsDeleteArgs<ExtArgs>>): Prisma__user_activity_logsClient<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one User_activity_logs.
+     * @param {user_activity_logsUpdateArgs} args - Arguments to update one User_activity_logs.
+     * @example
+     * // Update one User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends user_activity_logsUpdateArgs>(args: SelectSubset<T, user_activity_logsUpdateArgs<ExtArgs>>): Prisma__user_activity_logsClient<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more User_activity_logs.
+     * @param {user_activity_logsDeleteManyArgs} args - Arguments to filter User_activity_logs to delete.
+     * @example
+     * // Delete a few User_activity_logs
+     * const { count } = await prisma.user_activity_logs.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends user_activity_logsDeleteManyArgs>(args?: SelectSubset<T, user_activity_logsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more User_activity_logs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_activity_logsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends user_activity_logsUpdateManyArgs>(args: SelectSubset<T, user_activity_logsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more User_activity_logs and returns the data updated in the database.
+     * @param {user_activity_logsUpdateManyAndReturnArgs} args - Arguments to update many User_activity_logs.
+     * @example
+     * // Update many User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more User_activity_logs and only return the `activity_id`
+     * const user_activity_logsWithActivity_idOnly = await prisma.user_activity_logs.updateManyAndReturn({
+     *   select: { activity_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends user_activity_logsUpdateManyAndReturnArgs>(args: SelectSubset<T, user_activity_logsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one User_activity_logs.
+     * @param {user_activity_logsUpsertArgs} args - Arguments to update or create a User_activity_logs.
+     * @example
+     * // Update or create a User_activity_logs
+     * const user_activity_logs = await prisma.user_activity_logs.upsert({
+     *   create: {
+     *     // ... data to create a User_activity_logs
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the User_activity_logs we want to update
+     *   }
+     * })
+     */
+    upsert<T extends user_activity_logsUpsertArgs>(args: SelectSubset<T, user_activity_logsUpsertArgs<ExtArgs>>): Prisma__user_activity_logsClient<$Result.GetResult<Prisma.$user_activity_logsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of User_activity_logs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_activity_logsCountArgs} args - Arguments to filter User_activity_logs to count.
+     * @example
+     * // Count the number of User_activity_logs
+     * const count = await prisma.user_activity_logs.count({
+     *   where: {
+     *     // ... the filter for the User_activity_logs we want to count
+     *   }
+     * })
+    **/
+    count<T extends user_activity_logsCountArgs>(
+      args?: Subset<T, user_activity_logsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], User_activity_logsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a User_activity_logs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {User_activity_logsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends User_activity_logsAggregateArgs>(args: Subset<T, User_activity_logsAggregateArgs>): Prisma.PrismaPromise<GetUser_activity_logsAggregateType<T>>
+
+    /**
+     * Group by User_activity_logs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_activity_logsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends user_activity_logsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: user_activity_logsGroupByArgs['orderBy'] }
+        : { orderBy?: user_activity_logsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, user_activity_logsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUser_activity_logsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the user_activity_logs model
+   */
+  readonly fields: user_activity_logsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for user_activity_logs.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__user_activity_logsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    users<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the user_activity_logs model
+   */
+  interface user_activity_logsFieldRefs {
+    readonly activity_id: FieldRef<"user_activity_logs", 'Int'>
+    readonly user_id: FieldRef<"user_activity_logs", 'Int'>
+    readonly name: FieldRef<"user_activity_logs", 'String'>
+    readonly activity: FieldRef<"user_activity_logs", 'String'>
+    readonly created_at: FieldRef<"user_activity_logs", 'DateTime'>
+    readonly activity_type: FieldRef<"user_activity_logs", 'activity_type'>
+    readonly status: FieldRef<"user_activity_logs", 'String'>
+    readonly user_agent: FieldRef<"user_activity_logs", 'String'>
+    readonly employee_id: FieldRef<"user_activity_logs", 'BigInt'>
+    readonly student_num: FieldRef<"user_activity_logs", 'BigInt'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * user_activity_logs findUnique
+   */
+  export type user_activity_logsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsInclude<ExtArgs> | null
+    /**
+     * Filter, which user_activity_logs to fetch.
+     */
+    where: user_activity_logsWhereUniqueInput
+  }
+
+  /**
+   * user_activity_logs findUniqueOrThrow
+   */
+  export type user_activity_logsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsInclude<ExtArgs> | null
+    /**
+     * Filter, which user_activity_logs to fetch.
+     */
+    where: user_activity_logsWhereUniqueInput
+  }
+
+  /**
+   * user_activity_logs findFirst
+   */
+  export type user_activity_logsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsInclude<ExtArgs> | null
+    /**
+     * Filter, which user_activity_logs to fetch.
+     */
+    where?: user_activity_logsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_activity_logs to fetch.
+     */
+    orderBy?: user_activity_logsOrderByWithRelationInput | user_activity_logsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for user_activity_logs.
+     */
+    cursor?: user_activity_logsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_activity_logs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_activity_logs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of user_activity_logs.
+     */
+    distinct?: User_activity_logsScalarFieldEnum | User_activity_logsScalarFieldEnum[]
+  }
+
+  /**
+   * user_activity_logs findFirstOrThrow
+   */
+  export type user_activity_logsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsInclude<ExtArgs> | null
+    /**
+     * Filter, which user_activity_logs to fetch.
+     */
+    where?: user_activity_logsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_activity_logs to fetch.
+     */
+    orderBy?: user_activity_logsOrderByWithRelationInput | user_activity_logsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for user_activity_logs.
+     */
+    cursor?: user_activity_logsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_activity_logs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_activity_logs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of user_activity_logs.
+     */
+    distinct?: User_activity_logsScalarFieldEnum | User_activity_logsScalarFieldEnum[]
+  }
+
+  /**
+   * user_activity_logs findMany
+   */
+  export type user_activity_logsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsInclude<ExtArgs> | null
+    /**
+     * Filter, which user_activity_logs to fetch.
+     */
+    where?: user_activity_logsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_activity_logs to fetch.
+     */
+    orderBy?: user_activity_logsOrderByWithRelationInput | user_activity_logsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing user_activity_logs.
+     */
+    cursor?: user_activity_logsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_activity_logs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_activity_logs.
+     */
+    skip?: number
+    distinct?: User_activity_logsScalarFieldEnum | User_activity_logsScalarFieldEnum[]
+  }
+
+  /**
+   * user_activity_logs create
+   */
+  export type user_activity_logsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a user_activity_logs.
+     */
+    data: XOR<user_activity_logsCreateInput, user_activity_logsUncheckedCreateInput>
+  }
+
+  /**
+   * user_activity_logs createMany
+   */
+  export type user_activity_logsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many user_activity_logs.
+     */
+    data: user_activity_logsCreateManyInput | user_activity_logsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * user_activity_logs createManyAndReturn
+   */
+  export type user_activity_logsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * The data used to create many user_activity_logs.
+     */
+    data: user_activity_logsCreateManyInput | user_activity_logsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * user_activity_logs update
+   */
+  export type user_activity_logsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a user_activity_logs.
+     */
+    data: XOR<user_activity_logsUpdateInput, user_activity_logsUncheckedUpdateInput>
+    /**
+     * Choose, which user_activity_logs to update.
+     */
+    where: user_activity_logsWhereUniqueInput
+  }
+
+  /**
+   * user_activity_logs updateMany
+   */
+  export type user_activity_logsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update user_activity_logs.
+     */
+    data: XOR<user_activity_logsUpdateManyMutationInput, user_activity_logsUncheckedUpdateManyInput>
+    /**
+     * Filter which user_activity_logs to update
+     */
+    where?: user_activity_logsWhereInput
+    /**
+     * Limit how many user_activity_logs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * user_activity_logs updateManyAndReturn
+   */
+  export type user_activity_logsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * The data used to update user_activity_logs.
+     */
+    data: XOR<user_activity_logsUpdateManyMutationInput, user_activity_logsUncheckedUpdateManyInput>
+    /**
+     * Filter which user_activity_logs to update
+     */
+    where?: user_activity_logsWhereInput
+    /**
+     * Limit how many user_activity_logs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * user_activity_logs upsert
+   */
+  export type user_activity_logsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the user_activity_logs to update in case it exists.
+     */
+    where: user_activity_logsWhereUniqueInput
+    /**
+     * In case the user_activity_logs found by the `where` argument doesn't exist, create a new user_activity_logs with this data.
+     */
+    create: XOR<user_activity_logsCreateInput, user_activity_logsUncheckedCreateInput>
+    /**
+     * In case the user_activity_logs was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<user_activity_logsUpdateInput, user_activity_logsUncheckedUpdateInput>
+  }
+
+  /**
+   * user_activity_logs delete
+   */
+  export type user_activity_logsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsInclude<ExtArgs> | null
+    /**
+     * Filter which user_activity_logs to delete.
+     */
+    where: user_activity_logsWhereUniqueInput
+  }
+
+  /**
+   * user_activity_logs deleteMany
+   */
+  export type user_activity_logsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which user_activity_logs to delete
+     */
+    where?: user_activity_logsWhereInput
+    /**
+     * Limit how many user_activity_logs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * user_activity_logs without action
+   */
+  export type user_activity_logsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_activity_logs
+     */
+    select?: user_activity_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_activity_logs
+     */
+    omit?: user_activity_logsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_activity_logsInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12049,6 +13301,22 @@ export namespace Prisma {
   };
 
   export type Activity_logsScalarFieldEnum = (typeof Activity_logsScalarFieldEnum)[keyof typeof Activity_logsScalarFieldEnum]
+
+
+  export const User_activity_logsScalarFieldEnum: {
+    activity_id: 'activity_id',
+    user_id: 'user_id',
+    name: 'name',
+    activity: 'activity',
+    created_at: 'created_at',
+    activity_type: 'activity_type',
+    status: 'status',
+    user_agent: 'user_agent',
+    employee_id: 'employee_id',
+    student_num: 'student_num'
+  };
+
+  export type User_activity_logsScalarFieldEnum = (typeof User_activity_logsScalarFieldEnum)[keyof typeof User_activity_logsScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -12195,7 +13463,7 @@ export namespace Prisma {
     password?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
-    activity_logs?: Activity_logsListRelationFilter
+    user_activity_logs?: User_activity_logsListRelationFilter
     faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
     librarian?: XOR<LibrarianNullableScalarRelationFilter, librarianWhereInput> | null
     students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
@@ -12213,7 +13481,7 @@ export namespace Prisma {
     password?: SortOrder
     created_at?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
-    activity_logs?: activity_logsOrderByRelationAggregateInput
+    user_activity_logs?: user_activity_logsOrderByRelationAggregateInput
     faculty?: facultyOrderByWithRelationInput
     librarian?: librarianOrderByWithRelationInput
     students?: studentsOrderByWithRelationInput
@@ -12234,7 +13502,7 @@ export namespace Prisma {
     password?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
-    activity_logs?: Activity_logsListRelationFilter
+    user_activity_logs?: User_activity_logsListRelationFilter
     faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
     librarian?: XOR<LibrarianNullableScalarRelationFilter, librarianWhereInput> | null
     students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
@@ -12724,7 +13992,6 @@ export namespace Prisma {
     employee_id?: BigIntFilter<"activity_logs"> | bigint | number
     user_id?: IntFilter<"activity_logs"> | number
     librarian?: XOR<LibrarianScalarRelationFilter, librarianWhereInput>
-    users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }
 
   export type activity_logsOrderByWithRelationInput = {
@@ -12739,7 +14006,6 @@ export namespace Prisma {
     employee_id?: SortOrder
     user_id?: SortOrder
     librarian?: librarianOrderByWithRelationInput
-    users?: usersOrderByWithRelationInput
   }
 
   export type activity_logsWhereUniqueInput = Prisma.AtLeast<{
@@ -12757,7 +14023,6 @@ export namespace Prisma {
     employee_id?: BigIntFilter<"activity_logs"> | bigint | number
     user_id?: IntFilter<"activity_logs"> | number
     librarian?: XOR<LibrarianScalarRelationFilter, librarianWhereInput>
-    users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }, "act_id">
 
   export type activity_logsOrderByWithAggregationInput = {
@@ -12794,6 +14059,88 @@ export namespace Prisma {
     user_id?: IntWithAggregatesFilter<"activity_logs"> | number
   }
 
+  export type user_activity_logsWhereInput = {
+    AND?: user_activity_logsWhereInput | user_activity_logsWhereInput[]
+    OR?: user_activity_logsWhereInput[]
+    NOT?: user_activity_logsWhereInput | user_activity_logsWhereInput[]
+    activity_id?: IntFilter<"user_activity_logs"> | number
+    user_id?: IntFilter<"user_activity_logs"> | number
+    name?: StringFilter<"user_activity_logs"> | string
+    activity?: StringFilter<"user_activity_logs"> | string
+    created_at?: DateTimeNullableFilter<"user_activity_logs"> | Date | string | null
+    activity_type?: Enumactivity_typeNullableFilter<"user_activity_logs"> | $Enums.activity_type | null
+    status?: StringNullableFilter<"user_activity_logs"> | string | null
+    user_agent?: StringNullableFilter<"user_activity_logs"> | string | null
+    employee_id?: BigIntFilter<"user_activity_logs"> | bigint | number
+    student_num?: BigIntFilter<"user_activity_logs"> | bigint | number
+    users?: XOR<UsersScalarRelationFilter, usersWhereInput>
+  }
+
+  export type user_activity_logsOrderByWithRelationInput = {
+    activity_id?: SortOrder
+    user_id?: SortOrder
+    name?: SortOrder
+    activity?: SortOrder
+    created_at?: SortOrderInput | SortOrder
+    activity_type?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    user_agent?: SortOrderInput | SortOrder
+    employee_id?: SortOrder
+    student_num?: SortOrder
+    users?: usersOrderByWithRelationInput
+  }
+
+  export type user_activity_logsWhereUniqueInput = Prisma.AtLeast<{
+    activity_id?: number
+    AND?: user_activity_logsWhereInput | user_activity_logsWhereInput[]
+    OR?: user_activity_logsWhereInput[]
+    NOT?: user_activity_logsWhereInput | user_activity_logsWhereInput[]
+    user_id?: IntFilter<"user_activity_logs"> | number
+    name?: StringFilter<"user_activity_logs"> | string
+    activity?: StringFilter<"user_activity_logs"> | string
+    created_at?: DateTimeNullableFilter<"user_activity_logs"> | Date | string | null
+    activity_type?: Enumactivity_typeNullableFilter<"user_activity_logs"> | $Enums.activity_type | null
+    status?: StringNullableFilter<"user_activity_logs"> | string | null
+    user_agent?: StringNullableFilter<"user_activity_logs"> | string | null
+    employee_id?: BigIntFilter<"user_activity_logs"> | bigint | number
+    student_num?: BigIntFilter<"user_activity_logs"> | bigint | number
+    users?: XOR<UsersScalarRelationFilter, usersWhereInput>
+  }, "activity_id">
+
+  export type user_activity_logsOrderByWithAggregationInput = {
+    activity_id?: SortOrder
+    user_id?: SortOrder
+    name?: SortOrder
+    activity?: SortOrder
+    created_at?: SortOrderInput | SortOrder
+    activity_type?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    user_agent?: SortOrderInput | SortOrder
+    employee_id?: SortOrder
+    student_num?: SortOrder
+    _count?: user_activity_logsCountOrderByAggregateInput
+    _avg?: user_activity_logsAvgOrderByAggregateInput
+    _max?: user_activity_logsMaxOrderByAggregateInput
+    _min?: user_activity_logsMinOrderByAggregateInput
+    _sum?: user_activity_logsSumOrderByAggregateInput
+  }
+
+  export type user_activity_logsScalarWhereWithAggregatesInput = {
+    AND?: user_activity_logsScalarWhereWithAggregatesInput | user_activity_logsScalarWhereWithAggregatesInput[]
+    OR?: user_activity_logsScalarWhereWithAggregatesInput[]
+    NOT?: user_activity_logsScalarWhereWithAggregatesInput | user_activity_logsScalarWhereWithAggregatesInput[]
+    activity_id?: IntWithAggregatesFilter<"user_activity_logs"> | number
+    user_id?: IntWithAggregatesFilter<"user_activity_logs"> | number
+    name?: StringWithAggregatesFilter<"user_activity_logs"> | string
+    activity?: StringWithAggregatesFilter<"user_activity_logs"> | string
+    created_at?: DateTimeNullableWithAggregatesFilter<"user_activity_logs"> | Date | string | null
+    activity_type?: Enumactivity_typeNullableWithAggregatesFilter<"user_activity_logs"> | $Enums.activity_type | null
+    status?: StringNullableWithAggregatesFilter<"user_activity_logs"> | string | null
+    user_agent?: StringNullableWithAggregatesFilter<"user_activity_logs"> | string | null
+    employee_id?: BigIntWithAggregatesFilter<"user_activity_logs"> | bigint | number
+    student_num?: BigIntWithAggregatesFilter<"user_activity_logs"> | bigint | number
+  }
+
   export type usersCreateInput = {
     first_name?: string | null
     mid_name?: string | null
@@ -12804,7 +14151,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
-    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
@@ -12822,7 +14169,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
-    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
@@ -12839,7 +14186,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
+    user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
@@ -12857,7 +14204,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
@@ -13341,8 +14688,8 @@ export namespace Prisma {
     ip_address?: string | null
     status?: string | null
     user_agent?: string | null
+    user_id: number
     librarian: librarianCreateNestedOneWithoutActivity_logsInput
-    users: usersCreateNestedOneWithoutActivity_logsInput
   }
 
   export type activity_logsUncheckedCreateInput = {
@@ -13366,8 +14713,8 @@ export namespace Prisma {
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: IntFieldUpdateOperationsInput | number
     librarian?: librarianUpdateOneRequiredWithoutActivity_logsNestedInput
-    users?: usersUpdateOneRequiredWithoutActivity_logsNestedInput
   }
 
   export type activity_logsUncheckedUpdateInput = {
@@ -13404,6 +14751,7 @@ export namespace Prisma {
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type activity_logsUncheckedUpdateManyInput = {
@@ -13417,6 +14765,93 @@ export namespace Prisma {
     user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     user_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type user_activity_logsCreateInput = {
+    name: string
+    activity: string
+    created_at?: Date | string | null
+    activity_type?: $Enums.activity_type | null
+    status?: string | null
+    user_agent?: string | null
+    employee_id: bigint | number
+    student_num: bigint | number
+    users: usersCreateNestedOneWithoutUser_activity_logsInput
+  }
+
+  export type user_activity_logsUncheckedCreateInput = {
+    activity_id?: number
+    user_id: number
+    name: string
+    activity: string
+    created_at?: Date | string | null
+    activity_type?: $Enums.activity_type | null
+    status?: string | null
+    user_agent?: string | null
+    employee_id: bigint | number
+    student_num: bigint | number
+  }
+
+  export type user_activity_logsUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
+    users?: usersUpdateOneRequiredWithoutUser_activity_logsNestedInput
+  }
+
+  export type user_activity_logsUncheckedUpdateInput = {
+    activity_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type user_activity_logsCreateManyInput = {
+    activity_id?: number
+    user_id: number
+    name: string
+    activity: string
+    created_at?: Date | string | null
+    activity_type?: $Enums.activity_type | null
+    status?: string | null
+    user_agent?: string | null
+    employee_id: bigint | number
+    student_num: bigint | number
+  }
+
+  export type user_activity_logsUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type user_activity_logsUncheckedUpdateManyInput = {
+    activity_id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -13478,10 +14913,10 @@ export namespace Prisma {
     not?: NestedEnumuser_roleNullableFilter<$PrismaModel> | $Enums.user_role | null
   }
 
-  export type Activity_logsListRelationFilter = {
-    every?: activity_logsWhereInput
-    some?: activity_logsWhereInput
-    none?: activity_logsWhereInput
+  export type User_activity_logsListRelationFilter = {
+    every?: user_activity_logsWhereInput
+    some?: user_activity_logsWhereInput
+    none?: user_activity_logsWhereInput
   }
 
   export type FacultyNullableScalarRelationFilter = {
@@ -13510,7 +14945,7 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type activity_logsOrderByRelationAggregateInput = {
+  export type user_activity_logsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -13765,6 +15200,16 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type Activity_logsListRelationFilter = {
+    every?: activity_logsWhereInput
+    some?: activity_logsWhereInput
+    none?: activity_logsWhereInput
+  }
+
+  export type activity_logsOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type librarianCountOrderByAggregateInput = {
@@ -14076,11 +15521,64 @@ export namespace Prisma {
     _max?: NestedEnumactivity_typeNullableFilter<$PrismaModel>
   }
 
-  export type activity_logsCreateNestedManyWithoutUsersInput = {
-    create?: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput> | activity_logsCreateWithoutUsersInput[] | activity_logsUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: activity_logsCreateOrConnectWithoutUsersInput | activity_logsCreateOrConnectWithoutUsersInput[]
-    createMany?: activity_logsCreateManyUsersInputEnvelope
-    connect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
+  export type user_activity_logsCountOrderByAggregateInput = {
+    activity_id?: SortOrder
+    user_id?: SortOrder
+    name?: SortOrder
+    activity?: SortOrder
+    created_at?: SortOrder
+    activity_type?: SortOrder
+    status?: SortOrder
+    user_agent?: SortOrder
+    employee_id?: SortOrder
+    student_num?: SortOrder
+  }
+
+  export type user_activity_logsAvgOrderByAggregateInput = {
+    activity_id?: SortOrder
+    user_id?: SortOrder
+    employee_id?: SortOrder
+    student_num?: SortOrder
+  }
+
+  export type user_activity_logsMaxOrderByAggregateInput = {
+    activity_id?: SortOrder
+    user_id?: SortOrder
+    name?: SortOrder
+    activity?: SortOrder
+    created_at?: SortOrder
+    activity_type?: SortOrder
+    status?: SortOrder
+    user_agent?: SortOrder
+    employee_id?: SortOrder
+    student_num?: SortOrder
+  }
+
+  export type user_activity_logsMinOrderByAggregateInput = {
+    activity_id?: SortOrder
+    user_id?: SortOrder
+    name?: SortOrder
+    activity?: SortOrder
+    created_at?: SortOrder
+    activity_type?: SortOrder
+    status?: SortOrder
+    user_agent?: SortOrder
+    employee_id?: SortOrder
+    student_num?: SortOrder
+  }
+
+  export type user_activity_logsSumOrderByAggregateInput = {
+    activity_id?: SortOrder
+    user_id?: SortOrder
+    employee_id?: SortOrder
+    student_num?: SortOrder
+  }
+
+  export type user_activity_logsCreateNestedManyWithoutUsersInput = {
+    create?: XOR<user_activity_logsCreateWithoutUsersInput, user_activity_logsUncheckedCreateWithoutUsersInput> | user_activity_logsCreateWithoutUsersInput[] | user_activity_logsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: user_activity_logsCreateOrConnectWithoutUsersInput | user_activity_logsCreateOrConnectWithoutUsersInput[]
+    createMany?: user_activity_logsCreateManyUsersInputEnvelope
+    connect?: user_activity_logsWhereUniqueInput | user_activity_logsWhereUniqueInput[]
   }
 
   export type facultyCreateNestedOneWithoutUsersInput = {
@@ -14108,11 +15606,11 @@ export namespace Prisma {
     connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
   }
 
-  export type activity_logsUncheckedCreateNestedManyWithoutUsersInput = {
-    create?: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput> | activity_logsCreateWithoutUsersInput[] | activity_logsUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: activity_logsCreateOrConnectWithoutUsersInput | activity_logsCreateOrConnectWithoutUsersInput[]
-    createMany?: activity_logsCreateManyUsersInputEnvelope
-    connect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
+  export type user_activity_logsUncheckedCreateNestedManyWithoutUsersInput = {
+    create?: XOR<user_activity_logsCreateWithoutUsersInput, user_activity_logsUncheckedCreateWithoutUsersInput> | user_activity_logsCreateWithoutUsersInput[] | user_activity_logsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: user_activity_logsCreateOrConnectWithoutUsersInput | user_activity_logsCreateOrConnectWithoutUsersInput[]
+    createMany?: user_activity_logsCreateManyUsersInputEnvelope
+    connect?: user_activity_logsWhereUniqueInput | user_activity_logsWhereUniqueInput[]
   }
 
   export type facultyUncheckedCreateNestedOneWithoutUsersInput = {
@@ -14156,18 +15654,18 @@ export namespace Prisma {
     set?: $Enums.user_role | null
   }
 
-  export type activity_logsUpdateManyWithoutUsersNestedInput = {
-    create?: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput> | activity_logsCreateWithoutUsersInput[] | activity_logsUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: activity_logsCreateOrConnectWithoutUsersInput | activity_logsCreateOrConnectWithoutUsersInput[]
-    upsert?: activity_logsUpsertWithWhereUniqueWithoutUsersInput | activity_logsUpsertWithWhereUniqueWithoutUsersInput[]
-    createMany?: activity_logsCreateManyUsersInputEnvelope
-    set?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
-    disconnect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
-    delete?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
-    connect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
-    update?: activity_logsUpdateWithWhereUniqueWithoutUsersInput | activity_logsUpdateWithWhereUniqueWithoutUsersInput[]
-    updateMany?: activity_logsUpdateManyWithWhereWithoutUsersInput | activity_logsUpdateManyWithWhereWithoutUsersInput[]
-    deleteMany?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
+  export type user_activity_logsUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<user_activity_logsCreateWithoutUsersInput, user_activity_logsUncheckedCreateWithoutUsersInput> | user_activity_logsCreateWithoutUsersInput[] | user_activity_logsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: user_activity_logsCreateOrConnectWithoutUsersInput | user_activity_logsCreateOrConnectWithoutUsersInput[]
+    upsert?: user_activity_logsUpsertWithWhereUniqueWithoutUsersInput | user_activity_logsUpsertWithWhereUniqueWithoutUsersInput[]
+    createMany?: user_activity_logsCreateManyUsersInputEnvelope
+    set?: user_activity_logsWhereUniqueInput | user_activity_logsWhereUniqueInput[]
+    disconnect?: user_activity_logsWhereUniqueInput | user_activity_logsWhereUniqueInput[]
+    delete?: user_activity_logsWhereUniqueInput | user_activity_logsWhereUniqueInput[]
+    connect?: user_activity_logsWhereUniqueInput | user_activity_logsWhereUniqueInput[]
+    update?: user_activity_logsUpdateWithWhereUniqueWithoutUsersInput | user_activity_logsUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: user_activity_logsUpdateManyWithWhereWithoutUsersInput | user_activity_logsUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: user_activity_logsScalarWhereInput | user_activity_logsScalarWhereInput[]
   }
 
   export type facultyUpdateOneWithoutUsersNestedInput = {
@@ -14222,18 +15720,18 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type activity_logsUncheckedUpdateManyWithoutUsersNestedInput = {
-    create?: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput> | activity_logsCreateWithoutUsersInput[] | activity_logsUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: activity_logsCreateOrConnectWithoutUsersInput | activity_logsCreateOrConnectWithoutUsersInput[]
-    upsert?: activity_logsUpsertWithWhereUniqueWithoutUsersInput | activity_logsUpsertWithWhereUniqueWithoutUsersInput[]
-    createMany?: activity_logsCreateManyUsersInputEnvelope
-    set?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
-    disconnect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
-    delete?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
-    connect?: activity_logsWhereUniqueInput | activity_logsWhereUniqueInput[]
-    update?: activity_logsUpdateWithWhereUniqueWithoutUsersInput | activity_logsUpdateWithWhereUniqueWithoutUsersInput[]
-    updateMany?: activity_logsUpdateManyWithWhereWithoutUsersInput | activity_logsUpdateManyWithWhereWithoutUsersInput[]
-    deleteMany?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
+  export type user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<user_activity_logsCreateWithoutUsersInput, user_activity_logsUncheckedCreateWithoutUsersInput> | user_activity_logsCreateWithoutUsersInput[] | user_activity_logsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: user_activity_logsCreateOrConnectWithoutUsersInput | user_activity_logsCreateOrConnectWithoutUsersInput[]
+    upsert?: user_activity_logsUpsertWithWhereUniqueWithoutUsersInput | user_activity_logsUpsertWithWhereUniqueWithoutUsersInput[]
+    createMany?: user_activity_logsCreateManyUsersInputEnvelope
+    set?: user_activity_logsWhereUniqueInput | user_activity_logsWhereUniqueInput[]
+    disconnect?: user_activity_logsWhereUniqueInput | user_activity_logsWhereUniqueInput[]
+    delete?: user_activity_logsWhereUniqueInput | user_activity_logsWhereUniqueInput[]
+    connect?: user_activity_logsWhereUniqueInput | user_activity_logsWhereUniqueInput[]
+    update?: user_activity_logsUpdateWithWhereUniqueWithoutUsersInput | user_activity_logsUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: user_activity_logsUpdateManyWithWhereWithoutUsersInput | user_activity_logsUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: user_activity_logsScalarWhereInput | user_activity_logsScalarWhereInput[]
   }
 
   export type facultyUncheckedUpdateOneWithoutUsersNestedInput = {
@@ -14525,12 +16023,6 @@ export namespace Prisma {
     connect?: librarianWhereUniqueInput
   }
 
-  export type usersCreateNestedOneWithoutActivity_logsInput = {
-    create?: XOR<usersCreateWithoutActivity_logsInput, usersUncheckedCreateWithoutActivity_logsInput>
-    connectOrCreate?: usersCreateOrConnectWithoutActivity_logsInput
-    connect?: usersWhereUniqueInput
-  }
-
   export type NullableEnumactivity_typeFieldUpdateOperationsInput = {
     set?: $Enums.activity_type | null
   }
@@ -14543,12 +16035,18 @@ export namespace Prisma {
     update?: XOR<XOR<librarianUpdateToOneWithWhereWithoutActivity_logsInput, librarianUpdateWithoutActivity_logsInput>, librarianUncheckedUpdateWithoutActivity_logsInput>
   }
 
-  export type usersUpdateOneRequiredWithoutActivity_logsNestedInput = {
-    create?: XOR<usersCreateWithoutActivity_logsInput, usersUncheckedCreateWithoutActivity_logsInput>
-    connectOrCreate?: usersCreateOrConnectWithoutActivity_logsInput
-    upsert?: usersUpsertWithoutActivity_logsInput
+  export type usersCreateNestedOneWithoutUser_activity_logsInput = {
+    create?: XOR<usersCreateWithoutUser_activity_logsInput, usersUncheckedCreateWithoutUser_activity_logsInput>
+    connectOrCreate?: usersCreateOrConnectWithoutUser_activity_logsInput
     connect?: usersWhereUniqueInput
-    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutActivity_logsInput, usersUpdateWithoutActivity_logsInput>, usersUncheckedUpdateWithoutActivity_logsInput>
+  }
+
+  export type usersUpdateOneRequiredWithoutUser_activity_logsNestedInput = {
+    create?: XOR<usersCreateWithoutUser_activity_logsInput, usersUncheckedCreateWithoutUser_activity_logsInput>
+    connectOrCreate?: usersCreateOrConnectWithoutUser_activity_logsInput
+    upsert?: usersUpsertWithoutUser_activity_logsInput
+    connect?: usersWhereUniqueInput
+    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutUser_activity_logsInput, usersUpdateWithoutUser_activity_logsInput>, usersUncheckedUpdateWithoutUser_activity_logsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -14800,36 +16298,36 @@ export namespace Prisma {
     _max?: NestedEnumactivity_typeNullableFilter<$PrismaModel>
   }
 
-  export type activity_logsCreateWithoutUsersInput = {
+  export type user_activity_logsCreateWithoutUsersInput = {
     name: string
     activity: string
-    created_at?: Date | string
+    created_at?: Date | string | null
     activity_type?: $Enums.activity_type | null
-    ip_address?: string | null
-    status?: string | null
-    user_agent?: string | null
-    librarian: librarianCreateNestedOneWithoutActivity_logsInput
-  }
-
-  export type activity_logsUncheckedCreateWithoutUsersInput = {
-    name: string
-    activity: string
-    created_at?: Date | string
-    act_id?: number
-    activity_type?: $Enums.activity_type | null
-    ip_address?: string | null
     status?: string | null
     user_agent?: string | null
     employee_id: bigint | number
+    student_num: bigint | number
   }
 
-  export type activity_logsCreateOrConnectWithoutUsersInput = {
-    where: activity_logsWhereUniqueInput
-    create: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput>
+  export type user_activity_logsUncheckedCreateWithoutUsersInput = {
+    activity_id?: number
+    name: string
+    activity: string
+    created_at?: Date | string | null
+    activity_type?: $Enums.activity_type | null
+    status?: string | null
+    user_agent?: string | null
+    employee_id: bigint | number
+    student_num: bigint | number
   }
 
-  export type activity_logsCreateManyUsersInputEnvelope = {
-    data: activity_logsCreateManyUsersInput | activity_logsCreateManyUsersInput[]
+  export type user_activity_logsCreateOrConnectWithoutUsersInput = {
+    where: user_activity_logsWhereUniqueInput
+    create: XOR<user_activity_logsCreateWithoutUsersInput, user_activity_logsUncheckedCreateWithoutUsersInput>
+  }
+
+  export type user_activity_logsCreateManyUsersInputEnvelope = {
+    data: user_activity_logsCreateManyUsersInput | user_activity_logsCreateManyUsersInput[]
     skipDuplicates?: boolean
   }
 
@@ -14911,36 +16409,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type activity_logsUpsertWithWhereUniqueWithoutUsersInput = {
-    where: activity_logsWhereUniqueInput
-    update: XOR<activity_logsUpdateWithoutUsersInput, activity_logsUncheckedUpdateWithoutUsersInput>
-    create: XOR<activity_logsCreateWithoutUsersInput, activity_logsUncheckedCreateWithoutUsersInput>
+  export type user_activity_logsUpsertWithWhereUniqueWithoutUsersInput = {
+    where: user_activity_logsWhereUniqueInput
+    update: XOR<user_activity_logsUpdateWithoutUsersInput, user_activity_logsUncheckedUpdateWithoutUsersInput>
+    create: XOR<user_activity_logsCreateWithoutUsersInput, user_activity_logsUncheckedCreateWithoutUsersInput>
   }
 
-  export type activity_logsUpdateWithWhereUniqueWithoutUsersInput = {
-    where: activity_logsWhereUniqueInput
-    data: XOR<activity_logsUpdateWithoutUsersInput, activity_logsUncheckedUpdateWithoutUsersInput>
+  export type user_activity_logsUpdateWithWhereUniqueWithoutUsersInput = {
+    where: user_activity_logsWhereUniqueInput
+    data: XOR<user_activity_logsUpdateWithoutUsersInput, user_activity_logsUncheckedUpdateWithoutUsersInput>
   }
 
-  export type activity_logsUpdateManyWithWhereWithoutUsersInput = {
-    where: activity_logsScalarWhereInput
-    data: XOR<activity_logsUpdateManyMutationInput, activity_logsUncheckedUpdateManyWithoutUsersInput>
+  export type user_activity_logsUpdateManyWithWhereWithoutUsersInput = {
+    where: user_activity_logsScalarWhereInput
+    data: XOR<user_activity_logsUpdateManyMutationInput, user_activity_logsUncheckedUpdateManyWithoutUsersInput>
   }
 
-  export type activity_logsScalarWhereInput = {
-    AND?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
-    OR?: activity_logsScalarWhereInput[]
-    NOT?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
-    name?: StringFilter<"activity_logs"> | string
-    activity?: StringFilter<"activity_logs"> | string
-    created_at?: DateTimeFilter<"activity_logs"> | Date | string
-    act_id?: IntFilter<"activity_logs"> | number
-    activity_type?: Enumactivity_typeNullableFilter<"activity_logs"> | $Enums.activity_type | null
-    ip_address?: StringNullableFilter<"activity_logs"> | string | null
-    status?: StringNullableFilter<"activity_logs"> | string | null
-    user_agent?: StringNullableFilter<"activity_logs"> | string | null
-    employee_id?: BigIntFilter<"activity_logs"> | bigint | number
-    user_id?: IntFilter<"activity_logs"> | number
+  export type user_activity_logsScalarWhereInput = {
+    AND?: user_activity_logsScalarWhereInput | user_activity_logsScalarWhereInput[]
+    OR?: user_activity_logsScalarWhereInput[]
+    NOT?: user_activity_logsScalarWhereInput | user_activity_logsScalarWhereInput[]
+    activity_id?: IntFilter<"user_activity_logs"> | number
+    user_id?: IntFilter<"user_activity_logs"> | number
+    name?: StringFilter<"user_activity_logs"> | string
+    activity?: StringFilter<"user_activity_logs"> | string
+    created_at?: DateTimeNullableFilter<"user_activity_logs"> | Date | string | null
+    activity_type?: Enumactivity_typeNullableFilter<"user_activity_logs"> | $Enums.activity_type | null
+    status?: StringNullableFilter<"user_activity_logs"> | string | null
+    user_agent?: StringNullableFilter<"user_activity_logs"> | string | null
+    employee_id?: BigIntFilter<"user_activity_logs"> | bigint | number
+    student_num?: BigIntFilter<"user_activity_logs"> | bigint | number
   }
 
   export type facultyUpsertWithoutUsersInput = {
@@ -15053,7 +16551,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
-    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
@@ -15070,7 +16568,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
-    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
@@ -15102,7 +16600,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
+    user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
@@ -15119,7 +16617,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
@@ -15135,7 +16633,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
-    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
@@ -15152,7 +16650,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
-    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
@@ -15184,7 +16682,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
+    user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
@@ -15201,7 +16699,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
@@ -15215,7 +16713,7 @@ export namespace Prisma {
     ip_address?: string | null
     status?: string | null
     user_agent?: string | null
-    users: usersCreateNestedOneWithoutActivity_logsInput
+    user_id: number
   }
 
   export type activity_logsUncheckedCreateWithoutLibrarianInput = {
@@ -15250,7 +16748,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
-    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
@@ -15267,7 +16765,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
-    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
@@ -15294,6 +16792,22 @@ export namespace Prisma {
     data: XOR<activity_logsUpdateManyMutationInput, activity_logsUncheckedUpdateManyWithoutLibrarianInput>
   }
 
+  export type activity_logsScalarWhereInput = {
+    AND?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
+    OR?: activity_logsScalarWhereInput[]
+    NOT?: activity_logsScalarWhereInput | activity_logsScalarWhereInput[]
+    name?: StringFilter<"activity_logs"> | string
+    activity?: StringFilter<"activity_logs"> | string
+    created_at?: DateTimeFilter<"activity_logs"> | Date | string
+    act_id?: IntFilter<"activity_logs"> | number
+    activity_type?: Enumactivity_typeNullableFilter<"activity_logs"> | $Enums.activity_type | null
+    ip_address?: StringNullableFilter<"activity_logs"> | string | null
+    status?: StringNullableFilter<"activity_logs"> | string | null
+    user_agent?: StringNullableFilter<"activity_logs"> | string | null
+    employee_id?: BigIntFilter<"activity_logs"> | bigint | number
+    user_id?: IntFilter<"activity_logs"> | number
+  }
+
   export type usersUpsertWithoutLibrarianInput = {
     update: XOR<usersUpdateWithoutLibrarianInput, usersUncheckedUpdateWithoutLibrarianInput>
     create: XOR<usersCreateWithoutLibrarianInput, usersUncheckedCreateWithoutLibrarianInput>
@@ -15315,7 +16829,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
+    user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
@@ -15332,7 +16846,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
@@ -15551,7 +17065,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
-    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
@@ -15568,7 +17082,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
-    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
@@ -15640,7 +17154,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
+    user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
@@ -15657,7 +17171,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
-    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
@@ -15680,44 +17194,6 @@ export namespace Prisma {
   export type librarianCreateOrConnectWithoutActivity_logsInput = {
     where: librarianWhereUniqueInput
     create: XOR<librarianCreateWithoutActivity_logsInput, librarianUncheckedCreateWithoutActivity_logsInput>
-  }
-
-  export type usersCreateWithoutActivity_logsInput = {
-    first_name?: string | null
-    mid_name?: string | null
-    last_name?: string | null
-    ext_name?: string | null
-    email: string
-    profile_picture?: string | null
-    password: string
-    created_at?: Date | string | null
-    role?: $Enums.user_role | null
-    faculty?: facultyCreateNestedOneWithoutUsersInput
-    librarian?: librarianCreateNestedOneWithoutUsersInput
-    students?: studentsCreateNestedOneWithoutUsersInput
-    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
-  }
-
-  export type usersUncheckedCreateWithoutActivity_logsInput = {
-    user_id?: number
-    first_name?: string | null
-    mid_name?: string | null
-    last_name?: string | null
-    ext_name?: string | null
-    email: string
-    profile_picture?: string | null
-    password: string
-    created_at?: Date | string | null
-    role?: $Enums.user_role | null
-    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
-    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
-    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
-    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
-  }
-
-  export type usersCreateOrConnectWithoutActivity_logsInput = {
-    where: usersWhereUniqueInput
-    create: XOR<usersCreateWithoutActivity_logsInput, usersUncheckedCreateWithoutActivity_logsInput>
   }
 
   export type librarianUpsertWithoutActivity_logsInput = {
@@ -15745,18 +17221,56 @@ export namespace Prisma {
     user_id?: IntFieldUpdateOperationsInput | number
   }
 
-  export type usersUpsertWithoutActivity_logsInput = {
-    update: XOR<usersUpdateWithoutActivity_logsInput, usersUncheckedUpdateWithoutActivity_logsInput>
-    create: XOR<usersCreateWithoutActivity_logsInput, usersUncheckedCreateWithoutActivity_logsInput>
+  export type usersCreateWithoutUser_activity_logsInput = {
+    first_name?: string | null
+    mid_name?: string | null
+    last_name?: string | null
+    ext_name?: string | null
+    email: string
+    profile_picture?: string | null
+    password: string
+    created_at?: Date | string | null
+    role?: $Enums.user_role | null
+    faculty?: facultyCreateNestedOneWithoutUsersInput
+    librarian?: librarianCreateNestedOneWithoutUsersInput
+    students?: studentsCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersUncheckedCreateWithoutUser_activity_logsInput = {
+    user_id?: number
+    first_name?: string | null
+    mid_name?: string | null
+    last_name?: string | null
+    ext_name?: string | null
+    email: string
+    profile_picture?: string | null
+    password: string
+    created_at?: Date | string | null
+    role?: $Enums.user_role | null
+    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
+    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
+    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersCreateOrConnectWithoutUser_activity_logsInput = {
+    where: usersWhereUniqueInput
+    create: XOR<usersCreateWithoutUser_activity_logsInput, usersUncheckedCreateWithoutUser_activity_logsInput>
+  }
+
+  export type usersUpsertWithoutUser_activity_logsInput = {
+    update: XOR<usersUpdateWithoutUser_activity_logsInput, usersUncheckedUpdateWithoutUser_activity_logsInput>
+    create: XOR<usersCreateWithoutUser_activity_logsInput, usersUncheckedCreateWithoutUser_activity_logsInput>
     where?: usersWhereInput
   }
 
-  export type usersUpdateToOneWithWhereWithoutActivity_logsInput = {
+  export type usersUpdateToOneWithWhereWithoutUser_activity_logsInput = {
     where?: usersWhereInput
-    data: XOR<usersUpdateWithoutActivity_logsInput, usersUncheckedUpdateWithoutActivity_logsInput>
+    data: XOR<usersUpdateWithoutUser_activity_logsInput, usersUncheckedUpdateWithoutUser_activity_logsInput>
   }
 
-  export type usersUpdateWithoutActivity_logsInput = {
+  export type usersUpdateWithoutUser_activity_logsInput = {
     first_name?: NullableStringFieldUpdateOperationsInput | string | null
     mid_name?: NullableStringFieldUpdateOperationsInput | string | null
     last_name?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15772,7 +17286,7 @@ export namespace Prisma {
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
   }
 
-  export type usersUncheckedUpdateWithoutActivity_logsInput = {
+  export type usersUncheckedUpdateWithoutUser_activity_logsInput = {
     user_id?: IntFieldUpdateOperationsInput | number
     first_name?: NullableStringFieldUpdateOperationsInput | string | null
     mid_name?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15789,16 +17303,16 @@ export namespace Prisma {
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
   }
 
-  export type activity_logsCreateManyUsersInput = {
+  export type user_activity_logsCreateManyUsersInput = {
+    activity_id?: number
     name: string
     activity: string
-    created_at?: Date | string
-    act_id?: number
+    created_at?: Date | string | null
     activity_type?: $Enums.activity_type | null
-    ip_address?: string | null
     status?: string | null
     user_agent?: string | null
     employee_id: bigint | number
+    student_num: bigint | number
   }
 
   export type user_bookmarksCreateManyUsersInput = {
@@ -15808,39 +17322,39 @@ export namespace Prisma {
     updated_at?: Date | string | null
   }
 
-  export type activity_logsUpdateWithoutUsersInput = {
+  export type user_activity_logsUpdateWithoutUsersInput = {
     name?: StringFieldUpdateOperationsInput | string
     activity?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    ip_address?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
-    librarian?: librarianUpdateOneRequiredWithoutActivity_logsNestedInput
-  }
-
-  export type activity_logsUncheckedUpdateWithoutUsersInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    activity?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    act_id?: IntFieldUpdateOperationsInput | number
-    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
-  export type activity_logsUncheckedUpdateManyWithoutUsersInput = {
+  export type user_activity_logsUncheckedUpdateWithoutUsersInput = {
+    activity_id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     activity?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    act_id?: IntFieldUpdateOperationsInput | number
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
-    ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     user_agent?: NullableStringFieldUpdateOperationsInput | string | null
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
+  }
+
+  export type user_activity_logsUncheckedUpdateManyWithoutUsersInput = {
+    activity_id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    activity?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    activity_type?: NullableEnumactivity_typeFieldUpdateOperationsInput | $Enums.activity_type | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    student_num?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
   export type user_bookmarksUpdateWithoutUsersInput = {
@@ -15883,7 +17397,7 @@ export namespace Prisma {
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     user_agent?: NullableStringFieldUpdateOperationsInput | string | null
-    users?: usersUpdateOneRequiredWithoutActivity_logsNestedInput
+    user_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type activity_logsUncheckedUpdateWithoutLibrarianInput = {
