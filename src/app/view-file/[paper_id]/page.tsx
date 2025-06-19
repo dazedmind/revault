@@ -457,6 +457,9 @@ function ViewFile() {
                 <br />
                 <p className="font-bold text-2xl text-gold">Abstract</p>
                 <p>{paper.abstract}</p>{" "}
+
+                <RecentViewers paperId={paper_id as string} theme={theme} />
+
               </div>
             </div>
 
@@ -538,7 +541,7 @@ function ViewFile() {
                 {/* Content Row - Document and Metadata Sidebar */}
                 <div className="flex flex-col lg:flex-row">
                   {/* Document Viewer with Watermark */}
-                  <div className="Document flex-1 relative pdf-viewer-container">
+                  <div className="Document flex-1 relative pdf-viewer-container ">
                     {/* Watermark Overlay */}
                     {userEmail && (
                       <WatermarkOverlay
@@ -724,12 +727,11 @@ function ViewFile() {
                     [&::-webkit-scrollbar-track]:bg-card-foreground
                     [&::-webkit-scrollbar-thumb]:rounded-full
                     [&::-webkit-scrollbar-thumb]:bg-tertiary
-                    h-[400px] scrollbar-hide text-sm  border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 text-justify rounded-md mt-6 h-auto overflow-y-auto`}
+                    h-[400px] scrollbar-hide text-sm  border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 text-justify rounded-md mt-6 min-h-[400px] overflow-y-auto`}
                     >
                       <h1 className="text-xl font-bold mb-2">Abstract</h1>
                       <p className="whitespace-pre-wrap">{paper.abstract}</p>
                     </div>
-                    <RecentViewers paperId={paper_id as string} theme={theme} />
                   </div>
                 </div>
               </div>
