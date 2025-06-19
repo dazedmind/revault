@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import WatermarkOverlay, { useEnhancedAntiCopy } from '../../component/WatermarkOverlay';
 import PDFProtection from '../../component/PDFProtection';
+import RecentViewers from '../../component/RecentViewers';
 import { useRouter } from "next/navigation";
 import NavBar from "../../component/NavBar";
 import AdminNavBar from "../../admin/components/AdminNavBar";
@@ -723,11 +724,12 @@ function ViewFile() {
                     [&::-webkit-scrollbar-track]:bg-card-foreground
                     [&::-webkit-scrollbar-thumb]:rounded-full
                     [&::-webkit-scrollbar-thumb]:bg-tertiary
-                    h-[400px] scrollbar-hide text-sm  border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 text-justify rounded-md mt-6 overflow-y-auto`}
+                    h-[400px] scrollbar-hide text-sm  border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 text-justify rounded-md mt-6 h-auto overflow-y-auto`}
                     >
                       <h1 className="text-xl font-bold mb-2">Abstract</h1>
                       <p className="whitespace-pre-wrap">{paper.abstract}</p>
                     </div>
+                    <RecentViewers paperId={paper_id as string} theme={theme} />
                   </div>
                 </div>
               </div>
