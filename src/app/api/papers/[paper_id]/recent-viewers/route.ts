@@ -1,10 +1,9 @@
 // src/app/api/papers/[paper_id]/recent-viewers/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma"; // ✅ Use the same import as other files
 import jwt from "jsonwebtoken";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
-const prisma = new PrismaClient();
 
 interface JWTPayload {
   user_id: number;
@@ -154,6 +153,7 @@ export async function GET(
       { status: 500 }
     );
   } finally {
-    await prisma.$disconnect();
+    // ✅ Remove prisma disconnect since we're using the centralized instance
+    // The centralized prisma instance handles connection management
   }
 }
