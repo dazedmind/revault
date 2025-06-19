@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
-  output   = "../node_modules/.prisma/client"
+  output   = "../src/generated/prisma"
+  // output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -20,7 +20,7 @@ model users {
   password        String
   created_at      DateTime?
   role            user_role?
-  activity_logs   activity_logs[]
+  user_activity_logs   user_activity_logs[]
   faculty         faculty?
   librarian       librarian?
   students        students?
@@ -112,6 +112,19 @@ model activity_logs {
   employee_id   BigInt
   user_id       Int
   librarian     librarian      @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+}
+
+model user_activity_logs {
+  activity_id Int     @id @default(autoincrement())
+  user_id     Int
+  name        String
+  activity    String
+  created_at  DateTime?
+  activity_type activity_type?
+  status        String?
+  user_agent    String?
+  employee_id   BigInt
+  student_num   BigInt  
   users         users          @relation(fields: [user_id], references: [user_id])
 }
 
