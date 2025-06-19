@@ -136,13 +136,6 @@ const AdminLogin = () => {
                 </button>
               </div>
 
-              {/* Remember Password & Forgot Password */}
-              <div className="flex flex-row justify-end items-end m-5 md:my-4 md:mx-1 mt-5">
-                <p className="font-inter text-yale-blue font-bold text-xs text-align cursor-pointer">
-                  Forgot Password?
-                </p>
-              </div>
-
               {/* Submit Button */}
               <div className="flex flex-row justify-center mt-5">
                 <Button
