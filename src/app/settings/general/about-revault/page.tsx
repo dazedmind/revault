@@ -42,9 +42,8 @@ const AboutRevault = () => {
               Keyboard Warriors
             </span>
           </p>
-          <p className="text-sm font-mono bg-gold/10 text-gold px-2 py-1 rounded inline-block">
-            Version 1.7.0-alpha
-          </p>
+          <p className="text-xs font-bold bg-red-600/20 text-red-600 p-2 rounded-lg mb-2">Beta Testing Version 1.0.0</p>
+
         </div>
 
         <div className="mt-8 p-4 rounded-lg bg-gold/20 border border-gold/20">

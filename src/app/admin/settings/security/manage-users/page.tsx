@@ -3,7 +3,7 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState, ChangeEvent, Suspense, useRef } from "react";
-import { Plus, ChevronDown, ChevronUp } from "lucide-react";
+import { Plus, ChevronDown, ChevronUp, RefreshCcw } from "lucide-react";
 import { toast, Toaster } from "sonner";
 
 import UsersTable from "@/app/admin/components/manage-users/UsersTable";
@@ -477,6 +477,10 @@ function ManageUserContent() {
     }
   };
 
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   // ─── Render ───
   if (!mounted) {
     return (
@@ -530,14 +534,31 @@ function ManageUserContent() {
       {/* ─── Header + Create New Button ─── */}
       <div className="flex justify-between w-auto">
         <h1 className="text-2xl ml-1">Manage Librarians</h1>
-        <button
-          onClick={handleAddClick}
-          className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200"
-        >
-          <span className="hidden md:block text-sm">Create New</span>
-          <Plus className="w-4 h-4 md:hidden" />
-        </button>
+
+        <span className="flex items-center gap-2">
+          <button
+            onClick={handleRefresh}
+            className=" p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200">
+            <RefreshCcw className="w-4 h-4" />
+          </button>
+          <button
+            onClick={handleAddClick}
+            className="bg-gold p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200"
+          >
+            <span className="hidden md:block text-sm">Create New</span>
+            <Plus className="w-4 h-4 md:hidden" />
+          </button>
+        </span>
+ 
       </div>
+
+      {/* <div className="flex justify-end w-auto">
+        <button
+         onClick={handleRefresh}
+         className=" p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200">
+          <RefreshCcw className="w-4 h-4" />
+        </button>
+      </div> */}
 
       <div
         className={`h-0.5 w-auto my-4 ${
