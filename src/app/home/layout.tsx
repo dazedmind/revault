@@ -98,7 +98,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
             <button 
              onClick={() => setShowPopup(false)}
              className="bg-gold p-1 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200">
-              Let's go!
+              Let&apos;s go!
             </button>
           </div>
         </div>
