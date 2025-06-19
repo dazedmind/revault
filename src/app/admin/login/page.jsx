@@ -143,7 +143,7 @@ const AdminLogin = () => {
                   disabled={isLoading}
                   className={`w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-yale-blue-fg/70 to-yale-blue hover:bg-gradient-to-br font-inter cursor-pointer font-bold text-lg text-white ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
-                  {isLoading ? "Please wait..." : "Log In"}
+                  {isLoading ? "Logging in..." : "Log In"}
                 </Button>
               </div>
             </form>

@@ -203,28 +203,31 @@ const DocsCard = (props) => {
               </h3>
 
               {/* Metadata Row */}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex flex-wrap flex-col gap-2 text-sm text-gray-600 dark:text-gray-400">
                 <div className="flex items-center gap-1">
-                  <User className="w-4 h-4" />
-                  <span>{truncateAuthor(props.author)}</span>
+                  <User className="w-4 h-4 hidden md:block" />
+                  <span>{props.author}</span>
                 </div>
-
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>{props.year}</span>
-                </div>
-
-                <div className="flex items-center gap-1">
-                  <Building className="w-4 h-4" />
-                  <span>{props.department}</span>
-                </div>
-
-                {props.course && (
+                
+                <div className="flex flex-row flex-wrap gap-2">
                   <div className="flex items-center gap-1">
-                    <BookOpen className="w-4 h-4" />
-                    <span>{props.course}</span>
+                    <Calendar className="w-4 h-4" />
+                    <span>{props.year}</span>
                   </div>
-                )}
+
+                  <div className="flex items-center gap-1">
+                    <Building className="w-4 h-4" />
+                    <span>{props.department}</span>
+                  </div>
+
+                  {props.course && (
+                    <div className="flex items-center gap-1">
+                      <BookOpen className="w-4 h-4" />
+                      <span>{props.course}</span>
+                    </div>
+                  )}
+                </div>
+       
               </div>
             </div>
 

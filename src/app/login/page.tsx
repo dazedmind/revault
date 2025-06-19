@@ -32,6 +32,8 @@ const LogIn = () => {
   };
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
+
     e.preventDefault();
 
     // Debugging line to log form data before sending it
@@ -142,20 +144,18 @@ const LogIn = () => {
                 </button>
               </div>
 
-    
-
               {/* Submit Button */}
               <div className="flex flex-row justify-center mt-5">
                 <Button
                   type="submit"
-                  className={`w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-[#8F8749] to-[#CFC369] hover:brightness-120 transition-all duration-300 font-inter cursor-pointer font-bold text-md md:text-lg text-white ${isLoading ? 'scale-95 brightness-50' : ''}`}
-                  onClick={() => setIsLoading(true)}
-                  onMouseUp={() => setIsLoading(false)}
-                  onMouseLeave={() => setIsLoading(false)}
+                  disabled={isLoading}
+                  className={`w-68 md:w-xs h-12 rounded-lg bg-gradient-to-r from-[#8F8749] to-[#CFC369] hover:brightness-120 transition-all duration-300 font-inter cursor-pointer font-bold text-md md:text-lg text-white ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >
-                  Log In
+                  {isLoading ? "Logging in..." : "Log In"}
                 </Button>
               </div>
+               
+        
             </form>
           </div>
 
