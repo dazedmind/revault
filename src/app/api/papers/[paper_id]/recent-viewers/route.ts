@@ -1,9 +1,11 @@
 // src/app/api/papers/[paper_id]/recent-viewers/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
+import { user_activity_logs } from "@prisma/client";  
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
+const prisma = new PrismaClient();
 
 interface JWTPayload {
   user_id: number;
