@@ -21,6 +21,7 @@ model users {
   created_at         DateTime?
   role               user_role?
   user_activity_logs user_activity_logs[]
+  activity_logs      activity_logs[]
   faculty            faculty?
   librarian          librarian?
   students           students?
@@ -54,19 +55,20 @@ model librarian {
 }
 
 model papers {
-  paper_id       Int              @id @default(autoincrement())
-  title          String?          @unique
-  author         String?
-  year           Int?
-  department     String?
-  keywords       String[]
-  course         String?
-  abstract       String?
-  created_at     DateTime?
-  updated_at     DateTime?
-  paper_url      String?
-  paper_metadata paper_metadata[]
-  user_bookmarks user_bookmarks[]
+  paper_id           Int                  @id @default(autoincrement())
+  title              String?              @unique
+  author             String?
+  year               Int?
+  department         String?
+  keywords           String[]
+  course             String?
+  abstract           String?
+  created_at         DateTime?
+  updated_at         DateTime?
+  paper_url          String?
+  paper_metadata     paper_metadata[]
+  user_bookmarks     user_bookmarks[]
+  user_activity_logs user_activity_logs[]
 }
 
 model paper_metadata {
@@ -112,11 +114,13 @@ model activity_logs {
   employee_id   BigInt
   user_id       Int
   librarian     librarian      @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+  users         users          @relation(fields: [user_id], references: [user_id])
 }
 
 model user_activity_logs {
   activity_id   Int            @id @default(autoincrement())
   user_id       Int
+  paper_id      Int
   name          String
   activity      String
   created_at    DateTime?
@@ -126,6 +130,7 @@ model user_activity_logs {
   employee_id   BigInt
   student_num   BigInt
   users         users          @relation(fields: [user_id], references: [user_id])
+  papers        papers         @relation(fields: [paper_id], references: [paper_id])
 }
 
 enum activity_type {

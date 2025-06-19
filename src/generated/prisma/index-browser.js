@@ -211,6 +211,7 @@ exports.Prisma.Activity_logsScalarFieldEnum = {
 exports.Prisma.User_activity_logsScalarFieldEnum = {
   activity_id: 'activity_id',
   user_id: 'user_id',
+  paper_id: 'paper_id',
   name: 'name',
   activity: 'activity',
   created_at: 'created_at',

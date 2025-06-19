@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { GoBookmark, GoEye, GoPencil, GoBookmarkFill } from "react-icons/go";
 import { Calendar, User, Building, BookOpen } from "lucide-react";
+import { logUserActivity, DOCUMENT_ACTIVITIES, ACTIVITY_TYPES } from "../utils/activityLogger";
 
 const DocsCard = (props) => {
   // ❌ REMOVED: No more papers state and API fetching
@@ -18,6 +19,38 @@ const DocsCard = (props) => {
   const router = useRouter();
   const { theme, setTheme } = useTheme("light");
   const { paper_id, savedFromProfile = false, viewFromAdmin = false } = props;
+
+  // Helper function to log document interactions
+  const logDocumentInteraction = async (activity, activityType) => {
+    try {
+      console.log("🔍 DocsCard: Attempting to log activity:", { activity, activityType, paper_id: props.paper_id, title: props.title });
+      
+      const success = await logUserActivity({
+        activity,
+        activity_type: activityType,
+        paper_id: props.paper_id,
+        paper_title: props.title,
+      });
+
+      if (success) {
+        console.log("✅ DocsCard: Activity logged successfully");
+      } else {
+        console.log("⚠️ DocsCard: Activity logging returned false");
+      }
+    } catch (error) {
+      console.error("❌ DocsCard: Failed to log document interaction:", error);
+      // Don't block user interaction if logging fails
+    }
+  };
+
+  // Handle read button click with activity logging
+  const handleReadButtonClick = async (e) => {
+    // Log the read button click as VIEW_DOCUMENT
+    await logDocumentInteraction(
+      DOCUMENT_ACTIVITIES.CLICK_READ_BUTTON,
+      ACTIVITY_TYPES.VIEW_DOCUMENT
+    );
+  };
 
   // ✅ KEPT: Only bookmark-related functionality (component-specific)
   const checkBookmarkStatus = async () => {
@@ -221,10 +254,10 @@ const DocsCard = (props) => {
               {truncateText(props.description)}
             </p>
 
-            {/* Action Buttons */}
+            {/* Action Buttons - Original Structure with Activity Logging */}
             <div className="flex items-center justify-between">
               <div className="flex items-center w-full md:w-auto gap-2">
-                <Link href={`/view-file/${props.paper_id}`} className="flex-1">
+                <Link href={`/view-file/${props.paper_id}`} className="flex-1" onClick={handleReadButtonClick}>
                   <button className="cursor-pointer flex items-center w-full justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 text-white rounded-lg font-medium transition-all duration-200 hover:shadow-lg hover:scale-105">
                     <GoEye className="text-lg" />
                     <span>Read</span>
