@@ -44,6 +44,13 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
         if (payload.exp * 1000 > Date.now()) {
           setUserType(storedType);
           setAuthed(true);
+          
+          // Check if popup has been shown this session
+          const popupShown = sessionStorage.getItem("welcomePopupShown");
+          if (!popupShown) {
+            setShowPopup(true);
+            sessionStorage.setItem("welcomePopupShown", "true");
+          }
         } else {
           throw new Error("expired");
         }
@@ -59,10 +66,9 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
     checkAuth();
   }, [router]);
 
-  // Prevent theme changes from triggering auth loading
+  // Remove the theme-based popup trigger
   useEffect(() => {
     if (authed) {
-      setShowPopup(true);
       setIsLoading(false);
     }
   }, [theme, authed]);
