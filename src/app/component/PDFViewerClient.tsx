@@ -355,34 +355,34 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       );
     };
 
-    const preventContextMenu = (e: MouseEvent) => {
-      const target = e.target as Element;
+    // const preventContextMenu = (e: MouseEvent) => {
+    //   const target = e.target as Element;
       
-      // Allow right-click on toolbar elements
-      if (isToolbarElement(target)) {
-        return true;
-      }
+    //   // Allow right-click on toolbar elements
+    //   if (isToolbarElement(target)) {
+    //     return true;
+    //   }
       
-      e.preventDefault();
+    //   e.preventDefault();
       
-      // Log security event
-      fetch('/api/log-security-event', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getToken()}`
-        },
-        body: JSON.stringify({
-          event: 'RIGHT_CLICK_BLOCKED',
-          userEmail,
-          documentId: paperId,
-          timestamp: new Date().toISOString(),
-          details: `Right-click blocked on page ${currentPage} (react-pdf secure viewer)`
-        })
-      }).catch(() => {});
+    //   // Log security event
+    //   fetch('/api/log-security-event', {
+    //     method: 'POST',
+    //     headers: { 
+    //       'Content-Type': 'application/json',
+    //       'Authorization': `Bearer ${getToken()}`
+    //     },
+    //     body: JSON.stringify({
+    //       event: 'RIGHT_CLICK_BLOCKED',
+    //       userEmail,
+    //       documentId: paperId,
+    //       timestamp: new Date().toISOString(),
+    //       details: `Right-click blocked on page ${currentPage} (react-pdf secure viewer)`
+    //     })
+    //   }).catch(() => {});
       
-      return false;
-    };
+    //   return false;
+    // };
 
     const preventDragStart = (e: DragEvent) => {
       const target = e.target as Element;
@@ -442,13 +442,13 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       }
     };
 
-    document.addEventListener('contextmenu', preventContextMenu);
+    // document.addEventListener('contextmenu', preventContextMenu);
     document.addEventListener('dragstart', preventDragStart);
     document.addEventListener('selectstart', preventSelectStart);
     document.addEventListener('keydown', preventKeyboardShortcuts);
 
     return () => {
-      document.removeEventListener('contextmenu', preventContextMenu);
+      // document.removeEventListener('contextmenu', preventContextMenu);
       document.removeEventListener('dragstart', preventDragStart);
       document.removeEventListener('selectstart', preventSelectStart);
       document.removeEventListener('keydown', preventKeyboardShortcuts);
@@ -551,7 +551,7 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       `}</style>
 
       {/* Toolbar */}
-      <div className={`toolbar flex items-center justify-between p-4 border-b w-3xl ${
+      <div className={`toolbar flex items-center justify-between p-4 border-b w-auto md:w-3xl ${
         theme === 'light' ? 'bg-white border-gray-300' : 'bg-dusk border-white-5'
       }`}>
         {/* Navigation */}
@@ -564,8 +564,8 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
             <ChevronLeft className="w-5 h-5" />
           </button>
           
-          <span className="px-3 py-1 text-sm">
-            Page {currentPage} of {numPages}
+          <span className=" py-1 text-sm">
+             {currentPage} of {numPages}
           </span>
           
           <button
@@ -578,8 +578,9 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
         </div>
 
         {/* Page Input */}
-        <div className="flex items-center space-x-2">
-          <span className="text-sm">Go to page:</span>
+        <div className="flex items-center gap-1">
+          <span className="text-sm hidden md:block">Go to page:</span>
+          <span className="text-sm block md:hidden">Page:</span>
           <input
             type="number"
             min={1}
@@ -591,12 +592,12 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
                 goToPage(page);
               }
             }}
-            className="w-16 px-2 py-1 text-sm border rounded bg-accent"
+            className="w-12 px-2 py-1 text-sm border rounded bg-accent"
           />
         </div>
 
         {/* Zoom Controls */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center">
           <button
             onClick={zoomOut}
             disabled={scale <= 0.5}
@@ -615,23 +616,6 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
             className="p-2 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200"
           >
             <ZoomIn className="w-5 h-5" />
-          </button>
-
-          <button
-            onClick={rotateClockwise}
-            className="p-2 rounded hover:bg-gray-200"
-          >
-            <RotateCw className="w-5 h-5" />
-          </button>
-
-          <button
-            onClick={() => {
-              resetZoom();
-              resetRotation();
-            }}
-            className="px-3 py-1 text-sm rounded hover:bg-gray-200"
-          >
-            Reset
           </button>
         </div>
       </div>
