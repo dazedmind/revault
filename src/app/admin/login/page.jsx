@@ -21,6 +21,11 @@ const AdminLogin = () => {
     password: "",
   });
 
+  const handleCloseErrorModal = () => {
+    setIsLoading(false);
+    setShowErrorModal(false);
+  };
+
   // Handle Input Changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -158,7 +163,7 @@ const AdminLogin = () => {
             <p className="mb-6">{errorMessage}</p>
             <button
               className="cursor-pointer px-6 py-2 bg-yale-blue hover:brightness-105 text-white rounded-lg font-semibold"
-              onClick={() => setShowErrorModal(false)}
+              onClick={handleCloseErrorModal}
             >
               Okay
             </button>
