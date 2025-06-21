@@ -1,31 +1,38 @@
+// next.config.mjs
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config) => {
-    // Disable problematic aliases
-    config.resolve.alias.canvas = false;
-    config.resolve.alias.encoding = false;
- 
-    
+  serverExternalPackages: ['canvas', 'pdfjs-dist'],
+  experimental: {
+    esmExternals: 'loose', // Allow ESM packages
+  },
+  webpack: (config, { isServer }) => {
+    // Handle canvas and other binary modules
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      canvas: false,
+    };
+
+    // Externalize problematic packages
+    if (isServer) {
+      config.externals = [...(config.externals || []), 'canvas', 'pdfjs-dist'];
+    }
+
+    // Handle .node files
+    config.module.rules.push({
+      test: /\.node$/,
+      use: 'raw-loader',
+    });
+
+    // Handle ESM packages
+    config.resolve.extensionAlias = {
+      '.js': ['.ts', '.tsx', '.js', '.jsx'],
+    };
+
     return config;
   },
-
   images: {
-    remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-      },
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
+    unoptimized: process.env.NODE_ENV === 'production',
   },
-  api: {
-    bodyParser: {
-      sizeLimit: '40mb',
-    },
-  },
-};
+}
 
-export default nextConfig;
+export default nextConfig
