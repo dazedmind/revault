@@ -7,7 +7,7 @@
     "build": "npm install --include=optional sharp && next build",
     "build:next": "next build",
     "start": "next start",
-    "postinstall": "npm rebuild sharp || echo 'Sharp rebuild failed, continuing...'"
+    "postinstall": "npm rebuild sharp || echo 'Sharp rebuild failed, continuing...' && npx prisma generate --schema=./prisma/schema.prisma"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.6",
