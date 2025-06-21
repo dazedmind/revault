@@ -62,7 +62,7 @@ function ViewFile() {
     }
   };
 
-  // useAntiCopy();
+  useAntiCopy();
 
   const handleUnbookmark = async (paperId) => {
     const token = localStorage.getItem("authToken");
