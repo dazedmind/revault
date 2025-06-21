@@ -248,21 +248,6 @@ const SecureImagePDFViewer: React.FC<SecureImagePDFViewerProps> = ({
   // Page Load Success
   const onPageLoadSuccess = () => {
     console.log('✅ Page', currentPage, 'loaded successfully');
-    // Log page view
-    fetch('/api/log-security-event', {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getToken()}`
-      },
-      body: JSON.stringify({
-        event: 'SECURE_PAGE_VIEW',
-        userEmail,
-        documentId: paperId,
-        timestamp: new Date().toISOString(),
-        details: `Viewed page ${currentPage} in secure mode`
-      })
-    }).catch(() => {});
   };
 
   // Navigation functions
