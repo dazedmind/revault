@@ -194,4 +194,23 @@ body {
   .pdf-viewer-container {
     pointer-events: none;
   }
+
+  @media print {
+    .watermark-print {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) rotate(45deg) !important;
+      font-size: 24px !important;
+      color: #000 !important;
+      opacity: 0.3 !important;
+      z-index: 9999 !important;
+      pointer-events: none !important;
+    }
+    
+    /* Hide other elements that shouldn't print */
+    .no-print {
+      display: none !important;
+    }
+  }
 }

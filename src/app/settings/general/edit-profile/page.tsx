@@ -152,7 +152,7 @@ function EditProfileContent() {
 
   useEffect(() => {
     fetchProfile();
-  }, [mounted]);
+  }, [mounted, fetchProfile]);
 
   if (!mounted) {
     return null;

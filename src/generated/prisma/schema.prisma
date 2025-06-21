@@ -145,6 +145,8 @@ enum activity_type {
   DELETE_DOCUMENT
   UPDATE_DOCUMENT
   UPLOAD_DOCUMENT
+  SECURITY_VIOLATION
+  PRINT_DOCUMENT
 }
 
 enum user_role {

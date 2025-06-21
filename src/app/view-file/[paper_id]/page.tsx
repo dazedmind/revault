@@ -1,8 +1,5 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import WatermarkOverlay, { useEnhancedAntiCopy } from '../../component/WatermarkOverlay';
-import PDFProtection from '../../component/PDFProtection';
-import RecentViewers from '../../component/RecentViewers';
 import { useRouter } from "next/navigation";
 import NavBar from "../../component/NavBar";
 import AdminNavBar from "../../admin/components/AdminNavBar";
@@ -14,9 +11,6 @@ import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 import { useParams } from "next/navigation";
 import {
-  Link,
-  Download,
-  ExternalLink,
   User,
   BookOpen,
   Calendar,
@@ -25,7 +19,6 @@ import {
 } from "lucide-react";
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
-import useAntiCopy from "../../hooks/useAntiCopy";
 import {
   GoBookmark,
   GoBookmarkSlash,
@@ -34,48 +27,24 @@ import {
   GoPencil,
   GoSun,
 } from "react-icons/go";
-import MobileFriendlyPDFViewer from "../../component/MobileFriendlyPDFViewer";
-
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      const userAgent = navigator.userAgent || navigator.vendor;
-      return /android|iphone|ipad|ipod|blackberry|iemobile/i.test(
-        userAgent.toLowerCase(),
-      );
-    };
-
-    setIsMobile(checkMobile());
-  }, []);
-
-  return isMobile;
-};
+import SecureImagePDFViewer from "../../component/SecureImagePDFViewer";
+import RecentViewers from '../../component/RecentViewers';
+import useAntiCopy from "@/app/hooks/useAntiCopy";
 
 function ViewFile() {
   const { theme, setTheme } = useTheme();
   const [showMetadata, setShowMetadata] = useState(false);
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [userType, setUserType] = useState(null);
-  const isMobile = useIsMobile();
   const [paper, setPaper] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [pdfError, setPdfError] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
-  const [selectedPaperIndex, setSelectedPaperIndex] = useState(null);
-  const { paper_id } = useParams(); // grab it from URL
-
+  const { paper_id } = useParams();
   const [viewFromAdmin, setViewFromAdmin] = useState(null);
 
-  // Enable enhanced anti-copy protection
-  useEnhancedAntiCopy(userEmail, paper_id as string);
-  useAntiCopy();
-  
   const decode = (token: string) => {
     try {
       const base64Url = token.split(".")[1];
@@ -92,6 +61,8 @@ function ViewFile() {
       return null;
     }
   };
+
+  useAntiCopy();
 
   const handleUnbookmark = async (paperId) => {
     const token = localStorage.getItem("authToken");
@@ -168,32 +139,15 @@ function ViewFile() {
     }
   }, [paper_id]);
 
-  // Get the dynamic PDF URL
-  const getPdfUrl = () => {
-    if (!paper) return null;
-
-    // Priority order for PDF URL:
-    // 1. paper_url from database
-    // 2. file_path from database
-    // 3. API endpoint for download
-    // 4. Fallback to sample PDF
-
-    if (paper.paper_url) {
-      return paper.paper_url;
-    } else if (paper.file_path) {
-      return paper.file_path;
-    } else {
-      return `/api/papers/${paper_id}/download`;
-    }
-  };
-
   useEffect(() => {
+    
     const checkAuth = () => {
       const token = localStorage.getItem("authToken");
       const storedUserType = localStorage.getItem("userType");
 
       if (!token) {
         window.location.href = "/login";
+        return;
       }
 
       if (storedUserType === "STUDENT" || storedUserType === "FACULTY") {
@@ -202,34 +156,28 @@ function ViewFile() {
         setViewFromAdmin(true);
       }
 
-      if (token) {
-        try {
-          const decoded = decode(token);
-          const currentTime = Date.now() / 1000;
+      try {
+        const decoded = decode(token);
+        const currentTime = Date.now() / 1000;
 
-          if (decoded.exp > currentTime) {
-            setIsAuthenticated(true);
-            setUserType(storedUserType);
-            // Extract user information for watermarking
-            setUserEmail(decoded.email || '');
-            setUserName(decoded.name || `${decoded.first_name || ''} ${decoded.last_name || ''}`.trim());
-          } else {
-            alert("Token expired. Please log in again.");
-            localStorage.removeItem("authToken");
-            localStorage.removeItem("userType");
-            setIsAuthenticated(false);
-            router.push("/login");
-          }
-        } catch (error) {
-          alert("Invalid token. Please log in again.");
-          console.error("Error decoding token:", error);
+        if (decoded.exp > currentTime) {
+          setIsAuthenticated(true);
+          setUserType(storedUserType);
+          // Extract user information for watermarking
+          setUserEmail(decoded.email || '');
+          setUserName(decoded.name || `${decoded.first_name || ''} ${decoded.last_name || ''}`.trim());
+        } else {
+          alert("Token expired. Please log in again.");
           localStorage.removeItem("authToken");
           localStorage.removeItem("userType");
           setIsAuthenticated(false);
           router.push("/login");
         }
-      } else {
-        alert("No token found. Please log in.");
+      } catch (error) {
+        alert("Invalid token. Please log in again.");
+        console.error("Error decoding token:", error);
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userType");
         setIsAuthenticated(false);
         router.push("/login");
       }
@@ -241,16 +189,20 @@ function ViewFile() {
       try {
         console.log("Fetching paper with ID:", paper_id);
         const token = localStorage.getItem("authToken");
+        
         const res = await fetch(`/api/paper/${paper_id}`, {
+          method: 'GET',
           cache: "no-store",
           headers: {
             "Cache-Control": "no-cache",
+            "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` }),
           },
         });
 
         if (!res.ok) {
-          throw new Error(`Failed to fetch paper: ${res.statusText}`);
+          console.error(`HTTP Error: ${res.status} ${res.statusText}`);
+          throw new Error(`Failed to fetch paper: ${res.status} ${res.statusText}`);
         }
 
         const data = await res.json();
@@ -260,7 +212,8 @@ function ViewFile() {
           throw new Error("No paper data received");
         }
 
-        setPaper({
+        // Clean and set paper data
+        const cleanPaper = {
           ...data,
           paper_id: data.paper_id || "",
           title: data.title?.replace(/"/g, "") || "",
@@ -273,16 +226,18 @@ function ViewFile() {
           course: data.course?.replace(/"/g, "") || "",
           department: data.department?.replace(/"/g, "") || "",
           abstract: data.abstract?.replace(/"/g, "") || "",
-          // Keep the original PDF URL fields
+          // Keep the original PDF URL fields - don't modify these
           paper_url: data.paper_url || null,
           file_path: data.file_path || null,
-        });
+        };
+
+        setPaper(cleanPaper);
 
         // Check bookmark status after paper data is loaded
         await checkBookmarkStatus();
       } catch (err) {
         console.error("Error fetching paper:", err);
-        toast.error("Failed to load paper data");
+        toast.error(`Failed to load paper data: ${err.message}`);
       } finally {
         setLoading(false);
       }
@@ -293,19 +248,9 @@ function ViewFile() {
     }
   }, [paper_id, router, checkBookmarkStatus]);
 
-  // Handle PDF load error
-  const handlePdfError = () => {
-    setPdfError(true);
-    toast.error("Failed to load PDF. The file may not be available.");
-  };
-
   if (loading) {
     return <LoadingScreen />;
   }
-
-  // Get the PDF URL for display
-  const pdfUrl = getPdfUrl();
-  const pdfDisplayUrl = pdfUrl ? `${pdfUrl}#toolbar=0` : null;
 
   return (
     <div className="dark:bg-secondary h-auto">
@@ -319,15 +264,8 @@ function ViewFile() {
 
       <ProtectedRoute>
         <main className="w-full h-auto">
-          {userEmail && (
-            <PDFProtection
-              userEmail={userEmail}
-              documentId={paper_id as string}
-              enabled={true}
-            />
-          )}
-          
           <div className="flex flex-col md:flex-row gap-6 relative">
+            {/* Metadata Sidebar Overlay */}
             {showMetadata && (
               <div
                 className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
@@ -335,6 +273,7 @@ function ViewFile() {
               />
             )}
 
+            {/* Metadata Sidebar */}
             <div
               className={`fixed top-0 left-0 w-full md:w-[800px] h-screen z-50 p-4 md:p-10 shadow-lg 
                 transform transition-transform duration-300 ease-in-out
@@ -364,10 +303,11 @@ function ViewFile() {
                       {paper.paper_id}
                     </p>
                   </div>
+                  
                   <div className="flex flex-col gap-1">
                     <p className="text-lg">
-                      <strong>Paper Title:</strong>
-                      {paper.id} {paper.title}
+                      <strong>Paper Title: </strong>
+                      {paper.title}
                     </p>
                   </div>
 
@@ -446,22 +386,19 @@ function ViewFile() {
                     </div>
                   </div>
                 </div>
+                
                 <br />
                 <p className="font-bold text-2xl text-gold">Abstract</p>
-                <p>{paper.abstract}</p>{" "}
+                <p>{paper.abstract}</p>
 
                 <RecentViewers paperId={paper_id as string} theme={theme} />
-
               </div>
             </div>
 
             {/* File Menu and Main Content */}
             <div className="flex flex-col-reverse md:flex-row">
-              <aside className="flex flex-row md:flex-col justify-center md:justify-start gap-4 w-auto h-auto dark:bg-secondary p-4 ">
-                {/* <h1 className="text-2xl font-bold  hidden md:block">
-                  Menu
-                </h1> */}
-
+              {/* File Menu Sidebar */}
+              <aside className="flex flex-row md:flex-col justify-center md:justify-start gap-4 w-auto h-auto dark:bg-secondary p-4">
                 <FileMenuButton
                   icon={<GoInfo className="text-2xl text-yale-blue" />}
                   label="View Details"
@@ -483,13 +420,11 @@ function ViewFile() {
                 />
 
                 {viewFromAdmin && (
-                  <>
-                    <FileMenuButton
-                      icon={<GoPencil className="text-xl text-yale-blue" />}
-                      label="Edit Paper"
-                      onClick={() => {}}
-                    />
-                  </>
+                  <FileMenuButton
+                    icon={<GoPencil className="text-xl text-yale-blue" />}
+                    label="Edit Paper"
+                    onClick={() => {}}
+                  />
                 )}
 
                 {!viewFromAdmin &&
@@ -517,10 +452,10 @@ function ViewFile() {
                   )}
               </aside>
 
-              {/* Main Content Area with Title Header */}
+              {/* Main Content Area */}
               <div className="flex flex-col flex-1">
                 {/* Title Header */}
-                <span>
+                <div>
                   <p className="flex flex-col text-xl md:text-2xl font-bold bg-gold text-white p-6">
                     {paper.title}
                     <span className="flex gap-2 items-center text-sm font-normal text-gold-fg">
@@ -528,131 +463,37 @@ function ViewFile() {
                       {paper.author}
                     </span>
                   </p>
-                </span>
+                </div>
 
                 {/* Content Row - Document and Metadata Sidebar */}
                 <div className="flex flex-col lg:flex-row">
-                  {/* Document Viewer with Watermark */}
-                  <div className="Document flex-1 relative pdf-viewer-container ">
-                    {/* Watermark Overlay */}
-                    {userEmail && (
-                      <WatermarkOverlay
+                  {/* Document Viewer - ONLY SecureImagePDFViewer */}
+                  <div className="Document flex-1 relative pdf-viewer-container">
+                    {userEmail && paper_id ? (
+                      <SecureImagePDFViewer
+                        paperId={paper_id as string}
                         userEmail={userEmail}
-                        userName={userName}
-                        documentId={paper_id as string}
                         theme={theme}
                       />
-                    )}
-                    
-                    {isMobile ? (
-                      <MobileFriendlyPDFViewer
-                        pdfUrl={pdfUrl}
-                        pdfError={pdfError}
-                        handlePdfError={handlePdfError}
-                        theme={theme}
-
-                      />
-                    ) : // Desktop: Original object tag code
-                    pdfDisplayUrl && !pdfError ? (
-                      <object
-                        data={pdfDisplayUrl}
-                        type="application/pdf"
-                        width="100%"
-                        height="100%"
-                        className="h-screen w-screen md:w-3xl pointer-events-none"
-                        onError={handlePdfError}
-                        tabIndex={-1}
-                        onContextMenu={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          return false;
-                        }} // This disables right-click
-                        onMouseDown={(e) => e.preventDefault()} // This disables double-click text selection
-                        onDragStart={(e) => e.preventDefault()} // This disables drag operations
-                      >
-                        {/* Fallback content when PDF can't be displayed */}
-                        <div className="flex flex-col items-center justify-center h-full p-8 bg-gray-100 dark:bg-gray-800">
-                          <div className="text-center">
-                            <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                              <Download className="w-8 h-8 text-red-600 dark:text-red-400" />
-                            </div>
-                            <h3 className="text-lg font-semibold mb-2">
-                              PDF Viewer Not Supported
-                            </h3>
-                            <p className="text-gray-600 dark:text-gray-400 mb-4">
-                              Your browser doesn&apos;t support inline PDF
-                              viewing.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                              <a
-                                href={pdfUrl}
-                                download
-                                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                              >
-                                Download PDF
-                              </a>
-                              <a
-                                href={pdfUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                              >
-                                Open in New Tab
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </object>
                     ) : (
-                      // Error state for desktop
+                      // Fallback when user is not authenticated
                       <div className="flex flex-col items-center justify-center h-screen p-8 bg-gray-100 dark:bg-gray-800">
                         <div className="text-center">
-                          {pdfError ? (
-                            <>
-                              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <ExternalLink className="w-8 h-8 text-red-600 dark:text-red-400" />
-                              </div>
-                              <h3 className="text-lg font-semibold mb-2">
-                                PDF Not Available
-                              </h3>
-                              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                                The PDF file could not be loaded. It may have
-                                been moved or deleted.
-                              </p>
-                            </>
-                          ) : (
-                            <>
-                              <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Download className="w-8 h-8 text-gray-500" />
-                              </div>
-                              <h3 className="text-lg font-semibold mb-2">
-                                No PDF File Available
-                              </h3>
-                              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                                This document doesn&apos;t have an associated
-                                PDF file.
-                              </p>
-                            </>
-                          )}
-                          <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                            <button
-                              onClick={() => router.back()}
-                              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                            >
-                              Go Back
-                            </button>
-                            {pdfError && (
-                              <button
-                                onClick={() => {
-                                  setPdfError(false);
-                                  window.location.reload();
-                                }}
-                                className="bg-gold hover:brightness-110 text-white px-4 py-2 rounded-lg transition-all duration-300"
-                              >
-                                Retry
-                              </button>
-                            )}
+                          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <User className="w-8 h-8 text-red-600 dark:text-red-400" />
                           </div>
+                          <h3 className="text-lg font-semibold mb-2">
+                            Authentication Required
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-400 mb-4">
+                            Please ensure you are properly logged in to view this document.
+                          </p>
+                          <button
+                            onClick={() => window.location.reload()}
+                            className="bg-gold hover:brightness-110 text-white px-4 py-2 rounded-lg transition-all duration-300"
+                          >
+                            Refresh Page
+                          </button>
                         </div>
                       </div>
                     )}
@@ -699,7 +540,7 @@ function ViewFile() {
                           .map((keyword, keywordIndex) => (
                             <span
                               key={keywordIndex}
-                              className={`flex gap-1 items-center px-3 py-1 bg-yale-blue/10 text-yale-blue  rounded-md text-sm`}
+                              className={`flex gap-1 items-center px-3 py-1 bg-yale-blue/10 text-yale-blue rounded-md text-sm`}
                             >
                               <Tag className="w-3 h-3" />
                               {keyword}
@@ -714,12 +555,12 @@ function ViewFile() {
 
                     <div
                       className={`
-                    [&::-webkit-scrollbar]:w-2
-                    [&::-webkit-scrollbar-track]:rounded-full
-                    [&::-webkit-scrollbar-track]:bg-card-foreground
-                    [&::-webkit-scrollbar-thumb]:rounded-full
-                    [&::-webkit-scrollbar-thumb]:bg-tertiary
-                    h-[400px] scrollbar-hide text-sm  border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 text-justify rounded-md mt-6 min-h-[400px] overflow-y-auto`}
+                      [&::-webkit-scrollbar]:w-2
+                      [&::-webkit-scrollbar-track]:rounded-full
+                      [&::-webkit-scrollbar-track]:bg-card-foreground
+                      [&::-webkit-scrollbar-thumb]:rounded-full
+                      [&::-webkit-scrollbar-thumb]:bg-tertiary
+                      h-[400px] scrollbar-hide text-sm border-2 ${theme === "light" ? "border-white-50 bg-tertiary" : "border-white-5"} p-4 text-justify rounded-md mt-6 min-h-[400px] overflow-y-auto`}
                     >
                       <h1 className="text-xl font-bold mb-2">Abstract</h1>
                       <p className="whitespace-pre-wrap">{paper.abstract}</p>
