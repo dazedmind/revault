@@ -8,6 +8,7 @@ import { renderToStream, DocumentProps } from "@react-pdf/renderer";
 import ActivityLogsReport from "@/lib/ActivityLogsReport";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
 
@@ -169,6 +170,8 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     );
   } finally {
-    await prisma.$disconnect();
+    if (process.env.NODE_ENV !== "development") {
+      await prisma.$disconnect();
+    }
   }
 }
