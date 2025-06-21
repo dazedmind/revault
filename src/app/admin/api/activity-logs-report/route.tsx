@@ -1,14 +1,43 @@
-// File: src/app/admin/api/activity-logs-report/route.tsx
+// src/app/admin/api/activity-logs-report/route.tsx
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
-import React from "react";
-import { renderToStream, DocumentProps } from "@react-pdf/renderer";
-import ActivityLogsReport from "@/lib/ActivityLogsReport";
 
+// Next.js 15 configuration
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+// Dynamic import for React PDF to avoid build issues
+const generatePDFReport = async (logs: any[], filters: any, total: number, page: number, limit: number) => {
+  try {
+    // Dynamic imports to avoid build-time issues
+    const React = await import("react");
+    const { renderToStream } = await import("@react-pdf/renderer");
+    const { default: ActivityLogsReport } = await import("@/lib/ActivityLogsReport");
+
+    const pdfElement = ActivityLogsReport({
+      logs,
+      filters,
+      total,
+      page,
+      limit,
+    }) as React.ReactElement;
+
+    const pdfStream = await renderToStream(pdfElement);
+    const buffers: Uint8Array[] = [];
+    
+    for await (const chunk of pdfStream) {
+      buffers.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+    }
+    
+    return Buffer.concat(buffers);
+  } catch (error) {
+    console.error("PDF generation error:", error);
+    throw error;
+  }
+};
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
 
@@ -58,7 +87,7 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     const searchParams = url.searchParams;
 
-    // 3) Parse query params (same as get-logs route)
+    // 3) Parse query params
     const userIdParam = searchParams.get("userId") || "all";
     const activityTypesParam = searchParams.get("activityTypes") || "all";
     const page = parseInt(searchParams.get("page") || "1", 10);
@@ -75,7 +104,7 @@ export async function GET(request: NextRequest) {
       skip,
     });
 
-    // 4) Build Prisma where-clause (same as get-logs route)
+    // 4) Build Prisma where-clause
     const where: any = {};
     if (userIdParam !== "all") {
       where.user_id = Number(userIdParam);
@@ -134,26 +163,10 @@ export async function GET(request: NextRequest) {
       dateRange: "Current filters applied",
     };
 
-    // 8) Create PDF element
-    const pdfElement = (
-      <ActivityLogsReport
-        logs={formattedLogs}
-        filters={filters}
-        total={total}
-        page={page}
-        limit={limit}
-      />
-    ) as React.ReactElement<DocumentProps>;
+    // 8) Generate PDF using dynamic imports
+    const pdfBuffer = await generatePDFReport(formattedLogs, filters, total, page, limit);
 
-    // 9) Render to stream and buffer
-    const pdfStream = await renderToStream(pdfElement);
-    const buffers: Uint8Array[] = [];
-    for await (const chunk of pdfStream) {
-      buffers.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-    }
-    const pdfBuffer = Buffer.concat(buffers);
-
-    // 10) Return PDF
+    // 9) Return PDF
     const headers: Record<string, string> = {
       "Content-Type": "application/pdf",
       "Content-Disposition": download
