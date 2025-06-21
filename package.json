@@ -67,7 +67,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@prisma/client": "^6.7.0",
+    "@prisma/client": "^6.10.1",
     "@tailwindcss/postcss": "^4.1.10",
     "@types/node": "22.13.10",
     "@types/react": "19.0.10",
@@ -78,7 +78,7 @@
     "npm": "^11.3.0",
     "postcss": "^8.5.6",
     "prisma": "^6.7.0",
-    "tailwindcss": "^4.0.12",
+    "tailwindcss": "^4.1.10",
     "typescript": "5.8.2"
   },
   "optionalDependencies": {
