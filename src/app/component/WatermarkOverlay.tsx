@@ -44,6 +44,37 @@ const WatermarkOverlay: React.FC<WatermarkProps> = ({
     });
   };
 
+  const printStyles = `
+  @media print {
+    .watermark-overlay {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 100px,
+        rgba(0,0,0,0.1) 100px,
+        rgba(0,0,0,0.1) 200px
+      ) !important;
+      z-index: 9999 !important;
+    }
+    
+    .watermark-text {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) rotate(45deg) !important;
+      font-size: 48px !important;
+      color: #000 !important;
+      opacity: 0.2 !important;
+      font-weight: bold !important;
+    }
+  }
+`;
+
   // ✅ Fix SVG watermark color and opacity for both themes
   const getSVGWatermark = () => {
     const color = theme === 'light' ? '000000' : 'ffffff';
@@ -151,100 +182,11 @@ const WatermarkOverlay: React.FC<WatermarkProps> = ({
         </div>
       ))}
 
-      {/* ✅ Additional Protection: Semi-transparent overlay for extra visibility */}
-      <div className={`absolute inset-0 pointer-events-none z-5 ${
-        theme === 'light' 
-          ? 'bg-gray-50/5' 
-          : 'bg-gray-900/10'
-      }`} />
+
     </>
   );
 };
 
-// Enhanced useAntiCopy hook for additional protection
-export const useEnhancedAntiCopy = (userEmail: string, documentId: string) => {
-  useEffect(() => {
-    // Screenshot detection (limited but some coverage)
-    const detectScreenshot = () => {
-      // Log potential screenshot attempt
-      fetch('/api/log-security-event', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event: 'POTENTIAL_SCREENSHOT',
-          userEmail,
-          documentId,
-          timestamp: new Date().toISOString(),
-          userAgent: navigator.userAgent
-        })
-      }).catch(() => {});
-    };
 
-    // Detect print screen key
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'PrintScreen') {
-        detectScreenshot();
-        // Show warning
-        alert('Screenshots are monitored and logged for security purposes.');
-      }
-    };
-
-    // Detect when page loses focus (potential screenshot)
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        detectScreenshot();
-      }
-    };
-
-    // Prevent right-click context menu
-    const preventContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-      return false;
-    };
-
-    // Prevent drag and drop
-    const preventDragStart = (e: DragEvent) => {
-      e.preventDefault();
-      return false;
-    };
-
-    // Add event listeners
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    document.addEventListener('contextmenu', preventContextMenu);
-    document.addEventListener('dragstart', preventDragStart);
-
-    // CSS to prevent text selection and right-click
-    const style = document.createElement('style');
-    style.textContent = `
-      .pdf-viewer-container {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        -webkit-touch-callout: none;
-        -webkit-tap-highlight-color: transparent;
-      }
-      
-      .pdf-viewer-container * {
-        -webkit-user-select: none !important;
-        -moz-user-select: none !important;
-        -ms-user-select: none !important;
-        user-select: none !important;
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      document.removeEventListener('contextmenu', preventContextMenu);
-      document.removeEventListener('dragstart', preventDragStart);
-      if (style.parentNode) {
-        style.parentNode.removeChild(style);
-      }
-    };
-  }, [userEmail, documentId]);
-};
 
 export default WatermarkOverlay;
