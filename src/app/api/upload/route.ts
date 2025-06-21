@@ -15,6 +15,16 @@ export async function GET() {
   });
 }
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+    responseLimit: false,
+  },
+}
+
+
 export async function POST(req: NextRequest) {
   try {
     console.log("🚀 Upload API called");
