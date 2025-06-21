@@ -2,13 +2,13 @@
   "name": "revault",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "postinstall": "npx prisma generate --schema=./prisma/schema.prisma"
-  },
+    "scripts": {
+      "dev": "yarn dev",
+      "build": "yarn build:next",
+      "build:next": "next build",
+      "start": "yarn start",
+      "postinstall": "npm rebuild sharp || echo 'Sharp rebuild failed, continuing...'"
+    },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.6",
     "@fontsource/inter": "^5.2.6",
