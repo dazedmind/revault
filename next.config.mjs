@@ -33,6 +33,12 @@ const nextConfig = {
   images: {
     unoptimized: process.env.NODE_ENV === 'production',
   },
+  api: {
+    bodyParser: {
+      sizeLimit: '50mb',
+    },
+    responseLimit: false,
+  },
 }
 
 export default nextConfig
