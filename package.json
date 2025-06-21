@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
     "scripts": {
-      "dev": "yarn dev",
-      "build": "yarn build:next",
+      "dev": "next dev",
+      "build": "npm install --include=optional sharp && next build",
       "build:next": "next build",
-      "start": "yarn start",
+      "start": "next start",
       "postinstall": "npm rebuild sharp || echo 'Sharp rebuild failed, continuing...'"
     },
   "dependencies": {
@@ -60,7 +60,7 @@
     "react-toggle-dark-mode": "^1.1.1",
     "react-tooltip": "^5.29.1",
     "resend": "^4.3.0",
-    "sharp": "^0.34.2",
+    "sharp": "^0.33.0",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
@@ -79,5 +79,9 @@
     "prisma": "^6.7.0",
     "tailwindcss": "^4.0.12",
     "typescript": "5.8.2"
+  },
+  "optionalDependencies": {
+    "@img/sharp-linux-x64": "^0.33.0",
+    "@img/sharp-linuxmusl-x64": "^0.33.0"
   }
 }
