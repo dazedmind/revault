@@ -103,7 +103,7 @@ const UploadFile = () => {
 
       if (response.ok) {
         toast.success(
-          "Upload successful! File uploaded to Google Cloud Storage.",
+          "Upload successful!",
         );
         handleClearFile();
       } else if (response.status === 413) {
