@@ -23,8 +23,9 @@ export default function Form() {
   const [passwordRequirementsError, setPasswordRequirementsError] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [studentNumberError, setStudentNumberError] = useState(false);
+  const [studentNumberUniqueError, setStudentNumberUniqueError] = useState(false);
   const [emailError, setEmailError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingStudentNumber, setIsCheckingStudentNumber] = useState(false);
   
   useEffect(() => {
     const storedRole = localStorage.getItem("userType");
@@ -45,12 +46,36 @@ export default function Form() {
   });
 
   const validateStudentNumber = (number) => {
-    return /^2\d{8}$/.test(number);
+    return /^20\d{7}$/.test(number); // Updated to start with "20" and be 9 digits total
   };
 
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@(plm\.edu\.ph|gmail\.com)$/;
     return emailRegex.test(email);
+  };
+
+  // Function to check if student number is unique
+  const checkStudentNumberUniqueness = async (studentNumber) => {
+    if (!validateStudentNumber(studentNumber)) return;
+    
+    setIsCheckingStudentNumber(true);
+    try {
+      const response = await fetch('/api/check-student-number', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ studentNumber }),
+      });
+
+      const result = await response.json();
+      setStudentNumberUniqueError(!result.isUnique);
+    } catch (error) {
+      console.error('Error checking student number:', error);
+      setStudentNumberUniqueError(false);
+    } finally {
+      setIsCheckingStudentNumber(false);
+    }
   };
 
   // Check if all required fields are filled
@@ -77,9 +102,11 @@ export default function Form() {
       doPasswordsMatch && 
       isProgramSelected && 
       isStudentNumberValid && 
-      isEmailValid
+      isEmailValid &&
+      !studentNumberUniqueError &&
+      !isCheckingStudentNumber
     );
-  }, [formData, selectedProgram]);
+  }, [formData, selectedProgram, studentNumberUniqueError, isCheckingStudentNumber]);
 
   const validatePassword = (password) => {
     const hasMinLength = password.length >= 9;
@@ -100,7 +127,20 @@ export default function Form() {
 
     // Validate student number
     if (name === 'studentNumber') {
-      setStudentNumberError(!validateStudentNumber(value));
+      const isFormatValid = validateStudentNumber(value);
+      setStudentNumberError(!isFormatValid);
+      
+      // Reset uniqueness error when format is invalid
+      if (!isFormatValid) {
+        setStudentNumberUniqueError(false);
+      } else {
+        // Check uniqueness with debounce
+        const timeoutId = setTimeout(() => {
+          checkStudentNumberUniqueness(value);
+        }, 500);
+        
+        return () => clearTimeout(timeoutId);
+      }
     }
 
     // Validate email
@@ -132,33 +172,32 @@ const handleNext = async (e) => {
     return;
   }
 
-  setIsLoading(true);
-
   // Check if passwords match before proceeding
   if (formData.password !== formData.confirmPassword) {
     setPasswordError(true);
-    setIsLoading(false);
     return;
   }
 
   // Check password requirements
   if (!validatePassword(formData.password)) {
     setPasswordRequirementsError(true);
-    setIsLoading(false);
     return;
   }
 
   // Check student number format
   if (!validateStudentNumber(formData.studentNumber)) {
     setStudentNumberError(true);
-    setIsLoading(false);
     return;
   }
 
   // Check email format
   if (!validateEmail(formData.email)) {
     setEmailError(true);
-    setIsLoading(false);
+    return;
+  }
+
+  // Final check for student number uniqueness
+  if (studentNumberUniqueError) {
     return;
   }
 
@@ -194,29 +233,19 @@ const handleNext = async (e) => {
       router.push("/registration/otp-confirmation");
     } else {
       alert("Failed to send OTP. Try again.");
-      setIsLoading(false);
     }
   } catch (err) {
     console.error("OTP Send Error:", err);
     alert("Something went wrong while sending OTP.");
-    setIsLoading(false);
   }
 };
 
   return (
     <div className="max-w-lg mx-auto bg-accent border-2 p-6 md:p-10 rounded-lg shadow-lg mb-20">
+      <form onSubmit={handleNext} className="grid grid-cols-2 gap-4 min-w-0">
         <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">
           Personal Information
         </h1>
-     
-        {/* ─── Instruction Text ─── */}
-        <div className="mb-4">
-          <p className="text-sm text-gray-600 dark:text-gray-400 italic">
-            Please use information as indicated in your school ID as you will not be able to change this except for your email.
-          </p>
-        </div>
-      <form onSubmit={handleNext} className="grid grid-cols-2 gap-4 min-w-0">
-      
         <div className="bg-white-50 h-0.5 w-full col-span-2"></div>
 
         <InputField
@@ -319,7 +348,23 @@ const handleNext = async (e) => {
           <WarningMessage
             containerClassName="col-span-2 w-auto h-auto"
             textClassName="text-red-500"
-            message="Student number must be 9 digits and start with 2."
+            message="Student number must be 9 digits and start with 20."
+          />
+        )}
+
+        {studentNumberUniqueError && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-red-500"
+            message="This student number is already registered."
+          />
+        )}
+
+        {isCheckingStudentNumber && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-blue-500"
+            message="Checking existing student number..."
           />
         )}
 
@@ -330,7 +375,6 @@ const handleNext = async (e) => {
             message="Email must be a valid PLM email (@plm.edu.ph) or Gmail address (@gmail.com)."
           />
         )}
-
 
         <h1 className="col-span-2 font-mono text-gold font-bold text-2xl">
           Password
@@ -401,14 +445,14 @@ const handleNext = async (e) => {
         <div className="col-span-2">
           <button
             onClick={handleNext}
-            disabled={!isFormValid || isLoading}
+            disabled={!isFormValid}
             className={`block text-center w-full text-white py-2 mt-4 rounded-md font-inter text-lg font-bold ${
-              isFormValid && !isLoading
+              isFormValid 
                 ? "bg-gradient-to-r from-gold to-gold hover:bg-gradient-to-br cursor-pointer" 
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
-            {isLoading ? "Please wait..." : "Next"}
+            {isCheckingStudentNumber ? "Checking..." : "Next"}
           </button>
         </div>
       </form>

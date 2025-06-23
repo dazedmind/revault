@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
     const msg = {
       to: email,
-      from: 'jatevalena2022@plm.edu.ph',
+      from: 'mjbinsigne2022@plm.edu.ph',
       subject: 'Your OTP Code',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">
