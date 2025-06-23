@@ -127,9 +127,7 @@ export default function PapersArea({
             throw new Error(data.error || "Search failed");
           }
         } else {
-          // ✅ USE REGULAR API FOR NON-SEARCH QUERIES (FILTERING, BROWSING)
-          console.log("📋 Using papers API for filtering/browsing");
-          
+
           const qp = new URLSearchParams();
 
           // Build query parameters for regular filtering

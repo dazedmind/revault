@@ -19,8 +19,9 @@ export default function FacultyForm() {
   const [passwordRequirementsError, setPasswordRequirementsError] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [employeeNumberError, setEmployeeNumberError] = useState(false);
+  const [employeeNumberUniqueError, setEmployeeNumberUniqueError] = useState(false);
   const [emailError, setEmailError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingEmployeeNumber, setIsCheckingEmployeeNumber] = useState(false);
 
   useEffect(() => {
     const storedRole = localStorage.getItem("userType");
@@ -49,6 +50,44 @@ export default function FacultyForm() {
     return emailRegex.test(email);
   };
 
+  // Function to check if employee number is unique
+  const checkEmployeeNumberUniqueness = async (employeeNumber) => {
+    if (!validateEmployeeNumber(employeeNumber)) return;
+    
+    setIsCheckingEmployeeNumber(true);
+    try {
+      const response = await fetch('/api/check-faculty-number', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ employeeNumber }),
+      });
+
+      if (!response.ok) {
+        console.error('API response not ok:', response.status);
+        setEmployeeNumberUniqueError(false);
+        return;
+      }
+
+      const result = await response.json();
+      console.log('API result:', result); // Debug log
+      
+      // Only set error if the API explicitly says it's not unique
+      if (result.hasOwnProperty('isUnique')) {
+        setEmployeeNumberUniqueError(!result.isUnique);
+      } else {
+        setEmployeeNumberUniqueError(false);
+      }
+    } catch (error) {
+      console.error('Error checking employee number:', error);
+      // Don't block the form if there's a network error
+      setEmployeeNumberUniqueError(false);
+    } finally {
+      setIsCheckingEmployeeNumber(false);
+    }
+  };
+
   // Check if all required fields are filled
   useEffect(() => {
     const requiredFields = {
@@ -73,9 +112,11 @@ export default function FacultyForm() {
       doPasswordsMatch && 
       isDepartmentSelected && 
       isEmployeeNumberValid && 
-      isEmailValid
+      isEmailValid &&
+      !employeeNumberUniqueError &&
+      !isCheckingEmployeeNumber
     );
-  }, [formData, selectedDepartment]);
+  }, [formData, selectedDepartment, employeeNumberUniqueError, isCheckingEmployeeNumber]);
 
   const validatePassword = (password) => {
     const hasMinLength = password.length >= 9;
@@ -96,7 +137,20 @@ export default function FacultyForm() {
 
     // Validate employee number
     if (name === 'employeeID') {
-      setEmployeeNumberError(!validateEmployeeNumber(value));
+      const isFormatValid = validateEmployeeNumber(value);
+      setEmployeeNumberError(!isFormatValid);
+      
+      // Reset uniqueness error when format is invalid
+      if (!isFormatValid) {
+        setEmployeeNumberUniqueError(false);
+      } else {
+        // Check uniqueness with debounce
+        const timeoutId = setTimeout(() => {
+          checkEmployeeNumberUniqueness(value);
+        }, 500);
+        
+        return () => clearTimeout(timeoutId);
+      }
     }
 
     // Validate email
@@ -128,33 +182,32 @@ export default function FacultyForm() {
       return;
     }
 
-    setIsLoading(true);
-
     // Check if passwords match before proceeding
     if (formData.password !== formData.confirmPassword) {
       setPasswordError(true);
-      setIsLoading(false);
       return;
     }
 
     // Check password requirements
     if (!validatePassword(formData.password)) {
       setPasswordRequirementsError(true);
-      setIsLoading(false);
       return;
     }
 
     // Check employee number format
     if (!validateEmployeeNumber(formData.employeeID)) {
       setEmployeeNumberError(true);
-      setIsLoading(false);
       return;
     }
 
     // Check email format
     if (!validateEmail(formData.email)) {
       setEmailError(true);
-      setIsLoading(false);
+      return;
+    }
+
+    // Final check for employee number uniqueness
+    if (employeeNumberUniqueError) {
       return;
     }
 
@@ -187,12 +240,10 @@ export default function FacultyForm() {
         router.push("/registration/otp-confirmation");
       } else {
         alert("Failed to send OTP. Try again.");
-        setIsLoading(false);
       }
     } catch (err) {
       console.error("OTP Send Error:", err);
       alert("Something went wrong while sending OTP.");
-      setIsLoading(false);
     }
   };
 
@@ -292,7 +343,23 @@ export default function FacultyForm() {
           <WarningMessage
             containerClassName="col-span-2 w-auto h-auto"
             textClassName="text-red-500"
-            message="Employee number must be 10 digits."
+            message="Employee number must be exactly 10 digits."
+          />
+        )}
+
+        {employeeNumberUniqueError && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-red-500"
+            message="This employee number is already registered."
+          />
+        )}
+
+        {isCheckingEmployeeNumber && (
+          <WarningMessage
+            containerClassName="col-span-2 w-auto h-auto"
+            textClassName="text-blue-500"
+            message="Checking existing employee number..."
           />
         )}
 
@@ -371,14 +438,14 @@ export default function FacultyForm() {
         <div className="col-span-2">
           <button
             onClick={handleNext}
-            disabled={!isFormValid || isLoading}
+            disabled={!isFormValid}
             className={`block text-center w-full text-white mt-4 py-2 rounded-md font-inter text-lg font-bold ${
-              isFormValid && !isLoading
+              isFormValid 
                 ? "bg-gradient-to-r from-gold to-gold hover:bg-gradient-to-br cursor-pointer" 
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
-            {isLoading ? "Please wait..." : "Next"}
+            {isCheckingEmployeeNumber ? "Checking..." : "Next"}
           </button>
         </div>
       </form>
