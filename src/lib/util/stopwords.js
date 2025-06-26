@@ -36,6 +36,7 @@ const words = [
   'said', 'same', 'see', 'she', 'should', 'since', 'so', 'some', 'still', 'such', 'take', 'than',
   'that', 'the', 'their', 'theirs', 'them', 'themselves', 'then', 'there', 'these', 'they',
   'this', 'those', 'through', 'to', 'too', 'under', 'until', 'up', 'used','use', 'very', 'was',
+  'entities',
   'way', 'we', 'well', 'were', 'what', 'where', 'when', 'which', 'while', 'who','dataset',
   'datasets','lung','time','agree','students','health','system','based','data',
   'whom', 'with', 'would', 'why', 'you', 'your', 'yours', 'yourself',

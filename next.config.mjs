@@ -32,6 +32,12 @@ const nextConfig = {
   },
   images: {
     unoptimized: process.env.NODE_ENV === 'production',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+      },
+    ],
   },
   api: {
     bodyParser: {

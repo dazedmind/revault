@@ -1,7 +1,7 @@
 // src/app/component/PDFViewerClient.tsx
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import WatermarkOverlay from './WatermarkOverlay';
 
@@ -525,12 +525,13 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
         /* Ensure toolbar buttons are clickable */
         .toolbar button {
           pointer-events: auto !important;
-          z-index: 1000 !important;
+          z-index: 50 !important;
+          cursor: pointer !important;
         }
 
         .toolbar input {
           pointer-events: auto !important;
-          z-index: 1000 !important;
+          z-index: 50 !important;
         }
 
         /* Print protection */
