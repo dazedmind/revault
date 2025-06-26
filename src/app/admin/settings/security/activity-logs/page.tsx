@@ -20,7 +20,7 @@ import MultipleSelector, {
 } from "@/app/admin/components/EventTypeMultiSelect";
 import ActivityLogsSection from "@/app/admin/components/ActivityLogsSection";
 import UserActivityLogsSection from "@/app/admin/components/UserActivityLogsSection";
-import { Download, FileText, Users } from "lucide-react";
+import { Download, FileText, Users, ChevronDown, ChevronUp, UserCog } from "lucide-react";
 
 // Admin activity logs interfaces
 interface Activity {
@@ -77,7 +77,7 @@ function ActivityLogContent() {
   const initialUserId = searchParams.get("userId") || "all";
   const initialActivityTypes = searchParams.get("activityTypes") || "all";
   const initialPage = Number(searchParams.get("page")) || 1;
-  const initialLimit = Number(searchParams.get("limit")) || 50;
+  const initialLimit = Number(searchParams.get("limit")) || 10;
 
   const [selectedUser, setSelectedUser] = useState<string>(initialUserId);
   const [selectedEventTypes, setSelectedEventTypes] = useState<Option[]>(
@@ -101,6 +101,7 @@ function ActivityLogContent() {
     searchParams.get("userActivityTypes") || "all";
   const initialUserRole = searchParams.get("userRole") || "all";
   const initialUserPage = Number(searchParams.get("userPage")) || 1;
+  const initialShowUserLogs = searchParams.get("showUserLogs") === "true";
 
   const [selectedUserUser, setSelectedUserUser] =
     useState<string>(initialUserUserId);
@@ -117,11 +118,15 @@ function ActivityLogContent() {
   const [selectedUserRole, setSelectedUserRole] =
     useState<string>(initialUserRole);
   const [userPage, setUserPage] = useState<number>(initialUserPage);
-  const [userLimit] = useState<number>(50);
+  const [userLimit] = useState<number>(10);
 
   const [userLogs, setUserLogs] = useState<UserActivity[]>([]);
   const [regularUsers, setRegularUsers] = useState<RegularUser[]>([]);
   const [userTotal, setUserTotal] = useState<number>(0);
+  const [userLogsLoading, setUserLogsLoading] = useState(false);
+
+  // Collapsible state for User Activity Logs
+  const [showUserLogs, setShowUserLogs] = useState(initialShowUserLogs);
 
   const currentUserRole =
     typeof window !== "undefined" ? localStorage.getItem("userType") : null;
@@ -141,6 +146,7 @@ function ActivityLogContent() {
       userActivityTypes?: string;
       userRole?: string;
       userPage?: number;
+      showUserLogs?: boolean;
     }) => {
       const search = new URLSearchParams(searchParams.toString());
 
@@ -158,6 +164,8 @@ function ActivityLogContent() {
         search.set("userRole", params.userRole);
       if (params.userPage !== undefined)
         search.set("userPage", params.userPage.toString());
+      if (params.showUserLogs !== undefined)
+        search.set("showUserLogs", params.showUserLogs.toString());
 
       router.push(
         `/admin/settings/security/activity-logs?${search.toString()}`,
@@ -180,6 +188,99 @@ function ActivityLogContent() {
 
     const previewUrl = `/admin/activity-logs-preview-pdf?${params.toString()}`;
     window.open(previewUrl, "_blank");
+  };
+
+  // Handle User Logs Toggle
+  const handleUserLogsToggle = () => {
+    const newShowState = !showUserLogs;
+    setShowUserLogs(newShowState);
+    updateQueryParams({ showUserLogs: newShowState });
+    
+    // Fetch data when opening for the first time
+    if (newShowState && regularUsers.length === 0) {
+      fetchRegularUsers();
+    }
+    if (newShowState) {
+      fetchUserLogs();
+    }
+  };
+
+  // Separate function for fetching regular users
+  const fetchRegularUsers = async () => {
+    try {
+      console.log("🔍 Fetching regular users for user activity logs dropdown...");
+
+      const res = await fetch("/admin/api/get-user-logs?page=1&limit=1", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("❌ User logs API error:", res.status, errorText);
+        throw new Error(`Failed to fetch user list (${res.status})`);
+      }
+
+      const data = await res.json();
+      if (data.success && Array.isArray(data.users)) {
+        setRegularUsers(data.users);
+      } else {
+        setRegularUsers([]);
+      }
+    } catch (err) {
+      console.error("💥 Error fetching regular user list:", err);
+      setRegularUsers([]);
+    }
+  };
+
+  // Separate function for fetching user logs
+  const fetchUserLogs = async () => {
+    if (!showUserLogs) return;
+
+    try {
+      setUserLogsLoading(true);
+      const params = new URLSearchParams();
+      params.set("userId", selectedUserUser);
+      const eventTypesString =
+        selectedUserEventTypes.length === 0
+          ? "all"
+          : selectedUserEventTypes.map((opt) => opt.value).join(",");
+      params.set("activityTypes", eventTypesString);
+      params.set("userRole", selectedUserRole);
+      params.set("page", userPage.toString());
+      params.set("limit", userLimit.toString());
+
+      const res = await fetch(`/admin/api/get-user-logs?${params.toString()}`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("❌ User logs API error:", res.status, text);
+        throw new Error(`Failed to fetch user logs (${res.status})`);
+      }
+
+      const data = await res.json();
+      if (data.success) {
+        const fetchedLogs = Array.isArray(data.logs) ? data.logs : [];
+        setUserLogs(fetchedLogs);
+        setUserTotal(data.total);
+        // Update users list if it's provided (avoid duplicate fetch)
+        if (Array.isArray(data.users) && data.users.length > 0) {
+          setRegularUsers(data.users);
+        }
+      } else {
+        setUserLogs([]);
+        setUserTotal(0);
+      }
+    } catch (err) {
+      console.error("💥 Error fetching user logs:", err);
+      setUserLogs([]);
+      setUserTotal(0);
+    } finally {
+      setUserLogsLoading(false);
+    }
   };
 
   // Fetch admin users for dropdown
@@ -270,94 +371,13 @@ function ActivityLogContent() {
       });
   }, [mounted, selectedUser, selectedEventTypes, page, limit]);
 
-  // Fetch regular users for user activity logs dropdown
+  // Fetch user activity logs when dependencies change
   useEffect(() => {
-    if (!mounted) return;
-
-    console.log("🔍 Fetching regular users for user activity logs dropdown...");
-
-    fetch("/admin/api/get-user-logs?page=1&limit=1", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error("❌ User logs API error:", res.status, errorText);
-          throw new Error(`Failed to fetch user list (${res.status})`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (data.success && Array.isArray(data.users)) {
-          setRegularUsers(data.users);
-        } else {
-          setRegularUsers([]);
-        }
-      })
-      .catch((err) => {
-        console.error("💥 Error fetching regular user list:", err);
-        setRegularUsers([]);
-      });
-  }, [mounted]);
-
-  // Fetch user activity logs
-  useEffect(() => {
-    if (!mounted) return;
-
-    const params = new URLSearchParams();
-    params.set("userId", selectedUserUser);
-    const eventTypesString =
-      selectedUserEventTypes.length === 0
-        ? "all"
-        : selectedUserEventTypes.map((opt) => opt.value).join(",");
-    params.set("activityTypes", eventTypesString);
-    params.set("userRole", selectedUserRole);
-    params.set("page", userPage.toString());
-    params.set("limit", userLimit.toString());
-
-    fetch(`/admin/api/get-user-logs?${params.toString()}`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const text = await res.text();
-          console.error("❌ User logs API error:", res.status, text);
-          throw new Error(`Failed to fetch user logs (${res.status})`);
-        }
-        return res.json();
-      })
-      .then(
-        (data: {
-          success: boolean;
-          total: number;
-          page: number;
-          limit: number;
-          logs: UserActivity[];
-          users: RegularUser[];
-        }) => {
-          if (data.success) {
-            const fetchedLogs = Array.isArray(data.logs) ? data.logs : [];
-            setUserLogs(fetchedLogs);
-            setUserTotal(data.total);
-            // Update users list if it's provided (avoid duplicate fetch)
-            if (Array.isArray(data.users) && data.users.length > 0) {
-              setRegularUsers(data.users);
-            }
-          } else {
-            setUserLogs([]);
-            setUserTotal(0);
-          }
-        },
-      )
-      .catch((err) => {
-        console.error("💥 Error fetching user logs:", err);
-        setUserLogs([]);
-        setUserTotal(0);
-      });
+    if (!mounted || !showUserLogs) return;
+    fetchUserLogs();
   }, [
     mounted,
+    showUserLogs,
     selectedUserUser,
     selectedUserEventTypes,
     selectedUserRole,
@@ -404,12 +424,20 @@ function ActivityLogContent() {
     { value: "CHANGE_PASSWORD", label: "Change Password" },
   ];
 
+  // Calculate user counts for display
+  const studentCount = regularUsers.filter((u) => u.role === "STUDENT").length;
+  const facultyCount = regularUsers.filter((u) => u.role === "FACULTY").length;
+
   return (
     <div className="space-y-8">
       {/* Admin Activity Logs Section */}
       <div className="flex flex-col w-auto p-6 mb-8 rounded-xl border-1 border-white-5">
         <div className="flex flex-row items-center justify-between">
-          <h1 className="text-2xl ml-1">Admin Activity Logs</h1>
+          <span className="flex items-center gap-2">
+            <UserCog className="w-6 h-6" />
+            <h1 className="text-2xl ml-1">Admin Activity Logs</h1>
+          </span>
+ 
 
           {(currentUserRole === "ADMIN" || currentUserRole === "ASSISTANT") && (
             <div className="flex items-center gap-3">
@@ -503,116 +531,151 @@ function ActivityLogContent() {
         />
       </div>
 
-      {/* User Activity Logs Section */}
+      {/* User Activity Logs Section - Collapsible */}
       <div className="flex flex-col w-auto p-6 mb-8 rounded-xl border-1 border-white-5">
-        <div className="flex flex-row items-center justify-between">
-          <h1 className="text-2xl ml-1 flex items-center gap-2">
-            <Users className="w-6 h-6" />
-            User Activity Logs
-          </h1>
-        </div>
 
+        {/* Collapsible Header */}
         <div
-          className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-dusk"}`}
-        />
-
-        {/* User Filters */}
-        <div className="flex flex-row items-end space-x-8 mb-6 overflow-visible">
-          {/* User Filter */}
-          <div className="flex flex-col">
-            <Label className="text-sm mb-1">User</Label>
-            <Select
-              value={selectedUserUser}
-              onValueChange={(val) => {
-                setSelectedUserUser(val);
-                setUserPage(1);
-                updateQueryParams({ userUserId: val, userPage: 1 });
-              }}
-            >
-              <SelectTrigger className="w-64 dark:bg-primary">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="all">All Users</SelectItem>
-                  {regularUsers.map((u) => (
-                    <SelectItem key={u.userId} value={u.userId.toString()}>
-                      <div>
-                        <div className="font-medium">{u.name}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {u.role} - {u.details}
-                        </div>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+          className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-all duration-200 hover:shadow-md ${
+            theme === "light"
+              ? "bg-gray-50 border-gray-200 hover:bg-gray-100"
+              : "bg-gray-800/50 border-gray-600 hover:bg-gray-800/70"
+          }`}
+          onClick={handleUserLogsToggle}
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              {showUserLogs ? (
+                <ChevronUp className="w-5 h-5 text-gray-500" />
+              ) : (
+                <ChevronDown className="w-5 h-5 text-gray-500" />
+              )}
+              <Users className="w-6 h-6" />
+              <h2 className="text-xl font-semibold">User Activity Logs</h2>
+            </div>
+           
           </div>
 
-          {/* User Role Filter */}
-          <div className="flex flex-col">
-            <Label className="text-sm mb-1">User Role</Label>
-            <Select
-              value={selectedUserRole}
-              onValueChange={(val) => {
-                setSelectedUserRole(val);
-                setUserPage(1);
-                updateQueryParams({ userRole: val, userPage: 1 });
-              }}
-            >
-              <SelectTrigger className="w-48 dark:bg-primary">
-                <SelectValue placeholder="All Roles" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="STUDENT">Students</SelectItem>
-                  <SelectItem value="FACULTY">Faculty</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Event Type Multi-Select for Users */}
-          <div className="flex flex-col w-auto">
-            <Label className="text-sm mb-1">Event type</Label>
-            <MultipleSelector
-              options={userEventOptions}
-              value={selectedUserEventTypes}
-              onChange={(newSelected) => {
-                setSelectedUserEventTypes(newSelected);
-                setUserPage(1);
-                const typesString =
-                  newSelected.length === 0
-                    ? "all"
-                    : newSelected.map((o) => o.value).join(",");
-                updateQueryParams({
-                  userActivityTypes: typesString,
-                  userPage: 1,
-                });
-              }}
-              placeholder="Select event types..."
-              hidePlaceholderWhenSelected={false}
-              maxSelected={userEventOptions.length}
-              creatable={false}
-              className="border border-input rounded-md"
-              badgeClassName="bg-green-100 text-green-800"
-            />
+          <div className="text-sm text-gray-400 italic">
+            {showUserLogs ? "Click to hide" : "Click to view"}
           </div>
         </div>
 
-        {/* User Activity Logs Table */}
-        <UserActivityLogsSection
-          logs={userLogs}
-          page={userPage}
-          limit={userLimit}
-          total={userTotal}
-          onPageChange={(newPage) => {
-            setUserPage(newPage);
-            updateQueryParams({ userPage: newPage });
-          }}
-        />
+        {/* Collapsible Content */}
+        {showUserLogs && (
+          <div className="mt-4 space-y-4">
+            <div
+              className={`h-0.5 w-auto ${theme === "light" ? "bg-white-50" : "bg-dusk"}`}
+            />
+
+
+            {/* User Filters */}
+            <div className="flex flex-row items-end space-x-8 mb-6 overflow-visible">
+              {/* User Filter */}
+              <div className="flex flex-col">
+                <Label className="text-sm mb-1">User</Label>
+                <Select
+                  value={selectedUserUser}
+                  onValueChange={(val) => {
+                    setSelectedUserUser(val);
+                    setUserPage(1);
+                    updateQueryParams({ userUserId: val, userPage: 1 });
+                  }}
+                >
+                  <SelectTrigger className="w-64 dark:bg-primary">
+                    <SelectValue placeholder="All" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="all">All Users</SelectItem>
+                      {regularUsers.map((u) => (
+                        <SelectItem key={u.userId} value={u.userId.toString()}>
+                          <div>
+                            <div className="font-medium">{u.name}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {u.role} - {u.details}
+                            </div>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* User Role Filter */}
+              <div className="flex flex-col">
+                <Label className="text-sm mb-1">User Role</Label>
+                <Select
+                  value={selectedUserRole}
+                  onValueChange={(val) => {
+                    setSelectedUserRole(val);
+                    setUserPage(1);
+                    updateQueryParams({ userRole: val, userPage: 1 });
+                  }}
+                >
+                  <SelectTrigger className="w-48 dark:bg-primary">
+                    <SelectValue placeholder="All Roles" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="all">All Roles</SelectItem>
+                      <SelectItem value="STUDENT">Students</SelectItem>
+                      <SelectItem value="FACULTY">Faculty</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Event Type Multi-Select for Users */}
+              <div className="flex flex-col w-auto">
+                <Label className="text-sm mb-1">Event type</Label>
+                <MultipleSelector
+                  options={userEventOptions}
+                  value={selectedUserEventTypes}
+                  onChange={(newSelected) => {
+                    setSelectedUserEventTypes(newSelected);
+                    setUserPage(1);
+                    const typesString =
+                      newSelected.length === 0
+                        ? "all"
+                        : newSelected.map((o) => o.value).join(",");
+                    updateQueryParams({
+                      userActivityTypes: typesString,
+                      userPage: 1,
+                    });
+                  }}
+                  placeholder="Select event types..."
+                  hidePlaceholderWhenSelected={false}
+                  maxSelected={userEventOptions.length}
+                  creatable={false}
+                  className="border border-input rounded-md"
+                  badgeClassName="bg-green-100 text-green-800"
+                />
+              </div>
+            </div>
+
+            {/* User Activity Logs Table */}
+            {userLogsLoading ? (
+              <div className="space-y-4">
+                <div className="h-12 bg-secondary rounded animate-pulse"></div>
+                <div className="h-12 bg-secondary rounded animate-pulse"></div>
+                <div className="h-12 bg-secondary rounded animate-pulse"></div>
+              </div>
+            ) : (
+              <UserActivityLogsSection
+                logs={userLogs}
+                page={userPage}
+                limit={userLimit}
+                total={userTotal}
+                onPageChange={(newPage) => {
+                  setUserPage(newPage);
+                  updateQueryParams({ userPage: newPage });
+                }}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       {/* Debug info (remove in production) */}
@@ -628,6 +691,7 @@ function ActivityLogContent() {
           <p>Selected admin user: {selectedUser}</p>
           <p>Selected regular user: {selectedUserUser}</p>
           <p>Selected user role: {selectedUserRole}</p>
+          <p>Show user logs: {showUserLogs.toString()}</p>
         </div>
       )}
     </div>

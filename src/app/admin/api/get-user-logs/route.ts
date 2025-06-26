@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
     const activityTypesParam = searchParams.get("activityTypes") || "all";
     const userRoleParam = searchParams.get("userRole") || "all";
     const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "50", 10);
+    const limit = parseInt(searchParams.get("limit") || "5", 10);
     const skip = (page - 1) * limit;
 
     console.log("📋 Query parameters:", {
