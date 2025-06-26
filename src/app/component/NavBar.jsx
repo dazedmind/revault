@@ -80,16 +80,19 @@ export default function NavBar() {
         <div className="flex align-middle items-center gap-5">
           <Link
             href="/home"
-            className="hidden md:flex gap-4 font-bold text-3xl text-gold"
+            className="hidden md:flex gap-4 items-center font-bold text-3xl text-gold"
           >
             <Image src={ulLogo} alt="revault-icon" width={45} height={45} />
              <div className="w-0.5 h-10 bg-gold"></div>
-            <Image src={icon} alt="revault-icon" width={70} height={45} />
+            <Image src={icon} alt="revault-icon" className="w-14 h-9" width={70} height={45} />
 
             ReVault
           </Link>
 
-          <Link href="/home">
+          <Link href="/home" className="flex items-center gap-2">
+            <Image src={ulLogo} alt="revault-icon" className="md:hidden" width={45} height={45} />
+            <div className="w-0.5 h-10 bg-gold md:hidden"></div>
+
             <Image src={icon} className="md:hidden w-14" alt="revault-icon" />
           </Link>
 
