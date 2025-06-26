@@ -14,7 +14,7 @@ import {
 
 // Constants
 export const DEPARTMENTS = ["Information Technology", "Computer Science"];
-export const YEARS = ["2025", "2024", "2023", "2022", "2021"];
+export const YEARS = ["2025", "2024", "2023"];
 export const COURSES = [
   "SIA",
   "Capstone Project",

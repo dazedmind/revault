@@ -10,6 +10,8 @@ import { Toaster } from "sonner";
 import { GoEye } from "react-icons/go";
 import { GoEyeClosed } from "react-icons/go";
 import DeveloperList from "../component/DeveloperList";
+import Image from "next/image";
+import ulLogo from "../img/UL-logo-v2.png";
 
 const LogIn = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -99,10 +101,11 @@ const LogIn = () => {
       </div>
 
       {/* Main Content */}
-      <main className="flex flex-col justify-center mt-20 items-center relative z-10">
+      <main className="flex flex-col justify-center mt-10 items-center relative z-10">
         <div className="w-80 md:w-96 m-5 p-6 h-auto rounded-xl outline-1 bg-white relative z-10">
           {/* Title */}
           <div className="flex flex-col justify-center items-center">
+            <Image src={ulLogo} alt="Revault Logo" width={180} height={180} />
             <h1 className="text-4xl font-mono font-bold text-gold">ReVault</h1>
           </div>
 

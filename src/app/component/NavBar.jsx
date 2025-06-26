@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { LogOut, Settings, SunMoon, ChevronRight, IdCard, ChevronDown } from "lucide-react";
 import LoadingScreen from "./LoadingScreen";
 import { useTheme } from "next-themes";
+import ulLogo from "../img/UL-logo-v1.png";
 
 import {
   DropdownMenu,
@@ -74,7 +75,10 @@ export default function NavBar() {
             href="/home"
             className="hidden md:flex gap-4 font-bold text-3xl text-gold"
           >
-            <Image src={icon} className="w-14" alt="revault-icon" />
+            <Image src={ulLogo} alt="revault-icon" width={45} height={45} />
+             <div className="w-0.5 h-10 bg-gold"></div>
+            <Image src={icon} alt="revault-icon" width={70} height={45} />
+
             ReVault
           </Link>
 

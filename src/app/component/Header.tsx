@@ -5,6 +5,7 @@ import icon from "../img/revault-icon.png";
 import Link from "next/link";
 import { FaBuildingColumns, FaChevronRight } from "react-icons/fa6";
 import { usePathname } from "next/navigation"; // Import the hook
+import ulLogo from "../img/UL-logo-v1.png";
 
 
 const Header = () => {
@@ -15,13 +16,17 @@ const Header = () => {
         <div className="flex align-middle items-center md:pl-4 gap-10">
           <Link
             href="/home"
-            className="hidden md:flex gap-4 font-bold text-3xl text-gold"
+            className="hidden md:flex items-center gap-2 font-bold text-3xl text-gold"
           >
-            <Image src={icon} className="w-14" alt="revault-icon" />
+            <Image src={ulLogo} alt="revault-icon" width={45} height={45} />
+             <div className="w-0.5 h-10 bg-gold"></div>
+            <Image src={icon} alt="revault-icon" width={60} height={60} />
             ReVault
           </Link>
 
-          <Link href="/home">
+          <Link href="/home" className="flex items-center gap-2">
+            <Image src={ulLogo} className="md:hidden" alt="revault-icon" width={45} height={45} />
+            <div className="w-0.5 h-10 bg-gold md:hidden"></div>
             <Image src={icon} className="md:hidden w-14" alt="revault-icon" />
           </Link>
         </div>
