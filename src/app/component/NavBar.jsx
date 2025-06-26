@@ -7,7 +7,14 @@ import icon from "../img/revault-icon.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { LogOut, Settings, SunMoon, ChevronRight, IdCard, ChevronDown } from "lucide-react";
+import {
+  LogOut,
+  Settings,
+  SunMoon,
+  ChevronRight,
+  IdCard,
+  ChevronDown,
+} from "lucide-react";
 import LoadingScreen from "./LoadingScreen";
 import { useTheme } from "next-themes";
 
@@ -87,7 +94,7 @@ export default function NavBar() {
 
         <div className="flex flex-row items-center gap-8 text-lg">
           <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild>
               <div className="flex items-center gap-2 md:bg-accent rounded-lg p-2 cursor-pointer hover:bg-gold/80 transition-all duration-300">
                 <Image
                   src={profile?.users?.profile_picture || avatar}
@@ -96,29 +103,36 @@ export default function NavBar() {
                   width={50}
                   height={50}
                 />
-                <span className="text-sm font-[Inter] hidden md:block">{profile.users.last_name}</span>
+                <span className="text-sm font-[Inter] hidden md:block">
+                  {profile.users.last_name}
+                </span>
 
-                <ChevronDown className="h-4 w-4 hidden md:block" /> 
+                <ChevronDown className="h-4 w-4 hidden md:block" />
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="" align="end">
               <DropdownMenuGroup>
                 <Link href="/profile" className="flex items-center gap-2">
                   <DropdownMenuItem className="p-2 cursor-pointer">
-                    <Image src={profile?.users?.profile_picture || avatar} 
-                    alt="User profile picture" 
-                    width={40} 
-                    height={40} 
-                    className="rounded-full border-gold border-3 w-10 h-10 object-cover"
+                    <Image
+                      src={profile?.users?.profile_picture || avatar}
+                      alt="User profile picture"
+                      width={40}
+                      height={40}
+                      className="rounded-full border-gold border-3 w-10 h-10 object-cover"
                     />
-                      <span className="flex flex-col">
-                        <p className="text-sm font-[Inter]">{profile.users.name}</p>
-                        <p className="text-xs font-[Inter] flex items-center gap-1 text-gray-500"> 
-                          <IdCard className="text-xxs" strokeWidth={1.5} />
-                          {profile.role === "STUDENT" ? profile.student_num : profile.employee_id}
-                        </p>
-                      </span>
-                      <ChevronRight className="h-4 w-4" />
+                    <span className="flex flex-col">
+                      <p className="text-sm font-[Inter]">
+                        {profile.users.name}
+                      </p>
+                      <p className="text-xs font-[Inter] flex items-center gap-1 text-gray-500">
+                        <IdCard className="text-xxs" strokeWidth={1.5} />
+                        {profile.role === "STUDENT"
+                          ? profile.student_num
+                          : profile.employee_id}
+                      </p>
+                    </span>
+                    <ChevronRight className="h-4 w-4" />
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
@@ -130,7 +144,10 @@ export default function NavBar() {
                   </DropdownMenuItem>
                 </Link>
 
-                <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="cursor-pointer">
+                <DropdownMenuItem
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className="cursor-pointer"
+                >
                   <SunMoon className="h-4 w-4" />
                   <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
                 </DropdownMenuItem>
