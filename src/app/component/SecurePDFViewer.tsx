@@ -1,9 +1,7 @@
 // src/app/component/SecureImagePDFViewer.tsx
 "use client";
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import WatermarkOverlay from './WatermarkOverlay';
+import React from 'react';
+import { Loader2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 // Dynamic import to avoid SSR issues
@@ -17,14 +15,14 @@ const PDFViewer = dynamic(() => import('./PDFViewerClient'), {
   )
 });
 
-interface SecureImagePDFViewerProps {
+interface SecurePDFViewerProps {
   paperId: string;
   userEmail: string;
   theme?: string;
 }
 
-const SecureImagePDFViewer: React.FC<SecureImagePDFViewerProps> = (props) => {
+const SecurePDFViewer: React.FC<SecurePDFViewerProps> = (props) => {
   return <PDFViewer {...props} />;
 };
 
-export default SecureImagePDFViewer;
+export default SecurePDFViewer;

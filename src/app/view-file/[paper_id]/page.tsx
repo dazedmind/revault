@@ -27,7 +27,7 @@ import {
   GoPencil,
   GoSun,
 } from "react-icons/go";
-import SecureImagePDFViewer from "../../component/SecureImagePDFViewer";
+import SecurePDFViewer from "../../component/SecurePDFViewer";
 import RecentViewers from '../../component/RecentViewers';
 import useAntiCopy from "@/app/hooks/useAntiCopy";
 
@@ -268,14 +268,14 @@ function ViewFile() {
             {/* Metadata Sidebar Overlay */}
             {showMetadata && (
               <div
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-60 transition-opacity duration-300"
                 onClick={() => setShowMetadata(false)}
               />
             )}
 
             {/* Metadata Sidebar */}
             <div
-              className={`fixed top-0 left-0 w-full md:w-[800px] h-screen z-50 p-4 md:p-10 shadow-lg 
+              className={`fixed top-0 left-0 w-full md:w-[800px] h-screen z-70 p-4 md:p-10 shadow-lg 
                 transform transition-transform duration-300 ease-in-out
                 ${showMetadata ? "translate-x-0" : "-translate-x-full"}
                 dark:bg-accent overflow-y-auto`}
@@ -470,7 +470,7 @@ function ViewFile() {
                   {/* Document Viewer - ONLY SecureImagePDFViewer */}
                   <div className="Document flex-1 relative pdf-viewer-container">
                     {userEmail && paper_id ? (
-                      <SecureImagePDFViewer
+                      <SecurePDFViewer
                         paperId={paper_id as string}
                         userEmail={userEmail}
                         theme={theme}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader2 } from 'lucide-react'; // Optional: You can use any spinner icon
+import { Loader2 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 interface LoadingScreenProps {
