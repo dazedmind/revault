@@ -1,871 +1,420 @@
 "use client";
+import NavBar from "../component/NavBar";
+import Upload from "@/components/ui/upload-file";
 import pdfToText from "react-pdftotext";
 import { useEffect, useRef, useState } from "react";
 import AdminNavBar from "../admin/components/AdminNavBar";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import {
-  Trash,
-  Upload,
-  FileText,
-  User,
-  Calendar,
-  Building,
-  BookOpen,
-  Tag,
-  Edit3,
-  Save,
-  Eye,
-  CheckCircle,
-  AlertCircle,
-  FileCheck,
-} from "lucide-react";
-import { useTheme } from "next-themes";
-import { toast, Toaster } from "sonner";
+import ImprovedMetadataExtractor from "@/lib/metadata/improved-extractor";
 
 const UploadFile = () => {
   const [title, setTitle] = useState("");
   const [fullText, setFullText] = useState("");
-  const [author, setAuthor] = useState("");
+  const [authors, setAuthors] = useState("");
   const [course, setCourse] = useState("");
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
+  const [keywords, setKeywords] = useState([]);
+  const [extractionStatus, setExtractionStatus] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
   const [key, setKey] = useState(Date.now());
-  const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [isEditingAuthors, setIsEditingAuthors] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
-  const [isEditingAbstract, setIsEditingAbstract] = useState(false);
-  const [keywords, setKeywords] = useState<string[]>([]);
-  const [isTermsAccepted, setIsTermsAccepted] = useState(true);
-  const [pdfUrl, setPdfUrl] = useState("");
-  const [mounted, setMounted] = useState(false);
-  const { theme } = useTheme();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [isChunkedUpload, setIsChunkedUpload] = useState(false);
 
-  // Keep all your existing functions exactly as they are
-  function fixSplitAccents(text) {
-    return text
-      .replace(/n\s*̃\s*a/gi, "ña")
-      .replace(/([A-Za-z])\s*ñ\s*([A-Za-z])/gi, "$1ñ$2")
-      .replace(/([A-Za-z])\s*é\s*([A-Za-z])/gi, "$1é$2")
-      .replace(/([A-Za-z])\s*á\s*([A-Za-z])/gi, "$1á$2")
-      .replace(/([A-Za-z])\s*í\s*([A-Za-z])/gi, "$1í$2")
-      .replace(/([A-Za-z])\s*ó\s*([A-Za-z])/gi, "$1ó$2")
-      .replace(/([A-Za-z])\s*ú\s*([A-Za-z])/gi, "$1ú$2");
-  }
+  // Initialize the improved extractor
+  const extractor = new ImprovedMetadataExtractor();
 
-  // Replace your handleUpload function with this:
-const uploadFileInChunks = async (file: File, metadata: any) => {
-  const CHUNK_SIZE = 1024 * 1024 * 2; // 2MB chunks (safe for Vercel)
-  const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-  const uploadId = Date.now().toString();
-
-  console.log(`📦 Starting chunked upload: ${totalChunks} chunks of ${CHUNK_SIZE} bytes each`);
-  setIsChunkedUpload(true);
-  setUploadProgress(0);
-
-  try {
-    for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-      const start = chunkIndex * CHUNK_SIZE;
-      const end = Math.min(start + CHUNK_SIZE, file.size);
-      const chunk = file.slice(start, end);
-
-      console.log(`📤 Uploading chunk ${chunkIndex + 1}/${totalChunks} (${chunk.size} bytes)`);
-
-      const formData = new FormData();
-      formData.append('chunk', chunk);
-      formData.append('chunkIndex', chunkIndex.toString());
-      formData.append('totalChunks', totalChunks.toString());
-      formData.append('uploadId', uploadId);
-      formData.append('fileName', file.name);
-      
-      // Add metadata only on the last chunk to avoid duplication
-      if (chunkIndex === totalChunks - 1) {
-        Object.keys(metadata).forEach(key => {
-          if (metadata[key] !== null && metadata[key] !== undefined) {
-            formData.append(key, metadata[key]);
-          }
-        });
-      }
-
-      const response = await fetch('/api/upload-chunk', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || `Chunk ${chunkIndex + 1} upload failed`);
-      }
-
-      // Update progress
-      const progress = ((chunkIndex + 1) / totalChunks) * 100;
-      setUploadProgress(progress);
-      console.log(`✅ Chunk ${chunkIndex + 1}/${totalChunks} uploaded (${progress.toFixed(1)}%)`);
-
-      // Small delay to prevent overwhelming the server
-      if (chunkIndex < totalChunks - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    }
-
-    return { success: true, message: "File uploaded successfully!" };
-  } catch (error) {
-    console.error("❌ Chunked upload failed:", error);
-    throw error;
-  } finally {
-    setIsChunkedUpload(false);
-    setUploadProgress(0);
-  }
-};
-
-const handleUpload = async () => {
-  if (!selectedFile) {
-    toast.error("Please select a PDF file first.");
-    return;
-  }
-
-  // Validate required fields
-  if (!title || !author || !course || !department || !year) {
-    toast.error("Please fill in all required fields.");
-    return;
-  }
-
-  try {
-    setIsLoading(true);
-    
-    const metadata = {
-      title,
-      author,
-      abstract: fullText,
-      course,
-      department,
-      year,
-      keywords: JSON.stringify(keywords)
-    };
-
-    console.log("📤 Starting upload with metadata:");
-    console.log("File:", selectedFile.name, selectedFile.size, "bytes");
-    console.log("Title:", title);
-
-    // Use chunked upload for files larger than 3MB, regular upload for smaller files
-    if (selectedFile.size > 3 * 1024 * 1024) {
-      console.log("📦 File is large, using chunked upload");
-      await uploadFileInChunks(selectedFile, metadata);
-    } else {
-      console.log("📄 File is small, using regular upload");
-      // Fallback to regular upload for small files
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      Object.keys(metadata).forEach(key => {
-        formData.append(key, metadata[key]);
-      });
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message || "Upload failed");
-      }
-    }
-
-    toast.success("Upload successful!");
-    handleClearFile();
-
-  } catch (error: any) {
-    console.error("Upload error:", error);
-    if (error.message?.includes("P2002")) {
-      toast.error("A paper with this title already exists. Please use a different title.");
-    } else {
-      toast.error(error.message || "Upload failed. Please try again.");
-    }
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-  const startProgressAnimation = () => {
-    setProgress(0);
-    const duration = 2000;
-    const interval = 50;
-    const steps = duration / interval;
-    const increment = 100 / steps;
-
-    let currentProgress = 0;
-    const timer = setInterval(() => {
-      currentProgress += increment;
-      if (currentProgress >= 100) {
-        clearInterval(timer);
-        setProgress(100);
-      } else {
-        setProgress(currentProgress);
-      }
-    }, interval);
-  };
-
-  // Modify your extractText function to also store the file
   async function extractText(event) {
     const file = event.target.files[0];
     if (!file || file.type !== "application/pdf") return;
 
-    // Store the file for later upload
-    setSelectedFile(file);
-    setPdfUrl(URL.createObjectURL(file));
+    setIsProcessing(true);
+    setExtractionStatus("📄 Reading PDF file...");
 
     try {
-      setIsLoading(true);
-      startProgressAnimation();
-
-      console.log(
-        "📄 Processing file:",
-        file.name,
-        "Size:",
-        file.size,
-        "bytes",
-      );
-
+      // Extract raw text from PDF
       const rawText = await pdfToText(file);
+
+      setExtractionStatus("🔍 Analyzing document structure...");
       console.log("📊 Extracted text length:", rawText.length, "characters");
 
-      // Check if the file might be too large for processing
-      if (rawText.length > 100000) {
-        console.log(
-          "⚠️ Large document detected, may take longer to process...",
-        );
-        toast.info("Large document detected. Processing may take a moment...", {
-          duration: 3000,
-        });
+      // Use the improved extractor
+      const extractedMetadata = extractor.extractMetadata(rawText);
+
+      setExtractionStatus("✅ Extraction completed!");
+
+      // Set all extracted values
+      setTitle(extractedMetadata.extractedTitle);
+      setAuthors(extractedMetadata.extractedAuthor);
+      setCourse(extractedMetadata.extractedCourse);
+      setDepartment(extractedMetadata.extractedDepartment);
+      setYear(extractedMetadata.extractedYear);
+      setKeywords(extractedMetadata.tfidfKeywords || []);
+
+      // Set the abstract/full text for display
+      if (extractedMetadata.extractedAbstract !== "Cannot Determine") {
+        setFullText(extractedMetadata.extractedAbstract);
+      } else {
+        // Fallback to first part of the document
+        const textBeforeTOC = extractor.getTextBeforeTableOfContents(rawText);
+        setFullText(textBeforeTOC.substring(0, 1000));
       }
 
-      const firstPageEnd = rawText.toLowerCase().indexOf("table of contents");
-      const firstPageText =
-        firstPageEnd !== -1 ? rawText.substring(0, firstPageEnd) : rawText;
-
-      const sanitized = firstPageText.replace(/\s+/g, " ").trim();
-
-      console.log("🚀 Sending to extraction API...");
-      const response = await fetch("/api/extract", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: sanitized, rawText }),
+      // Log extraction results for debugging
+      console.log("📋 Extraction Results:", {
+        title: extractedMetadata.extractedTitle,
+        author: extractedMetadata.extractedAuthor,
+        course: extractedMetadata.extractedCourse,
+        department: extractedMetadata.extractedDepartment,
+        year: extractedMetadata.extractedYear,
+        keywords: extractedMetadata.tfidfKeywords,
       });
 
-      const result = await response.json();
-      console.log("📨 API Response status:", response.status);
-
-      if (!response.ok) {
-        console.error("❌ API Error:", result);
-
-        if (result.code === "DOCUMENT_TOO_LARGE") {
-          toast.error(
-            "Document is too large for automatic processing. Please try with a smaller file or fill in the details manually.",
-            {
-              duration: 6000,
-            },
-          );
-          return; // Don't clear the form, let user fill manually
-        } else if (result.code === 413) {
-          toast.error(
-            "File too large! Please select a smaller file (max 50MB)",
-          );
-        } else {
-          toast.error(
-            result.error ||
-              "Failed to extract document information. You can fill in the details manually.",
-            {
-              duration: 4000,
-            },
-          );
-          return; // Don't clear the form
-        }
-      }
-
-      console.log("✅ Extraction successful:", result);
-      setKeywords(result.tfidfKeywords ?? []);
-
-      if (result) {
-        setTitle(result.extractedTitle ?? "");
-        setAuthor(result.extractedAuthor ?? "");
-        setFullText(result.extractedAbstract ?? "");
-        setCourse(result.extractedCourse ?? "");
-        setDepartment(result.extractedDepartment ?? "");
-        setYear(result.extractedYear ?? "");
-
-        toast.success("Document information extracted successfully!", {
-          duration: 3000,
-        });
-      }
+      // Clear status after 3 seconds
+      setTimeout(() => setExtractionStatus(""), 3000);
     } catch (error) {
       console.error("❌ Error extracting text:", error);
-      toast.error(
-        "Failed to process document. You can fill in the details manually.",
-        {
-          duration: 4000,
-        },
-      );
+      setExtractionStatus("❌ Extraction failed. Please fill manually.");
+
+      // Clear error status after 5 seconds
+      setTimeout(() => setExtractionStatus(""), 5000);
     } finally {
-      setIsLoading(false);
-      setProgress(100);
+      setIsProcessing(false);
     }
   }
-  const handleSaveTitle = () => {
-    setIsEditingTitle(false);
-    if (!title) {
-      setTitle("");
-    }
-  };
 
-  const handleSaveAuthors = () => {
-    setIsEditingAuthors(false);
-    if (!author) {
-      setAuthor("");
-    }
-  };
-
-  const handleSaveAbstract = () => {
-    setIsEditingAbstract(false);
-    if (!fullText) {
-      setFullText("");
-    }
-  };
-
-  // Update your handleClearFile function to also clear the selected file:
   const handleClearFile = () => {
     if (ref.current) {
       ref.current.value = "";
     }
     setTitle("");
     setFullText("");
-    setAuthor("");
+    setAuthors("");
     setCourse("");
     setDepartment("");
     setYear("");
     setKeywords([]);
+    setExtractionStatus("");
     setKey(Date.now());
-    setPdfUrl("");
-    setSelectedFile(null); // Clear the selected file
-    setIsEditingTitle(false);
-    setIsEditingAuthors(false);
-    setIsEditingAbstract(false);
-    setIsTermsAccepted(true);
   };
 
-  useEffect(() => setMounted(true), []);
+  const removeKeyword = (indexToRemove) => {
+    setKeywords(keywords.filter((_, index) => index !== indexToRemove));
+  };
 
-  if (!mounted) return null;
-
-  const isFormValid =
-    title && author && course && department && year && isTermsAccepted;
+  const addKeyword = (newKeyword) => {
+    if (newKeyword.trim() && !keywords.includes(newKeyword.trim())) {
+      setKeywords([...keywords, newKeyword.trim()]);
+    }
+  };
 
   return (
-    <div
-      className={`min-h-screen ${theme === "light" ? "bg-secondary" : "bg-midnight"}`}
-    >
+    <div className="bg-midnight">
       <AdminNavBar />
-
-      {/* Hero Section */}
-      <div
-        className={`${theme === "light" ? "border-b bg-tertiary" : "border-b bg-dusk"}`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
-          <div className="text-center">
-            <div className="flex justify-center mb-4">
-              <div className="p-3 bg-gold/20 rounded-full">
-                <Upload className="w-8 h-8 text-gold" />
-              </div>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">
-              Upload Research Paper
-            </h1>
-          </div>
+      <main className="p-8 mx-12">
+        <div>
+          <h1 className="font-bold text-3xl mb-6">Upload Research Paper</h1>
+          <p className="text-white-50 mb-6">
+            Upload your PDF and let our improved extraction system automatically
+            detect metadata
+          </p>
         </div>
-      </div>
 
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 `}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Upload Section */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* File Upload Card */}
-            <div
-              className={`${theme === "light" ? "bg-secondary border-white-50" : " border-white-5"} rounded-2xl shadow-sm border p-6`}
-            >
-              <div className="flex items-center justify-between gap-3 mb-6">
-                <span className="flex items-center gap-2">
-                  <FileText className="w-6 h-6 text-gold" />
-                  <h2 className="text-xl font-semibold">Upload Document</h2>
-                </span>
+        {/* File Upload Section */}
+        <div className="mb-6">
+          <input
+            ref={ref}
+            type="file"
+            className="p-10 px-40 border-2 border-dashed border-teal rounded-md"
+            accept="application/pdf"
+            onChange={extractText}
+            name="file-input"
+            key={key}
+            disabled={isProcessing}
+          />
 
-                <button
-                  onClick={handleClearFile}
-                  className="p-3 h-fit bg-accent cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-md transition-all duration-300 hover:scale-105"
-                  disabled={isLoading}
-                  title="Clear file"
+          <button
+            onClick={handleClearFile}
+            className="ml-4 px-4 py-2 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-md disabled:opacity-50"
+            disabled={isProcessing}
+          >
+            Remove File
+          </button>
+        </div>
+
+        <label htmlFor="file-input" className="text-sm text-white-50">
+          File type: .pdf only (Maximum file size: 50MB)
+        </label>
+
+        {/* Extraction Status */}
+        {(isProcessing || extractionStatus) && (
+          <div className="mt-4 p-3 bg-dusk rounded-lg border border-white-5">
+            <div className="flex items-center gap-2">
+              {isProcessing && (
+                <div className="animate-spin w-4 h-4 border-2 border-teal border-t-transparent rounded-full"></div>
+              )}
+              <span className="text-sm text-white-75">{extractionStatus}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Extracted Metadata Display */}
+        <div className="flex flex-col gap-8 mt-8">
+          {/* Title */}
+          <span className="flex flex-col gap-2">
+            <h3 className="text-md font-medium text-teal">Research Title:</h3>
+            <textarea
+              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0 min-h-[80px]"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Title will be extracted automatically or enter manually"
+            />
+          </span>
+
+          {/* Authors */}
+          <span className="flex flex-col gap-2">
+            <h3 className="text-md font-medium text-teal">Authors:</h3>
+            <input
+              type="text"
+              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl outline-0"
+              value={authors}
+              onChange={(e) => setAuthors(e.target.value)}
+              placeholder="Author will be extracted automatically or enter manually"
+            />
+          </span>
+
+          {/* Course and Department */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <span className="flex flex-col gap-2">
+              <h3 className="text-md font-medium text-teal">Course:</h3>
+              <select
+                className="p-4 bg-midnight border border-white-5 rounded-md outline-0"
+                value={course}
+                onChange={(e) => setCourse(e.target.value)}
+              >
+                <option value="">Select Course</option>
+                <option value="SIA">SIA</option>
+                <option value="Capstone Project">Capstone Project</option>
+                <option value="Compiler Design">Compiler Design</option>
+                <option value="Thesis Writing">Thesis Writing</option>
+              </select>
+            </span>
+
+            <span className="flex flex-col gap-2">
+              <h3 className="text-md font-medium text-teal">Department:</h3>
+              <select
+                className="p-4 bg-midnight border border-white-5 rounded-md outline-0"
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+              >
+                <option value="">Select Department</option>
+                <option value="Information Technology">
+                  Information Technology
+                </option>
+                <option value="Computer Science">Computer Science</option>
+              </select>
+            </span>
+
+            <span className="flex flex-col gap-2">
+              <h3 className="text-md font-medium text-teal">Year:</h3>
+              <input
+                type="number"
+                className="p-4 bg-midnight border border-white-5 rounded-md outline-0"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                placeholder="2024"
+                min="2015"
+                max={new Date().getFullYear() + 5}
+              />
+            </span>
+          </div>
+
+          {/* Keywords */}
+          <span className="flex flex-col gap-2">
+            <h3 className="text-md font-medium text-teal">Keywords:</h3>
+            <div className="tags-card flex gap-2 items-center align-middle flex-wrap">
+              {keywords.map((keyword, index) => (
+                <div
+                  key={index}
+                  className="flex gap-2 items-center align-middle bg-dusk w-auto p-2 text-sm rounded-md"
                 >
-                  <Trash className="w-5 h-5" />
+                  <p>{keyword}</p>
+                  <button
+                    onClick={() => removeKeyword(index)}
+                    className="bg-white-5 p-1 rounded-full cursor-pointer text-xs hover:bg-red-500"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+
+              <div className="flex gap-2 items-center align-middle bg-teal w-auto p-2 text-sm rounded-md">
+                <button
+                  onClick={() => {
+                    const newKeyword = prompt("Enter new keyword:");
+                    if (newKeyword) addKeyword(newKeyword);
+                  }}
+                  className="p-1 rounded-full cursor-pointer text-xs"
+                >
+                  Add +
                 </button>
               </div>
-
-              <div className="flex gap-4">
-                <label
-                  htmlFor="uploadFile1"
-                  className={`flex-1 relative group cursor-pointer transition-all duration-300 ${
-                    isLoading
-                      ? "pointer-events-none opacity-50"
-                      : "hover:scale-[1.02]"
-                  }`}
-                >
-                  <div
-                    className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
-                      pdfUrl
-                        ? "border-green-300  dark:border-green-700 "
-                        : "border-gold/30 hover:border-gold/60 hover:bg-gold/5"
-                    }`}
-                  >
-                    {pdfUrl ? (
-                      <div className="space-y-3">
-                        <div className="flex justify-center">
-                          <CheckCircle className="w-12 h-12 text-green-500" />
-                        </div>
-                        <div>
-                          <p className="text-green-700 dark:text-green-400 font-semibold">
-                            PDF Uploaded Successfully
-                          </p>
-                          <p className="text-sm text-green-600 dark:text-green-500">
-                            {selectedFile &&
-                              `${selectedFile.name} (${(selectedFile.size / 1024 / 1024).toFixed(1)} MB)`}
-                          </p>
-                          <p className="text-xs text-green-600 dark:text-green-500">
-                            Ready for processing
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <div className="flex justify-center">
-                          <div className="p-3 bg-gold/10 rounded-full group-hover:bg-gold/20 transition-colors duration-300">
-                            <Upload className="w-8 h-8 text-gold" />
-                          </div>
-                        </div>
-                        <div>
-                          <p className="text-lg font-semibold ">
-                            Upload your PDF
-                          </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Drag and drop or click to browse
-                          </p>
-                        </div>
-                        <div className="text-xs text-gray-400 dark:text-gray-500">
-                          PDF only • Max 30MB • Larger files may take longer to
-                          process
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <input
-                    type="file"
-                    id="uploadFile1"
-                    ref={ref}
-                    className="hidden"
-                    accept="application/pdf"
-                    onChange={extractText}
-                    name="file-input"
-                    key={ref.current?.value}
-                    disabled={isLoading}
-                  />
-                </label>
-              </div>
-
-              {isLoading && (
-                <div className="mt-6 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="animate-spin w-5 h-5 border-2 border-gold border-t-transparent rounded-full"></div>
-                    <span className="text-sm font-medium text-gold">
-                      {isChunkedUpload 
-                        ? `Uploading chunks... ${uploadProgress.toFixed(1)}%`
-                        : progress < 100
-                        ? "Extracting text from PDF..."
-                        : "Processing complete!"
-                      }
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-gold to-gold-fg h-full rounded-full transition-all duration-300 ease-out"
-                      style={{ 
-                        width: `${isChunkedUpload ? uploadProgress : progress}%` 
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
             </div>
+          </span>
 
-            {/* Form Fields */}
-            {(title ||
-              author ||
-              fullText ||
-              course ||
-              department ||
-              year ||
-              keywords.length > 0) && (
-              <div className="space-y-6">
-                {/* Title Section */}
-                <div
-                  className={`bg-secondary rounded-2xl shadow-sm border ${theme === "light" ? "border-white-50" : "border-white-5"} p-6`}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <FileCheck className="w-5 h-5 text-gold" />
-                      <h3 className="text-lg font-semibold">Research Title</h3>
-                    </div>
-                    <button
-                      onClick={() =>
-                        isEditingTitle
-                          ? handleSaveTitle()
-                          : setIsEditingTitle(true)
-                      }
-                      className="flex items-center gap-2 px-3 py-1.5 bg-gold/10 hover:bg-gold/20 text-gold rounded-lg transition-colors duration-200 text-sm font-medium"
-                    >
-                      {isEditingTitle ? (
-                        <Save className="w-4 h-4" />
-                      ) : (
-                        <Edit3 className="w-4 h-4" />
-                      )}
-                      {isEditingTitle ? "Save" : "Edit"}
-                    </button>
-                  </div>
-                  <textarea
-                    className={`w-full p-4 rounded-xl border transition-all duration-200 resize-none ${
-                      isEditingTitle
-                        ? "border-gold bg-gold/5 focus:ring-2 focus:ring-gold/20 focus:border-gold"
-                        : "border-white-5  cursor-default"
-                    }  outline-none`}
-                    value={title.toUpperCase()}
-                    onChange={(e) => setTitle(e.target.value.toUpperCase())}
-                    readOnly={!isEditingTitle}
-                    rows={3}
-                    placeholder="Research paper title will appear here..."
-                  />
-                </div>
-
-                {/* Author Section */}
-                <div
-                  className={`bg-secondary rounded-2xl shadow-sm border ${theme === "light" ? "border-white-50" : "border-white-5"} p-6`}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <User className="w-5 h-5 text-gold" />
-                      <h3 className="text-lg font-semibold">Authors</h3>
-                    </div>
-                    <button
-                      onClick={() =>
-                        isEditingAuthors
-                          ? handleSaveAuthors()
-                          : setIsEditingAuthors(true)
-                      }
-                      className="flex items-center gap-2 px-3 py-1.5 bg-gold/10 hover:bg-gold/20 text-gold rounded-lg transition-colors duration-200 text-sm font-medium"
-                    >
-                      {isEditingAuthors ? (
-                        <Save className="w-4 h-4" />
-                      ) : (
-                        <Edit3 className="w-4 h-4" />
-                      )}
-                      {isEditingAuthors ? "Save" : "Edit"}
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    className={`w-full p-4 rounded-xl border transition-all duration-200 ${
-                      isEditingAuthors
-                        ? "border-gold bg-gold/5 focus:ring-2 focus:ring-gold/20 focus:border-gold"
-                        : "border-white-5 bg-accent cursor-default"
-                    } outline-none`}
-                    value={author}
-                    onChange={(e) => setAuthor(e.target.value)}
-                    readOnly={!isEditingAuthors}
-                    placeholder="Author names will appear here..."
-                  />
-                </div>
-
-                {/* Keywords Section */}
-                {keywords.length > 0 && (
-                  <div
-                    className={`bg-secondary rounded-2xl shadow-sm border ${theme === "light" ? "border-white-50" : "border-white-5"} p-6`}
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <Tag className="w-5 h-5 text-gold" />
-                      <h3 className="text-lg font-semibold">Keywords</h3>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {keywords.map((kw, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1.5 bg-yale-blue/20 text-yale-blue rounded-full text-sm font-medium"
-                        >
-                          {kw}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Metadata Section */}
-                <div
-                  className={`bg-secondary rounded-2xl shadow-sm border ${theme === "light" ? "border-white-50" : "border-white-5"} p-6`}
-                >
-                  <div className="flex items-center gap-3 mb-6">
-                    <Building className="w-5 h-5 text-gold" />
-                    <h3 className="text-lg font-semibold">Paper Details</h3>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-2 text-sm font-medium">
-                        <Building className="w-4 h-4" />
-                        Department
-                      </Label>
-                      <Select
-                        name="department"
-                        value={department}
-                        onValueChange={setDepartment}
-                      >
-                        <SelectTrigger className="w-full p-7 px-4 text-md dark:bg-secondary border-white-5 rounded-lg">
-                          <SelectValue placeholder="Select department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectItem
-                              className="p-3"
-                              value="Computer Science"
-                            >
-                              Computer Science
-                            </SelectItem>
-                            <SelectItem
-                              className="p-3"
-                              value="Information Technology"
-                            >
-                              Information Technology
-                            </SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-2 text-sm font-medium">
-                        <BookOpen className="w-4 h-4" />
-                        Course
-                      </Label>
-                      <Select
-                        name="course"
-                        value={course}
-                        onValueChange={setCourse}
-                        required={true}
-                      >
-                        <SelectTrigger className="w-full p-7 px-4 text-md dark:bg-secondary border-white-5 rounded-lg">
-                          <SelectValue placeholder="Select course" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectItem className="p-3" value="SIA">
-                              SIA
-                            </SelectItem>
-                            <SelectItem
-                              className="p-3"
-                              value="Capstone Project"
-                            >
-                              Capstone Project
-                            </SelectItem>
-                            <SelectItem className="p-3" value="Compiler Design">
-                              Compiler Design
-                            </SelectItem>
-                            <SelectItem className="p-3" value="Thesis Writing">
-                              Thesis Writing
-                            </SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-2 text-sm font-medium">
-                        <Calendar className="w-4 h-4" />
-                        Year
-                      </Label>
-                      <input
-                        type="text"
-                        className="w-full p-4 text-md dark:bg-secondary border-white-5 border-1 rounded-lg outline-none focus:ring-2 focus:ring-gold focus:border-gold transition-all duration-200"
-                        value={year}
-                        onChange={(e) => setYear(e.target.value)}
-                        placeholder="2024"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Abstract Section */}
-                <div
-                  className={`bg-secondary rounded-2xl shadow-sm border ${theme === "light" ? "border-white-50" : "border-white-5"} p-6`}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-gold" />
-                      <h3 className="text-lg font-semibold">Abstract</h3>
-                    </div>
-                    <button
-                      onClick={() =>
-                        isEditingAbstract
-                          ? handleSaveAbstract()
-                          : setIsEditingAbstract(true)
-                      }
-                      className="flex items-center gap-2 px-3 py-1.5 bg-gold/10 hover:bg-gold/20 text-gold rounded-lg transition-colors duration-200 text-sm font-medium"
-                    >
-                      {isEditingAbstract ? (
-                        <Save className="w-4 h-4" />
-                      ) : (
-                        <Edit3 className="w-4 h-4" />
-                      )}
-                      {isEditingAbstract ? "Save" : "Edit"}
-                    </button>
-                  </div>
-                  <textarea
-                    className={`w-full p-4 rounded-xl border transition-all duration-200 resize-none ${
-                      isEditingAbstract
-                        ? "border-gold bg-gold/5 focus:ring-2 focus:ring-gold/20 focus:border-gold"
-                        : "border-white-5 bg-accent cursor-default"
-                    } outline-none`}
-                    value={fullText}
-                    onChange={(e) => setFullText(e.target.value)}
-                    readOnly={!isEditingAbstract}
-                    rows={8}
-                    placeholder="Paper abstract will appear here..."
-                  />
-                </div>
+          {/* Pre-filled Tags based on course/department */}
+          <span className="flex flex-col gap-2">
+            <label htmlFor="tags">Suggested Tags</label>
+            <div className="tags-card flex gap-4 items-center align-middle">
+              <div className="flex gap-2 items-center align-middle bg-dusk w-auto p-2 text-sm rounded-md">
+                <p>{department || "Information Technology"}</p>
+                <button className="bg-white-5 p-1 rounded-full cursor-pointer text-xs">
+                  ×
+                </button>
               </div>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* PDF Preview */}
-            {pdfUrl && (
-              <div
-                className={`bg-secondary rounded-2xl shadow-sm border ${theme === "light" ? "border-white-50" : "border-white-5"} p-6`}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <Eye className="w-5 h-5 text-gold" />
-                  <h3 className="text-lg font-semibold">PDF Preview</h3>
-                </div>
-                <div className="relative">
-                  <iframe
-                    src={`${pdfUrl}#toolbar=0`}
-                    title="PDF Preview"
-                    className="w-full h-96 border border-white-5 rounded-xl"
-                  />
-                </div>
+              <div className="flex gap-2 items-center align-middle text-center bg-dusk w-auto p-2 text-sm rounded-md">
+                <p>{course || "SIA"}</p>
+                <button className="bg-white-5 p-1 rounded-full cursor-pointer text-xs">
+                  ×
+                </button>
               </div>
-            )}
-
-            {/* Upload Progress */}
-            {pdfUrl && (
-              <div
-                className={`bg-secondary rounded-2xl shadow-sm border ${theme === "light" ? "border-white-50" : "border-white-5"} p-6`}
-              >
-                <h3 className="text-lg font-semibold mb-4">Upload Progress</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      PDF uploaded
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-500" />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      Text extracted
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {isFormValid ? (
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                    ) : (
-                      <AlertCircle className="w-5 h-5 text-amber-500" />
-                    )}
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      Form {isFormValid ? "completed" : "incomplete"}
-                    </span>
-                  </div>
-                </div>
+              <div className="flex gap-2 items-center align-middle bg-teal w-auto p-2 text-sm rounded-md">
+                <button className="p-1 rounded-full cursor-pointer text-xs">
+                  Add +
+                </button>
               </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Footer Action Bar */}
-      <div
-        className={`${theme === "light" ? "bg-secondary border-t border-white-5" : "bg-dusk-fg border-t border-white-5"} p-6`}
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-start gap-3">
-              <input
-                type="checkbox"
-                checked={isTermsAccepted}
-                onChange={(e) => setIsTermsAccepted(e.target.checked)}
-                className="mt-1 md:mt-0 w-4 h-4 text-gold focus:ring-gold border-white-5 rounded"
-              />
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                I ensure the accuracy of the information above and that it
-                contains
-                <span className="ml-1 text-gold font-medium ">
-                  no clerical mistakes.
-                </span>
-              </p>
             </div>
+          </span>
 
-            <button
-              onClick={handleUpload}
-              disabled={!isFormValid || isLoading}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-white transition-all duration-300 cursor-pointer ${
-                isFormValid && !isLoading
-                  ? "bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 hover:shadow-lg shadow-gold"
-                  : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"
-              }`}
-            >
-              {isLoading ? (
-                <>
-                  <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <Upload className="w-5 h-5" />
-                  Upload Paper
-                </>
-              )}
-            </button>
-          </div>
+          {/* Abstract */}
+          <span className="flex flex-col gap-2">
+            <h3 className="text-md font-medium text-teal">Abstract:</h3>
+            <textarea
+              className="p-4 bg-midnight border border-white-5 rounded-md w-4xl h-64 outline-0"
+              value={fullText}
+              onChange={(e) => setFullText(e.target.value)}
+              placeholder="Abstract will be extracted automatically or enter manually"
+            />
+          </span>
+
+          {/* Extraction Summary */}
+          {(title || authors || course) && (
+            <div className="p-4 bg-dusk-fg rounded-lg border border-white-5">
+              <h4 className="text-lg font-medium text-teal mb-3">
+                Extraction Summary
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-white-75">Title Status:</span>
+                  <span
+                    className={`ml-2 ${title && title !== "Cannot Determine" ? "text-green-400" : "text-yellow-400"}`}
+                  >
+                    {title && title !== "Cannot Determine"
+                      ? "✅ Extracted"
+                      : "⚠️ Manual entry needed"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-white-75">Author Status:</span>
+                  <span
+                    className={`ml-2 ${authors && authors !== "Cannot Determine" ? "text-green-400" : "text-yellow-400"}`}
+                  >
+                    {authors && authors !== "Cannot Determine"
+                      ? "✅ Extracted"
+                      : "⚠️ Manual entry needed"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-white-75">Course:</span>
+                  <span
+                    className={`ml-2 ${course ? "text-green-400" : "text-yellow-400"}`}
+                  >
+                    {course ? `✅ ${course}` : "⚠️ Not determined"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-white-75">Department:</span>
+                  <span
+                    className={`ml-2 ${department ? "text-green-400" : "text-yellow-400"}`}
+                  >
+                    {department ? `✅ ${department}` : "⚠️ Not determined"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-white-75">Keywords:</span>
+                  <span
+                    className={`ml-2 ${keywords.length > 0 ? "text-green-400" : "text-yellow-400"}`}
+                  >
+                    {keywords.length > 0
+                      ? `✅ ${keywords.length} found`
+                      : "⚠️ None extracted"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-white-75">Year:</span>
+                  <span
+                    className={`ml-2 ${year ? "text-green-400" : "text-yellow-400"}`}
+                  >
+                    {year ? `✅ ${year}` : "⚠️ Not determined"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
+      </main>
 
-      <Toaster />
+      {/* Footer with Upload Button */}
+      <div className="flex justify-between items-center bg-darker p-12 px-24 border-t-2 border-dashed border-white-5">
+        <span className="flex flex-col gap-2">
+          <div className="flex flex-row mt-4">
+            <input type="checkbox" id="terms" />
+            <label htmlFor="terms" className="font-inter text-sm ml-1">
+              By uploading your research paper, you agree to our{" "}
+              <span className="text-teal">Terms and Privacy Policy</span> and
+              consent to its publication.
+            </label>
+          </div>
+
+          {/* Validation Status */}
+          <div className="text-xs text-white-50">
+            {!title || !authors || !course || !department || !year ? (
+              <span className="text-yellow-400">
+                ⚠️ Please fill in all required fields before uploading
+              </span>
+            ) : (
+              <span className="text-green-400">
+                ✅ All required fields completed
+              </span>
+            )}
+          </div>
+        </span>
+
+        <span>
+          <button
+            className={`p-2 px-8 font-sans flex items-center gap-2 rounded-lg cursor-pointer transition-all ${
+              title && authors && course && department && year
+                ? "bg-gradient-to-r from-teal-gradient-left to-teal-gradient-right hover:bg-gradient-to-br"
+                : "bg-gray-600 cursor-not-allowed opacity-50"
+            }`}
+            disabled={
+              !title ||
+              !authors ||
+              !course ||
+              !department ||
+              !year ||
+              isProcessing
+            }
+          >
+            {isProcessing ? (
+              <>
+                <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                Processing...
+              </>
+            ) : (
+              "Upload"
+            )}
+          </button>
+        </span>
+      </div>
     </div>
   );
 };

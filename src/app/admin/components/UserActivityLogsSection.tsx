@@ -1,4 +1,4 @@
-// File: src/app/admin/components/ActivityLogsSection.tsx
+// File: src/app/admin/components/UserActivityLogsSection.tsx
 "use client";
 
 import {
@@ -22,122 +22,93 @@ import {
   ChevronLeft,
   ChevronRight,
   FileUp,
+  BookOpen,
+  LogIn,
+  LogOut,
+  Key,
 } from "lucide-react";
 
-interface Activity {
+interface UserActivity {
   name: string;
   activity: string;
   created_at: string;
-  ip_address: string;
-  activity_type: string;
+  activity_type: string | null;
   status: string;
+  paper_id?: number;
+  student_num?: string;
+  employee_id?: string;
+  user_role?: string;
 }
 
-interface ActivityLogsSectionProps {
-  logs: Activity[];
+interface UserActivityLogsSectionProps {
+  logs: UserActivity[];
   page: number;
   limit: number;
   total: number;
   onPageChange: (newPage: number) => void;
-  // Add current filter state for PDF generation
-  currentFilters?: {
-    userId?: string;
-    activityTypes?: string;
-  };
 }
 
-export default function ActivityLogsSection({
+export default function UserActivityLogsSection({
   logs,
   page,
   limit,
   total,
   onPageChange,
-  currentFilters,
-}: ActivityLogsSectionProps) {
+}: UserActivityLogsSectionProps) {
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
-  const lastPage = Math.ceil(total / limit) || 1;
+
+  const lastPage = Math.ceil(total / limit);
+
+  // Utility functions
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const localDate = date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
+    const localTime = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return {
+      date: localDate,
+      time: localTime,
+    };
+  };
+
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + "...";
+  };
 
   const toggleRowExpansion = (index: number) => {
-    const newExpanded = new Set(expandedRows);
-    if (newExpanded.has(index)) {
-      newExpanded.delete(index);
+    const newExpandedRows = new Set(expandedRows);
+    if (newExpandedRows.has(index)) {
+      newExpandedRows.delete(index);
     } else {
-      newExpanded.add(index);
+      newExpandedRows.add(index);
     }
-    setExpandedRows(newExpanded);
+    setExpandedRows(newExpandedRows);
   };
 
-  const truncateText = (text: string, maxLength: number = 60) => {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + "...";
-  };
-
-  // Safe date parsing function
-  const parseDate = (dateString: string): Date => {
-    if (!dateString) return new Date();
-
-    // Try different date parsing methods
-    let date = new Date(dateString);
-
-    // If the date is invalid, try parsing as ISO string
-    if (isNaN(date.getTime())) {
-      date = new Date(dateString.replace(" ", "T"));
+  const getActivityIcon = (activityType: string | null | undefined) => {
+    if (!activityType) {
+      return <Activity className="w-4 h-4 text-gray-600" />;
     }
 
-    // If still invalid, try removing timezone info and parsing
-    if (isNaN(date.getTime())) {
-      const cleanDateString = dateString.replace(/[+-]\d{2}:\d{2}$/, "");
-      date = new Date(cleanDateString);
-    }
-
-    // Last resort: return current date if all parsing fails
-    if (isNaN(date.getTime())) {
-      console.warn("Failed to parse date:", dateString);
-      return new Date();
-    }
-
-    return date;
-  };
-
-  const formatDate = (dateString: string) => {
-    try {
-      const date = parseDate(dateString);
-      return {
-        date: date.toLocaleDateString("en-US", {
-          month: "short",
-          day: "2-digit",
-          year: "numeric",
-        }),
-        time: date.toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        }),
-      };
-    } catch (error) {
-      console.error("Date formatting error:", error, "for date:", dateString);
-      return {
-        date: "Invalid Date",
-        time: "Invalid Time",
-      };
-    }
-  };
-
-  const getActivityIcon = (activityType: string) => {
-    const iconClass = "w-4 h-4";
     switch (activityType) {
       case "LOGIN":
-        return <User className={`${iconClass} text-green-500`} />;
+        return <LogIn className="w-4 h-4 text-green-600" />;
       case "LOGOUT":
-        return <User className={`${iconClass} text-gray-500`} />;
-      case "UPLOAD_DOCUMENT":
-        return <FileUp className={`${iconClass} text-blue-500`} />;
+        return <LogOut className="w-4 h-4 text-blue-600" />;
       case "VIEW_DOCUMENT":
-        return <Eye className={`${iconClass} text-yellow-500`} />;
-      case "DOWNLOAD_DOCUMENT":
-        return <Activity className={`${iconClass} text-purple-500`} />;
+        return <BookOpen className="w-4 h-4 text-purple-600" />;
+      case "CHANGE_PASSWORD":
+        return <Key className="w-4 h-4 text-orange-600" />;
       default:
-        return <Info className={`${iconClass} text-gray-400`} />;
+        return <Activity className="w-4 h-4 text-gray-600" />;
     }
   };
 
@@ -149,31 +120,24 @@ export default function ActivityLogsSection({
     );
   };
 
-  const generatePDFReport = () => {
-    // Build query parameters for PDF preview page
-    const params = new URLSearchParams();
-
-    if (currentFilters?.userId) {
-      params.set("userId", currentFilters.userId);
+  const formatActivityType = (type: string | null | undefined) => {
+    if (!type) {
+      return "Unknown";
     }
-
-    if (currentFilters?.activityTypes) {
-      params.set("activityTypes", currentFilters.activityTypes);
-    }
-
-    params.set("page", page.toString());
-    params.set("limit", limit.toString());
-
-    // Redirect to preview page in new tab
-    const previewUrl = `/admin/activity-logs-preview-pdf?${params.toString()}`;
-    window.open(previewUrl, "_blank");
-  };
-
-  const formatActivityType = (type: string) => {
     return type
       .split("_")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(" ");
+  };
+
+  const getUserRole = (log: UserActivity) => {
+    // Determine user type based on available IDs
+    if (log.student_num && log.student_num !== "0") {
+      return "Student";
+    } else if (log.employee_id && log.employee_id !== "0") {
+      return "Faculty";
+    }
+    return log.user_role || "User";
   };
 
   const startIndex = (page - 1) * limit + 1;
@@ -192,7 +156,7 @@ export default function ActivityLogsSection({
             Page {page} of {lastPage}
           </span>
         </div>
-        <div className="text-sm text-muted-foreground">Activity Logs</div>
+        <div className="text-sm text-muted-foreground">User Activity Logs</div>
       </div>
 
       {/* Enhanced Table */}
@@ -212,6 +176,9 @@ export default function ActivityLogsSection({
                   User
                 </div>
               </TableCell>
+              <TableCell className="w-[80px] font-semibold text-left">
+                Role
+              </TableCell>
               <TableCell className="w-[280px] font-semibold text-left">
                 <div className="flex items-center gap-2">
                   <Activity className="w-4 h-4" />
@@ -226,12 +193,6 @@ export default function ActivityLogsSection({
               </TableCell>
               <TableCell className="w-[80px] font-semibold text-left">
                 Status
-              </TableCell>
-              <TableCell className="w-[120px] font-semibold text-left">
-                <div className="flex items-center gap-2">
-                  <Globe className="w-4 h-4" />
-                  IP Address
-                </div>
               </TableCell>
             </TableRow>
           </TableHeader>
@@ -258,7 +219,20 @@ export default function ActivityLogsSection({
                     <TableCell className="w-[160px]">
                       <div className="text-left">
                         <div className="font-medium text-sm">{log.name}</div>
+                        <div className="text-muted-foreground text-xs">
+                          {log.student_num &&
+                            log.student_num !== "0" &&
+                            `Student: ${log.student_num}`}
+                          {log.employee_id &&
+                            log.employee_id !== "0" &&
+                            `Employee: ${log.employee_id}`}
+                        </div>
                       </div>
+                    </TableCell>
+                    <TableCell className="w-[80px]">
+                      <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 font-medium">
+                        {getUserRole(log)}
+                      </span>
                     </TableCell>
                     <TableCell className="w-[280px]">
                       <div className="text-left">
@@ -326,13 +300,6 @@ export default function ActivityLogsSection({
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="w-[120px]">
-                      <div className="text-left">
-                        <div className="text-sm font-mono bg-muted/50 px-2 py-1 rounded">
-                          {log.ip_address || "Unknown"}
-                        </div>
-                      </div>
-                    </TableCell>
                   </TableRow>
                 );
               })
@@ -342,9 +309,11 @@ export default function ActivityLogsSection({
                   <div className="flex flex-col items-center gap-3 text-muted-foreground">
                     <Activity className="w-12 h-12 opacity-30" />
                     <div>
-                      <p className="font-medium">No logs to display</p>
+                      <p className="font-medium">
+                        No user activity logs to display
+                      </p>
                       <p className="text-sm">
-                        Activity logs will appear here when users perform
+                        User activity logs will appear here when users perform
                         actions
                       </p>
                     </div>
@@ -371,45 +340,86 @@ export default function ActivityLogsSection({
         <div className="flex items-center gap-2">
           <button
             className="flex items-center gap-2 px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
-            onClick={() => onPageChange(Math.max(1, page - 1))}
           >
             <ChevronLeft className="w-4 h-4" />
             Previous
           </button>
 
           <div className="flex items-center gap-1">
-            {/* Page numbers */}
-            {Array.from({ length: Math.min(5, lastPage) }, (_, i) => {
-              let pageNum;
-              if (lastPage <= 5) {
-                pageNum = i + 1;
-              } else if (page <= 3) {
-                pageNum = i + 1;
-              } else if (page >= lastPage - 2) {
-                pageNum = lastPage - 4 + i;
-              } else {
-                pageNum = page - 2 + i;
+            {/* Show first page */}
+            {page > 3 && (
+              <>
+                <button
+                  key="page-1"
+                  className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors"
+                  onClick={() => onPageChange(1)}
+                >
+                  1
+                </button>
+                {page > 4 && (
+                  <span
+                    key="ellipsis-start"
+                    className="px-2 text-muted-foreground"
+                  >
+                    ...
+                  </span>
+                )}
+              </>
+            )}
+
+            {/* Show pages around current page */}
+            {(() => {
+              const startPage = Math.max(1, page - 2);
+              const endPage = Math.min(lastPage, page + 2);
+              const pages = [];
+
+              for (let i = startPage; i <= endPage; i++) {
+                pages.push(
+                  <button
+                    key={`page-${i}`}
+                    className={`px-3 py-2 text-sm border rounded-md transition-colors ${
+                      i === page
+                        ? "dark:bg-primary dark:text-primary-foreground"
+                        : "hover:bg-muted"
+                    }`}
+                    onClick={() => onPageChange(i)}
+                  >
+                    {i}
+                  </button>,
+                );
               }
 
-              return (
+              return pages;
+            })()}
+
+            {/* Show last page */}
+            {page < lastPage - 2 && (
+              <>
+                {page < lastPage - 3 && (
+                  <span
+                    key="ellipsis-end"
+                    className="px-2 text-muted-foreground"
+                  >
+                    ...
+                  </span>
+                )}
                 <button
-                  key={pageNum}
-                  onClick={() => onPageChange(pageNum)}
-                  className={` cursor-pointer w-9 h-9 text-sm rounded-md transition-colors ${
-                    pageNum === page ? "font-medium" : "hover:bg-muted border"
-                  }`}
+                  key={`page-${lastPage}`}
+                  className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors"
+                  onClick={() => onPageChange(lastPage)}
                 >
-                  {pageNum}
+                  {lastPage}
                 </button>
-              );
-            })}
+              </>
+            )}
           </div>
 
           <button
             className="flex items-center gap-2 px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => onPageChange(page + 1)}
             disabled={page >= lastPage}
-            onClick={() => onPageChange(Math.min(lastPage, page + 1))}
           >
             Next
             <ChevronRight className="w-4 h-4" />
