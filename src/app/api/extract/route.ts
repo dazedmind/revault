@@ -160,21 +160,20 @@ export async function POST(req: Request) {
     });
 
     const raw = completion.choices[0].message.content || '';
-    console.log('📨 Received response from Groq API');
 
     // Attempt to extract just the JSON part
     const match = raw.match(/\{[\s\S]*\}/);
     if (!match) {
-      console.error('❌ No valid JSON found in LLM response:', raw);
+      console.error('❌ No valid JSON found in extraction:', raw);
       return NextResponse.json(
-        { error: 'No valid JSON found in LLM response' },
+        { error: 'No valid JSON found in extraction' },
         { status: 500 }
       );
     }
     
     try {
       const parsed = JSON.parse(match[0]);
-      console.log('✅ Successfully parsed LLM response');
+      console.log('✅ Successfully parsed metadata');
       
       // 🔍 TF-IDF Keyword Extraction (use original rawText for better keyword extraction)
       console.log('🔍 Extracting keywords using TF-IDF...');
@@ -213,7 +212,7 @@ export async function POST(req: Request) {
       console.error('❌ JSON parsing error:', e);
       console.error('Raw response:', raw);
       return NextResponse.json(
-        { error: 'Failed to parse LLM response as JSON' },
+        { error: 'Failed to parse metadata as JSON' },
         { status: 500 }
       );
     }
