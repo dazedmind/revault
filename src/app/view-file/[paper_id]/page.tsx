@@ -10,7 +10,17 @@ import FileMenuButton from "../../component/FileMenuButton";
 import ProtectedRoute from "../../component/ProtectedRoute";
 import { useTheme } from "next-themes";
 import { useParams } from "next/navigation";
-import { User, BookOpen, Calendar, Tag, Building2 } from "lucide-react";
+<<<<<<< HEAD
+import {
+  User,
+  BookOpen,
+  Calendar,
+  Tag,
+  Building2,
+} from "lucide-react";
+=======
+import { Link } from "lucide-react";
+>>>>>>> f4e31b3 (Add minor ui fixes)
 import LoadingScreen from "@/app/component/LoadingScreen";
 import { Toaster, toast } from "sonner";
 import {
@@ -22,7 +32,7 @@ import {
   GoSun,
 } from "react-icons/go";
 import SecurePDFViewer from "../../component/SecurePDFViewer";
-import RecentViewers from "../../component/RecentViewers";
+import RecentViewers from '../../component/RecentViewers';
 import useAntiCopy from "@/app/hooks/useAntiCopy";
 
 function ViewFile() {
@@ -34,8 +44,8 @@ function ViewFile() {
   const [paper, setPaper] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
   const { paper_id } = useParams();
   const [viewFromAdmin, setViewFromAdmin] = useState(null);
 
@@ -134,6 +144,7 @@ function ViewFile() {
   }, [paper_id]);
 
   useEffect(() => {
+    
     const checkAuth = () => {
       const token = localStorage.getItem("authToken");
       const storedUserType = localStorage.getItem("userType");
@@ -157,11 +168,8 @@ function ViewFile() {
           setIsAuthenticated(true);
           setUserType(storedUserType);
           // Extract user information for watermarking
-          setUserEmail(decoded.email || "");
-          setUserName(
-            decoded.name ||
-              `${decoded.first_name || ""} ${decoded.last_name || ""}`.trim(),
-          );
+          setUserEmail(decoded.email || '');
+          setUserName(decoded.name || `${decoded.first_name || ''} ${decoded.last_name || ''}`.trim());
         } else {
           alert("Token expired. Please log in again.");
           localStorage.removeItem("authToken");
@@ -185,9 +193,9 @@ function ViewFile() {
       try {
         console.log("Fetching paper with ID:", paper_id);
         const token = localStorage.getItem("authToken");
-
+        
         const res = await fetch(`/api/paper/${paper_id}`, {
-          method: "GET",
+          method: 'GET',
           cache: "no-store",
           headers: {
             "Cache-Control": "no-cache",
@@ -198,9 +206,7 @@ function ViewFile() {
 
         if (!res.ok) {
           console.error(`HTTP Error: ${res.status} ${res.statusText}`);
-          throw new Error(
-            `Failed to fetch paper: ${res.status} ${res.statusText}`,
-          );
+          throw new Error(`Failed to fetch paper: ${res.status} ${res.statusText}`);
         }
 
         const data = await res.json();
@@ -297,15 +303,20 @@ function ViewFile() {
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-1">
                     <p className="text-lg">
+<<<<<<< HEAD
                       <strong>Paper ID: </strong>
                       {paper.paper_id}
                     </p>
                   </div>
-
+                  
                   <div className="flex flex-col gap-1">
                     <p className="text-lg">
                       <strong>Paper Title: </strong>
                       {paper.title}
+=======
+                      <strong>Title:</strong>
+                      {paper.id} {paper.title}
+>>>>>>> f4e31b3 (Add minor ui fixes)
                     </p>
                   </div>
 
@@ -384,7 +395,7 @@ function ViewFile() {
                     </div>
                   </div>
                 </div>
-
+                
                 <br />
                 <p className="font-bold text-2xl text-gold">Abstract</p>
                 <p>{paper.abstract}</p>
@@ -432,30 +443,11 @@ function ViewFile() {
                       {isBookmarked ? (
                         <FileMenuButton
                           icon={
-                            <GoBookmarkSlash className="text-3xl text-yale-blue" />
-                          }
-                          label="Remove Bookmark"
-                          onClick={() => handleUnbookmark(paper_id)}
-                        />
-                      ) : (
-                        <FileMenuButton
-                          icon={
-                            <GoBookmark className="text-3xl text-yale-blue" />
-                          }
-                          label="Add to Bookmark"
-                          onClick={() => handleBookmark(paper_id)}
-                        />
-                      )}
-                    </>
-                  )}
-                {!viewFromAdmin &&
-                  userType !== "ADMIN" &&
-                  userType !== "ASSISTANT" && (
-                    <>
-                      {isBookmarked ? (
-                        <FileMenuButton
-                          icon={
+<<<<<<< HEAD
                             <GoBookmarkSlash className="text-2xl text-yale-blue" />
+=======
+                            <GoBookmarkSlash className="text-3xl text-yale-blue" />
+>>>>>>> f4e31b3 (Add minor ui fixes)
                           }
                           label="Remove Bookmark"
                           onClick={() => handleUnbookmark(paper_id)}
@@ -463,7 +455,11 @@ function ViewFile() {
                       ) : (
                         <FileMenuButton
                           icon={
+<<<<<<< HEAD
                             <GoBookmark className="text-2xl text-yale-blue" />
+=======
+                            <GoBookmark className="text-3xl text-yale-blue" />
+>>>>>>> f4e31b3 (Add minor ui fixes)
                           }
                           label="Add to Bookmark"
                           onClick={() => handleBookmark(paper_id)}
@@ -507,8 +503,7 @@ function ViewFile() {
                             Authentication Required
                           </h3>
                           <p className="text-gray-600 dark:text-gray-400 mb-4">
-                            Please ensure you are properly logged in to view
-                            this document.
+                            Please ensure you are properly logged in to view this document.
                           </p>
                           <button
                             onClick={() => window.location.reload()}
