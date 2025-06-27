@@ -43,9 +43,6 @@ const LogIn = () => {
 
     e.preventDefault();
 
-    // Debugging line to log form data before sending it
-    console.log("Form Data: ", formData);
-
     // Send login request to the server
     const response = await fetch("/api/login", {
       method: "POST",
@@ -183,7 +180,7 @@ const LogIn = () => {
         </div>
 
         <footer className="flex flex-col justify-center items-center z-150">
-          <p className="text-xs font-bold bg-red-600/20 text-red-600 p-2 rounded-lg mb-2">Beta Testing Version 1.2.0</p>
+          <p className="text-xs font-bold bg-yale-blue/30 text-yale-blue-fg p-2 rounded-lg mb-2">Beta Testing Version 1.2.0</p>
           <p className="text-xs">&copy; 2025 Revault. All rights reserved.</p>
           <p
             className="text-xs text-gold-fg font-bold cursor-pointer"
