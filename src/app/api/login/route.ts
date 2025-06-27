@@ -23,8 +23,6 @@ export async function POST(req: Request) {
   const numberLength = idNumber.length;
   let role: "STUDENT" | "FACULTY" | null = null;
 
-  console.log("ID Number:", idNumber); // Debugging line
-
   if (numberLength === 9) role = "STUDENT";
   else if (numberLength === 10) role = "FACULTY";
   else {
