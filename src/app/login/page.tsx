@@ -98,12 +98,10 @@ const LogIn = () => {
       </div>
 
       {/* Main Content */}
-      <main className="flex flex-col justify-center mt-8 items-center relative z-10">
-        <div className="w-80 md:w-96 m-5 p-2 h-auto rounded-xl outline-1 bg-white relative z-10">
+      <main className="flex flex-col justify-center mt-15 items-center relative z-10">
+        <div className="w-80 md:w-96 m-5 p-4 h-auto rounded-xl outline-1 bg-white relative z-10">
           {/* Title */}
-          <div className="flex flex-col justify-center gap-2 items-center">
-            <Image src={ulLogo} alt="Revault Logo" width={180} height={180} />
-            <div className="w-5/6 md:w-xs h-0.5 bg-gold/40"></div>
+          <div className="flex flex-col justify-center gap-2 items-center pt-4">
             <h1 className="text-4xl font-mono font-bold text-gold">ReVault</h1>
           </div>
 
