@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Upload to Google Cloud Storage
-        console.log("📤 Uploading to Google Cloud Storage...");
+        console.log("📤 Uploading to Cloud Storage...");
         const uploadedUrl = await uploadFile(finalBuffer, fileName);
         console.log("✅ Upload completed! URL:", uploadedUrl);
 
