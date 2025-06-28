@@ -16,14 +16,14 @@ export async function POST(req: NextRequest) {
     console.log("🚀 Upload Profile API called");
     
     // Test GCS connection first
-    console.log("🔍 Testing Google Cloud Storage connection...");
+    console.log("🔍 Testing Cloud Storage connection...");
     const connectionTest = await testConnection();
     console.log("🔍 Connection test result:", connectionTest);
     
     if (!connectionTest) {
       return NextResponse.json({
         success: false,
-        message: "Google Cloud Storage connection failed"
+        message: "Cloud Storage connection failed"
       }, { status: 500 });
     }
     
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
       const buffer = Buffer.from(await file.arrayBuffer());
       console.log("✅ Buffer created, size:", buffer.length);
       
-      console.log("📤 Starting upload to Google Cloud Storage...");
+      console.log("📤 Starting upload to Cloud Storage...");
       
       // Upload to profile folder
       const uploadedUrl = await uploadProfilePicture(buffer, file.name, userId);
@@ -191,7 +191,7 @@ async function uploadProfilePicture(buffer: Buffer, originalFilename: string, us
     const bucket = storage.bucket(bucketName);
     const file = bucket.file(filepath);
 
-    console.log("⬆️ Uploading profile picture to Google Cloud Storage...");
+    console.log("⬆️ Uploading profile picture to Cloud Storage...");
     
     // Determine content type based on file extension
     const getContentType = (filename: string): string => {

@@ -30,14 +30,14 @@ export async function POST(req: NextRequest) {
     console.log("🚀 Upload API called");
     
     // Test GCS connection first
-    console.log("🔍 Testing Google Cloud Storage connection...");
+    console.log("🔍 Testing Cloud Storage connection...");
     const connectionTest = await testConnection();
     console.log("🔍 Connection test result:", connectionTest);
     
     if (!connectionTest) {
       return NextResponse.json({
         success: false,
-        message: "Google Cloud Storage connection failed"
+        message: "Cloud Storage connection failed"
       }, { status: 500 });
     }
     
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
           const buffer = Buffer.from(await file.arrayBuffer());
           console.log("✅ Buffer created, size:", buffer.length);
           
-          console.log("📤 Starting upload to Google Cloud Storage...");
+          console.log("📤 Starting upload to Cloud Storage...");
           uploadedUrl = await uploadFile(buffer, file.name);
           console.log("✅ Upload completed! URL:", uploadedUrl);
           
