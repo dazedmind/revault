@@ -21,7 +21,7 @@ const LogInInputField = ({
     <label
       htmlFor={name}
       className="absolute text-sm text-white-25 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] 
-          bg-midnight dark:bg-white px-2 peer-focus:px-2 peer-focus:text-gold peer-focus:dark:text-gold 
+          px-2 peer-focus:px-2 peer-focus:text-gold peer-focus:dark:text-gold 
           peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 
           peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1 transition-all duration-300 ease-in-out"
     >
