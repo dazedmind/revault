@@ -80,9 +80,11 @@ export async function GET(req: Request) {
 
     user.role = payload.role; // set role to pass on to the front-end
 
+    await prisma.$disconnect();
     return NextResponse.json(user);
   } catch (err) {
     console.error("Error verifying token:", err);
+    await prisma.$disconnect();
     return NextResponse.json(
       { error: "Invalid or expired token" },
       { status: 403 },

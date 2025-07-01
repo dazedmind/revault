@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
-  output   = "../node_modules/.prisma/client"
+  output   = "../src/generated/prisma"
+  // output   = "../node_modules/.prisma/client"/
 }
 
 datasource db {
@@ -26,7 +26,8 @@ model users {
   librarian       librarian?
   students        students?
   user_bookmarks  user_bookmarks[]
-}
+  backup_jobs      backup_jobs[]
+  }
 
 model faculty {
   employee_id BigInt     @id @unique
@@ -132,6 +133,42 @@ model user_activity_logs {
   users         users          @relation(fields: [user_id], references: [user_id])
   papers        papers         @relation(fields: [paper_id], references: [paper_id])
 }
+
+
+model backup_jobs {
+  id               String    @id @default(cuid())
+  type             String    // 'full', 'documents'
+  status           String    @default("pending") // 'pending', 'running', 'completed', 'failed'
+  created_by       Int
+  created_at       DateTime  @default(now())
+  completed_at     DateTime?
+  file_count       Int       @default(0)
+  total_size       String    @default("0")
+  download_url     String?
+  error_message    String?
+  
+  // Relations
+  creator          users     @relation(fields: [created_by], references: [user_id], onDelete: Cascade)
+  
+  @@map("backup_jobs")
+}
+
+model backup_settings {
+  id                  String    @id @default(cuid())
+  frequency           String    @default("weekly") // 'daily', 'weekly', 'monthly', 'manual'
+  backup_time         String    @default("02:00") // Time in HH:MM format
+  retention_days      Int       @default(30)
+  auto_delete         Boolean   @default(true)
+  compress_backups    Boolean   @default(true)
+  email_notifications Boolean   @default(false)
+  notification_email  String?
+  last_cleanup        DateTime?
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+  
+  @@map("backup_settings")
+}
+
 
 enum activity_type {
   LOGIN

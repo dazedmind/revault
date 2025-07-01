@@ -5,6 +5,7 @@ const LogInInputField = ({
   value,
   onChange,
   className = "",
+  disabled = false,
 }) => (
   <div
     className={`flex flex-col justify-center items-center relative mx-auto w-68 md:w-full mt-5 ${className}`}
@@ -17,6 +18,7 @@ const LogInInputField = ({
       value={value}
       onChange={onChange}
       placeholder=" "
+      disabled={disabled}
     />
     <label
       htmlFor={name}
