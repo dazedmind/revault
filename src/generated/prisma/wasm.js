@@ -222,6 +222,33 @@ exports.Prisma.User_activity_logsScalarFieldEnum = {
   student_num: 'student_num'
 };
 
+exports.Prisma.Backup_jobsScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  status: 'status',
+  created_by: 'created_by',
+  created_at: 'created_at',
+  completed_at: 'completed_at',
+  file_count: 'file_count',
+  total_size: 'total_size',
+  download_url: 'download_url',
+  error_message: 'error_message'
+};
+
+exports.Prisma.Backup_settingsScalarFieldEnum = {
+  id: 'id',
+  frequency: 'frequency',
+  backup_time: 'backup_time',
+  retention_days: 'retention_days',
+  auto_delete: 'auto_delete',
+  compress_backups: 'compress_backups',
+  email_notifications: 'email_notifications',
+  notification_email: 'notification_email',
+  last_cleanup: 'last_cleanup',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -270,7 +297,9 @@ exports.Prisma.ModelName = {
   user_bookmarks: 'user_bookmarks',
   Otp: 'Otp',
   activity_logs: 'activity_logs',
-  user_activity_logs: 'user_activity_logs'
+  user_activity_logs: 'user_activity_logs',
+  backup_jobs: 'backup_jobs',
+  backup_settings: 'backup_settings'
 };
 
 /**

@@ -131,6 +131,7 @@ const AdminLogin = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-68 md:w-xs"
+                  disabled={isLoading}
                 />
                 <button
                   type="button"

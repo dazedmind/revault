@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import AdminNavBar from "../components/AdminNavBar";
 import SettingsList from "../components/SettingsSideBar";
 import ProtectedRoute from "../../component/ProtectedRoute";
-import { Activity, Cog, Info, Settings, SunMoon, Upload, User } from "lucide-react";
+import { Activity, Cog, Info, Settings, SunMoon, FolderSync, User } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export default function SettingsLayout({
@@ -35,10 +35,17 @@ export default function SettingsLayout({
     {
       category: "Security",
       labels:
-        userType === "LIBRARIAN" || userType === "ASSISTANT"
+        userType === "LIBRARIAN"
           ? ["Activity Logs", "About Revault"]
-          : ["Manage Users", "Activity Logs", "About Revault"],
-      icon: [<User key="user2" />, <Activity key="activity" />, <Info key="info" />],
+          : userType === "ASSISTANT"
+          ? ["Manage Users", "Activity Logs", "About Revault"]
+          : ["Manage Users", "Activity Logs", "Backup Files", "About Revault"],
+      icon: 
+        userType === "LIBRARIAN"
+        ? [<Activity key="activity" />, <Info key="info" />]
+        : userType === "ASSISTANT"
+        ? [<User key="user2" />, <Activity key="activity" />, <Info key="info" />]
+        : [<User key="user2" />, <Activity key="activity" />, <FolderSync />, <Info key="info" />],
     },
   ];
 

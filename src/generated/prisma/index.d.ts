@@ -63,6 +63,16 @@ export type activity_logs = $Result.DefaultSelection<Prisma.$activity_logsPayloa
  * 
  */
 export type user_activity_logs = $Result.DefaultSelection<Prisma.$user_activity_logsPayload>
+/**
+ * Model backup_jobs
+ * 
+ */
+export type backup_jobs = $Result.DefaultSelection<Prisma.$backup_jobsPayload>
+/**
+ * Model backup_settings
+ * 
+ */
+export type backup_settings = $Result.DefaultSelection<Prisma.$backup_settingsPayload>
 
 /**
  * Enums
@@ -331,6 +341,26 @@ export class PrismaClient<
     * ```
     */
   get user_activity_logs(): Prisma.user_activity_logsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.backup_jobs`: Exposes CRUD operations for the **backup_jobs** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Backup_jobs
+    * const backup_jobs = await prisma.backup_jobs.findMany()
+    * ```
+    */
+  get backup_jobs(): Prisma.backup_jobsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.backup_settings`: Exposes CRUD operations for the **backup_settings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Backup_settings
+    * const backup_settings = await prisma.backup_settings.findMany()
+    * ```
+    */
+  get backup_settings(): Prisma.backup_settingsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -780,7 +810,9 @@ export namespace Prisma {
     user_bookmarks: 'user_bookmarks',
     Otp: 'Otp',
     activity_logs: 'activity_logs',
-    user_activity_logs: 'user_activity_logs'
+    user_activity_logs: 'user_activity_logs',
+    backup_jobs: 'backup_jobs',
+    backup_settings: 'backup_settings'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -799,7 +831,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "faculty" | "students" | "librarian" | "papers" | "paper_metadata" | "user_bookmarks" | "otp" | "activity_logs" | "user_activity_logs"
+      modelProps: "users" | "faculty" | "students" | "librarian" | "papers" | "paper_metadata" | "user_bookmarks" | "otp" | "activity_logs" | "user_activity_logs" | "backup_jobs" | "backup_settings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1543,6 +1575,154 @@ export namespace Prisma {
           }
         }
       }
+      backup_jobs: {
+        payload: Prisma.$backup_jobsPayload<ExtArgs>
+        fields: Prisma.backup_jobsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.backup_jobsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.backup_jobsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload>
+          }
+          findFirst: {
+            args: Prisma.backup_jobsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.backup_jobsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload>
+          }
+          findMany: {
+            args: Prisma.backup_jobsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload>[]
+          }
+          create: {
+            args: Prisma.backup_jobsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload>
+          }
+          createMany: {
+            args: Prisma.backup_jobsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.backup_jobsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload>[]
+          }
+          delete: {
+            args: Prisma.backup_jobsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload>
+          }
+          update: {
+            args: Prisma.backup_jobsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload>
+          }
+          deleteMany: {
+            args: Prisma.backup_jobsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.backup_jobsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.backup_jobsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload>[]
+          }
+          upsert: {
+            args: Prisma.backup_jobsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_jobsPayload>
+          }
+          aggregate: {
+            args: Prisma.Backup_jobsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBackup_jobs>
+          }
+          groupBy: {
+            args: Prisma.backup_jobsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Backup_jobsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.backup_jobsCountArgs<ExtArgs>
+            result: $Utils.Optional<Backup_jobsCountAggregateOutputType> | number
+          }
+        }
+      }
+      backup_settings: {
+        payload: Prisma.$backup_settingsPayload<ExtArgs>
+        fields: Prisma.backup_settingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.backup_settingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.backup_settingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload>
+          }
+          findFirst: {
+            args: Prisma.backup_settingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.backup_settingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload>
+          }
+          findMany: {
+            args: Prisma.backup_settingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload>[]
+          }
+          create: {
+            args: Prisma.backup_settingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload>
+          }
+          createMany: {
+            args: Prisma.backup_settingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.backup_settingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload>[]
+          }
+          delete: {
+            args: Prisma.backup_settingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload>
+          }
+          update: {
+            args: Prisma.backup_settingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.backup_settingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.backup_settingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.backup_settingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.backup_settingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$backup_settingsPayload>
+          }
+          aggregate: {
+            args: Prisma.Backup_settingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBackup_settings>
+          }
+          groupBy: {
+            args: Prisma.backup_settingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Backup_settingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.backup_settingsCountArgs<ExtArgs>
+            result: $Utils.Optional<Backup_settingsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1637,6 +1817,8 @@ export namespace Prisma {
     otp?: OtpOmit
     activity_logs?: activity_logsOmit
     user_activity_logs?: user_activity_logsOmit
+    backup_jobs?: backup_jobsOmit
+    backup_settings?: backup_settingsOmit
   }
 
   /* Types for Logging */
@@ -1734,12 +1916,14 @@ export namespace Prisma {
     user_activity_logs: number
     activity_logs: number
     user_bookmarks: number
+    backup_jobs: number
   }
 
   export type UsersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user_activity_logs?: boolean | UsersCountOutputTypeCountUser_activity_logsArgs
     activity_logs?: boolean | UsersCountOutputTypeCountActivity_logsArgs
     user_bookmarks?: boolean | UsersCountOutputTypeCountUser_bookmarksArgs
+    backup_jobs?: boolean | UsersCountOutputTypeCountBackup_jobsArgs
   }
 
   // Custom InputTypes
@@ -1772,6 +1956,13 @@ export namespace Prisma {
    */
   export type UsersCountOutputTypeCountUser_bookmarksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: user_bookmarksWhereInput
+  }
+
+  /**
+   * UsersCountOutputType without action
+   */
+  export type UsersCountOutputTypeCountBackup_jobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: backup_jobsWhereInput
   }
 
 
@@ -2103,6 +2294,7 @@ export namespace Prisma {
     librarian?: boolean | users$librarianArgs<ExtArgs>
     students?: boolean | users$studentsArgs<ExtArgs>
     user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
+    backup_jobs?: boolean | users$backup_jobsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["users"]>
 
@@ -2153,6 +2345,7 @@ export namespace Prisma {
     librarian?: boolean | users$librarianArgs<ExtArgs>
     students?: boolean | users$studentsArgs<ExtArgs>
     user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
+    backup_jobs?: boolean | users$backup_jobsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type usersIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2167,6 +2360,7 @@ export namespace Prisma {
       librarian: Prisma.$librarianPayload<ExtArgs> | null
       students: Prisma.$studentsPayload<ExtArgs> | null
       user_bookmarks: Prisma.$user_bookmarksPayload<ExtArgs>[]
+      backup_jobs: Prisma.$backup_jobsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       user_id: number
@@ -2579,6 +2773,7 @@ export namespace Prisma {
     librarian<T extends users$librarianArgs<ExtArgs> = {}>(args?: Subset<T, users$librarianArgs<ExtArgs>>): Prisma__librarianClient<$Result.GetResult<Prisma.$librarianPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     students<T extends users$studentsArgs<ExtArgs> = {}>(args?: Subset<T, users$studentsArgs<ExtArgs>>): Prisma__studentsClient<$Result.GetResult<Prisma.$studentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     user_bookmarks<T extends users$user_bookmarksArgs<ExtArgs> = {}>(args?: Subset<T, users$user_bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_bookmarksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    backup_jobs<T extends users$backup_jobsArgs<ExtArgs> = {}>(args?: Subset<T, users$backup_jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3132,6 +3327,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: User_bookmarksScalarFieldEnum | User_bookmarksScalarFieldEnum[]
+  }
+
+  /**
+   * users.backup_jobs
+   */
+  export type users$backup_jobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+    where?: backup_jobsWhereInput
+    orderBy?: backup_jobsOrderByWithRelationInput | backup_jobsOrderByWithRelationInput[]
+    cursor?: backup_jobsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Backup_jobsScalarFieldEnum | Backup_jobsScalarFieldEnum[]
   }
 
   /**
@@ -13284,6 +13503,2274 @@ export namespace Prisma {
 
 
   /**
+   * Model backup_jobs
+   */
+
+  export type AggregateBackup_jobs = {
+    _count: Backup_jobsCountAggregateOutputType | null
+    _avg: Backup_jobsAvgAggregateOutputType | null
+    _sum: Backup_jobsSumAggregateOutputType | null
+    _min: Backup_jobsMinAggregateOutputType | null
+    _max: Backup_jobsMaxAggregateOutputType | null
+  }
+
+  export type Backup_jobsAvgAggregateOutputType = {
+    created_by: number | null
+    file_count: number | null
+  }
+
+  export type Backup_jobsSumAggregateOutputType = {
+    created_by: number | null
+    file_count: number | null
+  }
+
+  export type Backup_jobsMinAggregateOutputType = {
+    id: string | null
+    type: string | null
+    status: string | null
+    created_by: number | null
+    created_at: Date | null
+    completed_at: Date | null
+    file_count: number | null
+    total_size: string | null
+    download_url: string | null
+    error_message: string | null
+  }
+
+  export type Backup_jobsMaxAggregateOutputType = {
+    id: string | null
+    type: string | null
+    status: string | null
+    created_by: number | null
+    created_at: Date | null
+    completed_at: Date | null
+    file_count: number | null
+    total_size: string | null
+    download_url: string | null
+    error_message: string | null
+  }
+
+  export type Backup_jobsCountAggregateOutputType = {
+    id: number
+    type: number
+    status: number
+    created_by: number
+    created_at: number
+    completed_at: number
+    file_count: number
+    total_size: number
+    download_url: number
+    error_message: number
+    _all: number
+  }
+
+
+  export type Backup_jobsAvgAggregateInputType = {
+    created_by?: true
+    file_count?: true
+  }
+
+  export type Backup_jobsSumAggregateInputType = {
+    created_by?: true
+    file_count?: true
+  }
+
+  export type Backup_jobsMinAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    created_by?: true
+    created_at?: true
+    completed_at?: true
+    file_count?: true
+    total_size?: true
+    download_url?: true
+    error_message?: true
+  }
+
+  export type Backup_jobsMaxAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    created_by?: true
+    created_at?: true
+    completed_at?: true
+    file_count?: true
+    total_size?: true
+    download_url?: true
+    error_message?: true
+  }
+
+  export type Backup_jobsCountAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    created_by?: true
+    created_at?: true
+    completed_at?: true
+    file_count?: true
+    total_size?: true
+    download_url?: true
+    error_message?: true
+    _all?: true
+  }
+
+  export type Backup_jobsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which backup_jobs to aggregate.
+     */
+    where?: backup_jobsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of backup_jobs to fetch.
+     */
+    orderBy?: backup_jobsOrderByWithRelationInput | backup_jobsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: backup_jobsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` backup_jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` backup_jobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned backup_jobs
+    **/
+    _count?: true | Backup_jobsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Backup_jobsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Backup_jobsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Backup_jobsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Backup_jobsMaxAggregateInputType
+  }
+
+  export type GetBackup_jobsAggregateType<T extends Backup_jobsAggregateArgs> = {
+        [P in keyof T & keyof AggregateBackup_jobs]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBackup_jobs[P]>
+      : GetScalarType<T[P], AggregateBackup_jobs[P]>
+  }
+
+
+
+
+  export type backup_jobsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: backup_jobsWhereInput
+    orderBy?: backup_jobsOrderByWithAggregationInput | backup_jobsOrderByWithAggregationInput[]
+    by: Backup_jobsScalarFieldEnum[] | Backup_jobsScalarFieldEnum
+    having?: backup_jobsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Backup_jobsCountAggregateInputType | true
+    _avg?: Backup_jobsAvgAggregateInputType
+    _sum?: Backup_jobsSumAggregateInputType
+    _min?: Backup_jobsMinAggregateInputType
+    _max?: Backup_jobsMaxAggregateInputType
+  }
+
+  export type Backup_jobsGroupByOutputType = {
+    id: string
+    type: string
+    status: string
+    created_by: number
+    created_at: Date
+    completed_at: Date | null
+    file_count: number
+    total_size: string
+    download_url: string | null
+    error_message: string | null
+    _count: Backup_jobsCountAggregateOutputType | null
+    _avg: Backup_jobsAvgAggregateOutputType | null
+    _sum: Backup_jobsSumAggregateOutputType | null
+    _min: Backup_jobsMinAggregateOutputType | null
+    _max: Backup_jobsMaxAggregateOutputType | null
+  }
+
+  type GetBackup_jobsGroupByPayload<T extends backup_jobsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Backup_jobsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Backup_jobsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Backup_jobsGroupByOutputType[P]>
+            : GetScalarType<T[P], Backup_jobsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type backup_jobsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    completed_at?: boolean
+    file_count?: boolean
+    total_size?: boolean
+    download_url?: boolean
+    error_message?: boolean
+    creator?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["backup_jobs"]>
+
+  export type backup_jobsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    completed_at?: boolean
+    file_count?: boolean
+    total_size?: boolean
+    download_url?: boolean
+    error_message?: boolean
+    creator?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["backup_jobs"]>
+
+  export type backup_jobsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    completed_at?: boolean
+    file_count?: boolean
+    total_size?: boolean
+    download_url?: boolean
+    error_message?: boolean
+    creator?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["backup_jobs"]>
+
+  export type backup_jobsSelectScalar = {
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    completed_at?: boolean
+    file_count?: boolean
+    total_size?: boolean
+    download_url?: boolean
+    error_message?: boolean
+  }
+
+  export type backup_jobsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "status" | "created_by" | "created_at" | "completed_at" | "file_count" | "total_size" | "download_url" | "error_message", ExtArgs["result"]["backup_jobs"]>
+  export type backup_jobsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | usersDefaultArgs<ExtArgs>
+  }
+  export type backup_jobsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | usersDefaultArgs<ExtArgs>
+  }
+  export type backup_jobsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | usersDefaultArgs<ExtArgs>
+  }
+
+  export type $backup_jobsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "backup_jobs"
+    objects: {
+      creator: Prisma.$usersPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      type: string
+      status: string
+      created_by: number
+      created_at: Date
+      completed_at: Date | null
+      file_count: number
+      total_size: string
+      download_url: string | null
+      error_message: string | null
+    }, ExtArgs["result"]["backup_jobs"]>
+    composites: {}
+  }
+
+  type backup_jobsGetPayload<S extends boolean | null | undefined | backup_jobsDefaultArgs> = $Result.GetResult<Prisma.$backup_jobsPayload, S>
+
+  type backup_jobsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<backup_jobsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Backup_jobsCountAggregateInputType | true
+    }
+
+  export interface backup_jobsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['backup_jobs'], meta: { name: 'backup_jobs' } }
+    /**
+     * Find zero or one Backup_jobs that matches the filter.
+     * @param {backup_jobsFindUniqueArgs} args - Arguments to find a Backup_jobs
+     * @example
+     * // Get one Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends backup_jobsFindUniqueArgs>(args: SelectSubset<T, backup_jobsFindUniqueArgs<ExtArgs>>): Prisma__backup_jobsClient<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Backup_jobs that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {backup_jobsFindUniqueOrThrowArgs} args - Arguments to find a Backup_jobs
+     * @example
+     * // Get one Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends backup_jobsFindUniqueOrThrowArgs>(args: SelectSubset<T, backup_jobsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__backup_jobsClient<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Backup_jobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_jobsFindFirstArgs} args - Arguments to find a Backup_jobs
+     * @example
+     * // Get one Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends backup_jobsFindFirstArgs>(args?: SelectSubset<T, backup_jobsFindFirstArgs<ExtArgs>>): Prisma__backup_jobsClient<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Backup_jobs that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_jobsFindFirstOrThrowArgs} args - Arguments to find a Backup_jobs
+     * @example
+     * // Get one Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends backup_jobsFindFirstOrThrowArgs>(args?: SelectSubset<T, backup_jobsFindFirstOrThrowArgs<ExtArgs>>): Prisma__backup_jobsClient<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Backup_jobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_jobsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.findMany()
+     * 
+     * // Get first 10 Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const backup_jobsWithIdOnly = await prisma.backup_jobs.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends backup_jobsFindManyArgs>(args?: SelectSubset<T, backup_jobsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Backup_jobs.
+     * @param {backup_jobsCreateArgs} args - Arguments to create a Backup_jobs.
+     * @example
+     * // Create one Backup_jobs
+     * const Backup_jobs = await prisma.backup_jobs.create({
+     *   data: {
+     *     // ... data to create a Backup_jobs
+     *   }
+     * })
+     * 
+     */
+    create<T extends backup_jobsCreateArgs>(args: SelectSubset<T, backup_jobsCreateArgs<ExtArgs>>): Prisma__backup_jobsClient<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Backup_jobs.
+     * @param {backup_jobsCreateManyArgs} args - Arguments to create many Backup_jobs.
+     * @example
+     * // Create many Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends backup_jobsCreateManyArgs>(args?: SelectSubset<T, backup_jobsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Backup_jobs and returns the data saved in the database.
+     * @param {backup_jobsCreateManyAndReturnArgs} args - Arguments to create many Backup_jobs.
+     * @example
+     * // Create many Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Backup_jobs and only return the `id`
+     * const backup_jobsWithIdOnly = await prisma.backup_jobs.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends backup_jobsCreateManyAndReturnArgs>(args?: SelectSubset<T, backup_jobsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Backup_jobs.
+     * @param {backup_jobsDeleteArgs} args - Arguments to delete one Backup_jobs.
+     * @example
+     * // Delete one Backup_jobs
+     * const Backup_jobs = await prisma.backup_jobs.delete({
+     *   where: {
+     *     // ... filter to delete one Backup_jobs
+     *   }
+     * })
+     * 
+     */
+    delete<T extends backup_jobsDeleteArgs>(args: SelectSubset<T, backup_jobsDeleteArgs<ExtArgs>>): Prisma__backup_jobsClient<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Backup_jobs.
+     * @param {backup_jobsUpdateArgs} args - Arguments to update one Backup_jobs.
+     * @example
+     * // Update one Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends backup_jobsUpdateArgs>(args: SelectSubset<T, backup_jobsUpdateArgs<ExtArgs>>): Prisma__backup_jobsClient<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Backup_jobs.
+     * @param {backup_jobsDeleteManyArgs} args - Arguments to filter Backup_jobs to delete.
+     * @example
+     * // Delete a few Backup_jobs
+     * const { count } = await prisma.backup_jobs.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends backup_jobsDeleteManyArgs>(args?: SelectSubset<T, backup_jobsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Backup_jobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_jobsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends backup_jobsUpdateManyArgs>(args: SelectSubset<T, backup_jobsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Backup_jobs and returns the data updated in the database.
+     * @param {backup_jobsUpdateManyAndReturnArgs} args - Arguments to update many Backup_jobs.
+     * @example
+     * // Update many Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Backup_jobs and only return the `id`
+     * const backup_jobsWithIdOnly = await prisma.backup_jobs.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends backup_jobsUpdateManyAndReturnArgs>(args: SelectSubset<T, backup_jobsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Backup_jobs.
+     * @param {backup_jobsUpsertArgs} args - Arguments to update or create a Backup_jobs.
+     * @example
+     * // Update or create a Backup_jobs
+     * const backup_jobs = await prisma.backup_jobs.upsert({
+     *   create: {
+     *     // ... data to create a Backup_jobs
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Backup_jobs we want to update
+     *   }
+     * })
+     */
+    upsert<T extends backup_jobsUpsertArgs>(args: SelectSubset<T, backup_jobsUpsertArgs<ExtArgs>>): Prisma__backup_jobsClient<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Backup_jobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_jobsCountArgs} args - Arguments to filter Backup_jobs to count.
+     * @example
+     * // Count the number of Backup_jobs
+     * const count = await prisma.backup_jobs.count({
+     *   where: {
+     *     // ... the filter for the Backup_jobs we want to count
+     *   }
+     * })
+    **/
+    count<T extends backup_jobsCountArgs>(
+      args?: Subset<T, backup_jobsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Backup_jobsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Backup_jobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Backup_jobsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Backup_jobsAggregateArgs>(args: Subset<T, Backup_jobsAggregateArgs>): Prisma.PrismaPromise<GetBackup_jobsAggregateType<T>>
+
+    /**
+     * Group by Backup_jobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_jobsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends backup_jobsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: backup_jobsGroupByArgs['orderBy'] }
+        : { orderBy?: backup_jobsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, backup_jobsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBackup_jobsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the backup_jobs model
+   */
+  readonly fields: backup_jobsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for backup_jobs.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__backup_jobsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    creator<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the backup_jobs model
+   */
+  interface backup_jobsFieldRefs {
+    readonly id: FieldRef<"backup_jobs", 'String'>
+    readonly type: FieldRef<"backup_jobs", 'String'>
+    readonly status: FieldRef<"backup_jobs", 'String'>
+    readonly created_by: FieldRef<"backup_jobs", 'Int'>
+    readonly created_at: FieldRef<"backup_jobs", 'DateTime'>
+    readonly completed_at: FieldRef<"backup_jobs", 'DateTime'>
+    readonly file_count: FieldRef<"backup_jobs", 'Int'>
+    readonly total_size: FieldRef<"backup_jobs", 'String'>
+    readonly download_url: FieldRef<"backup_jobs", 'String'>
+    readonly error_message: FieldRef<"backup_jobs", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * backup_jobs findUnique
+   */
+  export type backup_jobsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+    /**
+     * Filter, which backup_jobs to fetch.
+     */
+    where: backup_jobsWhereUniqueInput
+  }
+
+  /**
+   * backup_jobs findUniqueOrThrow
+   */
+  export type backup_jobsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+    /**
+     * Filter, which backup_jobs to fetch.
+     */
+    where: backup_jobsWhereUniqueInput
+  }
+
+  /**
+   * backup_jobs findFirst
+   */
+  export type backup_jobsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+    /**
+     * Filter, which backup_jobs to fetch.
+     */
+    where?: backup_jobsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of backup_jobs to fetch.
+     */
+    orderBy?: backup_jobsOrderByWithRelationInput | backup_jobsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for backup_jobs.
+     */
+    cursor?: backup_jobsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` backup_jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` backup_jobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of backup_jobs.
+     */
+    distinct?: Backup_jobsScalarFieldEnum | Backup_jobsScalarFieldEnum[]
+  }
+
+  /**
+   * backup_jobs findFirstOrThrow
+   */
+  export type backup_jobsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+    /**
+     * Filter, which backup_jobs to fetch.
+     */
+    where?: backup_jobsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of backup_jobs to fetch.
+     */
+    orderBy?: backup_jobsOrderByWithRelationInput | backup_jobsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for backup_jobs.
+     */
+    cursor?: backup_jobsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` backup_jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` backup_jobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of backup_jobs.
+     */
+    distinct?: Backup_jobsScalarFieldEnum | Backup_jobsScalarFieldEnum[]
+  }
+
+  /**
+   * backup_jobs findMany
+   */
+  export type backup_jobsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+    /**
+     * Filter, which backup_jobs to fetch.
+     */
+    where?: backup_jobsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of backup_jobs to fetch.
+     */
+    orderBy?: backup_jobsOrderByWithRelationInput | backup_jobsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing backup_jobs.
+     */
+    cursor?: backup_jobsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` backup_jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` backup_jobs.
+     */
+    skip?: number
+    distinct?: Backup_jobsScalarFieldEnum | Backup_jobsScalarFieldEnum[]
+  }
+
+  /**
+   * backup_jobs create
+   */
+  export type backup_jobsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a backup_jobs.
+     */
+    data: XOR<backup_jobsCreateInput, backup_jobsUncheckedCreateInput>
+  }
+
+  /**
+   * backup_jobs createMany
+   */
+  export type backup_jobsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many backup_jobs.
+     */
+    data: backup_jobsCreateManyInput | backup_jobsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * backup_jobs createManyAndReturn
+   */
+  export type backup_jobsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * The data used to create many backup_jobs.
+     */
+    data: backup_jobsCreateManyInput | backup_jobsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * backup_jobs update
+   */
+  export type backup_jobsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a backup_jobs.
+     */
+    data: XOR<backup_jobsUpdateInput, backup_jobsUncheckedUpdateInput>
+    /**
+     * Choose, which backup_jobs to update.
+     */
+    where: backup_jobsWhereUniqueInput
+  }
+
+  /**
+   * backup_jobs updateMany
+   */
+  export type backup_jobsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update backup_jobs.
+     */
+    data: XOR<backup_jobsUpdateManyMutationInput, backup_jobsUncheckedUpdateManyInput>
+    /**
+     * Filter which backup_jobs to update
+     */
+    where?: backup_jobsWhereInput
+    /**
+     * Limit how many backup_jobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * backup_jobs updateManyAndReturn
+   */
+  export type backup_jobsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * The data used to update backup_jobs.
+     */
+    data: XOR<backup_jobsUpdateManyMutationInput, backup_jobsUncheckedUpdateManyInput>
+    /**
+     * Filter which backup_jobs to update
+     */
+    where?: backup_jobsWhereInput
+    /**
+     * Limit how many backup_jobs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * backup_jobs upsert
+   */
+  export type backup_jobsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the backup_jobs to update in case it exists.
+     */
+    where: backup_jobsWhereUniqueInput
+    /**
+     * In case the backup_jobs found by the `where` argument doesn't exist, create a new backup_jobs with this data.
+     */
+    create: XOR<backup_jobsCreateInput, backup_jobsUncheckedCreateInput>
+    /**
+     * In case the backup_jobs was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<backup_jobsUpdateInput, backup_jobsUncheckedUpdateInput>
+  }
+
+  /**
+   * backup_jobs delete
+   */
+  export type backup_jobsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+    /**
+     * Filter which backup_jobs to delete.
+     */
+    where: backup_jobsWhereUniqueInput
+  }
+
+  /**
+   * backup_jobs deleteMany
+   */
+  export type backup_jobsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which backup_jobs to delete
+     */
+    where?: backup_jobsWhereInput
+    /**
+     * Limit how many backup_jobs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * backup_jobs without action
+   */
+  export type backup_jobsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_jobs
+     */
+    select?: backup_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_jobs
+     */
+    omit?: backup_jobsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: backup_jobsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model backup_settings
+   */
+
+  export type AggregateBackup_settings = {
+    _count: Backup_settingsCountAggregateOutputType | null
+    _avg: Backup_settingsAvgAggregateOutputType | null
+    _sum: Backup_settingsSumAggregateOutputType | null
+    _min: Backup_settingsMinAggregateOutputType | null
+    _max: Backup_settingsMaxAggregateOutputType | null
+  }
+
+  export type Backup_settingsAvgAggregateOutputType = {
+    retention_days: number | null
+  }
+
+  export type Backup_settingsSumAggregateOutputType = {
+    retention_days: number | null
+  }
+
+  export type Backup_settingsMinAggregateOutputType = {
+    id: string | null
+    frequency: string | null
+    backup_time: string | null
+    retention_days: number | null
+    auto_delete: boolean | null
+    compress_backups: boolean | null
+    email_notifications: boolean | null
+    notification_email: string | null
+    last_cleanup: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Backup_settingsMaxAggregateOutputType = {
+    id: string | null
+    frequency: string | null
+    backup_time: string | null
+    retention_days: number | null
+    auto_delete: boolean | null
+    compress_backups: boolean | null
+    email_notifications: boolean | null
+    notification_email: string | null
+    last_cleanup: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Backup_settingsCountAggregateOutputType = {
+    id: number
+    frequency: number
+    backup_time: number
+    retention_days: number
+    auto_delete: number
+    compress_backups: number
+    email_notifications: number
+    notification_email: number
+    last_cleanup: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Backup_settingsAvgAggregateInputType = {
+    retention_days?: true
+  }
+
+  export type Backup_settingsSumAggregateInputType = {
+    retention_days?: true
+  }
+
+  export type Backup_settingsMinAggregateInputType = {
+    id?: true
+    frequency?: true
+    backup_time?: true
+    retention_days?: true
+    auto_delete?: true
+    compress_backups?: true
+    email_notifications?: true
+    notification_email?: true
+    last_cleanup?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Backup_settingsMaxAggregateInputType = {
+    id?: true
+    frequency?: true
+    backup_time?: true
+    retention_days?: true
+    auto_delete?: true
+    compress_backups?: true
+    email_notifications?: true
+    notification_email?: true
+    last_cleanup?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Backup_settingsCountAggregateInputType = {
+    id?: true
+    frequency?: true
+    backup_time?: true
+    retention_days?: true
+    auto_delete?: true
+    compress_backups?: true
+    email_notifications?: true
+    notification_email?: true
+    last_cleanup?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Backup_settingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which backup_settings to aggregate.
+     */
+    where?: backup_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of backup_settings to fetch.
+     */
+    orderBy?: backup_settingsOrderByWithRelationInput | backup_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: backup_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` backup_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` backup_settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned backup_settings
+    **/
+    _count?: true | Backup_settingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Backup_settingsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Backup_settingsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Backup_settingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Backup_settingsMaxAggregateInputType
+  }
+
+  export type GetBackup_settingsAggregateType<T extends Backup_settingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateBackup_settings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBackup_settings[P]>
+      : GetScalarType<T[P], AggregateBackup_settings[P]>
+  }
+
+
+
+
+  export type backup_settingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: backup_settingsWhereInput
+    orderBy?: backup_settingsOrderByWithAggregationInput | backup_settingsOrderByWithAggregationInput[]
+    by: Backup_settingsScalarFieldEnum[] | Backup_settingsScalarFieldEnum
+    having?: backup_settingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Backup_settingsCountAggregateInputType | true
+    _avg?: Backup_settingsAvgAggregateInputType
+    _sum?: Backup_settingsSumAggregateInputType
+    _min?: Backup_settingsMinAggregateInputType
+    _max?: Backup_settingsMaxAggregateInputType
+  }
+
+  export type Backup_settingsGroupByOutputType = {
+    id: string
+    frequency: string
+    backup_time: string
+    retention_days: number
+    auto_delete: boolean
+    compress_backups: boolean
+    email_notifications: boolean
+    notification_email: string | null
+    last_cleanup: Date | null
+    created_at: Date
+    updated_at: Date
+    _count: Backup_settingsCountAggregateOutputType | null
+    _avg: Backup_settingsAvgAggregateOutputType | null
+    _sum: Backup_settingsSumAggregateOutputType | null
+    _min: Backup_settingsMinAggregateOutputType | null
+    _max: Backup_settingsMaxAggregateOutputType | null
+  }
+
+  type GetBackup_settingsGroupByPayload<T extends backup_settingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Backup_settingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Backup_settingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Backup_settingsGroupByOutputType[P]>
+            : GetScalarType<T[P], Backup_settingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type backup_settingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    frequency?: boolean
+    backup_time?: boolean
+    retention_days?: boolean
+    auto_delete?: boolean
+    compress_backups?: boolean
+    email_notifications?: boolean
+    notification_email?: boolean
+    last_cleanup?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["backup_settings"]>
+
+  export type backup_settingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    frequency?: boolean
+    backup_time?: boolean
+    retention_days?: boolean
+    auto_delete?: boolean
+    compress_backups?: boolean
+    email_notifications?: boolean
+    notification_email?: boolean
+    last_cleanup?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["backup_settings"]>
+
+  export type backup_settingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    frequency?: boolean
+    backup_time?: boolean
+    retention_days?: boolean
+    auto_delete?: boolean
+    compress_backups?: boolean
+    email_notifications?: boolean
+    notification_email?: boolean
+    last_cleanup?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["backup_settings"]>
+
+  export type backup_settingsSelectScalar = {
+    id?: boolean
+    frequency?: boolean
+    backup_time?: boolean
+    retention_days?: boolean
+    auto_delete?: boolean
+    compress_backups?: boolean
+    email_notifications?: boolean
+    notification_email?: boolean
+    last_cleanup?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type backup_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "frequency" | "backup_time" | "retention_days" | "auto_delete" | "compress_backups" | "email_notifications" | "notification_email" | "last_cleanup" | "created_at" | "updated_at", ExtArgs["result"]["backup_settings"]>
+
+  export type $backup_settingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "backup_settings"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      frequency: string
+      backup_time: string
+      retention_days: number
+      auto_delete: boolean
+      compress_backups: boolean
+      email_notifications: boolean
+      notification_email: string | null
+      last_cleanup: Date | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["backup_settings"]>
+    composites: {}
+  }
+
+  type backup_settingsGetPayload<S extends boolean | null | undefined | backup_settingsDefaultArgs> = $Result.GetResult<Prisma.$backup_settingsPayload, S>
+
+  type backup_settingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<backup_settingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Backup_settingsCountAggregateInputType | true
+    }
+
+  export interface backup_settingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['backup_settings'], meta: { name: 'backup_settings' } }
+    /**
+     * Find zero or one Backup_settings that matches the filter.
+     * @param {backup_settingsFindUniqueArgs} args - Arguments to find a Backup_settings
+     * @example
+     * // Get one Backup_settings
+     * const backup_settings = await prisma.backup_settings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends backup_settingsFindUniqueArgs>(args: SelectSubset<T, backup_settingsFindUniqueArgs<ExtArgs>>): Prisma__backup_settingsClient<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Backup_settings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {backup_settingsFindUniqueOrThrowArgs} args - Arguments to find a Backup_settings
+     * @example
+     * // Get one Backup_settings
+     * const backup_settings = await prisma.backup_settings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends backup_settingsFindUniqueOrThrowArgs>(args: SelectSubset<T, backup_settingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__backup_settingsClient<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Backup_settings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_settingsFindFirstArgs} args - Arguments to find a Backup_settings
+     * @example
+     * // Get one Backup_settings
+     * const backup_settings = await prisma.backup_settings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends backup_settingsFindFirstArgs>(args?: SelectSubset<T, backup_settingsFindFirstArgs<ExtArgs>>): Prisma__backup_settingsClient<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Backup_settings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_settingsFindFirstOrThrowArgs} args - Arguments to find a Backup_settings
+     * @example
+     * // Get one Backup_settings
+     * const backup_settings = await prisma.backup_settings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends backup_settingsFindFirstOrThrowArgs>(args?: SelectSubset<T, backup_settingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__backup_settingsClient<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Backup_settings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_settingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Backup_settings
+     * const backup_settings = await prisma.backup_settings.findMany()
+     * 
+     * // Get first 10 Backup_settings
+     * const backup_settings = await prisma.backup_settings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const backup_settingsWithIdOnly = await prisma.backup_settings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends backup_settingsFindManyArgs>(args?: SelectSubset<T, backup_settingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Backup_settings.
+     * @param {backup_settingsCreateArgs} args - Arguments to create a Backup_settings.
+     * @example
+     * // Create one Backup_settings
+     * const Backup_settings = await prisma.backup_settings.create({
+     *   data: {
+     *     // ... data to create a Backup_settings
+     *   }
+     * })
+     * 
+     */
+    create<T extends backup_settingsCreateArgs>(args: SelectSubset<T, backup_settingsCreateArgs<ExtArgs>>): Prisma__backup_settingsClient<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Backup_settings.
+     * @param {backup_settingsCreateManyArgs} args - Arguments to create many Backup_settings.
+     * @example
+     * // Create many Backup_settings
+     * const backup_settings = await prisma.backup_settings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends backup_settingsCreateManyArgs>(args?: SelectSubset<T, backup_settingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Backup_settings and returns the data saved in the database.
+     * @param {backup_settingsCreateManyAndReturnArgs} args - Arguments to create many Backup_settings.
+     * @example
+     * // Create many Backup_settings
+     * const backup_settings = await prisma.backup_settings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Backup_settings and only return the `id`
+     * const backup_settingsWithIdOnly = await prisma.backup_settings.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends backup_settingsCreateManyAndReturnArgs>(args?: SelectSubset<T, backup_settingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Backup_settings.
+     * @param {backup_settingsDeleteArgs} args - Arguments to delete one Backup_settings.
+     * @example
+     * // Delete one Backup_settings
+     * const Backup_settings = await prisma.backup_settings.delete({
+     *   where: {
+     *     // ... filter to delete one Backup_settings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends backup_settingsDeleteArgs>(args: SelectSubset<T, backup_settingsDeleteArgs<ExtArgs>>): Prisma__backup_settingsClient<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Backup_settings.
+     * @param {backup_settingsUpdateArgs} args - Arguments to update one Backup_settings.
+     * @example
+     * // Update one Backup_settings
+     * const backup_settings = await prisma.backup_settings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends backup_settingsUpdateArgs>(args: SelectSubset<T, backup_settingsUpdateArgs<ExtArgs>>): Prisma__backup_settingsClient<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Backup_settings.
+     * @param {backup_settingsDeleteManyArgs} args - Arguments to filter Backup_settings to delete.
+     * @example
+     * // Delete a few Backup_settings
+     * const { count } = await prisma.backup_settings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends backup_settingsDeleteManyArgs>(args?: SelectSubset<T, backup_settingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Backup_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_settingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Backup_settings
+     * const backup_settings = await prisma.backup_settings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends backup_settingsUpdateManyArgs>(args: SelectSubset<T, backup_settingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Backup_settings and returns the data updated in the database.
+     * @param {backup_settingsUpdateManyAndReturnArgs} args - Arguments to update many Backup_settings.
+     * @example
+     * // Update many Backup_settings
+     * const backup_settings = await prisma.backup_settings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Backup_settings and only return the `id`
+     * const backup_settingsWithIdOnly = await prisma.backup_settings.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends backup_settingsUpdateManyAndReturnArgs>(args: SelectSubset<T, backup_settingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Backup_settings.
+     * @param {backup_settingsUpsertArgs} args - Arguments to update or create a Backup_settings.
+     * @example
+     * // Update or create a Backup_settings
+     * const backup_settings = await prisma.backup_settings.upsert({
+     *   create: {
+     *     // ... data to create a Backup_settings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Backup_settings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends backup_settingsUpsertArgs>(args: SelectSubset<T, backup_settingsUpsertArgs<ExtArgs>>): Prisma__backup_settingsClient<$Result.GetResult<Prisma.$backup_settingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Backup_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_settingsCountArgs} args - Arguments to filter Backup_settings to count.
+     * @example
+     * // Count the number of Backup_settings
+     * const count = await prisma.backup_settings.count({
+     *   where: {
+     *     // ... the filter for the Backup_settings we want to count
+     *   }
+     * })
+    **/
+    count<T extends backup_settingsCountArgs>(
+      args?: Subset<T, backup_settingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Backup_settingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Backup_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Backup_settingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Backup_settingsAggregateArgs>(args: Subset<T, Backup_settingsAggregateArgs>): Prisma.PrismaPromise<GetBackup_settingsAggregateType<T>>
+
+    /**
+     * Group by Backup_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {backup_settingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends backup_settingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: backup_settingsGroupByArgs['orderBy'] }
+        : { orderBy?: backup_settingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, backup_settingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBackup_settingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the backup_settings model
+   */
+  readonly fields: backup_settingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for backup_settings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__backup_settingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the backup_settings model
+   */
+  interface backup_settingsFieldRefs {
+    readonly id: FieldRef<"backup_settings", 'String'>
+    readonly frequency: FieldRef<"backup_settings", 'String'>
+    readonly backup_time: FieldRef<"backup_settings", 'String'>
+    readonly retention_days: FieldRef<"backup_settings", 'Int'>
+    readonly auto_delete: FieldRef<"backup_settings", 'Boolean'>
+    readonly compress_backups: FieldRef<"backup_settings", 'Boolean'>
+    readonly email_notifications: FieldRef<"backup_settings", 'Boolean'>
+    readonly notification_email: FieldRef<"backup_settings", 'String'>
+    readonly last_cleanup: FieldRef<"backup_settings", 'DateTime'>
+    readonly created_at: FieldRef<"backup_settings", 'DateTime'>
+    readonly updated_at: FieldRef<"backup_settings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * backup_settings findUnique
+   */
+  export type backup_settingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which backup_settings to fetch.
+     */
+    where: backup_settingsWhereUniqueInput
+  }
+
+  /**
+   * backup_settings findUniqueOrThrow
+   */
+  export type backup_settingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which backup_settings to fetch.
+     */
+    where: backup_settingsWhereUniqueInput
+  }
+
+  /**
+   * backup_settings findFirst
+   */
+  export type backup_settingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which backup_settings to fetch.
+     */
+    where?: backup_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of backup_settings to fetch.
+     */
+    orderBy?: backup_settingsOrderByWithRelationInput | backup_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for backup_settings.
+     */
+    cursor?: backup_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` backup_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` backup_settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of backup_settings.
+     */
+    distinct?: Backup_settingsScalarFieldEnum | Backup_settingsScalarFieldEnum[]
+  }
+
+  /**
+   * backup_settings findFirstOrThrow
+   */
+  export type backup_settingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which backup_settings to fetch.
+     */
+    where?: backup_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of backup_settings to fetch.
+     */
+    orderBy?: backup_settingsOrderByWithRelationInput | backup_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for backup_settings.
+     */
+    cursor?: backup_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` backup_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` backup_settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of backup_settings.
+     */
+    distinct?: Backup_settingsScalarFieldEnum | Backup_settingsScalarFieldEnum[]
+  }
+
+  /**
+   * backup_settings findMany
+   */
+  export type backup_settingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which backup_settings to fetch.
+     */
+    where?: backup_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of backup_settings to fetch.
+     */
+    orderBy?: backup_settingsOrderByWithRelationInput | backup_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing backup_settings.
+     */
+    cursor?: backup_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` backup_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` backup_settings.
+     */
+    skip?: number
+    distinct?: Backup_settingsScalarFieldEnum | Backup_settingsScalarFieldEnum[]
+  }
+
+  /**
+   * backup_settings create
+   */
+  export type backup_settingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a backup_settings.
+     */
+    data: XOR<backup_settingsCreateInput, backup_settingsUncheckedCreateInput>
+  }
+
+  /**
+   * backup_settings createMany
+   */
+  export type backup_settingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many backup_settings.
+     */
+    data: backup_settingsCreateManyInput | backup_settingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * backup_settings createManyAndReturn
+   */
+  export type backup_settingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many backup_settings.
+     */
+    data: backup_settingsCreateManyInput | backup_settingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * backup_settings update
+   */
+  export type backup_settingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a backup_settings.
+     */
+    data: XOR<backup_settingsUpdateInput, backup_settingsUncheckedUpdateInput>
+    /**
+     * Choose, which backup_settings to update.
+     */
+    where: backup_settingsWhereUniqueInput
+  }
+
+  /**
+   * backup_settings updateMany
+   */
+  export type backup_settingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update backup_settings.
+     */
+    data: XOR<backup_settingsUpdateManyMutationInput, backup_settingsUncheckedUpdateManyInput>
+    /**
+     * Filter which backup_settings to update
+     */
+    where?: backup_settingsWhereInput
+    /**
+     * Limit how many backup_settings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * backup_settings updateManyAndReturn
+   */
+  export type backup_settingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * The data used to update backup_settings.
+     */
+    data: XOR<backup_settingsUpdateManyMutationInput, backup_settingsUncheckedUpdateManyInput>
+    /**
+     * Filter which backup_settings to update
+     */
+    where?: backup_settingsWhereInput
+    /**
+     * Limit how many backup_settings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * backup_settings upsert
+   */
+  export type backup_settingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the backup_settings to update in case it exists.
+     */
+    where: backup_settingsWhereUniqueInput
+    /**
+     * In case the backup_settings found by the `where` argument doesn't exist, create a new backup_settings with this data.
+     */
+    create: XOR<backup_settingsCreateInput, backup_settingsUncheckedCreateInput>
+    /**
+     * In case the backup_settings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<backup_settingsUpdateInput, backup_settingsUncheckedUpdateInput>
+  }
+
+  /**
+   * backup_settings delete
+   */
+  export type backup_settingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+    /**
+     * Filter which backup_settings to delete.
+     */
+    where: backup_settingsWhereUniqueInput
+  }
+
+  /**
+   * backup_settings deleteMany
+   */
+  export type backup_settingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which backup_settings to delete
+     */
+    where?: backup_settingsWhereInput
+    /**
+     * Limit how many backup_settings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * backup_settings without action
+   */
+  export type backup_settingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the backup_settings
+     */
+    select?: backup_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the backup_settings
+     */
+    omit?: backup_settingsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -13429,6 +15916,39 @@ export namespace Prisma {
   export type User_activity_logsScalarFieldEnum = (typeof User_activity_logsScalarFieldEnum)[keyof typeof User_activity_logsScalarFieldEnum]
 
 
+  export const Backup_jobsScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    status: 'status',
+    created_by: 'created_by',
+    created_at: 'created_at',
+    completed_at: 'completed_at',
+    file_count: 'file_count',
+    total_size: 'total_size',
+    download_url: 'download_url',
+    error_message: 'error_message'
+  };
+
+  export type Backup_jobsScalarFieldEnum = (typeof Backup_jobsScalarFieldEnum)[keyof typeof Backup_jobsScalarFieldEnum]
+
+
+  export const Backup_settingsScalarFieldEnum: {
+    id: 'id',
+    frequency: 'frequency',
+    backup_time: 'backup_time',
+    retention_days: 'retention_days',
+    auto_delete: 'auto_delete',
+    compress_backups: 'compress_backups',
+    email_notifications: 'email_notifications',
+    notification_email: 'notification_email',
+    last_cleanup: 'last_cleanup',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Backup_settingsScalarFieldEnum = (typeof Backup_settingsScalarFieldEnum)[keyof typeof Backup_settingsScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -13543,6 +16063,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -13579,6 +16106,7 @@ export namespace Prisma {
     librarian?: XOR<LibrarianNullableScalarRelationFilter, librarianWhereInput> | null
     students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
     user_bookmarks?: User_bookmarksListRelationFilter
+    backup_jobs?: Backup_jobsListRelationFilter
   }
 
   export type usersOrderByWithRelationInput = {
@@ -13598,6 +16126,7 @@ export namespace Prisma {
     librarian?: librarianOrderByWithRelationInput
     students?: studentsOrderByWithRelationInput
     user_bookmarks?: user_bookmarksOrderByRelationAggregateInput
+    backup_jobs?: backup_jobsOrderByRelationAggregateInput
   }
 
   export type usersWhereUniqueInput = Prisma.AtLeast<{
@@ -13620,6 +16149,7 @@ export namespace Prisma {
     librarian?: XOR<LibrarianNullableScalarRelationFilter, librarianWhereInput> | null
     students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
     user_bookmarks?: User_bookmarksListRelationFilter
+    backup_jobs?: Backup_jobsListRelationFilter
   }, "user_id" | "email">
 
   export type usersOrderByWithAggregationInput = {
@@ -14268,6 +16798,172 @@ export namespace Prisma {
     student_num?: BigIntWithAggregatesFilter<"user_activity_logs"> | bigint | number
   }
 
+  export type backup_jobsWhereInput = {
+    AND?: backup_jobsWhereInput | backup_jobsWhereInput[]
+    OR?: backup_jobsWhereInput[]
+    NOT?: backup_jobsWhereInput | backup_jobsWhereInput[]
+    id?: StringFilter<"backup_jobs"> | string
+    type?: StringFilter<"backup_jobs"> | string
+    status?: StringFilter<"backup_jobs"> | string
+    created_by?: IntFilter<"backup_jobs"> | number
+    created_at?: DateTimeFilter<"backup_jobs"> | Date | string
+    completed_at?: DateTimeNullableFilter<"backup_jobs"> | Date | string | null
+    file_count?: IntFilter<"backup_jobs"> | number
+    total_size?: StringFilter<"backup_jobs"> | string
+    download_url?: StringNullableFilter<"backup_jobs"> | string | null
+    error_message?: StringNullableFilter<"backup_jobs"> | string | null
+    creator?: XOR<UsersScalarRelationFilter, usersWhereInput>
+  }
+
+  export type backup_jobsOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    completed_at?: SortOrderInput | SortOrder
+    file_count?: SortOrder
+    total_size?: SortOrder
+    download_url?: SortOrderInput | SortOrder
+    error_message?: SortOrderInput | SortOrder
+    creator?: usersOrderByWithRelationInput
+  }
+
+  export type backup_jobsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: backup_jobsWhereInput | backup_jobsWhereInput[]
+    OR?: backup_jobsWhereInput[]
+    NOT?: backup_jobsWhereInput | backup_jobsWhereInput[]
+    type?: StringFilter<"backup_jobs"> | string
+    status?: StringFilter<"backup_jobs"> | string
+    created_by?: IntFilter<"backup_jobs"> | number
+    created_at?: DateTimeFilter<"backup_jobs"> | Date | string
+    completed_at?: DateTimeNullableFilter<"backup_jobs"> | Date | string | null
+    file_count?: IntFilter<"backup_jobs"> | number
+    total_size?: StringFilter<"backup_jobs"> | string
+    download_url?: StringNullableFilter<"backup_jobs"> | string | null
+    error_message?: StringNullableFilter<"backup_jobs"> | string | null
+    creator?: XOR<UsersScalarRelationFilter, usersWhereInput>
+  }, "id">
+
+  export type backup_jobsOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    completed_at?: SortOrderInput | SortOrder
+    file_count?: SortOrder
+    total_size?: SortOrder
+    download_url?: SortOrderInput | SortOrder
+    error_message?: SortOrderInput | SortOrder
+    _count?: backup_jobsCountOrderByAggregateInput
+    _avg?: backup_jobsAvgOrderByAggregateInput
+    _max?: backup_jobsMaxOrderByAggregateInput
+    _min?: backup_jobsMinOrderByAggregateInput
+    _sum?: backup_jobsSumOrderByAggregateInput
+  }
+
+  export type backup_jobsScalarWhereWithAggregatesInput = {
+    AND?: backup_jobsScalarWhereWithAggregatesInput | backup_jobsScalarWhereWithAggregatesInput[]
+    OR?: backup_jobsScalarWhereWithAggregatesInput[]
+    NOT?: backup_jobsScalarWhereWithAggregatesInput | backup_jobsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"backup_jobs"> | string
+    type?: StringWithAggregatesFilter<"backup_jobs"> | string
+    status?: StringWithAggregatesFilter<"backup_jobs"> | string
+    created_by?: IntWithAggregatesFilter<"backup_jobs"> | number
+    created_at?: DateTimeWithAggregatesFilter<"backup_jobs"> | Date | string
+    completed_at?: DateTimeNullableWithAggregatesFilter<"backup_jobs"> | Date | string | null
+    file_count?: IntWithAggregatesFilter<"backup_jobs"> | number
+    total_size?: StringWithAggregatesFilter<"backup_jobs"> | string
+    download_url?: StringNullableWithAggregatesFilter<"backup_jobs"> | string | null
+    error_message?: StringNullableWithAggregatesFilter<"backup_jobs"> | string | null
+  }
+
+  export type backup_settingsWhereInput = {
+    AND?: backup_settingsWhereInput | backup_settingsWhereInput[]
+    OR?: backup_settingsWhereInput[]
+    NOT?: backup_settingsWhereInput | backup_settingsWhereInput[]
+    id?: StringFilter<"backup_settings"> | string
+    frequency?: StringFilter<"backup_settings"> | string
+    backup_time?: StringFilter<"backup_settings"> | string
+    retention_days?: IntFilter<"backup_settings"> | number
+    auto_delete?: BoolFilter<"backup_settings"> | boolean
+    compress_backups?: BoolFilter<"backup_settings"> | boolean
+    email_notifications?: BoolFilter<"backup_settings"> | boolean
+    notification_email?: StringNullableFilter<"backup_settings"> | string | null
+    last_cleanup?: DateTimeNullableFilter<"backup_settings"> | Date | string | null
+    created_at?: DateTimeFilter<"backup_settings"> | Date | string
+    updated_at?: DateTimeFilter<"backup_settings"> | Date | string
+  }
+
+  export type backup_settingsOrderByWithRelationInput = {
+    id?: SortOrder
+    frequency?: SortOrder
+    backup_time?: SortOrder
+    retention_days?: SortOrder
+    auto_delete?: SortOrder
+    compress_backups?: SortOrder
+    email_notifications?: SortOrder
+    notification_email?: SortOrderInput | SortOrder
+    last_cleanup?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type backup_settingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: backup_settingsWhereInput | backup_settingsWhereInput[]
+    OR?: backup_settingsWhereInput[]
+    NOT?: backup_settingsWhereInput | backup_settingsWhereInput[]
+    frequency?: StringFilter<"backup_settings"> | string
+    backup_time?: StringFilter<"backup_settings"> | string
+    retention_days?: IntFilter<"backup_settings"> | number
+    auto_delete?: BoolFilter<"backup_settings"> | boolean
+    compress_backups?: BoolFilter<"backup_settings"> | boolean
+    email_notifications?: BoolFilter<"backup_settings"> | boolean
+    notification_email?: StringNullableFilter<"backup_settings"> | string | null
+    last_cleanup?: DateTimeNullableFilter<"backup_settings"> | Date | string | null
+    created_at?: DateTimeFilter<"backup_settings"> | Date | string
+    updated_at?: DateTimeFilter<"backup_settings"> | Date | string
+  }, "id">
+
+  export type backup_settingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    frequency?: SortOrder
+    backup_time?: SortOrder
+    retention_days?: SortOrder
+    auto_delete?: SortOrder
+    compress_backups?: SortOrder
+    email_notifications?: SortOrder
+    notification_email?: SortOrderInput | SortOrder
+    last_cleanup?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: backup_settingsCountOrderByAggregateInput
+    _avg?: backup_settingsAvgOrderByAggregateInput
+    _max?: backup_settingsMaxOrderByAggregateInput
+    _min?: backup_settingsMinOrderByAggregateInput
+    _sum?: backup_settingsSumOrderByAggregateInput
+  }
+
+  export type backup_settingsScalarWhereWithAggregatesInput = {
+    AND?: backup_settingsScalarWhereWithAggregatesInput | backup_settingsScalarWhereWithAggregatesInput[]
+    OR?: backup_settingsScalarWhereWithAggregatesInput[]
+    NOT?: backup_settingsScalarWhereWithAggregatesInput | backup_settingsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"backup_settings"> | string
+    frequency?: StringWithAggregatesFilter<"backup_settings"> | string
+    backup_time?: StringWithAggregatesFilter<"backup_settings"> | string
+    retention_days?: IntWithAggregatesFilter<"backup_settings"> | number
+    auto_delete?: BoolWithAggregatesFilter<"backup_settings"> | boolean
+    compress_backups?: BoolWithAggregatesFilter<"backup_settings"> | boolean
+    email_notifications?: BoolWithAggregatesFilter<"backup_settings"> | boolean
+    notification_email?: StringNullableWithAggregatesFilter<"backup_settings"> | string | null
+    last_cleanup?: DateTimeNullableWithAggregatesFilter<"backup_settings"> | Date | string | null
+    created_at?: DateTimeWithAggregatesFilter<"backup_settings"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"backup_settings"> | Date | string
+  }
+
   export type usersCreateInput = {
     first_name?: string | null
     mid_name?: string | null
@@ -14284,6 +16980,7 @@ export namespace Prisma {
     librarian?: librarianCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
   }
 
   export type usersUncheckedCreateInput = {
@@ -14303,6 +17000,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type usersUpdateInput = {
@@ -14321,6 +17019,7 @@ export namespace Prisma {
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
   }
 
   export type usersUncheckedUpdateInput = {
@@ -14340,6 +17039,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type usersCreateManyInput = {
@@ -14994,6 +17694,194 @@ export namespace Prisma {
     student_num?: BigIntFieldUpdateOperationsInput | bigint | number
   }
 
+  export type backup_jobsCreateInput = {
+    id?: string
+    type: string
+    status?: string
+    created_at?: Date | string
+    completed_at?: Date | string | null
+    file_count?: number
+    total_size?: string
+    download_url?: string | null
+    error_message?: string | null
+    creator: usersCreateNestedOneWithoutBackup_jobsInput
+  }
+
+  export type backup_jobsUncheckedCreateInput = {
+    id?: string
+    type: string
+    status?: string
+    created_by: number
+    created_at?: Date | string
+    completed_at?: Date | string | null
+    file_count?: number
+    total_size?: string
+    download_url?: string | null
+    error_message?: string | null
+  }
+
+  export type backup_jobsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    file_count?: IntFieldUpdateOperationsInput | number
+    total_size?: StringFieldUpdateOperationsInput | string
+    download_url?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    creator?: usersUpdateOneRequiredWithoutBackup_jobsNestedInput
+  }
+
+  export type backup_jobsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_by?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    file_count?: IntFieldUpdateOperationsInput | number
+    total_size?: StringFieldUpdateOperationsInput | string
+    download_url?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type backup_jobsCreateManyInput = {
+    id?: string
+    type: string
+    status?: string
+    created_by: number
+    created_at?: Date | string
+    completed_at?: Date | string | null
+    file_count?: number
+    total_size?: string
+    download_url?: string | null
+    error_message?: string | null
+  }
+
+  export type backup_jobsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    file_count?: IntFieldUpdateOperationsInput | number
+    total_size?: StringFieldUpdateOperationsInput | string
+    download_url?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type backup_jobsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_by?: IntFieldUpdateOperationsInput | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    file_count?: IntFieldUpdateOperationsInput | number
+    total_size?: StringFieldUpdateOperationsInput | string
+    download_url?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type backup_settingsCreateInput = {
+    id?: string
+    frequency?: string
+    backup_time?: string
+    retention_days?: number
+    auto_delete?: boolean
+    compress_backups?: boolean
+    email_notifications?: boolean
+    notification_email?: string | null
+    last_cleanup?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type backup_settingsUncheckedCreateInput = {
+    id?: string
+    frequency?: string
+    backup_time?: string
+    retention_days?: number
+    auto_delete?: boolean
+    compress_backups?: boolean
+    email_notifications?: boolean
+    notification_email?: string | null
+    last_cleanup?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type backup_settingsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    frequency?: StringFieldUpdateOperationsInput | string
+    backup_time?: StringFieldUpdateOperationsInput | string
+    retention_days?: IntFieldUpdateOperationsInput | number
+    auto_delete?: BoolFieldUpdateOperationsInput | boolean
+    compress_backups?: BoolFieldUpdateOperationsInput | boolean
+    email_notifications?: BoolFieldUpdateOperationsInput | boolean
+    notification_email?: NullableStringFieldUpdateOperationsInput | string | null
+    last_cleanup?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type backup_settingsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    frequency?: StringFieldUpdateOperationsInput | string
+    backup_time?: StringFieldUpdateOperationsInput | string
+    retention_days?: IntFieldUpdateOperationsInput | number
+    auto_delete?: BoolFieldUpdateOperationsInput | boolean
+    compress_backups?: BoolFieldUpdateOperationsInput | boolean
+    email_notifications?: BoolFieldUpdateOperationsInput | boolean
+    notification_email?: NullableStringFieldUpdateOperationsInput | string | null
+    last_cleanup?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type backup_settingsCreateManyInput = {
+    id?: string
+    frequency?: string
+    backup_time?: string
+    retention_days?: number
+    auto_delete?: boolean
+    compress_backups?: boolean
+    email_notifications?: boolean
+    notification_email?: string | null
+    last_cleanup?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type backup_settingsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    frequency?: StringFieldUpdateOperationsInput | string
+    backup_time?: StringFieldUpdateOperationsInput | string
+    retention_days?: IntFieldUpdateOperationsInput | number
+    auto_delete?: BoolFieldUpdateOperationsInput | boolean
+    compress_backups?: BoolFieldUpdateOperationsInput | boolean
+    email_notifications?: BoolFieldUpdateOperationsInput | boolean
+    notification_email?: NullableStringFieldUpdateOperationsInput | string | null
+    last_cleanup?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type backup_settingsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    frequency?: StringFieldUpdateOperationsInput | string
+    backup_time?: StringFieldUpdateOperationsInput | string
+    retention_days?: IntFieldUpdateOperationsInput | number
+    auto_delete?: BoolFieldUpdateOperationsInput | boolean
+    compress_backups?: BoolFieldUpdateOperationsInput | boolean
+    email_notifications?: BoolFieldUpdateOperationsInput | boolean
+    notification_email?: NullableStringFieldUpdateOperationsInput | string | null
+    last_cleanup?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -15086,6 +17974,12 @@ export namespace Prisma {
     none?: user_bookmarksWhereInput
   }
 
+  export type Backup_jobsListRelationFilter = {
+    every?: backup_jobsWhereInput
+    some?: backup_jobsWhereInput
+    none?: backup_jobsWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -15100,6 +17994,10 @@ export namespace Prisma {
   }
 
   export type user_bookmarksOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type backup_jobsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15719,6 +18617,118 @@ export namespace Prisma {
     student_num?: SortOrder
   }
 
+  export type backup_jobsCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    completed_at?: SortOrder
+    file_count?: SortOrder
+    total_size?: SortOrder
+    download_url?: SortOrder
+    error_message?: SortOrder
+  }
+
+  export type backup_jobsAvgOrderByAggregateInput = {
+    created_by?: SortOrder
+    file_count?: SortOrder
+  }
+
+  export type backup_jobsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    completed_at?: SortOrder
+    file_count?: SortOrder
+    total_size?: SortOrder
+    download_url?: SortOrder
+    error_message?: SortOrder
+  }
+
+  export type backup_jobsMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    completed_at?: SortOrder
+    file_count?: SortOrder
+    total_size?: SortOrder
+    download_url?: SortOrder
+    error_message?: SortOrder
+  }
+
+  export type backup_jobsSumOrderByAggregateInput = {
+    created_by?: SortOrder
+    file_count?: SortOrder
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type backup_settingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    frequency?: SortOrder
+    backup_time?: SortOrder
+    retention_days?: SortOrder
+    auto_delete?: SortOrder
+    compress_backups?: SortOrder
+    email_notifications?: SortOrder
+    notification_email?: SortOrder
+    last_cleanup?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type backup_settingsAvgOrderByAggregateInput = {
+    retention_days?: SortOrder
+  }
+
+  export type backup_settingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    frequency?: SortOrder
+    backup_time?: SortOrder
+    retention_days?: SortOrder
+    auto_delete?: SortOrder
+    compress_backups?: SortOrder
+    email_notifications?: SortOrder
+    notification_email?: SortOrder
+    last_cleanup?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type backup_settingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    frequency?: SortOrder
+    backup_time?: SortOrder
+    retention_days?: SortOrder
+    auto_delete?: SortOrder
+    compress_backups?: SortOrder
+    email_notifications?: SortOrder
+    notification_email?: SortOrder
+    last_cleanup?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type backup_settingsSumOrderByAggregateInput = {
+    retention_days?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type user_activity_logsCreateNestedManyWithoutUsersInput = {
     create?: XOR<user_activity_logsCreateWithoutUsersInput, user_activity_logsUncheckedCreateWithoutUsersInput> | user_activity_logsCreateWithoutUsersInput[] | user_activity_logsUncheckedCreateWithoutUsersInput[]
     connectOrCreate?: user_activity_logsCreateOrConnectWithoutUsersInput | user_activity_logsCreateOrConnectWithoutUsersInput[]
@@ -15758,6 +18768,13 @@ export namespace Prisma {
     connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
   }
 
+  export type backup_jobsCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<backup_jobsCreateWithoutCreatorInput, backup_jobsUncheckedCreateWithoutCreatorInput> | backup_jobsCreateWithoutCreatorInput[] | backup_jobsUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: backup_jobsCreateOrConnectWithoutCreatorInput | backup_jobsCreateOrConnectWithoutCreatorInput[]
+    createMany?: backup_jobsCreateManyCreatorInputEnvelope
+    connect?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
+  }
+
   export type user_activity_logsUncheckedCreateNestedManyWithoutUsersInput = {
     create?: XOR<user_activity_logsCreateWithoutUsersInput, user_activity_logsUncheckedCreateWithoutUsersInput> | user_activity_logsCreateWithoutUsersInput[] | user_activity_logsUncheckedCreateWithoutUsersInput[]
     connectOrCreate?: user_activity_logsCreateOrConnectWithoutUsersInput | user_activity_logsCreateOrConnectWithoutUsersInput[]
@@ -15795,6 +18812,13 @@ export namespace Prisma {
     connectOrCreate?: user_bookmarksCreateOrConnectWithoutUsersInput | user_bookmarksCreateOrConnectWithoutUsersInput[]
     createMany?: user_bookmarksCreateManyUsersInputEnvelope
     connect?: user_bookmarksWhereUniqueInput | user_bookmarksWhereUniqueInput[]
+  }
+
+  export type backup_jobsUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<backup_jobsCreateWithoutCreatorInput, backup_jobsUncheckedCreateWithoutCreatorInput> | backup_jobsCreateWithoutCreatorInput[] | backup_jobsUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: backup_jobsCreateOrConnectWithoutCreatorInput | backup_jobsCreateOrConnectWithoutCreatorInput[]
+    createMany?: backup_jobsCreateManyCreatorInputEnvelope
+    connect?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -15885,6 +18909,20 @@ export namespace Prisma {
     deleteMany?: user_bookmarksScalarWhereInput | user_bookmarksScalarWhereInput[]
   }
 
+  export type backup_jobsUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<backup_jobsCreateWithoutCreatorInput, backup_jobsUncheckedCreateWithoutCreatorInput> | backup_jobsCreateWithoutCreatorInput[] | backup_jobsUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: backup_jobsCreateOrConnectWithoutCreatorInput | backup_jobsCreateOrConnectWithoutCreatorInput[]
+    upsert?: backup_jobsUpsertWithWhereUniqueWithoutCreatorInput | backup_jobsUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: backup_jobsCreateManyCreatorInputEnvelope
+    set?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
+    disconnect?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
+    delete?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
+    connect?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
+    update?: backup_jobsUpdateWithWhereUniqueWithoutCreatorInput | backup_jobsUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: backup_jobsUpdateManyWithWhereWithoutCreatorInput | backup_jobsUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: backup_jobsScalarWhereInput | backup_jobsScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -15963,6 +19001,20 @@ export namespace Prisma {
     update?: user_bookmarksUpdateWithWhereUniqueWithoutUsersInput | user_bookmarksUpdateWithWhereUniqueWithoutUsersInput[]
     updateMany?: user_bookmarksUpdateManyWithWhereWithoutUsersInput | user_bookmarksUpdateManyWithWhereWithoutUsersInput[]
     deleteMany?: user_bookmarksScalarWhereInput | user_bookmarksScalarWhereInput[]
+  }
+
+  export type backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<backup_jobsCreateWithoutCreatorInput, backup_jobsUncheckedCreateWithoutCreatorInput> | backup_jobsCreateWithoutCreatorInput[] | backup_jobsUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: backup_jobsCreateOrConnectWithoutCreatorInput | backup_jobsCreateOrConnectWithoutCreatorInput[]
+    upsert?: backup_jobsUpsertWithWhereUniqueWithoutCreatorInput | backup_jobsUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: backup_jobsCreateManyCreatorInputEnvelope
+    set?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
+    disconnect?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
+    delete?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
+    connect?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
+    update?: backup_jobsUpdateWithWhereUniqueWithoutCreatorInput | backup_jobsUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: backup_jobsUpdateManyWithWhereWithoutCreatorInput | backup_jobsUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: backup_jobsScalarWhereInput | backup_jobsScalarWhereInput[]
   }
 
   export type usersCreateNestedOneWithoutFacultyInput = {
@@ -16306,6 +19358,24 @@ export namespace Prisma {
     update?: XOR<XOR<papersUpdateToOneWithWhereWithoutUser_activity_logsInput, papersUpdateWithoutUser_activity_logsInput>, papersUncheckedUpdateWithoutUser_activity_logsInput>
   }
 
+  export type usersCreateNestedOneWithoutBackup_jobsInput = {
+    create?: XOR<usersCreateWithoutBackup_jobsInput, usersUncheckedCreateWithoutBackup_jobsInput>
+    connectOrCreate?: usersCreateOrConnectWithoutBackup_jobsInput
+    connect?: usersWhereUniqueInput
+  }
+
+  export type usersUpdateOneRequiredWithoutBackup_jobsNestedInput = {
+    create?: XOR<usersCreateWithoutBackup_jobsInput, usersUncheckedCreateWithoutBackup_jobsInput>
+    connectOrCreate?: usersCreateOrConnectWithoutBackup_jobsInput
+    upsert?: usersUpsertWithoutBackup_jobsInput
+    connect?: usersWhereUniqueInput
+    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutBackup_jobsInput, usersUpdateWithoutBackup_jobsInput>, usersUncheckedUpdateWithoutBackup_jobsInput>
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -16555,6 +19625,19 @@ export namespace Prisma {
     _max?: NestedEnumactivity_typeNullableFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type user_activity_logsCreateWithoutUsersInput = {
     name: string
     activity: string
@@ -16698,6 +19781,40 @@ export namespace Prisma {
 
   export type user_bookmarksCreateManyUsersInputEnvelope = {
     data: user_bookmarksCreateManyUsersInput | user_bookmarksCreateManyUsersInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type backup_jobsCreateWithoutCreatorInput = {
+    id?: string
+    type: string
+    status?: string
+    created_at?: Date | string
+    completed_at?: Date | string | null
+    file_count?: number
+    total_size?: string
+    download_url?: string | null
+    error_message?: string | null
+  }
+
+  export type backup_jobsUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    type: string
+    status?: string
+    created_at?: Date | string
+    completed_at?: Date | string | null
+    file_count?: number
+    total_size?: string
+    download_url?: string | null
+    error_message?: string | null
+  }
+
+  export type backup_jobsCreateOrConnectWithoutCreatorInput = {
+    where: backup_jobsWhereUniqueInput
+    create: XOR<backup_jobsCreateWithoutCreatorInput, backup_jobsUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type backup_jobsCreateManyCreatorInputEnvelope = {
+    data: backup_jobsCreateManyCreatorInput | backup_jobsCreateManyCreatorInput[]
     skipDuplicates?: boolean
   }
 
@@ -16866,6 +19983,38 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"user_bookmarks"> | Date | string | null
   }
 
+  export type backup_jobsUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: backup_jobsWhereUniqueInput
+    update: XOR<backup_jobsUpdateWithoutCreatorInput, backup_jobsUncheckedUpdateWithoutCreatorInput>
+    create: XOR<backup_jobsCreateWithoutCreatorInput, backup_jobsUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type backup_jobsUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: backup_jobsWhereUniqueInput
+    data: XOR<backup_jobsUpdateWithoutCreatorInput, backup_jobsUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type backup_jobsUpdateManyWithWhereWithoutCreatorInput = {
+    where: backup_jobsScalarWhereInput
+    data: XOR<backup_jobsUpdateManyMutationInput, backup_jobsUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type backup_jobsScalarWhereInput = {
+    AND?: backup_jobsScalarWhereInput | backup_jobsScalarWhereInput[]
+    OR?: backup_jobsScalarWhereInput[]
+    NOT?: backup_jobsScalarWhereInput | backup_jobsScalarWhereInput[]
+    id?: StringFilter<"backup_jobs"> | string
+    type?: StringFilter<"backup_jobs"> | string
+    status?: StringFilter<"backup_jobs"> | string
+    created_by?: IntFilter<"backup_jobs"> | number
+    created_at?: DateTimeFilter<"backup_jobs"> | Date | string
+    completed_at?: DateTimeNullableFilter<"backup_jobs"> | Date | string | null
+    file_count?: IntFilter<"backup_jobs"> | number
+    total_size?: StringFilter<"backup_jobs"> | string
+    download_url?: StringNullableFilter<"backup_jobs"> | string | null
+    error_message?: StringNullableFilter<"backup_jobs"> | string | null
+  }
+
   export type usersCreateWithoutFacultyInput = {
     first_name?: string | null
     mid_name?: string | null
@@ -16881,6 +20030,7 @@ export namespace Prisma {
     librarian?: librarianCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
   }
 
   export type usersUncheckedCreateWithoutFacultyInput = {
@@ -16899,6 +20049,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type usersCreateOrConnectWithoutFacultyInput = {
@@ -16932,6 +20083,7 @@ export namespace Prisma {
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
   }
 
   export type usersUncheckedUpdateWithoutFacultyInput = {
@@ -16950,6 +20102,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type usersCreateWithoutStudentsInput = {
@@ -16967,6 +20120,7 @@ export namespace Prisma {
     faculty?: facultyCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
   }
 
   export type usersUncheckedCreateWithoutStudentsInput = {
@@ -16985,6 +20139,7 @@ export namespace Prisma {
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type usersCreateOrConnectWithoutStudentsInput = {
@@ -17018,6 +20173,7 @@ export namespace Prisma {
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
   }
 
   export type usersUncheckedUpdateWithoutStudentsInput = {
@@ -17036,6 +20192,7 @@ export namespace Prisma {
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type activity_logsCreateWithoutLibrarianInput = {
@@ -17086,6 +20243,7 @@ export namespace Prisma {
     faculty?: facultyCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
   }
 
   export type usersUncheckedCreateWithoutLibrarianInput = {
@@ -17104,6 +20262,7 @@ export namespace Prisma {
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type usersCreateOrConnectWithoutLibrarianInput = {
@@ -17153,6 +20312,7 @@ export namespace Prisma {
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
   }
 
   export type usersUncheckedUpdateWithoutLibrarianInput = {
@@ -17171,6 +20331,7 @@ export namespace Prisma {
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type paper_metadataCreateWithoutPapersInput = {
@@ -17448,6 +20609,7 @@ export namespace Prisma {
     faculty?: facultyCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
+    backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
   }
 
   export type usersUncheckedCreateWithoutUser_bookmarksInput = {
@@ -17466,6 +20628,7 @@ export namespace Prisma {
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type usersCreateOrConnectWithoutUser_bookmarksInput = {
@@ -17541,6 +20704,7 @@ export namespace Prisma {
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
   }
 
   export type usersUncheckedUpdateWithoutUser_bookmarksInput = {
@@ -17559,6 +20723,7 @@ export namespace Prisma {
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type librarianCreateWithoutActivity_logsInput = {
@@ -17595,6 +20760,7 @@ export namespace Prisma {
     librarian?: librarianCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
   }
 
   export type usersUncheckedCreateWithoutActivity_logsInput = {
@@ -17613,6 +20779,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type usersCreateOrConnectWithoutActivity_logsInput = {
@@ -17671,6 +20838,7 @@ export namespace Prisma {
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
   }
 
   export type usersUncheckedUpdateWithoutActivity_logsInput = {
@@ -17689,6 +20857,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type usersCreateWithoutUser_activity_logsInput = {
@@ -17706,6 +20875,7 @@ export namespace Prisma {
     librarian?: librarianCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
   }
 
   export type usersUncheckedCreateWithoutUser_activity_logsInput = {
@@ -17724,6 +20894,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type usersCreateOrConnectWithoutUser_activity_logsInput = {
@@ -17793,6 +20964,7 @@ export namespace Prisma {
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
   }
 
   export type usersUncheckedUpdateWithoutUser_activity_logsInput = {
@@ -17811,6 +20983,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type papersUpsertWithoutUser_activity_logsInput = {
@@ -17855,6 +21028,96 @@ export namespace Prisma {
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
   }
 
+  export type usersCreateWithoutBackup_jobsInput = {
+    first_name?: string | null
+    mid_name?: string | null
+    last_name?: string | null
+    ext_name?: string | null
+    email: string
+    profile_picture?: string | null
+    password: string
+    created_at?: Date | string | null
+    role?: $Enums.user_role | null
+    user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
+    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    faculty?: facultyCreateNestedOneWithoutUsersInput
+    librarian?: librarianCreateNestedOneWithoutUsersInput
+    students?: studentsCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersUncheckedCreateWithoutBackup_jobsInput = {
+    user_id?: number
+    first_name?: string | null
+    mid_name?: string | null
+    last_name?: string | null
+    ext_name?: string | null
+    email: string
+    profile_picture?: string | null
+    password: string
+    created_at?: Date | string | null
+    role?: $Enums.user_role | null
+    user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
+    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
+    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersCreateOrConnectWithoutBackup_jobsInput = {
+    where: usersWhereUniqueInput
+    create: XOR<usersCreateWithoutBackup_jobsInput, usersUncheckedCreateWithoutBackup_jobsInput>
+  }
+
+  export type usersUpsertWithoutBackup_jobsInput = {
+    update: XOR<usersUpdateWithoutBackup_jobsInput, usersUncheckedUpdateWithoutBackup_jobsInput>
+    create: XOR<usersCreateWithoutBackup_jobsInput, usersUncheckedCreateWithoutBackup_jobsInput>
+    where?: usersWhereInput
+  }
+
+  export type usersUpdateToOneWithWhereWithoutBackup_jobsInput = {
+    where?: usersWhereInput
+    data: XOR<usersUpdateWithoutBackup_jobsInput, usersUncheckedUpdateWithoutBackup_jobsInput>
+  }
+
+  export type usersUpdateWithoutBackup_jobsInput = {
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    mid_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    ext_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
+    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
+    faculty?: facultyUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUpdateOneWithoutUsersNestedInput
+    students?: studentsUpdateOneWithoutUsersNestedInput
+    user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+  }
+
+  export type usersUncheckedUpdateWithoutBackup_jobsInput = {
+    user_id?: IntFieldUpdateOperationsInput | number
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    mid_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    ext_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
+    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
+    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+  }
+
   export type user_activity_logsCreateManyUsersInput = {
     activity_id?: number
     paper_id: number
@@ -17885,6 +21148,18 @@ export namespace Prisma {
     paper_id: number
     created_at?: Date | string | null
     updated_at?: Date | string | null
+  }
+
+  export type backup_jobsCreateManyCreatorInput = {
+    id?: string
+    type: string
+    status?: string
+    created_at?: Date | string
+    completed_at?: Date | string | null
+    file_count?: number
+    total_size?: string
+    download_url?: string | null
+    error_message?: string | null
   }
 
   export type user_activity_logsUpdateWithoutUsersInput = {
@@ -17978,6 +21253,42 @@ export namespace Prisma {
     paper_id?: IntFieldUpdateOperationsInput | number
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type backup_jobsUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    file_count?: IntFieldUpdateOperationsInput | number
+    total_size?: StringFieldUpdateOperationsInput | string
+    download_url?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type backup_jobsUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    file_count?: IntFieldUpdateOperationsInput | number
+    total_size?: StringFieldUpdateOperationsInput | string
+    download_url?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type backup_jobsUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    file_count?: IntFieldUpdateOperationsInput | number
+    total_size?: StringFieldUpdateOperationsInput | string
+    download_url?: NullableStringFieldUpdateOperationsInput | string | null
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type activity_logsCreateManyLibrarianInput = {
