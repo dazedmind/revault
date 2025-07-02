@@ -152,7 +152,8 @@ exports.Prisma.LibrarianScalarFieldEnum = {
   employee_id: 'employee_id',
   position: 'position',
   contact_num: 'contact_num',
-  user_id: 'user_id'
+  user_id: 'user_id',
+  status: 'status'
 };
 
 exports.Prisma.PapersScalarFieldEnum = {
@@ -193,6 +194,15 @@ exports.Prisma.OtpScalarFieldEnum = {
   code: 'code',
   createdAt: 'createdAt',
   expiresAt: 'expiresAt'
+};
+
+exports.Prisma.Password_reset_tokensScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  token: 'token',
+  expires_at: 'expires_at',
+  created_at: 'created_at',
+  used_at: 'used_at'
 };
 
 exports.Prisma.Activity_logsScalarFieldEnum = {
@@ -277,6 +287,7 @@ exports.activity_type = exports.$Enums.activity_type = {
   VIEW_DOCUMENT: 'VIEW_DOCUMENT',
   DOWNLOAD_DOCUMENT: 'DOWNLOAD_DOCUMENT',
   CHANGE_PASSWORD: 'CHANGE_PASSWORD',
+  PASSWORD_RESET: 'PASSWORD_RESET',
   ADD_USER: 'ADD_USER',
   DELETE_USER: 'DELETE_USER',
   MODIFY_USER: 'MODIFY_USER',
@@ -296,6 +307,7 @@ exports.Prisma.ModelName = {
   paper_metadata: 'paper_metadata',
   user_bookmarks: 'user_bookmarks',
   Otp: 'Otp',
+  password_reset_tokens: 'password_reset_tokens',
   activity_logs: 'activity_logs',
   user_activity_logs: 'user_activity_logs',
   backup_jobs: 'backup_jobs',

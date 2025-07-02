@@ -20,6 +20,13 @@ const LogIn = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Forgot Password States
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [isForgotPasswordLoading, setIsForgotPasswordLoading] = useState(false);
+  const [forgotPasswordMessage, setForgotPasswordMessage] = useState("");
+  const [showForgotPasswordSuccess, setShowForgotPasswordSuccess] = useState(false);
 
   // useAntiCopy();
 
@@ -82,6 +89,62 @@ const LogIn = () => {
     }
   };
 
+  // Forgot Password Handlers
+  const handleForgotPasswordClick = () => {
+    setShowForgotPasswordModal(true);
+    setForgotPasswordEmail("");
+    setForgotPasswordMessage("");
+    setShowForgotPasswordSuccess(false);
+  };
+
+  const handleCloseForgotPasswordModal = () => {
+    setShowForgotPasswordModal(false);
+    setForgotPasswordEmail("");
+    setForgotPasswordMessage("");
+    setShowForgotPasswordSuccess(false);
+    setIsForgotPasswordLoading(false);
+  };
+
+  const handleForgotPasswordSubmit = async (e) => {
+    e.preventDefault();
+    setIsForgotPasswordLoading(true);
+    setForgotPasswordMessage("");
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(forgotPasswordEmail)) {
+      setForgotPasswordMessage("Please enter a valid email address.");
+      setIsForgotPasswordLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: forgotPasswordEmail,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setShowForgotPasswordSuccess(true);
+        setForgotPasswordMessage(result.message || "Password reset instructions have been sent to your email.");
+      } else {
+        setForgotPasswordMessage(result.error || "Failed to send reset instructions.");
+      }
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      setForgotPasswordMessage("An error occurred. Please try again later.");
+    } finally {
+      setIsForgotPasswordLoading(false);
+    }
+  };
+
   // ALWAYS CLEARS TOKEN ON LOGIN PAGE LOAD
   useEffect(() => {
     localStorage.removeItem("authToken");
@@ -117,15 +180,6 @@ const LogIn = () => {
                 className="w-60 md:w-xs"
               />
 
-              {/* <LogInInputField
-                label="Password"
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-68 md:w-xs"
-              /> */}
-
               <div className="col-span-2 w-full relative">
                 <LogInInputField
                   label="Password"
@@ -148,6 +202,15 @@ const LogIn = () => {
                 </button>
               </div>
 
+              <div className="flex flex-row justify-end mt-5">
+                <p 
+                  className="text-xs text-gold font-bold cursor-pointer hover:underline"
+                  onClick={handleForgotPasswordClick}
+                >
+                  Forgot password?
+                </p>
+              </div>
+
               {/* Submit Button */}
               <div className="flex flex-row justify-center mt-5">
                 <Button
@@ -158,8 +221,6 @@ const LogIn = () => {
                   {isLoading ? "Logging in..." : "Log In"}
                 </Button>
               </div>
-               
-        
             </form>
           </div>
 
@@ -189,6 +250,7 @@ const LogIn = () => {
         </footer>
       </main>
 
+      {/* Error Modal */}
       {showErrorModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-accent border-2 rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
@@ -200,6 +262,83 @@ const LogIn = () => {
             >
               Okay
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Forgot Password Modal */}
+      {showForgotPasswordModal && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white border-2 rounded-2xl shadow-lg p-8 max-w-md w-full mx-4">
+            {!showForgotPasswordSuccess ? (
+              <form onSubmit={handleForgotPasswordSubmit}>
+                <h2 className="text-2xl font-bold text-gold mb-4 text-center">Reset Password</h2>
+                <p className="text-gray-600 mb-6 text-center text-sm">
+                  Enter your email address and we&apos;ll send you instructions to reset your password.
+                </p>
+                
+                <div className="mb-4">
+                  <LogInInputField
+                    label="Email Address"
+                    type="email"
+                    name="email"
+                    value={forgotPasswordEmail}
+                    onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                    className="w-full"
+                    
+                  />
+                </div>
+
+                {forgotPasswordMessage && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-red-600 text-sm">{forgotPasswordMessage}</p>
+                  </div>
+                )}
+
+                <div className="flex gap-3 justify-end">
+                  <button
+                    type="button"
+                    onClick={handleCloseForgotPasswordModal}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+                    disabled={isForgotPasswordLoading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isForgotPasswordLoading || !forgotPasswordEmail.trim()}
+                    className={`px-6 py-2 bg-gold hover:brightness-105 text-white rounded-lg font-semibold transition-all duration-300 ${
+                      (isForgotPasswordLoading || !forgotPasswordEmail.trim()) 
+                        ? 'opacity-70 cursor-not-allowed' 
+                        : ''
+                    }`}
+                  >
+                    {isForgotPasswordLoading ? "Sending..." : "Send Instructions"}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gold mb-4">Instructions Sent!</h2>
+                <p className="text-gray-600 mb-6 text-sm">
+                  {forgotPasswordMessage}
+                </p>
+                <p className="text-gray-500 mb-6 text-xs">
+                  If you don&apos;t receive an email within a few minutes, please check your spam folder.
+                </p>
+                <button
+                  onClick={handleCloseForgotPasswordModal}
+                  className="px-6 py-2 bg-gold hover:brightness-105 text-white rounded-lg font-semibold"
+                >
+                  Close
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

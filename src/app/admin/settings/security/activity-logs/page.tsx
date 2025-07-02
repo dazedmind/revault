@@ -234,7 +234,8 @@ function ActivityLogContent() {
   };
 
   // Separate function for fetching user logs
-  const fetchUserLogs = async () => {
+ // Wrap fetchUserLogs in useCallback
+  const fetchUserLogs = useCallback(async () => {
     if (!showUserLogs) return;
 
     try {
@@ -266,7 +267,6 @@ function ActivityLogContent() {
         const fetchedLogs = Array.isArray(data.logs) ? data.logs : [];
         setUserLogs(fetchedLogs);
         setUserTotal(data.total);
-        // Update users list if it's provided (avoid duplicate fetch)
         if (Array.isArray(data.users) && data.users.length > 0) {
           setRegularUsers(data.users);
         }
@@ -281,8 +281,24 @@ function ActivityLogContent() {
     } finally {
       setUserLogsLoading(false);
     }
-  };
+  }, [
+    showUserLogs,
+    selectedUserUser,
+    selectedUserEventTypes,
+    selectedUserRole,
+    userPage,
+    userLimit,
+  ]);
 
+  // Update the useEffect to include fetchUserLogs in dependencies
+  useEffect(() => {
+    if (!mounted || !showUserLogs) return;
+    fetchUserLogs();
+  }, [
+    mounted,
+    showUserLogs,
+    fetchUserLogs, // Add this dependency
+  ]);
   // Fetch admin users for dropdown
   useEffect(() => {
     if (!mounted) return;

@@ -1,17 +1,16 @@
 // src/lib/services/backupScheduler.ts
 import { PrismaClient } from '@prisma/client';
 import cron, { ScheduledTask } from 'node-cron';
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 
 const prisma = new PrismaClient();
 
 class BackupScheduler {
   private static instance: BackupScheduler;
   private scheduledJobs: Map<string, ScheduledTask> = new Map();
-  private emailTransporter: nodemailer.Transporter;
 
   private constructor() {
-    this.initializeEmailTransporter();
+    this.initializeSendGrid();
     this.initializeScheduler();
   }
 
@@ -22,16 +21,15 @@ class BackupScheduler {
     return BackupScheduler.instance;
   }
 
-  private initializeEmailTransporter() {
-    this.emailTransporter = nodemailer.createTransporter({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+  private initializeSendGrid() {
+    const apiKey = process.env.SENDGRID_API_KEY;
+    if (!apiKey) {
+      console.error('❌ SENDGRID_API_KEY not found in environment variables');
+      return;
+    }
+    
+    sgMail.setApiKey(apiKey);
+    console.log('✅ SendGrid initialized');
   }
 
   private async initializeScheduler() {
@@ -305,9 +303,11 @@ class BackupScheduler {
 
   private async sendNotificationEmail(to: string, subject: string, text: string) {
     try {
-      await this.emailTransporter.sendMail({
-        from: process.env.SMTP_FROM || 'noreply@revault.system',
+      const fromEmail = process.env.EMAIL_HOST || 'noreply@revault.system';
+      
+      const msg = {
         to,
+        from: fromEmail,
         subject: `[ReVault] ${subject}`,
         text,
         html: `
@@ -320,11 +320,17 @@ class BackupScheduler {
             </p>
           </div>
         `,
-      });
-      
+      };
+
+      await sgMail.send(msg);
       console.log('📧 Notification email sent to:', to);
     } catch (error) {
       console.error('❌ Failed to send notification email:', error);
+      
+      // Log more details about the SendGrid error
+      if (error.response) {
+        console.error('SendGrid error details:', error.response.body);
+      }
     }
   }
 

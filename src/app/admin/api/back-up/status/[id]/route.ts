@@ -6,11 +6,16 @@ import jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 const SECRET_KEY = process.env.JWT_SECRET_KEY || 'your-secret-key';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
+
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.split(' ')[1] || req.cookies.get('authToken')?.value;
-    
+
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -21,7 +26,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
 
     const backup = await prisma.backup_jobs.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!backup) {
