@@ -9,7 +9,7 @@ import { activity_type } from "@prisma/client";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY!;
-const FROM_EMAIL = process.env.FROM_EMAIL || "noreply@revault.com"; // Your verified sender email
+const EMAIL_HOST = process.env.EMAIL_HOST || "noreply@revault.com"; // Your verified sender email
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
 // Initialize SendGrid
@@ -49,7 +49,7 @@ const sendResetEmail = async (email: string, resetToken: string, userName: strin
   const msg = {
     to: email,
     from: {
-      email: FROM_EMAIL,
+      email: EMAIL_HOST,
       name: "ReVault Support"
     },
     subject: "Password Reset Instructions - ReVault",
@@ -261,11 +261,7 @@ export async function POST(req: NextRequest) {
 
         // Log password reset request (temporarily disabled until schema is fixed)
         try {
-          // Temporarily skip activity logging to prevent errors
-          console.log("✅ Password reset requested - activity logging temporarily disabled");
-          
-          // Uncomment this block after running the migration:
-          /*
+
           await prisma.user_activity_logs.create({
             data: {
               user_id: user.user_id,
@@ -283,7 +279,6 @@ export async function POST(req: NextRequest) {
               student_num: user.students?.student_num || BigInt(0),
             },
           });
-          */
         } catch (logError) {
           console.log("Failed to log password reset activity:", logError.message);
         }
@@ -294,10 +289,7 @@ export async function POST(req: NextRequest) {
         
         // Log failed email attempt (temporarily disabled)
         try {
-          console.log("⚠️ Failed to send reset email - activity logging temporarily disabled");
-          
-          // Uncomment after schema migration:
-          /*
+
           await prisma.user_activity_logs.create({
             data: {
               user_id: user.user_id,
@@ -315,7 +307,6 @@ export async function POST(req: NextRequest) {
               student_num: user.students?.student_num || BigInt(0),
             },
           });
-          */
         } catch (logError) {
           console.error("Failed to log email error:", logError.message);
         }
