@@ -5,6 +5,7 @@ import sgMail from '@sendgrid/mail';
 import { prisma } from '@/lib/prisma';
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+const EMAIL_HOST = process.env.EMAIL_HOST;
 
 export async function POST(req: Request) {
   try {
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
 
     const msg = {
       to: email,
-      from: 'mjbinsigne2022@plm.edu.ph',
+      from: EMAIL_HOST,
       subject: 'Your OTP Code',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center;">

@@ -272,23 +272,23 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
   };
 
   // Navigation functions
-  const goToPrevPage = () => {
+  const goToPrevPage = useCallback(() => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
-  };
-
-  const goToNextPage = () => {
+  }, [currentPage]);
+  
+  const goToNextPage = useCallback(() => {
     if (currentPage < numPages) {
       setCurrentPage(currentPage + 1);
     }
-  };
-
-  const goToPage = (page: number) => {
+  }, [currentPage, numPages]);
+  
+  const goToPage = useCallback((page: number) => {
     if (page >= 1 && page <= numPages) {
       setCurrentPage(page);
     }
-  };
+  }, [numPages]);
 
   // Zoom functions
   const zoomIn = () => setScale(prev => Math.min(prev + 0.25, 3.0));
@@ -302,11 +302,10 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
   // Keyboard controls
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Don't interfere with input fields
       if ((e.target as Element).tagName === 'INPUT') {
         return;
       }
-
+  
       switch (e.key) {
         case 'ArrowLeft':
           e.preventDefault();
@@ -337,10 +336,10 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
           break;
       }
     };
-
+  
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [currentPage, numPages]);
+  }, [goToPrevPage, goToNextPage]); // Add dependencies
 
   // Security event handlers - Updated to not interfere with toolbar
   useEffect(() => {

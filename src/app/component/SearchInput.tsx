@@ -35,8 +35,9 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
   }, [pathname, searchParams]);
 
   // Debounced search function
+  // Inside the component, fix the debouncedSearch function
   const debouncedSearch = useCallback(
-    debounce(async (searchQuery) => {
+    debounce(async (searchQuery: string) => {
       if (!searchQuery.trim() || searchQuery.length < 2) {
         setResults([]);
         setLoading(false);
@@ -47,43 +48,26 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
       try {
         const params = new URLSearchParams({
           q: searchQuery,
-          limit: "6", // Limit results for dropdown
+          limit: "6",
         });
 
         console.log("🔍 Searching for:", searchQuery);
         const response = await fetch(`/api/search?${params}`);
 
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          throw new Error(`HTTP ${response.status}`);
         }
 
         const data = await response.json();
-        console.log("📥 Search response:", data);
-
-        if (data.success) {
-          setResults(data.results || []);
-        } else {
-          console.error("Search failed:", data.error);
-          setResults([]);
-        }
+        setResults(data.papers || []);
       } catch (error) {
         console.error("Search error:", error);
         setResults([]);
-
-        // Show error state in dropdown
-        setResults([
-          {
-            paper_id: -1,
-            title: "Search temporarily unavailable",
-            author: "Please try again later",
-            isError: true,
-          },
-        ]);
       } finally {
         setLoading(false);
       }
     }, 300),
-    [],
+    [] // Empty dependency array since debounce creates a stable function
   );
 
   // Handle input change
@@ -646,16 +630,17 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
 };
 
 // Debounce utility function
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
+// Move debounce function outside component (at the top of the file)
+function debounce<T extends (...args: any[]) => any>(func: T, wait: number): T {
+  let timeout: NodeJS.Timeout;
+  return ((...args: Parameters<T>) => {
     const later = () => {
       clearTimeout(timeout);
       func(...args);
     };
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
-  };
+  }) as T;
 }
 
 export default SearchInput;

@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
-  // output   = "../node_modules/.prisma/client"/
+  // output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -10,24 +10,25 @@ datasource db {
 }
 
 model users {
-  user_id         Int              @id @default(autoincrement())
-  first_name      String?
-  mid_name        String?
-  last_name       String?
-  ext_name        String?
-  email           String           @unique
-  profile_picture String?
-  password        String
-  created_at      DateTime?
-  role            user_role?
-  user_activity_logs   user_activity_logs[]
-  activity_logs   activity_logs[]
-  faculty         faculty?
-  librarian       librarian?
-  students        students?
-  user_bookmarks  user_bookmarks[]
-  backup_jobs      backup_jobs[]
-  }
+  user_id                Int                      @id @default(autoincrement())
+  first_name             String?
+  mid_name               String?
+  last_name              String?
+  ext_name               String?
+  email                  String                   @unique
+  profile_picture        String?
+  password               String
+  created_at             DateTime?
+  role                   user_role?
+  user_activity_logs     user_activity_logs[]
+  activity_logs          activity_logs[]
+  faculty                faculty?
+  librarian              librarian?
+  students               students?
+  user_bookmarks         user_bookmarks[]
+  backup_jobs            backup_jobs[]
+  password_reset_tokens  password_reset_tokens[]
+}
 
 model faculty {
   employee_id BigInt     @id @unique
@@ -51,6 +52,7 @@ model librarian {
   position      String?
   contact_num   Int
   user_id       Int             @unique
+  status        String?
   activity_logs activity_logs[]
   users         users           @relation(fields: [user_id], references: [user_id])
 }
@@ -103,6 +105,20 @@ model Otp {
   expiresAt DateTime
 }
 
+model password_reset_tokens {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  token      String   @unique
+  expires_at DateTime
+  created_at DateTime @default(now())
+  used_at    DateTime?
+  
+  // Relations
+  user       users    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  
+  @@map("password_reset_tokens")
+}
+
 model activity_logs {
   name          String
   activity      String
@@ -133,7 +149,6 @@ model user_activity_logs {
   users         users          @relation(fields: [user_id], references: [user_id])
   papers        papers         @relation(fields: [paper_id], references: [paper_id])
 }
-
 
 model backup_jobs {
   id               String    @id @default(cuid())
@@ -169,13 +184,13 @@ model backup_settings {
   @@map("backup_settings")
 }
 
-
 enum activity_type {
   LOGIN
   LOGOUT
   VIEW_DOCUMENT
   DOWNLOAD_DOCUMENT
   CHANGE_PASSWORD
+  PASSWORD_RESET
   ADD_USER
   DELETE_USER
   MODIFY_USER

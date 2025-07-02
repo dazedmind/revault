@@ -45,7 +45,7 @@ export default function SettingsLayout({
         ? [<Activity key="activity" />, <Info key="info" />]
         : userType === "ASSISTANT"
         ? [<User key="user2" />, <Activity key="activity" />, <Info key="info" />]
-        : [<User key="user2" />, <Activity key="activity" />, <FolderSync />, <Info key="info" />],
+        : [<User key="user2" />, <Activity key="activity" />, <FolderSync key="folder" />, <Info key="info" />],
     },
   ];
 

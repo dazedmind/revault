@@ -54,6 +54,11 @@ export type user_bookmarks = $Result.DefaultSelection<Prisma.$user_bookmarksPayl
  */
 export type Otp = $Result.DefaultSelection<Prisma.$OtpPayload>
 /**
+ * Model password_reset_tokens
+ * 
+ */
+export type password_reset_tokens = $Result.DefaultSelection<Prisma.$password_reset_tokensPayload>
+/**
  * Model activity_logs
  * 
  */
@@ -84,6 +89,7 @@ export namespace $Enums {
   VIEW_DOCUMENT: 'VIEW_DOCUMENT',
   DOWNLOAD_DOCUMENT: 'DOWNLOAD_DOCUMENT',
   CHANGE_PASSWORD: 'CHANGE_PASSWORD',
+  PASSWORD_RESET: 'PASSWORD_RESET',
   ADD_USER: 'ADD_USER',
   DELETE_USER: 'DELETE_USER',
   MODIFY_USER: 'MODIFY_USER',
@@ -321,6 +327,16 @@ export class PrismaClient<
     * ```
     */
   get otp(): Prisma.OtpDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.password_reset_tokens`: Exposes CRUD operations for the **password_reset_tokens** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Password_reset_tokens
+    * const password_reset_tokens = await prisma.password_reset_tokens.findMany()
+    * ```
+    */
+  get password_reset_tokens(): Prisma.password_reset_tokensDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.activity_logs`: Exposes CRUD operations for the **activity_logs** model.
@@ -809,6 +825,7 @@ export namespace Prisma {
     paper_metadata: 'paper_metadata',
     user_bookmarks: 'user_bookmarks',
     Otp: 'Otp',
+    password_reset_tokens: 'password_reset_tokens',
     activity_logs: 'activity_logs',
     user_activity_logs: 'user_activity_logs',
     backup_jobs: 'backup_jobs',
@@ -831,7 +848,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "faculty" | "students" | "librarian" | "papers" | "paper_metadata" | "user_bookmarks" | "otp" | "activity_logs" | "user_activity_logs" | "backup_jobs" | "backup_settings"
+      modelProps: "users" | "faculty" | "students" | "librarian" | "papers" | "paper_metadata" | "user_bookmarks" | "otp" | "password_reset_tokens" | "activity_logs" | "user_activity_logs" | "backup_jobs" | "backup_settings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1427,6 +1444,80 @@ export namespace Prisma {
           }
         }
       }
+      password_reset_tokens: {
+        payload: Prisma.$password_reset_tokensPayload<ExtArgs>
+        fields: Prisma.password_reset_tokensFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.password_reset_tokensFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.password_reset_tokensFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload>
+          }
+          findFirst: {
+            args: Prisma.password_reset_tokensFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.password_reset_tokensFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload>
+          }
+          findMany: {
+            args: Prisma.password_reset_tokensFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload>[]
+          }
+          create: {
+            args: Prisma.password_reset_tokensCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload>
+          }
+          createMany: {
+            args: Prisma.password_reset_tokensCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.password_reset_tokensCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload>[]
+          }
+          delete: {
+            args: Prisma.password_reset_tokensDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload>
+          }
+          update: {
+            args: Prisma.password_reset_tokensUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload>
+          }
+          deleteMany: {
+            args: Prisma.password_reset_tokensDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.password_reset_tokensUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.password_reset_tokensUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload>[]
+          }
+          upsert: {
+            args: Prisma.password_reset_tokensUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$password_reset_tokensPayload>
+          }
+          aggregate: {
+            args: Prisma.Password_reset_tokensAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePassword_reset_tokens>
+          }
+          groupBy: {
+            args: Prisma.password_reset_tokensGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Password_reset_tokensGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.password_reset_tokensCountArgs<ExtArgs>
+            result: $Utils.Optional<Password_reset_tokensCountAggregateOutputType> | number
+          }
+        }
+      }
       activity_logs: {
         payload: Prisma.$activity_logsPayload<ExtArgs>
         fields: Prisma.activity_logsFieldRefs
@@ -1815,6 +1906,7 @@ export namespace Prisma {
     paper_metadata?: paper_metadataOmit
     user_bookmarks?: user_bookmarksOmit
     otp?: OtpOmit
+    password_reset_tokens?: password_reset_tokensOmit
     activity_logs?: activity_logsOmit
     user_activity_logs?: user_activity_logsOmit
     backup_jobs?: backup_jobsOmit
@@ -1917,6 +2009,7 @@ export namespace Prisma {
     activity_logs: number
     user_bookmarks: number
     backup_jobs: number
+    password_reset_tokens: number
   }
 
   export type UsersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1924,6 +2017,7 @@ export namespace Prisma {
     activity_logs?: boolean | UsersCountOutputTypeCountActivity_logsArgs
     user_bookmarks?: boolean | UsersCountOutputTypeCountUser_bookmarksArgs
     backup_jobs?: boolean | UsersCountOutputTypeCountBackup_jobsArgs
+    password_reset_tokens?: boolean | UsersCountOutputTypeCountPassword_reset_tokensArgs
   }
 
   // Custom InputTypes
@@ -1963,6 +2057,13 @@ export namespace Prisma {
    */
   export type UsersCountOutputTypeCountBackup_jobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: backup_jobsWhereInput
+  }
+
+  /**
+   * UsersCountOutputType without action
+   */
+  export type UsersCountOutputTypeCountPassword_reset_tokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: password_reset_tokensWhereInput
   }
 
 
@@ -2295,6 +2396,7 @@ export namespace Prisma {
     students?: boolean | users$studentsArgs<ExtArgs>
     user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
     backup_jobs?: boolean | users$backup_jobsArgs<ExtArgs>
+    password_reset_tokens?: boolean | users$password_reset_tokensArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["users"]>
 
@@ -2346,6 +2448,7 @@ export namespace Prisma {
     students?: boolean | users$studentsArgs<ExtArgs>
     user_bookmarks?: boolean | users$user_bookmarksArgs<ExtArgs>
     backup_jobs?: boolean | users$backup_jobsArgs<ExtArgs>
+    password_reset_tokens?: boolean | users$password_reset_tokensArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type usersIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2361,6 +2464,7 @@ export namespace Prisma {
       students: Prisma.$studentsPayload<ExtArgs> | null
       user_bookmarks: Prisma.$user_bookmarksPayload<ExtArgs>[]
       backup_jobs: Prisma.$backup_jobsPayload<ExtArgs>[]
+      password_reset_tokens: Prisma.$password_reset_tokensPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       user_id: number
@@ -2774,6 +2878,7 @@ export namespace Prisma {
     students<T extends users$studentsArgs<ExtArgs> = {}>(args?: Subset<T, users$studentsArgs<ExtArgs>>): Prisma__studentsClient<$Result.GetResult<Prisma.$studentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     user_bookmarks<T extends users$user_bookmarksArgs<ExtArgs> = {}>(args?: Subset<T, users$user_bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_bookmarksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     backup_jobs<T extends users$backup_jobsArgs<ExtArgs> = {}>(args?: Subset<T, users$backup_jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$backup_jobsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    password_reset_tokens<T extends users$password_reset_tokensArgs<ExtArgs> = {}>(args?: Subset<T, users$password_reset_tokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3351,6 +3456,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Backup_jobsScalarFieldEnum | Backup_jobsScalarFieldEnum[]
+  }
+
+  /**
+   * users.password_reset_tokens
+   */
+  export type users$password_reset_tokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+    where?: password_reset_tokensWhereInput
+    orderBy?: password_reset_tokensOrderByWithRelationInput | password_reset_tokensOrderByWithRelationInput[]
+    cursor?: password_reset_tokensWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Password_reset_tokensScalarFieldEnum | Password_reset_tokensScalarFieldEnum[]
   }
 
   /**
@@ -5584,6 +5713,7 @@ export namespace Prisma {
     position: string | null
     contact_num: number | null
     user_id: number | null
+    status: string | null
   }
 
   export type LibrarianMaxAggregateOutputType = {
@@ -5591,6 +5721,7 @@ export namespace Prisma {
     position: string | null
     contact_num: number | null
     user_id: number | null
+    status: string | null
   }
 
   export type LibrarianCountAggregateOutputType = {
@@ -5598,6 +5729,7 @@ export namespace Prisma {
     position: number
     contact_num: number
     user_id: number
+    status: number
     _all: number
   }
 
@@ -5619,6 +5751,7 @@ export namespace Prisma {
     position?: true
     contact_num?: true
     user_id?: true
+    status?: true
   }
 
   export type LibrarianMaxAggregateInputType = {
@@ -5626,6 +5759,7 @@ export namespace Prisma {
     position?: true
     contact_num?: true
     user_id?: true
+    status?: true
   }
 
   export type LibrarianCountAggregateInputType = {
@@ -5633,6 +5767,7 @@ export namespace Prisma {
     position?: true
     contact_num?: true
     user_id?: true
+    status?: true
     _all?: true
   }
 
@@ -5727,6 +5862,7 @@ export namespace Prisma {
     position: string | null
     contact_num: number
     user_id: number
+    status: string | null
     _count: LibrarianCountAggregateOutputType | null
     _avg: LibrarianAvgAggregateOutputType | null
     _sum: LibrarianSumAggregateOutputType | null
@@ -5753,6 +5889,7 @@ export namespace Prisma {
     position?: boolean
     contact_num?: boolean
     user_id?: boolean
+    status?: boolean
     activity_logs?: boolean | librarian$activity_logsArgs<ExtArgs>
     users?: boolean | usersDefaultArgs<ExtArgs>
     _count?: boolean | LibrarianCountOutputTypeDefaultArgs<ExtArgs>
@@ -5763,6 +5900,7 @@ export namespace Prisma {
     position?: boolean
     contact_num?: boolean
     user_id?: boolean
+    status?: boolean
     users?: boolean | usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["librarian"]>
 
@@ -5771,6 +5909,7 @@ export namespace Prisma {
     position?: boolean
     contact_num?: boolean
     user_id?: boolean
+    status?: boolean
     users?: boolean | usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["librarian"]>
 
@@ -5779,9 +5918,10 @@ export namespace Prisma {
     position?: boolean
     contact_num?: boolean
     user_id?: boolean
+    status?: boolean
   }
 
-  export type librarianOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"employee_id" | "position" | "contact_num" | "user_id", ExtArgs["result"]["librarian"]>
+  export type librarianOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"employee_id" | "position" | "contact_num" | "user_id" | "status", ExtArgs["result"]["librarian"]>
   export type librarianInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     activity_logs?: boolean | librarian$activity_logsArgs<ExtArgs>
     users?: boolean | usersDefaultArgs<ExtArgs>
@@ -5805,6 +5945,7 @@ export namespace Prisma {
       position: string | null
       contact_num: number
       user_id: number
+      status: string | null
     }, ExtArgs["result"]["librarian"]>
     composites: {}
   }
@@ -6234,6 +6375,7 @@ export namespace Prisma {
     readonly position: FieldRef<"librarian", 'String'>
     readonly contact_num: FieldRef<"librarian", 'Int'>
     readonly user_id: FieldRef<"librarian", 'Int'>
+    readonly status: FieldRef<"librarian", 'String'>
   }
     
 
@@ -11136,6 +11278,1115 @@ export namespace Prisma {
 
 
   /**
+   * Model password_reset_tokens
+   */
+
+  export type AggregatePassword_reset_tokens = {
+    _count: Password_reset_tokensCountAggregateOutputType | null
+    _avg: Password_reset_tokensAvgAggregateOutputType | null
+    _sum: Password_reset_tokensSumAggregateOutputType | null
+    _min: Password_reset_tokensMinAggregateOutputType | null
+    _max: Password_reset_tokensMaxAggregateOutputType | null
+  }
+
+  export type Password_reset_tokensAvgAggregateOutputType = {
+    id: number | null
+    user_id: number | null
+  }
+
+  export type Password_reset_tokensSumAggregateOutputType = {
+    id: number | null
+    user_id: number | null
+  }
+
+  export type Password_reset_tokensMinAggregateOutputType = {
+    id: number | null
+    user_id: number | null
+    token: string | null
+    expires_at: Date | null
+    created_at: Date | null
+    used_at: Date | null
+  }
+
+  export type Password_reset_tokensMaxAggregateOutputType = {
+    id: number | null
+    user_id: number | null
+    token: string | null
+    expires_at: Date | null
+    created_at: Date | null
+    used_at: Date | null
+  }
+
+  export type Password_reset_tokensCountAggregateOutputType = {
+    id: number
+    user_id: number
+    token: number
+    expires_at: number
+    created_at: number
+    used_at: number
+    _all: number
+  }
+
+
+  export type Password_reset_tokensAvgAggregateInputType = {
+    id?: true
+    user_id?: true
+  }
+
+  export type Password_reset_tokensSumAggregateInputType = {
+    id?: true
+    user_id?: true
+  }
+
+  export type Password_reset_tokensMinAggregateInputType = {
+    id?: true
+    user_id?: true
+    token?: true
+    expires_at?: true
+    created_at?: true
+    used_at?: true
+  }
+
+  export type Password_reset_tokensMaxAggregateInputType = {
+    id?: true
+    user_id?: true
+    token?: true
+    expires_at?: true
+    created_at?: true
+    used_at?: true
+  }
+
+  export type Password_reset_tokensCountAggregateInputType = {
+    id?: true
+    user_id?: true
+    token?: true
+    expires_at?: true
+    created_at?: true
+    used_at?: true
+    _all?: true
+  }
+
+  export type Password_reset_tokensAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which password_reset_tokens to aggregate.
+     */
+    where?: password_reset_tokensWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of password_reset_tokens to fetch.
+     */
+    orderBy?: password_reset_tokensOrderByWithRelationInput | password_reset_tokensOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: password_reset_tokensWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` password_reset_tokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` password_reset_tokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned password_reset_tokens
+    **/
+    _count?: true | Password_reset_tokensCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Password_reset_tokensAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Password_reset_tokensSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Password_reset_tokensMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Password_reset_tokensMaxAggregateInputType
+  }
+
+  export type GetPassword_reset_tokensAggregateType<T extends Password_reset_tokensAggregateArgs> = {
+        [P in keyof T & keyof AggregatePassword_reset_tokens]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePassword_reset_tokens[P]>
+      : GetScalarType<T[P], AggregatePassword_reset_tokens[P]>
+  }
+
+
+
+
+  export type password_reset_tokensGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: password_reset_tokensWhereInput
+    orderBy?: password_reset_tokensOrderByWithAggregationInput | password_reset_tokensOrderByWithAggregationInput[]
+    by: Password_reset_tokensScalarFieldEnum[] | Password_reset_tokensScalarFieldEnum
+    having?: password_reset_tokensScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Password_reset_tokensCountAggregateInputType | true
+    _avg?: Password_reset_tokensAvgAggregateInputType
+    _sum?: Password_reset_tokensSumAggregateInputType
+    _min?: Password_reset_tokensMinAggregateInputType
+    _max?: Password_reset_tokensMaxAggregateInputType
+  }
+
+  export type Password_reset_tokensGroupByOutputType = {
+    id: number
+    user_id: number
+    token: string
+    expires_at: Date
+    created_at: Date
+    used_at: Date | null
+    _count: Password_reset_tokensCountAggregateOutputType | null
+    _avg: Password_reset_tokensAvgAggregateOutputType | null
+    _sum: Password_reset_tokensSumAggregateOutputType | null
+    _min: Password_reset_tokensMinAggregateOutputType | null
+    _max: Password_reset_tokensMaxAggregateOutputType | null
+  }
+
+  type GetPassword_reset_tokensGroupByPayload<T extends password_reset_tokensGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Password_reset_tokensGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Password_reset_tokensGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Password_reset_tokensGroupByOutputType[P]>
+            : GetScalarType<T[P], Password_reset_tokensGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type password_reset_tokensSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    token?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    used_at?: boolean
+    user?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["password_reset_tokens"]>
+
+  export type password_reset_tokensSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    token?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    used_at?: boolean
+    user?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["password_reset_tokens"]>
+
+  export type password_reset_tokensSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    token?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    used_at?: boolean
+    user?: boolean | usersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["password_reset_tokens"]>
+
+  export type password_reset_tokensSelectScalar = {
+    id?: boolean
+    user_id?: boolean
+    token?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    used_at?: boolean
+  }
+
+  export type password_reset_tokensOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "token" | "expires_at" | "created_at" | "used_at", ExtArgs["result"]["password_reset_tokens"]>
+  export type password_reset_tokensInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | usersDefaultArgs<ExtArgs>
+  }
+  export type password_reset_tokensIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | usersDefaultArgs<ExtArgs>
+  }
+  export type password_reset_tokensIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | usersDefaultArgs<ExtArgs>
+  }
+
+  export type $password_reset_tokensPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "password_reset_tokens"
+    objects: {
+      user: Prisma.$usersPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      user_id: number
+      token: string
+      expires_at: Date
+      created_at: Date
+      used_at: Date | null
+    }, ExtArgs["result"]["password_reset_tokens"]>
+    composites: {}
+  }
+
+  type password_reset_tokensGetPayload<S extends boolean | null | undefined | password_reset_tokensDefaultArgs> = $Result.GetResult<Prisma.$password_reset_tokensPayload, S>
+
+  type password_reset_tokensCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<password_reset_tokensFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Password_reset_tokensCountAggregateInputType | true
+    }
+
+  export interface password_reset_tokensDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['password_reset_tokens'], meta: { name: 'password_reset_tokens' } }
+    /**
+     * Find zero or one Password_reset_tokens that matches the filter.
+     * @param {password_reset_tokensFindUniqueArgs} args - Arguments to find a Password_reset_tokens
+     * @example
+     * // Get one Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends password_reset_tokensFindUniqueArgs>(args: SelectSubset<T, password_reset_tokensFindUniqueArgs<ExtArgs>>): Prisma__password_reset_tokensClient<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Password_reset_tokens that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {password_reset_tokensFindUniqueOrThrowArgs} args - Arguments to find a Password_reset_tokens
+     * @example
+     * // Get one Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends password_reset_tokensFindUniqueOrThrowArgs>(args: SelectSubset<T, password_reset_tokensFindUniqueOrThrowArgs<ExtArgs>>): Prisma__password_reset_tokensClient<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Password_reset_tokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {password_reset_tokensFindFirstArgs} args - Arguments to find a Password_reset_tokens
+     * @example
+     * // Get one Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends password_reset_tokensFindFirstArgs>(args?: SelectSubset<T, password_reset_tokensFindFirstArgs<ExtArgs>>): Prisma__password_reset_tokensClient<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Password_reset_tokens that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {password_reset_tokensFindFirstOrThrowArgs} args - Arguments to find a Password_reset_tokens
+     * @example
+     * // Get one Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends password_reset_tokensFindFirstOrThrowArgs>(args?: SelectSubset<T, password_reset_tokensFindFirstOrThrowArgs<ExtArgs>>): Prisma__password_reset_tokensClient<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Password_reset_tokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {password_reset_tokensFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.findMany()
+     * 
+     * // Get first 10 Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const password_reset_tokensWithIdOnly = await prisma.password_reset_tokens.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends password_reset_tokensFindManyArgs>(args?: SelectSubset<T, password_reset_tokensFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Password_reset_tokens.
+     * @param {password_reset_tokensCreateArgs} args - Arguments to create a Password_reset_tokens.
+     * @example
+     * // Create one Password_reset_tokens
+     * const Password_reset_tokens = await prisma.password_reset_tokens.create({
+     *   data: {
+     *     // ... data to create a Password_reset_tokens
+     *   }
+     * })
+     * 
+     */
+    create<T extends password_reset_tokensCreateArgs>(args: SelectSubset<T, password_reset_tokensCreateArgs<ExtArgs>>): Prisma__password_reset_tokensClient<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Password_reset_tokens.
+     * @param {password_reset_tokensCreateManyArgs} args - Arguments to create many Password_reset_tokens.
+     * @example
+     * // Create many Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends password_reset_tokensCreateManyArgs>(args?: SelectSubset<T, password_reset_tokensCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Password_reset_tokens and returns the data saved in the database.
+     * @param {password_reset_tokensCreateManyAndReturnArgs} args - Arguments to create many Password_reset_tokens.
+     * @example
+     * // Create many Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Password_reset_tokens and only return the `id`
+     * const password_reset_tokensWithIdOnly = await prisma.password_reset_tokens.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends password_reset_tokensCreateManyAndReturnArgs>(args?: SelectSubset<T, password_reset_tokensCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Password_reset_tokens.
+     * @param {password_reset_tokensDeleteArgs} args - Arguments to delete one Password_reset_tokens.
+     * @example
+     * // Delete one Password_reset_tokens
+     * const Password_reset_tokens = await prisma.password_reset_tokens.delete({
+     *   where: {
+     *     // ... filter to delete one Password_reset_tokens
+     *   }
+     * })
+     * 
+     */
+    delete<T extends password_reset_tokensDeleteArgs>(args: SelectSubset<T, password_reset_tokensDeleteArgs<ExtArgs>>): Prisma__password_reset_tokensClient<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Password_reset_tokens.
+     * @param {password_reset_tokensUpdateArgs} args - Arguments to update one Password_reset_tokens.
+     * @example
+     * // Update one Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends password_reset_tokensUpdateArgs>(args: SelectSubset<T, password_reset_tokensUpdateArgs<ExtArgs>>): Prisma__password_reset_tokensClient<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Password_reset_tokens.
+     * @param {password_reset_tokensDeleteManyArgs} args - Arguments to filter Password_reset_tokens to delete.
+     * @example
+     * // Delete a few Password_reset_tokens
+     * const { count } = await prisma.password_reset_tokens.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends password_reset_tokensDeleteManyArgs>(args?: SelectSubset<T, password_reset_tokensDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Password_reset_tokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {password_reset_tokensUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends password_reset_tokensUpdateManyArgs>(args: SelectSubset<T, password_reset_tokensUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Password_reset_tokens and returns the data updated in the database.
+     * @param {password_reset_tokensUpdateManyAndReturnArgs} args - Arguments to update many Password_reset_tokens.
+     * @example
+     * // Update many Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Password_reset_tokens and only return the `id`
+     * const password_reset_tokensWithIdOnly = await prisma.password_reset_tokens.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends password_reset_tokensUpdateManyAndReturnArgs>(args: SelectSubset<T, password_reset_tokensUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Password_reset_tokens.
+     * @param {password_reset_tokensUpsertArgs} args - Arguments to update or create a Password_reset_tokens.
+     * @example
+     * // Update or create a Password_reset_tokens
+     * const password_reset_tokens = await prisma.password_reset_tokens.upsert({
+     *   create: {
+     *     // ... data to create a Password_reset_tokens
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Password_reset_tokens we want to update
+     *   }
+     * })
+     */
+    upsert<T extends password_reset_tokensUpsertArgs>(args: SelectSubset<T, password_reset_tokensUpsertArgs<ExtArgs>>): Prisma__password_reset_tokensClient<$Result.GetResult<Prisma.$password_reset_tokensPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Password_reset_tokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {password_reset_tokensCountArgs} args - Arguments to filter Password_reset_tokens to count.
+     * @example
+     * // Count the number of Password_reset_tokens
+     * const count = await prisma.password_reset_tokens.count({
+     *   where: {
+     *     // ... the filter for the Password_reset_tokens we want to count
+     *   }
+     * })
+    **/
+    count<T extends password_reset_tokensCountArgs>(
+      args?: Subset<T, password_reset_tokensCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Password_reset_tokensCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Password_reset_tokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Password_reset_tokensAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Password_reset_tokensAggregateArgs>(args: Subset<T, Password_reset_tokensAggregateArgs>): Prisma.PrismaPromise<GetPassword_reset_tokensAggregateType<T>>
+
+    /**
+     * Group by Password_reset_tokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {password_reset_tokensGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends password_reset_tokensGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: password_reset_tokensGroupByArgs['orderBy'] }
+        : { orderBy?: password_reset_tokensGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, password_reset_tokensGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPassword_reset_tokensGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the password_reset_tokens model
+   */
+  readonly fields: password_reset_tokensFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for password_reset_tokens.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__password_reset_tokensClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the password_reset_tokens model
+   */
+  interface password_reset_tokensFieldRefs {
+    readonly id: FieldRef<"password_reset_tokens", 'Int'>
+    readonly user_id: FieldRef<"password_reset_tokens", 'Int'>
+    readonly token: FieldRef<"password_reset_tokens", 'String'>
+    readonly expires_at: FieldRef<"password_reset_tokens", 'DateTime'>
+    readonly created_at: FieldRef<"password_reset_tokens", 'DateTime'>
+    readonly used_at: FieldRef<"password_reset_tokens", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * password_reset_tokens findUnique
+   */
+  export type password_reset_tokensFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+    /**
+     * Filter, which password_reset_tokens to fetch.
+     */
+    where: password_reset_tokensWhereUniqueInput
+  }
+
+  /**
+   * password_reset_tokens findUniqueOrThrow
+   */
+  export type password_reset_tokensFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+    /**
+     * Filter, which password_reset_tokens to fetch.
+     */
+    where: password_reset_tokensWhereUniqueInput
+  }
+
+  /**
+   * password_reset_tokens findFirst
+   */
+  export type password_reset_tokensFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+    /**
+     * Filter, which password_reset_tokens to fetch.
+     */
+    where?: password_reset_tokensWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of password_reset_tokens to fetch.
+     */
+    orderBy?: password_reset_tokensOrderByWithRelationInput | password_reset_tokensOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for password_reset_tokens.
+     */
+    cursor?: password_reset_tokensWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` password_reset_tokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` password_reset_tokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of password_reset_tokens.
+     */
+    distinct?: Password_reset_tokensScalarFieldEnum | Password_reset_tokensScalarFieldEnum[]
+  }
+
+  /**
+   * password_reset_tokens findFirstOrThrow
+   */
+  export type password_reset_tokensFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+    /**
+     * Filter, which password_reset_tokens to fetch.
+     */
+    where?: password_reset_tokensWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of password_reset_tokens to fetch.
+     */
+    orderBy?: password_reset_tokensOrderByWithRelationInput | password_reset_tokensOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for password_reset_tokens.
+     */
+    cursor?: password_reset_tokensWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` password_reset_tokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` password_reset_tokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of password_reset_tokens.
+     */
+    distinct?: Password_reset_tokensScalarFieldEnum | Password_reset_tokensScalarFieldEnum[]
+  }
+
+  /**
+   * password_reset_tokens findMany
+   */
+  export type password_reset_tokensFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+    /**
+     * Filter, which password_reset_tokens to fetch.
+     */
+    where?: password_reset_tokensWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of password_reset_tokens to fetch.
+     */
+    orderBy?: password_reset_tokensOrderByWithRelationInput | password_reset_tokensOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing password_reset_tokens.
+     */
+    cursor?: password_reset_tokensWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` password_reset_tokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` password_reset_tokens.
+     */
+    skip?: number
+    distinct?: Password_reset_tokensScalarFieldEnum | Password_reset_tokensScalarFieldEnum[]
+  }
+
+  /**
+   * password_reset_tokens create
+   */
+  export type password_reset_tokensCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+    /**
+     * The data needed to create a password_reset_tokens.
+     */
+    data: XOR<password_reset_tokensCreateInput, password_reset_tokensUncheckedCreateInput>
+  }
+
+  /**
+   * password_reset_tokens createMany
+   */
+  export type password_reset_tokensCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many password_reset_tokens.
+     */
+    data: password_reset_tokensCreateManyInput | password_reset_tokensCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * password_reset_tokens createManyAndReturn
+   */
+  export type password_reset_tokensCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * The data used to create many password_reset_tokens.
+     */
+    data: password_reset_tokensCreateManyInput | password_reset_tokensCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * password_reset_tokens update
+   */
+  export type password_reset_tokensUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+    /**
+     * The data needed to update a password_reset_tokens.
+     */
+    data: XOR<password_reset_tokensUpdateInput, password_reset_tokensUncheckedUpdateInput>
+    /**
+     * Choose, which password_reset_tokens to update.
+     */
+    where: password_reset_tokensWhereUniqueInput
+  }
+
+  /**
+   * password_reset_tokens updateMany
+   */
+  export type password_reset_tokensUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update password_reset_tokens.
+     */
+    data: XOR<password_reset_tokensUpdateManyMutationInput, password_reset_tokensUncheckedUpdateManyInput>
+    /**
+     * Filter which password_reset_tokens to update
+     */
+    where?: password_reset_tokensWhereInput
+    /**
+     * Limit how many password_reset_tokens to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * password_reset_tokens updateManyAndReturn
+   */
+  export type password_reset_tokensUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * The data used to update password_reset_tokens.
+     */
+    data: XOR<password_reset_tokensUpdateManyMutationInput, password_reset_tokensUncheckedUpdateManyInput>
+    /**
+     * Filter which password_reset_tokens to update
+     */
+    where?: password_reset_tokensWhereInput
+    /**
+     * Limit how many password_reset_tokens to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * password_reset_tokens upsert
+   */
+  export type password_reset_tokensUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+    /**
+     * The filter to search for the password_reset_tokens to update in case it exists.
+     */
+    where: password_reset_tokensWhereUniqueInput
+    /**
+     * In case the password_reset_tokens found by the `where` argument doesn't exist, create a new password_reset_tokens with this data.
+     */
+    create: XOR<password_reset_tokensCreateInput, password_reset_tokensUncheckedCreateInput>
+    /**
+     * In case the password_reset_tokens was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<password_reset_tokensUpdateInput, password_reset_tokensUncheckedUpdateInput>
+  }
+
+  /**
+   * password_reset_tokens delete
+   */
+  export type password_reset_tokensDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+    /**
+     * Filter which password_reset_tokens to delete.
+     */
+    where: password_reset_tokensWhereUniqueInput
+  }
+
+  /**
+   * password_reset_tokens deleteMany
+   */
+  export type password_reset_tokensDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which password_reset_tokens to delete
+     */
+    where?: password_reset_tokensWhereInput
+    /**
+     * Limit how many password_reset_tokens to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * password_reset_tokens without action
+   */
+  export type password_reset_tokensDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the password_reset_tokens
+     */
+    select?: password_reset_tokensSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the password_reset_tokens
+     */
+    omit?: password_reset_tokensOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: password_reset_tokensInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model activity_logs
    */
 
@@ -15825,7 +17076,8 @@ export namespace Prisma {
     employee_id: 'employee_id',
     position: 'position',
     contact_num: 'contact_num',
-    user_id: 'user_id'
+    user_id: 'user_id',
+    status: 'status'
   };
 
   export type LibrarianScalarFieldEnum = (typeof LibrarianScalarFieldEnum)[keyof typeof LibrarianScalarFieldEnum]
@@ -15881,6 +17133,18 @@ export namespace Prisma {
   };
 
   export type OtpScalarFieldEnum = (typeof OtpScalarFieldEnum)[keyof typeof OtpScalarFieldEnum]
+
+
+  export const Password_reset_tokensScalarFieldEnum: {
+    id: 'id',
+    user_id: 'user_id',
+    token: 'token',
+    expires_at: 'expires_at',
+    created_at: 'created_at',
+    used_at: 'used_at'
+  };
+
+  export type Password_reset_tokensScalarFieldEnum = (typeof Password_reset_tokensScalarFieldEnum)[keyof typeof Password_reset_tokensScalarFieldEnum]
 
 
   export const Activity_logsScalarFieldEnum: {
@@ -16107,6 +17371,7 @@ export namespace Prisma {
     students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
     user_bookmarks?: User_bookmarksListRelationFilter
     backup_jobs?: Backup_jobsListRelationFilter
+    password_reset_tokens?: Password_reset_tokensListRelationFilter
   }
 
   export type usersOrderByWithRelationInput = {
@@ -16127,6 +17392,7 @@ export namespace Prisma {
     students?: studentsOrderByWithRelationInput
     user_bookmarks?: user_bookmarksOrderByRelationAggregateInput
     backup_jobs?: backup_jobsOrderByRelationAggregateInput
+    password_reset_tokens?: password_reset_tokensOrderByRelationAggregateInput
   }
 
   export type usersWhereUniqueInput = Prisma.AtLeast<{
@@ -16150,6 +17416,7 @@ export namespace Prisma {
     students?: XOR<StudentsNullableScalarRelationFilter, studentsWhereInput> | null
     user_bookmarks?: User_bookmarksListRelationFilter
     backup_jobs?: Backup_jobsListRelationFilter
+    password_reset_tokens?: Password_reset_tokensListRelationFilter
   }, "user_id" | "email">
 
   export type usersOrderByWithAggregationInput = {
@@ -16303,6 +17570,7 @@ export namespace Prisma {
     position?: StringNullableFilter<"librarian"> | string | null
     contact_num?: IntFilter<"librarian"> | number
     user_id?: IntFilter<"librarian"> | number
+    status?: StringNullableFilter<"librarian"> | string | null
     activity_logs?: Activity_logsListRelationFilter
     users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }
@@ -16312,6 +17580,7 @@ export namespace Prisma {
     position?: SortOrderInput | SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
+    status?: SortOrderInput | SortOrder
     activity_logs?: activity_logsOrderByRelationAggregateInput
     users?: usersOrderByWithRelationInput
   }
@@ -16324,6 +17593,7 @@ export namespace Prisma {
     NOT?: librarianWhereInput | librarianWhereInput[]
     position?: StringNullableFilter<"librarian"> | string | null
     contact_num?: IntFilter<"librarian"> | number
+    status?: StringNullableFilter<"librarian"> | string | null
     activity_logs?: Activity_logsListRelationFilter
     users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }, "employee_id" | "employee_id" | "user_id">
@@ -16333,6 +17603,7 @@ export namespace Prisma {
     position?: SortOrderInput | SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
+    status?: SortOrderInput | SortOrder
     _count?: librarianCountOrderByAggregateInput
     _avg?: librarianAvgOrderByAggregateInput
     _max?: librarianMaxOrderByAggregateInput
@@ -16348,6 +17619,7 @@ export namespace Prisma {
     position?: StringNullableWithAggregatesFilter<"librarian"> | string | null
     contact_num?: IntWithAggregatesFilter<"librarian"> | number
     user_id?: IntWithAggregatesFilter<"librarian"> | number
+    status?: StringNullableWithAggregatesFilter<"librarian"> | string | null
   }
 
   export type papersWhereInput = {
@@ -16621,6 +17893,68 @@ export namespace Prisma {
     code?: StringWithAggregatesFilter<"Otp"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Otp"> | Date | string
     expiresAt?: DateTimeWithAggregatesFilter<"Otp"> | Date | string
+  }
+
+  export type password_reset_tokensWhereInput = {
+    AND?: password_reset_tokensWhereInput | password_reset_tokensWhereInput[]
+    OR?: password_reset_tokensWhereInput[]
+    NOT?: password_reset_tokensWhereInput | password_reset_tokensWhereInput[]
+    id?: IntFilter<"password_reset_tokens"> | number
+    user_id?: IntFilter<"password_reset_tokens"> | number
+    token?: StringFilter<"password_reset_tokens"> | string
+    expires_at?: DateTimeFilter<"password_reset_tokens"> | Date | string
+    created_at?: DateTimeFilter<"password_reset_tokens"> | Date | string
+    used_at?: DateTimeNullableFilter<"password_reset_tokens"> | Date | string | null
+    user?: XOR<UsersScalarRelationFilter, usersWhereInput>
+  }
+
+  export type password_reset_tokensOrderByWithRelationInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    token?: SortOrder
+    expires_at?: SortOrder
+    created_at?: SortOrder
+    used_at?: SortOrderInput | SortOrder
+    user?: usersOrderByWithRelationInput
+  }
+
+  export type password_reset_tokensWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    token?: string
+    AND?: password_reset_tokensWhereInput | password_reset_tokensWhereInput[]
+    OR?: password_reset_tokensWhereInput[]
+    NOT?: password_reset_tokensWhereInput | password_reset_tokensWhereInput[]
+    user_id?: IntFilter<"password_reset_tokens"> | number
+    expires_at?: DateTimeFilter<"password_reset_tokens"> | Date | string
+    created_at?: DateTimeFilter<"password_reset_tokens"> | Date | string
+    used_at?: DateTimeNullableFilter<"password_reset_tokens"> | Date | string | null
+    user?: XOR<UsersScalarRelationFilter, usersWhereInput>
+  }, "id" | "token">
+
+  export type password_reset_tokensOrderByWithAggregationInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    token?: SortOrder
+    expires_at?: SortOrder
+    created_at?: SortOrder
+    used_at?: SortOrderInput | SortOrder
+    _count?: password_reset_tokensCountOrderByAggregateInput
+    _avg?: password_reset_tokensAvgOrderByAggregateInput
+    _max?: password_reset_tokensMaxOrderByAggregateInput
+    _min?: password_reset_tokensMinOrderByAggregateInput
+    _sum?: password_reset_tokensSumOrderByAggregateInput
+  }
+
+  export type password_reset_tokensScalarWhereWithAggregatesInput = {
+    AND?: password_reset_tokensScalarWhereWithAggregatesInput | password_reset_tokensScalarWhereWithAggregatesInput[]
+    OR?: password_reset_tokensScalarWhereWithAggregatesInput[]
+    NOT?: password_reset_tokensScalarWhereWithAggregatesInput | password_reset_tokensScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"password_reset_tokens"> | number
+    user_id?: IntWithAggregatesFilter<"password_reset_tokens"> | number
+    token?: StringWithAggregatesFilter<"password_reset_tokens"> | string
+    expires_at?: DateTimeWithAggregatesFilter<"password_reset_tokens"> | Date | string
+    created_at?: DateTimeWithAggregatesFilter<"password_reset_tokens"> | Date | string
+    used_at?: DateTimeNullableWithAggregatesFilter<"password_reset_tokens"> | Date | string | null
   }
 
   export type activity_logsWhereInput = {
@@ -16981,6 +18315,7 @@ export namespace Prisma {
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensCreateNestedManyWithoutUserInput
   }
 
   export type usersUncheckedCreateInput = {
@@ -17001,6 +18336,7 @@ export namespace Prisma {
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type usersUpdateInput = {
@@ -17020,6 +18356,7 @@ export namespace Prisma {
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUpdateManyWithoutUserNestedInput
   }
 
   export type usersUncheckedUpdateInput = {
@@ -17040,6 +18377,7 @@ export namespace Prisma {
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type usersCreateManyInput = {
@@ -17187,6 +18525,7 @@ export namespace Prisma {
     employee_id: bigint | number
     position?: string | null
     contact_num: number
+    status?: string | null
     activity_logs?: activity_logsCreateNestedManyWithoutLibrarianInput
     users: usersCreateNestedOneWithoutLibrarianInput
   }
@@ -17196,6 +18535,7 @@ export namespace Prisma {
     position?: string | null
     contact_num: number
     user_id: number
+    status?: string | null
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutLibrarianInput
   }
 
@@ -17203,6 +18543,7 @@ export namespace Prisma {
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     activity_logs?: activity_logsUpdateManyWithoutLibrarianNestedInput
     users?: usersUpdateOneRequiredWithoutLibrarianNestedInput
   }
@@ -17212,6 +18553,7 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     activity_logs?: activity_logsUncheckedUpdateManyWithoutLibrarianNestedInput
   }
 
@@ -17220,12 +18562,14 @@ export namespace Prisma {
     position?: string | null
     contact_num: number
     user_id: number
+    status?: string | null
   }
 
   export type librarianUpdateManyMutationInput = {
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
+    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type librarianUncheckedUpdateManyInput = {
@@ -17233,6 +18577,7 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
+    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type papersCreateInput = {
@@ -17513,6 +18858,65 @@ export namespace Prisma {
     code?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type password_reset_tokensCreateInput = {
+    token: string
+    expires_at: Date | string
+    created_at?: Date | string
+    used_at?: Date | string | null
+    user: usersCreateNestedOneWithoutPassword_reset_tokensInput
+  }
+
+  export type password_reset_tokensUncheckedCreateInput = {
+    id?: number
+    user_id: number
+    token: string
+    expires_at: Date | string
+    created_at?: Date | string
+    used_at?: Date | string | null
+  }
+
+  export type password_reset_tokensUpdateInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    used_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: usersUpdateOneRequiredWithoutPassword_reset_tokensNestedInput
+  }
+
+  export type password_reset_tokensUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    used_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type password_reset_tokensCreateManyInput = {
+    id?: number
+    user_id: number
+    token: string
+    expires_at: Date | string
+    created_at?: Date | string
+    used_at?: Date | string | null
+  }
+
+  export type password_reset_tokensUpdateManyMutationInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    used_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type password_reset_tokensUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    user_id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    used_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type activity_logsCreateInput = {
@@ -17980,6 +19384,12 @@ export namespace Prisma {
     none?: backup_jobsWhereInput
   }
 
+  export type Password_reset_tokensListRelationFilter = {
+    every?: password_reset_tokensWhereInput
+    some?: password_reset_tokensWhereInput
+    none?: password_reset_tokensWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -17998,6 +19408,10 @@ export namespace Prisma {
   }
 
   export type backup_jobsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type password_reset_tokensOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18255,6 +19669,7 @@ export namespace Prisma {
     position?: SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
+    status?: SortOrder
   }
 
   export type librarianAvgOrderByAggregateInput = {
@@ -18268,6 +19683,7 @@ export namespace Prisma {
     position?: SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
+    status?: SortOrder
   }
 
   export type librarianMinOrderByAggregateInput = {
@@ -18275,6 +19691,7 @@ export namespace Prisma {
     position?: SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
+    status?: SortOrder
   }
 
   export type librarianSumOrderByAggregateInput = {
@@ -18484,6 +19901,43 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type password_reset_tokensCountOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    token?: SortOrder
+    expires_at?: SortOrder
+    created_at?: SortOrder
+    used_at?: SortOrder
+  }
+
+  export type password_reset_tokensAvgOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type password_reset_tokensMaxOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    token?: SortOrder
+    expires_at?: SortOrder
+    created_at?: SortOrder
+    used_at?: SortOrder
+  }
+
+  export type password_reset_tokensMinOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    token?: SortOrder
+    expires_at?: SortOrder
+    created_at?: SortOrder
+    used_at?: SortOrder
+  }
+
+  export type password_reset_tokensSumOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
   }
 
   export type Enumactivity_typeNullableFilter<$PrismaModel = never> = {
@@ -18775,6 +20229,13 @@ export namespace Prisma {
     connect?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
   }
 
+  export type password_reset_tokensCreateNestedManyWithoutUserInput = {
+    create?: XOR<password_reset_tokensCreateWithoutUserInput, password_reset_tokensUncheckedCreateWithoutUserInput> | password_reset_tokensCreateWithoutUserInput[] | password_reset_tokensUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: password_reset_tokensCreateOrConnectWithoutUserInput | password_reset_tokensCreateOrConnectWithoutUserInput[]
+    createMany?: password_reset_tokensCreateManyUserInputEnvelope
+    connect?: password_reset_tokensWhereUniqueInput | password_reset_tokensWhereUniqueInput[]
+  }
+
   export type user_activity_logsUncheckedCreateNestedManyWithoutUsersInput = {
     create?: XOR<user_activity_logsCreateWithoutUsersInput, user_activity_logsUncheckedCreateWithoutUsersInput> | user_activity_logsCreateWithoutUsersInput[] | user_activity_logsUncheckedCreateWithoutUsersInput[]
     connectOrCreate?: user_activity_logsCreateOrConnectWithoutUsersInput | user_activity_logsCreateOrConnectWithoutUsersInput[]
@@ -18819,6 +20280,13 @@ export namespace Prisma {
     connectOrCreate?: backup_jobsCreateOrConnectWithoutCreatorInput | backup_jobsCreateOrConnectWithoutCreatorInput[]
     createMany?: backup_jobsCreateManyCreatorInputEnvelope
     connect?: backup_jobsWhereUniqueInput | backup_jobsWhereUniqueInput[]
+  }
+
+  export type password_reset_tokensUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<password_reset_tokensCreateWithoutUserInput, password_reset_tokensUncheckedCreateWithoutUserInput> | password_reset_tokensCreateWithoutUserInput[] | password_reset_tokensUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: password_reset_tokensCreateOrConnectWithoutUserInput | password_reset_tokensCreateOrConnectWithoutUserInput[]
+    createMany?: password_reset_tokensCreateManyUserInputEnvelope
+    connect?: password_reset_tokensWhereUniqueInput | password_reset_tokensWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -18923,6 +20391,20 @@ export namespace Prisma {
     deleteMany?: backup_jobsScalarWhereInput | backup_jobsScalarWhereInput[]
   }
 
+  export type password_reset_tokensUpdateManyWithoutUserNestedInput = {
+    create?: XOR<password_reset_tokensCreateWithoutUserInput, password_reset_tokensUncheckedCreateWithoutUserInput> | password_reset_tokensCreateWithoutUserInput[] | password_reset_tokensUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: password_reset_tokensCreateOrConnectWithoutUserInput | password_reset_tokensCreateOrConnectWithoutUserInput[]
+    upsert?: password_reset_tokensUpsertWithWhereUniqueWithoutUserInput | password_reset_tokensUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: password_reset_tokensCreateManyUserInputEnvelope
+    set?: password_reset_tokensWhereUniqueInput | password_reset_tokensWhereUniqueInput[]
+    disconnect?: password_reset_tokensWhereUniqueInput | password_reset_tokensWhereUniqueInput[]
+    delete?: password_reset_tokensWhereUniqueInput | password_reset_tokensWhereUniqueInput[]
+    connect?: password_reset_tokensWhereUniqueInput | password_reset_tokensWhereUniqueInput[]
+    update?: password_reset_tokensUpdateWithWhereUniqueWithoutUserInput | password_reset_tokensUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: password_reset_tokensUpdateManyWithWhereWithoutUserInput | password_reset_tokensUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: password_reset_tokensScalarWhereInput | password_reset_tokensScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -19015,6 +20497,20 @@ export namespace Prisma {
     update?: backup_jobsUpdateWithWhereUniqueWithoutCreatorInput | backup_jobsUpdateWithWhereUniqueWithoutCreatorInput[]
     updateMany?: backup_jobsUpdateManyWithWhereWithoutCreatorInput | backup_jobsUpdateManyWithWhereWithoutCreatorInput[]
     deleteMany?: backup_jobsScalarWhereInput | backup_jobsScalarWhereInput[]
+  }
+
+  export type password_reset_tokensUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<password_reset_tokensCreateWithoutUserInput, password_reset_tokensUncheckedCreateWithoutUserInput> | password_reset_tokensCreateWithoutUserInput[] | password_reset_tokensUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: password_reset_tokensCreateOrConnectWithoutUserInput | password_reset_tokensCreateOrConnectWithoutUserInput[]
+    upsert?: password_reset_tokensUpsertWithWhereUniqueWithoutUserInput | password_reset_tokensUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: password_reset_tokensCreateManyUserInputEnvelope
+    set?: password_reset_tokensWhereUniqueInput | password_reset_tokensWhereUniqueInput[]
+    disconnect?: password_reset_tokensWhereUniqueInput | password_reset_tokensWhereUniqueInput[]
+    delete?: password_reset_tokensWhereUniqueInput | password_reset_tokensWhereUniqueInput[]
+    connect?: password_reset_tokensWhereUniqueInput | password_reset_tokensWhereUniqueInput[]
+    update?: password_reset_tokensUpdateWithWhereUniqueWithoutUserInput | password_reset_tokensUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: password_reset_tokensUpdateManyWithWhereWithoutUserInput | password_reset_tokensUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: password_reset_tokensScalarWhereInput | password_reset_tokensScalarWhereInput[]
   }
 
   export type usersCreateNestedOneWithoutFacultyInput = {
@@ -19296,6 +20792,20 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type usersCreateNestedOneWithoutPassword_reset_tokensInput = {
+    create?: XOR<usersCreateWithoutPassword_reset_tokensInput, usersUncheckedCreateWithoutPassword_reset_tokensInput>
+    connectOrCreate?: usersCreateOrConnectWithoutPassword_reset_tokensInput
+    connect?: usersWhereUniqueInput
+  }
+
+  export type usersUpdateOneRequiredWithoutPassword_reset_tokensNestedInput = {
+    create?: XOR<usersCreateWithoutPassword_reset_tokensInput, usersUncheckedCreateWithoutPassword_reset_tokensInput>
+    connectOrCreate?: usersCreateOrConnectWithoutPassword_reset_tokensInput
+    upsert?: usersUpsertWithoutPassword_reset_tokensInput
+    connect?: usersWhereUniqueInput
+    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutPassword_reset_tokensInput, usersUpdateWithoutPassword_reset_tokensInput>, usersUncheckedUpdateWithoutPassword_reset_tokensInput>
   }
 
   export type librarianCreateNestedOneWithoutActivity_logsInput = {
@@ -19727,6 +21237,7 @@ export namespace Prisma {
     employee_id: bigint | number
     position?: string | null
     contact_num: number
+    status?: string | null
     activity_logs?: activity_logsCreateNestedManyWithoutLibrarianInput
   }
 
@@ -19734,6 +21245,7 @@ export namespace Prisma {
     employee_id: bigint | number
     position?: string | null
     contact_num: number
+    status?: string | null
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutLibrarianInput
   }
 
@@ -19815,6 +21327,31 @@ export namespace Prisma {
 
   export type backup_jobsCreateManyCreatorInputEnvelope = {
     data: backup_jobsCreateManyCreatorInput | backup_jobsCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type password_reset_tokensCreateWithoutUserInput = {
+    token: string
+    expires_at: Date | string
+    created_at?: Date | string
+    used_at?: Date | string | null
+  }
+
+  export type password_reset_tokensUncheckedCreateWithoutUserInput = {
+    id?: number
+    token: string
+    expires_at: Date | string
+    created_at?: Date | string
+    used_at?: Date | string | null
+  }
+
+  export type password_reset_tokensCreateOrConnectWithoutUserInput = {
+    where: password_reset_tokensWhereUniqueInput
+    create: XOR<password_reset_tokensCreateWithoutUserInput, password_reset_tokensUncheckedCreateWithoutUserInput>
+  }
+
+  export type password_reset_tokensCreateManyUserInputEnvelope = {
+    data: password_reset_tokensCreateManyUserInput | password_reset_tokensCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -19921,6 +21458,7 @@ export namespace Prisma {
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     activity_logs?: activity_logsUpdateManyWithoutLibrarianNestedInput
   }
 
@@ -19928,6 +21466,7 @@ export namespace Prisma {
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     activity_logs?: activity_logsUncheckedUpdateManyWithoutLibrarianNestedInput
   }
 
@@ -20015,6 +21554,34 @@ export namespace Prisma {
     error_message?: StringNullableFilter<"backup_jobs"> | string | null
   }
 
+  export type password_reset_tokensUpsertWithWhereUniqueWithoutUserInput = {
+    where: password_reset_tokensWhereUniqueInput
+    update: XOR<password_reset_tokensUpdateWithoutUserInput, password_reset_tokensUncheckedUpdateWithoutUserInput>
+    create: XOR<password_reset_tokensCreateWithoutUserInput, password_reset_tokensUncheckedCreateWithoutUserInput>
+  }
+
+  export type password_reset_tokensUpdateWithWhereUniqueWithoutUserInput = {
+    where: password_reset_tokensWhereUniqueInput
+    data: XOR<password_reset_tokensUpdateWithoutUserInput, password_reset_tokensUncheckedUpdateWithoutUserInput>
+  }
+
+  export type password_reset_tokensUpdateManyWithWhereWithoutUserInput = {
+    where: password_reset_tokensScalarWhereInput
+    data: XOR<password_reset_tokensUpdateManyMutationInput, password_reset_tokensUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type password_reset_tokensScalarWhereInput = {
+    AND?: password_reset_tokensScalarWhereInput | password_reset_tokensScalarWhereInput[]
+    OR?: password_reset_tokensScalarWhereInput[]
+    NOT?: password_reset_tokensScalarWhereInput | password_reset_tokensScalarWhereInput[]
+    id?: IntFilter<"password_reset_tokens"> | number
+    user_id?: IntFilter<"password_reset_tokens"> | number
+    token?: StringFilter<"password_reset_tokens"> | string
+    expires_at?: DateTimeFilter<"password_reset_tokens"> | Date | string
+    created_at?: DateTimeFilter<"password_reset_tokens"> | Date | string
+    used_at?: DateTimeNullableFilter<"password_reset_tokens"> | Date | string | null
+  }
+
   export type usersCreateWithoutFacultyInput = {
     first_name?: string | null
     mid_name?: string | null
@@ -20031,6 +21598,7 @@ export namespace Prisma {
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensCreateNestedManyWithoutUserInput
   }
 
   export type usersUncheckedCreateWithoutFacultyInput = {
@@ -20050,6 +21618,7 @@ export namespace Prisma {
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type usersCreateOrConnectWithoutFacultyInput = {
@@ -20084,6 +21653,7 @@ export namespace Prisma {
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUpdateManyWithoutUserNestedInput
   }
 
   export type usersUncheckedUpdateWithoutFacultyInput = {
@@ -20103,6 +21673,7 @@ export namespace Prisma {
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type usersCreateWithoutStudentsInput = {
@@ -20121,6 +21692,7 @@ export namespace Prisma {
     librarian?: librarianCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensCreateNestedManyWithoutUserInput
   }
 
   export type usersUncheckedCreateWithoutStudentsInput = {
@@ -20140,6 +21712,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type usersCreateOrConnectWithoutStudentsInput = {
@@ -20174,6 +21747,7 @@ export namespace Prisma {
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUpdateManyWithoutUserNestedInput
   }
 
   export type usersUncheckedUpdateWithoutStudentsInput = {
@@ -20193,6 +21767,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type activity_logsCreateWithoutLibrarianInput = {
@@ -20244,6 +21819,7 @@ export namespace Prisma {
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensCreateNestedManyWithoutUserInput
   }
 
   export type usersUncheckedCreateWithoutLibrarianInput = {
@@ -20263,6 +21839,7 @@ export namespace Prisma {
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type usersCreateOrConnectWithoutLibrarianInput = {
@@ -20313,6 +21890,7 @@ export namespace Prisma {
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUpdateManyWithoutUserNestedInput
   }
 
   export type usersUncheckedUpdateWithoutLibrarianInput = {
@@ -20332,6 +21910,7 @@ export namespace Prisma {
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type paper_metadataCreateWithoutPapersInput = {
@@ -20610,6 +22189,7 @@ export namespace Prisma {
     librarian?: librarianCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
     backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensCreateNestedManyWithoutUserInput
   }
 
   export type usersUncheckedCreateWithoutUser_bookmarksInput = {
@@ -20629,6 +22209,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type usersCreateOrConnectWithoutUser_bookmarksInput = {
@@ -20705,6 +22286,7 @@ export namespace Prisma {
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUpdateManyWithoutUserNestedInput
   }
 
   export type usersUncheckedUpdateWithoutUser_bookmarksInput = {
@@ -20724,12 +22306,108 @@ export namespace Prisma {
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type usersCreateWithoutPassword_reset_tokensInput = {
+    first_name?: string | null
+    mid_name?: string | null
+    last_name?: string | null
+    ext_name?: string | null
+    email: string
+    profile_picture?: string | null
+    password: string
+    created_at?: Date | string | null
+    role?: $Enums.user_role | null
+    user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
+    activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
+    faculty?: facultyCreateNestedOneWithoutUsersInput
+    librarian?: librarianCreateNestedOneWithoutUsersInput
+    students?: studentsCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
+  }
+
+  export type usersUncheckedCreateWithoutPassword_reset_tokensInput = {
+    user_id?: number
+    first_name?: string | null
+    mid_name?: string | null
+    last_name?: string | null
+    ext_name?: string | null
+    email: string
+    profile_picture?: string | null
+    password: string
+    created_at?: Date | string | null
+    role?: $Enums.user_role | null
+    user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
+    faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
+    librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
+    students?: studentsUncheckedCreateNestedOneWithoutUsersInput
+    user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+    backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type usersCreateOrConnectWithoutPassword_reset_tokensInput = {
+    where: usersWhereUniqueInput
+    create: XOR<usersCreateWithoutPassword_reset_tokensInput, usersUncheckedCreateWithoutPassword_reset_tokensInput>
+  }
+
+  export type usersUpsertWithoutPassword_reset_tokensInput = {
+    update: XOR<usersUpdateWithoutPassword_reset_tokensInput, usersUncheckedUpdateWithoutPassword_reset_tokensInput>
+    create: XOR<usersCreateWithoutPassword_reset_tokensInput, usersUncheckedCreateWithoutPassword_reset_tokensInput>
+    where?: usersWhereInput
+  }
+
+  export type usersUpdateToOneWithWhereWithoutPassword_reset_tokensInput = {
+    where?: usersWhereInput
+    data: XOR<usersUpdateWithoutPassword_reset_tokensInput, usersUncheckedUpdateWithoutPassword_reset_tokensInput>
+  }
+
+  export type usersUpdateWithoutPassword_reset_tokensInput = {
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    mid_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    ext_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
+    activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
+    faculty?: facultyUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUpdateOneWithoutUsersNestedInput
+    students?: studentsUpdateOneWithoutUsersNestedInput
+    user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type usersUncheckedUpdateWithoutPassword_reset_tokensInput = {
+    user_id?: IntFieldUpdateOperationsInput | number
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    mid_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    ext_name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    profile_picture?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
+    faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
+    librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
+    students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
+    user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+    backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type librarianCreateWithoutActivity_logsInput = {
     employee_id: bigint | number
     position?: string | null
     contact_num: number
+    status?: string | null
     users: usersCreateNestedOneWithoutLibrarianInput
   }
 
@@ -20738,6 +22416,7 @@ export namespace Prisma {
     position?: string | null
     contact_num: number
     user_id: number
+    status?: string | null
   }
 
   export type librarianCreateOrConnectWithoutActivity_logsInput = {
@@ -20761,6 +22440,7 @@ export namespace Prisma {
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensCreateNestedManyWithoutUserInput
   }
 
   export type usersUncheckedCreateWithoutActivity_logsInput = {
@@ -20780,6 +22460,7 @@ export namespace Prisma {
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type usersCreateOrConnectWithoutActivity_logsInput = {
@@ -20802,6 +22483,7 @@ export namespace Prisma {
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     users?: usersUpdateOneRequiredWithoutLibrarianNestedInput
   }
 
@@ -20810,6 +22492,7 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
+    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type usersUpsertWithoutActivity_logsInput = {
@@ -20839,6 +22522,7 @@ export namespace Prisma {
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUpdateManyWithoutUserNestedInput
   }
 
   export type usersUncheckedUpdateWithoutActivity_logsInput = {
@@ -20858,6 +22542,7 @@ export namespace Prisma {
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type usersCreateWithoutUser_activity_logsInput = {
@@ -20876,6 +22561,7 @@ export namespace Prisma {
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensCreateNestedManyWithoutUserInput
   }
 
   export type usersUncheckedCreateWithoutUser_activity_logsInput = {
@@ -20895,6 +22581,7 @@ export namespace Prisma {
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
     backup_jobs?: backup_jobsUncheckedCreateNestedManyWithoutCreatorInput
+    password_reset_tokens?: password_reset_tokensUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type usersCreateOrConnectWithoutUser_activity_logsInput = {
@@ -20965,6 +22652,7 @@ export namespace Prisma {
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUpdateManyWithoutUserNestedInput
   }
 
   export type usersUncheckedUpdateWithoutUser_activity_logsInput = {
@@ -20984,6 +22672,7 @@ export namespace Prisma {
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
     backup_jobs?: backup_jobsUncheckedUpdateManyWithoutCreatorNestedInput
+    password_reset_tokens?: password_reset_tokensUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type papersUpsertWithoutUser_activity_logsInput = {
@@ -21044,6 +22733,7 @@ export namespace Prisma {
     librarian?: librarianCreateNestedOneWithoutUsersInput
     students?: studentsCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutUsersInput
+    password_reset_tokens?: password_reset_tokensCreateNestedManyWithoutUserInput
   }
 
   export type usersUncheckedCreateWithoutBackup_jobsInput = {
@@ -21063,6 +22753,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
     students?: studentsUncheckedCreateNestedOneWithoutUsersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutUsersInput
+    password_reset_tokens?: password_reset_tokensUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type usersCreateOrConnectWithoutBackup_jobsInput = {
@@ -21097,6 +22788,7 @@ export namespace Prisma {
     librarian?: librarianUpdateOneWithoutUsersNestedInput
     students?: studentsUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutUsersNestedInput
+    password_reset_tokens?: password_reset_tokensUpdateManyWithoutUserNestedInput
   }
 
   export type usersUncheckedUpdateWithoutBackup_jobsInput = {
@@ -21116,6 +22808,7 @@ export namespace Prisma {
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
     students?: studentsUncheckedUpdateOneWithoutUsersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutUsersNestedInput
+    password_reset_tokens?: password_reset_tokensUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type user_activity_logsCreateManyUsersInput = {
@@ -21160,6 +22853,14 @@ export namespace Prisma {
     total_size?: string
     download_url?: string | null
     error_message?: string | null
+  }
+
+  export type password_reset_tokensCreateManyUserInput = {
+    id?: number
+    token: string
+    expires_at: Date | string
+    created_at?: Date | string
+    used_at?: Date | string | null
   }
 
   export type user_activity_logsUpdateWithoutUsersInput = {
@@ -21289,6 +22990,29 @@ export namespace Prisma {
     total_size?: StringFieldUpdateOperationsInput | string
     download_url?: NullableStringFieldUpdateOperationsInput | string | null
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type password_reset_tokensUpdateWithoutUserInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    used_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type password_reset_tokensUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    used_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type password_reset_tokensUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    used_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type activity_logsCreateManyLibrarianInput = {
