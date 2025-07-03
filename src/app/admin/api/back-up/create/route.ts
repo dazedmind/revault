@@ -1,17 +1,72 @@
 // src/app/api/back-up/create/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { Storage } from '@google-cloud/storage';
 import JSZip from 'jszip';
 import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
-const storage = new Storage({
-  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID || "revault-system",
-});
-
 const SECRET_KEY = process.env.JWT_SECRET_KEY || 'your-secret-key';
+
+// Use your existing GCP setup
+let storage: any = null;
+
+async function initializeStorage() {
+  if (storage) return storage;
+  
+  try {
+    const { Storage } = require('@google-cloud/storage');
+    const path = require('path');
+    const fs = require('fs');
+    
+    // Use your existing authentication logic
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const serviceAccountPath = path.join(process.cwd(), "gcp-service-key.json");
+    
+    console.log("🔍 Environment:", process.env.NODE_ENV);
+    console.log("📁 Service account file exists:", fs.existsSync(serviceAccountPath));
+    
+    if (isDevelopment && fs.existsSync(serviceAccountPath)) {
+      // Development: Use service account file
+      console.log("✅ Using service account file for authentication (Development)");
+      storage = new Storage({
+        keyFilename: serviceAccountPath,
+        projectId: "revault-system",
+      });
+    } else if (process.env.GOOGLE_CLOUD_CREDENTIALS_BASE64) {
+      // Production: Use base64 encoded credentials
+      console.log("✅ Using base64 encoded credentials (Production)");
+      const credentialsJSON = Buffer.from(
+        process.env.GOOGLE_CLOUD_CREDENTIALS_BASE64,
+        'base64'
+      ).toString('utf-8');
+      const credentials = JSON.parse(credentialsJSON);
+      
+      storage = new Storage({
+        projectId: credentials.project_id || "revault-system",
+        credentials,
+      });
+    } else if (process.env.GOOGLE_CLOUD_PROJECT_ID && process.env.GOOGLE_CLOUD_CLIENT_EMAIL && process.env.GOOGLE_CLOUD_PRIVATE_KEY) {
+      // Production: Use individual environment variables
+      console.log("✅ Using individual environment variables (Production)");
+      storage = new Storage({
+        projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+        credentials: {
+          client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
+          private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        },
+      });
+    } else {
+      console.error("❌ No Google Cloud credentials found!");
+      throw new Error("Google Cloud Storage credentials not configured");
+    }
+    
+    return storage;
+  } catch (error) {
+    console.error("❌ Failed to initialize Google Cloud Storage:", error);
+    throw error;
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -68,6 +123,9 @@ export async function POST(req: NextRequest) {
 
 async function processBackup(backupId: string, type: string) {
   try {
+    // Initialize storage with your existing setup
+    const gcsStorage = await initializeStorage();
+    
     // Update status to running
     await prisma.backup_jobs.update({
       where: { id: backupId },
@@ -97,7 +155,7 @@ async function processBackup(backupId: string, type: string) {
           totalSize += file.size;
         } else {
           // For files from GCS
-          const fileData = await downloadFileFromGCS(file.path);
+          const fileData = await downloadFileFromGCS(file.path, gcsStorage);
           zip.file(file.name, fileData);
           totalSize += fileData.length;
         }
@@ -121,9 +179,9 @@ async function processBackup(backupId: string, type: string) {
     // Generate ZIP buffer
     const zipBuffer = await zip.generateAsync({ type: 'nodebuffer' });
 
-    // Upload to GCS
+    // Upload to GCS using your existing bucket
     const backupFileName = `backups/${backupId}.zip`;
-    const bucket = storage.bucket('revault-files');
+    const bucket = gcsStorage.bucket('revault-files');
     const file = bucket.file(backupFileName);
 
     await file.save(zipBuffer, {
@@ -256,7 +314,7 @@ async function getDocumentFiles() {
   return files;
 }
 
-async function downloadFileFromGCS(filePath: string): Promise<Buffer> {
+async function downloadFileFromGCS(filePath: string, gcsStorage: any): Promise<Buffer> {
   try {
     // Extract bucket and file path from URL
     const url = new URL(filePath);
@@ -264,7 +322,7 @@ async function downloadFileFromGCS(filePath: string): Promise<Buffer> {
     const bucketName = pathParts[1];
     const fileName = pathParts.slice(2).join('/');
 
-    const bucket = storage.bucket(bucketName);
+    const bucket = gcsStorage.bucket(bucketName);
     const file = bucket.file(fileName);
 
     const [fileBuffer] = await file.download();
@@ -277,12 +335,13 @@ async function downloadFileFromGCS(filePath: string): Promise<Buffer> {
 
 async function getFileSize(filePath: string): Promise<number> {
   try {
+    const gcsStorage = await initializeStorage();
     const url = new URL(filePath);
     const pathParts = url.pathname.split('/');
     const bucketName = pathParts[1];
     const fileName = pathParts.slice(2).join('/');
 
-    const bucket = storage.bucket(bucketName);
+    const bucket = gcsStorage.bucket(bucketName);
     const file = bucket.file(fileName);
     
     const [metadata] = await file.getMetadata();

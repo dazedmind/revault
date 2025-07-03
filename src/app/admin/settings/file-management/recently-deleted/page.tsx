@@ -68,7 +68,8 @@ const RecentlyDeletedPage = () => {
   const [showRestoreModal, setShowRestoreModal] = useState(false);
   const [selectedPaper, setSelectedPaper] = useState<DeletedPaper | null>(null);
   const [isRestoring, setIsRestoring] = useState(false);
-
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   // Fetch deleted papers
   const fetchDeletedPapers = async (page = 1) => {
     try {
@@ -152,6 +153,40 @@ const RecentlyDeletedPage = () => {
       toast.error("An unexpected error occurred");
     } finally {
       setIsRestoring(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedPaper) return;
+      
+    setIsDeleting(true);
+    
+    try {
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch(`/admin/api/permanent-delete/${selectedPaper.paper_id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        toast.success("Paper deleted successfully");
+        setShowDeleteModal(false);
+        setSelectedPaper(null);
+        fetchDeletedPapers(pagination.currentPage); // Refresh the list
+      } else {
+        toast.error(result.error || "Failed to delete paper");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -340,7 +375,7 @@ const RecentlyDeletedPage = () => {
                     <button
                       onClick={() => {
                         setSelectedPaper(paper);
-                        setShowRestoreModal(true);
+                        setShowDeleteModal(true);
                       }}
                       className="flex items-center gap-2 px-3 py-2 cursor-pointer bg-red-warning hover:bg-red-warning-fg text-white rounded-lg text-sm font-medium transition-colors"
                     >
@@ -492,6 +527,90 @@ const RecentlyDeletedPage = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && selectedPaper && (
+         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+         <div
+           className={`${
+             theme === "light" ? "bg-white" : "bg-darker"
+           } rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden`}
+         >
+           {/* Modal Header */}
+           <div className="flex items-center justify-between p-6 pb-0 border-gray-200 dark:border-white-5">
+             <div className="flex items-center gap-3">
+               <div className="p-2 bg-red-warning/30 rounded-full">
+                 <Trash2 className="w-5 h-5 text-red-warning" />
+               </div>
+               <h3 className="text-lg font-semibold">Delete Paper</h3>
+             </div>
+             <button
+               onClick={() => setShowDeleteModal(false)}
+               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
+             >
+               <X className="w-5 h-5" />
+             </button>
+           </div>
+
+           {/* Modal Body */}
+           <div className="p-6">
+             <p className=" mb-4">
+               Are you sure you want to delete this research paper? It will be <strong>permanently deleted</strong> and cannot be restored.
+             </p>
+             
+             <div className="bg-secondary rounded-lg p-4 mb-6">
+               <h4 className="font-semibold text-sm mb-1">Paper to be deleted:</h4>
+               <p className="text-sm  line-clamp-2">
+                 {selectedPaper.title}
+               </p>
+               <p className="text-xs mt-1">
+                 by {selectedPaper.author}
+               </p>
+             </div>
+
+             <div className="bg-red-warning/30 border border-red-warning rounded-lg p-3">
+               <p className="text-sm text-red-warning">
+                 <strong>Note:</strong> This paper will be permanently deleted and cannot be restored.
+               </p>
+             </div>
+           </div>
+
+           {/* Modal Footer */}
+           <div className="flex items-center justify-end gap-3 p-6  border-white-5">
+             <button
+               onClick={() => setShowDeleteModal(false)}
+               disabled={isDeleting}
+               className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                 theme === "light"
+                   ? "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                   : "bg-gray-800 hover:bg-gray-700 text-gray-300"
+               } ${isDeleting ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+             >
+               Cancel
+             </button>
+             <button
+               onClick={handleDelete}
+               disabled={isDeleting}
+               className={`px-4 py-2 bg-red-warning hover:bg-red-warning/80 text-white rounded-lg font-medium transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+                 isDeleting ? "opacity-50 cursor-not-allowed" : ""
+               }`}
+             >
+               {isRestoring ? (
+                 <>
+                   <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                   Deleting...
+                 </>
+               ) : (
+                 <>
+                   <Trash2 className="w-4 h-4" />
+                   Delete Permanently
+                 </>
+               )}
+             </button>
+           </div>
+         </div>
+       </div>
       )}
     </div>
   );

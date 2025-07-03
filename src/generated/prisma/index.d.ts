@@ -101,7 +101,8 @@ export namespace $Enums {
   BACKUP_CREATED: 'BACKUP_CREATED',
   BACKUP_COMPLETED: 'BACKUP_COMPLETED',
   BACKUP_FAILED: 'BACKUP_FAILED',
-  BACKUP_DOWNLOADED: 'BACKUP_DOWNLOADED'
+  BACKUP_DOWNLOADED: 'BACKUP_DOWNLOADED',
+  PERMANENT_DELETE: 'PERMANENT_DELETE'
 };
 
 export type activity_type = (typeof activity_type)[keyof typeof activity_type]
