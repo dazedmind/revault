@@ -49,7 +49,10 @@ export async function GET(req: NextRequest) {
 
     // Execute search query
     const papers = await prisma.papers.findMany({
-      where: searchConditions,
+      where: {
+        ...searchConditions,
+        is_deleted: false // Exclude deleted papers
+      },
       select: {
         paper_id: true,
         title: true,
@@ -60,7 +63,8 @@ export async function GET(req: NextRequest) {
         course: true,
         year: true,
         created_at: true,
-        paper_url: true
+        paper_url: true,
+        is_deleted: true
       },
       orderBy: orderBy as any,
       skip,

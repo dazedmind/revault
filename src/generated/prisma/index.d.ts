@@ -6850,6 +6850,9 @@ export namespace Prisma {
     abstract: string | null
     created_at: Date | null
     updated_at: Date | null
+    is_deleted: boolean | null
+    deleted_at: Date | null
+    deleted_by: string | null
     paper_url: string | null
   }
 
@@ -6863,6 +6866,9 @@ export namespace Prisma {
     abstract: string | null
     created_at: Date | null
     updated_at: Date | null
+    is_deleted: boolean | null
+    deleted_at: Date | null
+    deleted_by: string | null
     paper_url: string | null
   }
 
@@ -6877,6 +6883,9 @@ export namespace Prisma {
     abstract: number
     created_at: number
     updated_at: number
+    is_deleted: number
+    deleted_at: number
+    deleted_by: number
     paper_url: number
     _all: number
   }
@@ -6902,6 +6911,9 @@ export namespace Prisma {
     abstract?: true
     created_at?: true
     updated_at?: true
+    is_deleted?: true
+    deleted_at?: true
+    deleted_by?: true
     paper_url?: true
   }
 
@@ -6915,6 +6927,9 @@ export namespace Prisma {
     abstract?: true
     created_at?: true
     updated_at?: true
+    is_deleted?: true
+    deleted_at?: true
+    deleted_by?: true
     paper_url?: true
   }
 
@@ -6929,6 +6944,9 @@ export namespace Prisma {
     abstract?: true
     created_at?: true
     updated_at?: true
+    is_deleted?: true
+    deleted_at?: true
+    deleted_by?: true
     paper_url?: true
     _all?: true
   }
@@ -7030,6 +7048,9 @@ export namespace Prisma {
     abstract: string | null
     created_at: Date | null
     updated_at: Date | null
+    is_deleted: boolean | null
+    deleted_at: Date | null
+    deleted_by: string | null
     paper_url: string | null
     _count: PapersCountAggregateOutputType | null
     _avg: PapersAvgAggregateOutputType | null
@@ -7063,6 +7084,9 @@ export namespace Prisma {
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
+    is_deleted?: boolean
+    deleted_at?: boolean
+    deleted_by?: boolean
     paper_url?: boolean
     paper_metadata?: boolean | papers$paper_metadataArgs<ExtArgs>
     user_bookmarks?: boolean | papers$user_bookmarksArgs<ExtArgs>
@@ -7081,6 +7105,9 @@ export namespace Prisma {
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
+    is_deleted?: boolean
+    deleted_at?: boolean
+    deleted_by?: boolean
     paper_url?: boolean
   }, ExtArgs["result"]["papers"]>
 
@@ -7095,6 +7122,9 @@ export namespace Prisma {
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
+    is_deleted?: boolean
+    deleted_at?: boolean
+    deleted_by?: boolean
     paper_url?: boolean
   }, ExtArgs["result"]["papers"]>
 
@@ -7109,10 +7139,13 @@ export namespace Prisma {
     abstract?: boolean
     created_at?: boolean
     updated_at?: boolean
+    is_deleted?: boolean
+    deleted_at?: boolean
+    deleted_by?: boolean
     paper_url?: boolean
   }
 
-  export type papersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"paper_id" | "title" | "author" | "year" | "department" | "keywords" | "course" | "abstract" | "created_at" | "updated_at" | "paper_url", ExtArgs["result"]["papers"]>
+  export type papersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"paper_id" | "title" | "author" | "year" | "department" | "keywords" | "course" | "abstract" | "created_at" | "updated_at" | "is_deleted" | "deleted_at" | "deleted_by" | "paper_url", ExtArgs["result"]["papers"]>
   export type papersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     paper_metadata?: boolean | papers$paper_metadataArgs<ExtArgs>
     user_bookmarks?: boolean | papers$user_bookmarksArgs<ExtArgs>
@@ -7140,6 +7173,9 @@ export namespace Prisma {
       abstract: string | null
       created_at: Date | null
       updated_at: Date | null
+      is_deleted: boolean | null
+      deleted_at: Date | null
+      deleted_by: string | null
       paper_url: string | null
     }, ExtArgs["result"]["papers"]>
     composites: {}
@@ -7577,6 +7613,9 @@ export namespace Prisma {
     readonly abstract: FieldRef<"papers", 'String'>
     readonly created_at: FieldRef<"papers", 'DateTime'>
     readonly updated_at: FieldRef<"papers", 'DateTime'>
+    readonly is_deleted: FieldRef<"papers", 'Boolean'>
+    readonly deleted_at: FieldRef<"papers", 'DateTime'>
+    readonly deleted_by: FieldRef<"papers", 'String'>
     readonly paper_url: FieldRef<"papers", 'String'>
   }
     
@@ -17098,6 +17137,9 @@ export namespace Prisma {
     abstract: 'abstract',
     created_at: 'created_at',
     updated_at: 'updated_at',
+    is_deleted: 'is_deleted',
+    deleted_at: 'deleted_at',
+    deleted_by: 'deleted_by',
     paper_url: 'paper_url'
   };
 
@@ -17317,6 +17359,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'activity_type'
    */
   export type Enumactivity_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'activity_type'>
@@ -17327,13 +17376,6 @@ export namespace Prisma {
    * Reference to a field of type 'activity_type[]'
    */
   export type ListEnumactivity_typeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'activity_type[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -17640,6 +17682,9 @@ export namespace Prisma {
     abstract?: StringNullableFilter<"papers"> | string | null
     created_at?: DateTimeNullableFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"papers"> | Date | string | null
+    is_deleted?: BoolNullableFilter<"papers"> | boolean | null
+    deleted_at?: DateTimeNullableFilter<"papers"> | Date | string | null
+    deleted_by?: StringNullableFilter<"papers"> | string | null
     paper_url?: StringNullableFilter<"papers"> | string | null
     paper_metadata?: Paper_metadataListRelationFilter
     user_bookmarks?: User_bookmarksListRelationFilter
@@ -17657,6 +17702,9 @@ export namespace Prisma {
     abstract?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
+    is_deleted?: SortOrderInput | SortOrder
+    deleted_at?: SortOrderInput | SortOrder
+    deleted_by?: SortOrderInput | SortOrder
     paper_url?: SortOrderInput | SortOrder
     paper_metadata?: paper_metadataOrderByRelationAggregateInput
     user_bookmarks?: user_bookmarksOrderByRelationAggregateInput
@@ -17677,6 +17725,9 @@ export namespace Prisma {
     abstract?: StringNullableFilter<"papers"> | string | null
     created_at?: DateTimeNullableFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"papers"> | Date | string | null
+    is_deleted?: BoolNullableFilter<"papers"> | boolean | null
+    deleted_at?: DateTimeNullableFilter<"papers"> | Date | string | null
+    deleted_by?: StringNullableFilter<"papers"> | string | null
     paper_url?: StringNullableFilter<"papers"> | string | null
     paper_metadata?: Paper_metadataListRelationFilter
     user_bookmarks?: User_bookmarksListRelationFilter
@@ -17694,6 +17745,9 @@ export namespace Prisma {
     abstract?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
+    is_deleted?: SortOrderInput | SortOrder
+    deleted_at?: SortOrderInput | SortOrder
+    deleted_by?: SortOrderInput | SortOrder
     paper_url?: SortOrderInput | SortOrder
     _count?: papersCountOrderByAggregateInput
     _avg?: papersAvgOrderByAggregateInput
@@ -17716,6 +17770,9 @@ export namespace Prisma {
     abstract?: StringNullableWithAggregatesFilter<"papers"> | string | null
     created_at?: DateTimeNullableWithAggregatesFilter<"papers"> | Date | string | null
     updated_at?: DateTimeNullableWithAggregatesFilter<"papers"> | Date | string | null
+    is_deleted?: BoolNullableWithAggregatesFilter<"papers"> | boolean | null
+    deleted_at?: DateTimeNullableWithAggregatesFilter<"papers"> | Date | string | null
+    deleted_by?: StringNullableWithAggregatesFilter<"papers"> | string | null
     paper_url?: StringNullableWithAggregatesFilter<"papers"> | string | null
   }
 
@@ -18594,6 +18651,9 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    is_deleted?: boolean | null
+    deleted_at?: Date | string | null
+    deleted_by?: string | null
     paper_url?: string | null
     paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
@@ -18611,6 +18671,9 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    is_deleted?: boolean | null
+    deleted_at?: Date | string | null
+    deleted_by?: string | null
     paper_url?: string | null
     paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
@@ -18627,6 +18690,9 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
@@ -18644,6 +18710,9 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
@@ -18661,6 +18730,9 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    is_deleted?: boolean | null
+    deleted_at?: Date | string | null
+    deleted_by?: string | null
     paper_url?: string | null
   }
 
@@ -18674,6 +18746,9 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -18688,6 +18763,9 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -19712,6 +19790,11 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type Paper_metadataListRelationFilter = {
     every?: paper_metadataWhereInput
     some?: paper_metadataWhereInput
@@ -19733,6 +19816,9 @@ export namespace Prisma {
     abstract?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    is_deleted?: SortOrder
+    deleted_at?: SortOrder
+    deleted_by?: SortOrder
     paper_url?: SortOrder
   }
 
@@ -19751,6 +19837,9 @@ export namespace Prisma {
     abstract?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    is_deleted?: SortOrder
+    deleted_at?: SortOrder
+    deleted_by?: SortOrder
     paper_url?: SortOrder
   }
 
@@ -19764,12 +19853,23 @@ export namespace Prisma {
     abstract?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    is_deleted?: SortOrder
+    deleted_at?: SortOrder
+    deleted_by?: SortOrder
     paper_url?: SortOrder
   }
 
   export type papersSumOrderByAggregateInput = {
     paper_id?: SortOrder
     year?: SortOrder
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type PapersScalarRelationFilter = {
@@ -20668,6 +20768,10 @@ export namespace Prisma {
     push?: string | string[]
   }
 
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
   export type paper_metadataUpdateManyWithoutPapersNestedInput = {
     create?: XOR<paper_metadataCreateWithoutPapersInput, paper_metadataUncheckedCreateWithoutPapersInput> | paper_metadataCreateWithoutPapersInput[] | paper_metadataUncheckedCreateWithoutPapersInput[]
     connectOrCreate?: paper_metadataCreateOrConnectWithoutPapersInput | paper_metadataCreateOrConnectWithoutPapersInput[]
@@ -21095,6 +21199,19 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -22081,6 +22198,9 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    is_deleted?: boolean | null
+    deleted_at?: Date | string | null
+    deleted_by?: string | null
     paper_url?: string | null
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutPapersInput
@@ -22097,6 +22217,9 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    is_deleted?: boolean | null
+    deleted_at?: Date | string | null
+    deleted_by?: string | null
     paper_url?: string | null
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutPapersInput
@@ -22128,6 +22251,9 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
     user_activity_logs?: user_activity_logsUpdateManyWithoutPapersNestedInput
@@ -22144,6 +22270,9 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutPapersNestedInput
@@ -22159,6 +22288,9 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    is_deleted?: boolean | null
+    deleted_at?: Date | string | null
+    deleted_by?: string | null
     paper_url?: string | null
     paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutPapersInput
@@ -22175,6 +22307,9 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    is_deleted?: boolean | null
+    deleted_at?: Date | string | null
+    deleted_by?: string | null
     paper_url?: string | null
     paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutPapersInput
@@ -22252,6 +22387,9 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     user_activity_logs?: user_activity_logsUpdateManyWithoutPapersNestedInput
@@ -22268,6 +22406,9 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutPapersNestedInput
@@ -22621,6 +22762,9 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    is_deleted?: boolean | null
+    deleted_at?: Date | string | null
+    deleted_by?: string | null
     paper_url?: string | null
     paper_metadata?: paper_metadataCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksCreateNestedManyWithoutPapersInput
@@ -22637,6 +22781,9 @@ export namespace Prisma {
     abstract?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    is_deleted?: boolean | null
+    deleted_at?: Date | string | null
+    deleted_by?: string | null
     paper_url?: string | null
     paper_metadata?: paper_metadataUncheckedCreateNestedManyWithoutPapersInput
     user_bookmarks?: user_bookmarksUncheckedCreateNestedManyWithoutPapersInput
@@ -22720,6 +22867,9 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUpdateManyWithoutPapersNestedInput
@@ -22736,6 +22886,9 @@ export namespace Prisma {
     abstract?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    is_deleted?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     paper_url?: NullableStringFieldUpdateOperationsInput | string | null
     paper_metadata?: paper_metadataUncheckedUpdateManyWithoutPapersNestedInput
     user_bookmarks?: user_bookmarksUncheckedUpdateManyWithoutPapersNestedInput

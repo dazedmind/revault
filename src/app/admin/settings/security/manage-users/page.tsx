@@ -533,7 +533,7 @@ function ManageUserContent() {
 
       {/* ─── Header + Create New Button ─── */}
       <div className="flex justify-between w-auto">
-        <h1 className="text-2xl ml-1">Manage Librarians</h1>
+        <h1 className="text-2xl font-bold ml-1">Manage Librarians</h1>
 
         <span className="flex items-center gap-2">
           <button

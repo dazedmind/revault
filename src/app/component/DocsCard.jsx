@@ -239,8 +239,8 @@ const DocsCard = (props) => {
                     key={index}
                     className={`px-2 py-1 text-xs rounded-full border ${
                       theme === "light"
-                        ? "bg-yale-blue/10 text-yale-blue border-gold/20"
-                        : "bg-yale-blue/20 text-yale-blue border-gold/30"
+                        ? "bg-yale-blue/10 text-yale-blue border-yale-blue/20"
+                        : "bg-yale-blue/20 text-yale-blue border-yale-blue/30"
                     }`}
                   >
                     {tag}
