@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const recentPapers = await prisma.papers.findMany({
+      where: { is_deleted: false },
       orderBy: { created_at: "desc" },
       take: 5,
     });

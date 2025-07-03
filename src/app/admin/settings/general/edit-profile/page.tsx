@@ -3,7 +3,7 @@ import InputField from "@/app/component/InputField";
 import Image from "next/image";
 import avatar from "@/app/img/user.jpg";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useCallback } from "react";
 import ContentLoader from "@/app/component/ContentLoader";
 import { useTheme } from "next-themes";
 import { Camera, Upload, Loader2 } from "lucide-react";
@@ -111,7 +111,8 @@ function EditProfileContent() {
     }
   };
 
-  const fetchProfile = async () => {
+  // Use useCallback to memoize the fetchProfile function
+  const fetchProfile = useCallback(async () => {
     if (!mounted || typeof window === "undefined") return;
     
     const token = localStorage.getItem("authToken");
@@ -148,11 +149,11 @@ function EditProfileContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [mounted]); // Only depend on mounted
 
   useEffect(() => {
     fetchProfile();
-  }, [mounted, fetchProfile]);
+  }, [fetchProfile]); // Now fetchProfile is stable
 
   if (!mounted) {
     return null;

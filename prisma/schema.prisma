@@ -68,6 +68,9 @@ model papers {
   abstract         String?
   created_at       DateTime?
   updated_at       DateTime?
+  is_deleted       Boolean?           @default(false)
+  deleted_at       DateTime?
+  deleted_by       String?
   paper_url        String?
   paper_metadata   paper_metadata[]
   user_bookmarks   user_bookmarks[]

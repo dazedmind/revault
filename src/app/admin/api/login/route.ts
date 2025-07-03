@@ -58,6 +58,7 @@ export async function POST(req: Request) {
     {
       user_id: userRecord.user_id,
       firstName: userRecord.first_name,
+      lastName: userRecord.last_name,
       email: userRecord.email,
       role: userRecord.role,
       userNumber: idNumber,

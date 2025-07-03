@@ -167,6 +167,9 @@ exports.Prisma.PapersScalarFieldEnum = {
   abstract: 'abstract',
   created_at: 'created_at',
   updated_at: 'updated_at',
+  is_deleted: 'is_deleted',
+  deleted_at: 'deleted_at',
+  deleted_by: 'deleted_by',
   paper_url: 'paper_url'
 };
 

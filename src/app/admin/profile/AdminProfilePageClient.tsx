@@ -165,67 +165,68 @@ function AdminProfileContent() {
     fetchProfile();
   }, [router, token, tokenLoaded]);
 
+  // ── Fetch papers function
+  const fetchPapers = async () => {
+    if (loadingProfile || !tokenLoaded) return; // Wait for profile to load and token to be available
+
+    console.log("🔍 Fetching papers with state:", urlState);
+    setLoadingPapers(true);
+
+    try {
+      const qp = new URLSearchParams();
+
+      // Add filters
+      if (urlState.departments.length) {
+        qp.set("department", urlState.departments.join(","));
+      }
+      if (urlState.courses.length) {
+        qp.set("course", urlState.courses.join(","));
+      }
+
+      // Always include sort (default to recent)
+      qp.set("sort", urlState.sortOpt || "recent");
+      qp.set("page", String(urlState.currentPage));
+
+      const apiUrl = `/api/papers?${qp.toString()}`;
+      console.log("📤 Fetching papers from:", apiUrl);
+
+      const res = await fetch(apiUrl, { cache: "no-store" });
+
+      if (!res.ok) {
+        throw new Error(`Papers API returned ${res.status}`);
+      }
+
+      const json = await res.json();
+      console.log("📋 Papers response:", {
+        papersCount: Array.isArray(json.papers) ? json.papers.length : 0,
+        totalPages: json.totalPages,
+        totalCount: json.totalCount,
+        currentPage: json.currentPage,
+        sort: urlState.sortOpt,
+      });
+
+      setPapers(Array.isArray(json.papers) ? json.papers : []);
+      setTotalPages(
+        typeof json.totalPages === "number" ? json.totalPages : 1,
+      );
+      setTotalPapersCount(
+        typeof json.totalCount === "number"
+          ? json.totalCount
+          : Array.isArray(json.papers)
+            ? json.papers.length
+            : 0,
+      );
+    } catch (err) {
+      console.error("💥 Failed to load papers:", err);
+      setPapers([]);
+      setTotalPages(1);
+    } finally {
+      setLoadingPapers(false);
+    }
+  };
+
   // ── Fetch paged papers based on URL state
   useEffect(() => {
-    const fetchPapers = async () => {
-      if (loadingProfile || !tokenLoaded) return; // Wait for profile to load and token to be available
-
-      console.log("🔍 Fetching papers with state:", urlState);
-      setLoadingPapers(true);
-
-      try {
-        const qp = new URLSearchParams();
-
-        // Add filters
-        if (urlState.departments.length) {
-          qp.set("department", urlState.departments.join(","));
-        }
-        if (urlState.courses.length) {
-          qp.set("course", urlState.courses.join(","));
-        }
-
-        // Always include sort (default to recent)
-        qp.set("sort", urlState.sortOpt || "recent");
-        qp.set("page", String(urlState.currentPage));
-
-        const apiUrl = `/api/papers?${qp.toString()}`;
-        console.log("📤 Fetching papers from:", apiUrl);
-
-        const res = await fetch(apiUrl, { cache: "no-store" });
-
-        if (!res.ok) {
-          throw new Error(`Papers API returned ${res.status}`);
-        }
-
-        const json = await res.json();
-        console.log("📋 Papers response:", {
-          papersCount: Array.isArray(json.papers) ? json.papers.length : 0,
-          totalPages: json.totalPages,
-          totalCount: json.totalCount,
-          currentPage: json.currentPage,
-          sort: urlState.sortOpt,
-        });
-
-        setPapers(Array.isArray(json.papers) ? json.papers : []);
-        setTotalPages(
-          typeof json.totalPages === "number" ? json.totalPages : 1,
-        );
-        setTotalPapersCount(
-          typeof json.totalCount === "number"
-            ? json.totalCount
-            : Array.isArray(json.papers)
-              ? json.papers.length
-              : 0,
-        );
-      } catch (err) {
-        console.error("💥 Failed to load papers:", err);
-        setPapers([]);
-        setTotalPages(1);
-      } finally {
-        setLoadingPapers(false);
-      }
-    };
-
     fetchPapers();
   }, [urlState, loadingProfile, tokenLoaded]);
 
@@ -313,6 +314,13 @@ function AdminProfileContent() {
       sortOpt: "recent",
     });
     router.replace(pathname, { scroll: false });
+  };
+
+  // ── Refresh papers list
+  const refreshPapers = () => {
+    console.log("🔄 Refreshing papers list");
+    // Force a re-fetch by calling fetchPapers directly
+    fetchPapers();
   };
 
   // ── Pagination handler
@@ -438,7 +446,7 @@ function AdminProfileContent() {
             onClearFilters={clearAllFilters}
           />
 
-          <PapersList papers={papers} loading={loadingPapers} theme={theme} />
+          <PapersList papers={papers} loading={loadingPapers} theme={theme} onRefresh={refreshPapers}/>
 
           <div
             className={`bg-dusk h-0.5 w-auto my-2 mx-4 ${

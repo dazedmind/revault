@@ -14,12 +14,14 @@ interface PapersListProps {
     author: string;
     department: string;
     year: string | number;
+    is_deleted: boolean;
   }>;
   loading: boolean;
   theme: string;
+  onRefresh?: () => void; // Add refresh callback prop
 }
 
-export function PapersList({ papers, loading, theme }: PapersListProps) {
+export function PapersList({ papers, loading, theme, onRefresh }: PapersListProps) {
   if (loading) {
     return <LoadingScreen />;
   }
@@ -28,9 +30,16 @@ export function PapersList({ papers, loading, theme }: PapersListProps) {
     return <p>No papers found.</p>;
   }
 
+  // Filter out deleted papers
+  const activePapers = papers.filter(paper => !paper.is_deleted);
+
+  if (!activePapers.length) {
+    return <p>No papers found.</p>;
+  }
+
   return (
     <>
-      {papers.map((paper) => (
+      {activePapers.map((paper) => (
         <React.Fragment key={paper.paper_id}>
           <DocsCardUser
             img={document}
@@ -40,6 +49,15 @@ export function PapersList({ papers, loading, theme }: PapersListProps) {
             department={paper.department || "No department available"}
             year={paper.year}
             paper_id={paper.paper_id}
+            is_deleted={paper.is_deleted}
+            onPaperDeleted={(paperId) => {
+              // Handle paper deletion - refresh list, show message, etc.
+              console.log(`Paper ${paperId} was deleted`);
+              // Call the refresh callback to update the papers list
+              if (onRefresh) {
+                onRefresh();
+              }
+            }}
           />
    
         </React.Fragment>

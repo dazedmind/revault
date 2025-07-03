@@ -404,7 +404,7 @@ function ActivityLogContent() {
   if (!mounted) {
     return (
       <div className="flex flex-col w-auto bg-midnight p-6 mb-8 rounded-xl border-1 border-white-5">
-        <h1 className="text-2xl ml-1">Activity Logs</h1>
+        <h1 className="text-2xl font-bold ml-1">Activity Logs</h1>
         <div className="h-0.5 w-auto my-4 bg-dusk"></div>
         <div className="animate-pulse space-y-4">
           <div className="flex gap-4">
@@ -451,7 +451,7 @@ function ActivityLogContent() {
         <div className="flex flex-row items-center justify-between">
           <span className="flex items-center gap-2">
             <UserCog className="w-6 h-6" />
-            <h1 className="text-2xl ml-1">Admin Activity Logs</h1>
+            <h1 className="text-2xl font-bold ml-1">Admin Activity Logs</h1>
           </span>
  
 

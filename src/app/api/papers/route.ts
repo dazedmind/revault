@@ -65,6 +65,9 @@ export async function GET(request: Request) {
       });
     }
 
+    // Add filter to exclude deleted papers
+    andFilters.push({ is_deleted: false });
+
     // Final where object
     const where = andFilters.length > 0 ? { AND: andFilters } : {};
 
@@ -118,6 +121,7 @@ export async function GET(request: Request) {
         year: true,
         created_at: true,
         paper_url: true,
+        is_deleted: true,
       },
     });
 

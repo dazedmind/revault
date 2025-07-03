@@ -1,6 +1,6 @@
 // src/app/component/PDFViewerClient.tsx
 "use client";
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import WatermarkOverlay from './WatermarkOverlay';
@@ -31,6 +31,9 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
   const [rotation, setRotation] = useState<number>(0);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfBlob, setPdfBlob] = useState<string | null>(null);
+
+  // Add this ref
+  const wasVisible = useRef(document.visibilityState === "visible");
 
   // Load PDF.js components
   useEffect(() => {
@@ -68,6 +71,42 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
 
   // Get authentication token
   const getToken = () => localStorage.getItem("authToken");
+
+  // Security logging function
+  const logSecurityEvent = useCallback(async (eventType: string, details: string) => {
+    try {
+      // Get user email from JWT token to ensure accuracy
+      const token = getToken();
+      let currentUserEmail = userEmail;
+      
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          currentUserEmail = payload.email || userEmail;
+        } catch (jwtError) {
+          console.warn('Could not parse JWT for email, using prop:', jwtError);
+        }
+      }
+
+      await fetch('/api/log-security-event', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          event: eventType,
+          userEmail: currentUserEmail,
+          documentId: paperId,
+          timestamp: new Date().toISOString(),
+          details: `${details} on page ${currentPage} (react-pdf secure viewer)`
+        })
+      });
+      console.log(`🔒 Security event logged: ${eventType} - ${details}`);
+    } catch (error) {
+      console.error('Failed to log security event:', error);
+    }
+  }, [paperId, userEmail, currentPage]);
 
   // Convert Google Cloud Storage URL to proxy URL
   const convertToProxyUrl = (originalUrl: string): string => {
@@ -339,9 +378,9 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
   
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [goToPrevPage, goToNextPage]); // Add dependencies
+  }, [goToPrevPage, goToNextPage]);
 
-  // Security event handlers - Updated to not interfere with toolbar
+  // Security event handlers with screenshot attempt logging
   useEffect(() => {
     const isToolbarElement = (element: Element): boolean => {
       return !!(
@@ -354,6 +393,7 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       );
     };
 
+    // Log right-click attempts (potential screenshot attempts)
     const preventContextMenu = (e: MouseEvent) => {
       const target = e.target as Element;
       
@@ -364,22 +404,10 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       
       e.preventDefault();
       
-      // Log security event
-      fetch('/api/log-security-event', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getToken()}`
-        },
-        body: JSON.stringify({
-          event: 'RIGHT_CLICK_BLOCKED',
-          userEmail,
-          documentId: paperId,
-          timestamp: new Date().toISOString(),
-          details: `Right-click blocked on page ${currentPage} (react-pdf secure viewer)`
-        })
-      }).catch(() => {});
+      // Log security event for potential screenshot attempt
+      logSecurityEvent('POTENTIAL_SCREENSHOT_ATTEMPT', 'Right-click blocked - possible screenshot attempt');
       
+      toast.warning('Right-click disabled in secure mode');
       return false;
     };
 
@@ -392,6 +420,7 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       }
       
       e.preventDefault();
+      logSecurityEvent('DRAG_ATTEMPT_BLOCKED', 'Content drag attempt blocked');
       return false;
     };
 
@@ -404,6 +433,7 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       }
       
       e.preventDefault();
+      logSecurityEvent('TEXT_SELECTION_BLOCKED', 'Text selection attempt blocked');
       return false;
     };
 
@@ -416,43 +446,88 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
         return true;
       }
       
-      // Block common shortcuts
-      if (isCtrl && ['s', 'p', 'a', 'c', 'v', 'x', 'f'].includes(e.key.toLowerCase())) {
+      // Block common shortcuts and log potential screenshot attempts
+      if (isCtrl && ['s', 'p', 'c', 'v', 'x'].includes(e.key.toLowerCase())) {
         e.preventDefault();
         
-        // Log the attempt
-        fetch('/api/log-security-event', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`
-          },
-          body: JSON.stringify({
-            event: 'KEYBOARD_SHORTCUT_BLOCKED',
-            userEmail,
-            documentId: paperId,
-            timestamp: new Date().toISOString(),
-            details: `Blocked: Ctrl+${e.key.toUpperCase()} in secure react-pdf viewer`
-          })
-        }).catch(() => {});
+        // Log specific shortcut attempts
+        let eventType = 'KEYBOARD_SHORTCUT_BLOCKED';
+        let details = `Blocked: Ctrl+${e.key.toUpperCase()}`;
+        
+        // Specific logging for potential screenshot/copy attempts
+        switch (e.key.toLowerCase()) {
+          case 'p':
+            eventType = 'PRINT_ATTEMPT_BLOCKED';
+            details = 'Print attempt blocked - potential document copying';
+            break;
+          case 's':
+            eventType = 'SAVE_ATTEMPT_BLOCKED';
+            details = 'Save attempt blocked - potential document copying';
+            break;
+          case 'c':
+            eventType = 'COPY_ATTEMPT_BLOCKED';
+            details = 'Copy attempt blocked - potential content extraction';
+            break;
+        }
+        
+        logSecurityEvent(eventType, details);
         
         toast.warning(`${e.key.toUpperCase()} operation disabled in secure mode`);
         return false;
       }
+
+      // Log Print Screen key attempts
+      if (e.key === 'PrintScreen') {
+        e.preventDefault();
+        logSecurityEvent('PRINT_SCREEN_ATTEMPT', 'Print Screen key blocked - screenshot attempt detected');
+        toast.error('Screenshots disabled in secure mode');
+        return false;
+      }
+
+      // Log Win+Shift+S (Windows screenshot tool)
+      if (e.metaKey && e.shiftKey && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        logSecurityEvent('WINDOWS_SCREENSHOT_TOOL_BLOCKED', 'Windows screenshot tool (Win+Shift+S) blocked');
+        toast.error('Screenshot tools disabled in secure mode');
+        return false;
+      }
     };
 
-    // document.addEventListener('contextmenu', preventContextMenu);
+    // Detect potential screenshot tools and dev tools
+    const detectDevTools = () => {
+      // Check if dev tools are open (rough detection)
+      let devtools = {open: false, orientation: null};
+      const threshold = 160;
+
+      setInterval(() => {
+        if (window.outerHeight - window.innerHeight > threshold || 
+            window.outerWidth - window.innerWidth > threshold) {
+          if (!devtools.open) {
+            devtools.open = true;
+            logSecurityEvent('DEV_TOOLS_DETECTED', 'Developer tools potentially opened - security monitoring active');
+          }
+        } else {
+          devtools.open = false;
+        }
+      }, 500);
+    };
+
+    // Add all event listeners
+    document.addEventListener('contextmenu', preventContextMenu);
     document.addEventListener('dragstart', preventDragStart);
     document.addEventListener('selectstart', preventSelectStart);
     document.addEventListener('keydown', preventKeyboardShortcuts);
 
+    // Start dev tools detection
+    detectDevTools();
+
     return () => {
-      // document.removeEventListener('contextmenu', preventContextMenu);
+      document.removeEventListener('contextmenu', preventContextMenu);
       document.removeEventListener('dragstart', preventDragStart);
       document.removeEventListener('selectstart', preventSelectStart);
       document.removeEventListener('keydown', preventKeyboardShortcuts);
     };
-  }, [currentPage, paperId, userEmail]);
+  }, [logSecurityEvent]);
 
   // Initialize
   useEffect(() => {

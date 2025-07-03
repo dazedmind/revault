@@ -1,202 +1,132 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import jwt from "jsonwebtoken";
-import { activity_type } from "@prisma/client";
+// src/app/api/log-security-event/route.ts
+import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { activity_type } from '@prisma/client';
 
 export async function POST(req: NextRequest) {
   try {
-    console.log("🚨 Security event logging API called");
-
-    // Parse request body
     const body = await req.json();
     const { event, userEmail, documentId, timestamp, details } = body;
 
-    console.log("📋 Security event data:", {
+    if (!event || !userEmail) {
+      return NextResponse.json(
+        { error: 'Event type and user email are required' },
+        { status: 400 }
+      );
+    }
+
+    console.log('🔒 Security event received:', {
       event,
       userEmail,
       documentId,
-      timestamp,
       details
     });
 
-    // Validate required fields
-    if (!event || !userEmail) {
-      console.log("❌ Missing required fields");
-      return NextResponse.json({
-        success: false,
-        message: "Missing required fields: event and userEmail are required"
-      }, { status: 400 });
-    }
-
-    // Get user info from token or email
-    let userId: number | null = null;
-    let userName = 'Unknown User';
-
-    try {
-      // Try to get user from Authorization header first
-      const authHeader = req.headers.get('authorization');
-      if (authHeader?.startsWith('Bearer ')) {
-        const token = authHeader.slice(7);
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
-        userId = decoded.user_id;
+    // Find the user by email first (exclude librarian relation to avoid security event logging for librarians)
+    const user = await prisma.users.findUnique({
+      where: { email: userEmail },
+      select: {
+        user_id: true,
+        email: true,
+        first_name: true,
+        last_name: true,
+        role: true,
+        faculty: true,
+        students: true
       }
-
-      // If no token or token failed, try to find user by email
-      if (!userId && userEmail) {
-        const user = await prisma.users.findUnique({
-          where: { email: userEmail },
-          select: {
-            user_id: true,
-            first_name: true,
-            last_name: true,
-            students: {
-              select: {
-                student_num: true
-              }
-            },
-            librarian: {
-              select: {
-                employee_id: true
-              }
-            }
-          }
-        });
-
-        if (user) {
-          userId = user.user_id;
-          userName = `${user.first_name} ${user.last_name || ''}`.trim();
-        }
-      }
-    } catch (tokenError) {
-      console.log("⚠️ Token verification failed, proceeding with email lookup");
-    }
-
-    // Map security events to activity types
-    const eventToActivityTypeMap: { [key: string]: string } = {
-      'PDF_KEYBOARD_BLOCK': 'SECURITY_VIOLATION',
-      'RIGHT_CLICK_BLOCKED': 'SECURITY_VIOLATION',
-      'POTENTIAL_SCREENSHOT': 'SECURITY_VIOLATION',
-      'PRINT_ATTEMPT': 'PRINT_DOCUMENT',
-      'DOWNLOAD_ATTEMPT': 'DOWNLOAD_DOCUMENT',
-      'COPY_ATTEMPT': 'SECURITY_VIOLATION',
-      'WATERMARK_BYPASS': 'SECURITY_VIOLATION'
-    };
-
-    const activityType = eventToActivityTypeMap[event] || 'SECURITY_EVENT';
-
-    // Create activity description
-    let activityDescription = `Security Event: ${event}`;
-    if (details) {
-      activityDescription += ` - ${details}`;
-    }
-    if (documentId) {
-      activityDescription += ` (Document ID: ${documentId})`;
-    }
-
-    // Get additional request info
-    const userAgent = req.headers.get('user-agent') || 'Unknown';
-    const ipAddress = req.headers.get('x-forwarded-for') || 
-                     req.headers.get('x-real-ip') || 
-                     req.headers.get('cf-connecting-ip') || 
-                     'Unknown';
-
-    // Prepare log data for user_activity_logs table
-    const logData = {
-      user_id: userId || 0, // Use 0 if user not found
-      paper_id: documentId ? parseInt(documentId.toString()) : 0,
-      name: userName,
-      activity: activityDescription,
-      activity_type: activityType,
-      status: event.includes('BLOCK') ? 'blocked' : 'detected',
-      user_agent: userAgent,
-      created_at: new Date(timestamp || Date.now()),
-      employee_id: BigInt(0), // Default value
-      student_num: BigInt(0)  // Default value
-    };
-
-    // If we found the user, get their employee_id or student_num
-    if (userId) {
-      try {
-        const userDetails = await prisma.users.findUnique({
-          where: { user_id: userId },
-          include: {
-            students: {
-              select: { student_num: true }
-            },
-            librarian: {
-              select: { employee_id: true }
-            }
-          }
-        });
-
-        if (userDetails?.librarian?.employee_id) {
-          logData.employee_id = userDetails.librarian.employee_id;
-        }
-        if (userDetails?.students?.student_num) {
-          logData.student_num = userDetails.students.student_num;
-        }
-      } catch (userDetailsError) {
-        console.log("⚠️ Could not fetch user details, using defaults");
-      }
-    }
-
-    console.log("💾 Creating security log entry...", {
-      ...logData,
-      employee_id: logData.employee_id.toString(),
-      student_num: logData.student_num.toString()
     });
 
-    // Create the activity log entry
-    const { user_id, paper_id, ...restLogData } = logData;
+    if (!user) {
+      console.log('❌ User not found for email:', userEmail);
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    // Exclude librarians, admins, and assistants from security event logging
+    if (['LIBRARIAN', 'ADMIN', 'ASSISTANT'].includes(user.role)) {
+      console.log('🔒 Security event skipped for privileged role:', user.role);
+      return NextResponse.json(
+        { 
+          success: true, 
+          message: 'Security event skipped for privileged user',
+          skipped: true
+        },
+        { status: 200 }
+      );
+    }
+
+    console.log('✅ User found:', {
+      user_id: user.user_id,
+      email: user.email,
+      role: user.role
+    });
+
+    // Map security events to simple string types for user_activity_logs
+    const securityEventMapping: Record<string, string> = {
+      'POTENTIAL_SCREENSHOT_ATTEMPT': 'SECURITY_VIOLATION',
+      'RIGHT_CLICK_BLOCKED': 'SECURITY_VIOLATION',
+      'PRINT_SCREEN_ATTEMPT': 'SECURITY_VIOLATION',
+      'COPY_ATTEMPT_BLOCKED': 'SECURITY_VIOLATION',
+      'PRINT_ATTEMPT_BLOCKED': 'SECURITY_VIOLATION',
+      'SAVE_ATTEMPT_BLOCKED': 'SECURITY_VIOLATION',
+      'SELECT_ALL_BLOCKED': 'SECURITY_VIOLATION',
+      'FIND_BLOCKED': 'SECURITY_VIOLATION',
+      'KEYBOARD_SHORTCUT_BLOCKED': 'SECURITY_VIOLATION',
+      'DRAG_ATTEMPT_BLOCKED': 'SECURITY_VIOLATION',
+      'TEXT_SELECTION_BLOCKED': 'SECURITY_VIOLATION',
+      'WINDOWS_SCREENSHOT_TOOL_BLOCKED': 'SECURITY_VIOLATION',
+      'DEV_TOOLS_DETECTED': 'SECURITY_VIOLATION',
+      'WINDOW_HIDDEN': 'SECURITY_VIOLATION',
+    };
+
+    const activityType = securityEventMapping[event] || 'SECURITY_VIOLATION';
+
+    // Create the security log entry in user_activity_logs table
     const securityLog = await prisma.user_activity_logs.create({
       data: {
-        ...restLogData,
-        activity_type: activity_type[activityType as keyof typeof activity_type],
-        users: { connect: { user_id } },
-        papers: paper_id ? { connect: { paper_id } } : undefined,
+        users: { connect: { user_id: user.user_id } },
+        activity_type: activityType as activity_type  ,
+        activity: `${event}: ${details}${documentId ? ` (Document: ${documentId})` : ''}`,
+        user_agent: req.headers.get('user-agent') || '',
+        created_at: new Date(timestamp || Date.now()),
+        name: `${user.first_name} ${user.last_name}`.trim(),
+        employee_id: user.faculty?.employee_id || 0,
+        student_num: user.students?.student_num || 0,
+        papers: { connect: { paper_id: parseInt(documentId) } }
       }
     });
 
-    console.log("✅ Security event logged successfully:", {
-      activity_id: securityLog.activity_id,
+    console.log('✅ Security event logged:', {
+      log_id: securityLog.activity_id,
       event,
-      user: userName,
-      timestamp: securityLog.created_at
+      user_id: user.user_id,
+      activity_type: activityType
     });
 
-    // Return success response
-    return NextResponse.json({
-      success: true,
-      message: "Security event logged successfully",
-      activity_id: securityLog.activity_id,
-      event_type: event,
-      logged_at: securityLog.created_at
-    });
+    return NextResponse.json(
+      { 
+        success: true, 
+        message: 'Security event logged successfully',
+        log_id: securityLog.activity_id
+      },
+      { status: 201 }
+    );
 
   } catch (error) {
-    console.error("❌ Error logging security event:", error);
+    console.error('❌ Error logging security event:', error);
     
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-    console.error("❌ Error details:", {
-      message: errorMessage,
-      stack: error instanceof Error ? error.stack : "No stack trace"
-    });
-
-    // Even if logging fails, we don't want to break the user experience
-    return NextResponse.json({
-      success: false,
-      message: "Failed to log security event",
-      error: errorMessage
-    }, { status: 500 });
+    // Don't expose internal errors to client
+    return NextResponse.json(
+      { 
+        error: 'Failed to log security event',
+        success: false
+      },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
   }
-}
-
-// Optional: GET method for testing the endpoint
-export async function GET() {
-  return NextResponse.json({
-    success: true,
-    message: "Security event logging API is running",
-    timestamp: new Date().toISOString(),
-    endpoint: "/api/log-security-event"
-  });
 }
