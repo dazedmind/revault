@@ -119,7 +119,7 @@ export async function POST(req: Request) {
       password: body.password,
       confirmPassword: body.confirmPassword || body.password,
       role: role,
-
+      status: "ACTIVE",
       // Staff-specific fields
       employeeID: body.employeeID,
       position: body.position,

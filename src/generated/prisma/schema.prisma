@@ -20,6 +20,7 @@ model users {
   password              String
   created_at            DateTime?
   role                  user_role?
+  status                String?
   user_activity_logs    user_activity_logs[]
   activity_logs         activity_logs[]
   faculty               faculty?
@@ -52,7 +53,6 @@ model librarian {
   position      String?
   contact_num   Int
   user_id       Int             @unique
-  status        String?
   activity_logs activity_logs[]
   users         users           @relation(fields: [user_id], references: [user_id])
 }

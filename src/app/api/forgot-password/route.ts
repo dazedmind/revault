@@ -261,7 +261,6 @@ export async function POST(req: NextRequest) {
 
         // Log password reset request (temporarily disabled until schema is fixed)
         try {
-
           await prisma.user_activity_logs.create({
             data: {
               user_id: user.user_id,
@@ -289,7 +288,6 @@ export async function POST(req: NextRequest) {
         
         // Log failed email attempt (temporarily disabled)
         try {
-
           await prisma.user_activity_logs.create({
             data: {
               user_id: user.user_id,

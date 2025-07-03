@@ -41,6 +41,18 @@ export async function POST(req: Request) {
     );
   }
 
+  // Check if user account is active
+  if (userRecord.status === "INACTIVE") {
+    return Response.json(
+      { 
+        success: false, 
+        message: "Account is disabled please contact your admin.",
+        status: "INACTIVE"
+      },
+      { status: 403 },
+    );
+  }
+
   // 🪙 Create token
   const token = jwt.sign(
     {
@@ -49,6 +61,7 @@ export async function POST(req: Request) {
       email: userRecord.email,
       role: userRecord.role,
       userNumber: idNumber,
+      status: userRecord.status,
     },
     SECRET_KEY,
     { expiresIn: "2h" },

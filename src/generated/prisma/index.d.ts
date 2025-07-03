@@ -2186,6 +2186,7 @@ export namespace Prisma {
     password: string | null
     created_at: Date | null
     role: $Enums.user_role | null
+    status: string | null
   }
 
   export type UsersMaxAggregateOutputType = {
@@ -2199,6 +2200,7 @@ export namespace Prisma {
     password: string | null
     created_at: Date | null
     role: $Enums.user_role | null
+    status: string | null
   }
 
   export type UsersCountAggregateOutputType = {
@@ -2212,6 +2214,7 @@ export namespace Prisma {
     password: number
     created_at: number
     role: number
+    status: number
     _all: number
   }
 
@@ -2235,6 +2238,7 @@ export namespace Prisma {
     password?: true
     created_at?: true
     role?: true
+    status?: true
   }
 
   export type UsersMaxAggregateInputType = {
@@ -2248,6 +2252,7 @@ export namespace Prisma {
     password?: true
     created_at?: true
     role?: true
+    status?: true
   }
 
   export type UsersCountAggregateInputType = {
@@ -2261,6 +2266,7 @@ export namespace Prisma {
     password?: true
     created_at?: true
     role?: true
+    status?: true
     _all?: true
   }
 
@@ -2361,6 +2367,7 @@ export namespace Prisma {
     password: string
     created_at: Date | null
     role: $Enums.user_role | null
+    status: string | null
     _count: UsersCountAggregateOutputType | null
     _avg: UsersAvgAggregateOutputType | null
     _sum: UsersSumAggregateOutputType | null
@@ -2393,6 +2400,7 @@ export namespace Prisma {
     password?: boolean
     created_at?: boolean
     role?: boolean
+    status?: boolean
     user_activity_logs?: boolean | users$user_activity_logsArgs<ExtArgs>
     activity_logs?: boolean | users$activity_logsArgs<ExtArgs>
     faculty?: boolean | users$facultyArgs<ExtArgs>
@@ -2415,6 +2423,7 @@ export namespace Prisma {
     password?: boolean
     created_at?: boolean
     role?: boolean
+    status?: boolean
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2428,6 +2437,7 @@ export namespace Prisma {
     password?: boolean
     created_at?: boolean
     role?: boolean
+    status?: boolean
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectScalar = {
@@ -2441,9 +2451,10 @@ export namespace Prisma {
     password?: boolean
     created_at?: boolean
     role?: boolean
+    status?: boolean
   }
 
-  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "first_name" | "mid_name" | "last_name" | "ext_name" | "email" | "profile_picture" | "password" | "created_at" | "role", ExtArgs["result"]["users"]>
+  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "first_name" | "mid_name" | "last_name" | "ext_name" | "email" | "profile_picture" | "password" | "created_at" | "role" | "status", ExtArgs["result"]["users"]>
   export type usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user_activity_logs?: boolean | users$user_activity_logsArgs<ExtArgs>
     activity_logs?: boolean | users$activity_logsArgs<ExtArgs>
@@ -2481,6 +2492,7 @@ export namespace Prisma {
       password: string
       created_at: Date | null
       role: $Enums.user_role | null
+      status: string | null
     }, ExtArgs["result"]["users"]>
     composites: {}
   }
@@ -2922,6 +2934,7 @@ export namespace Prisma {
     readonly password: FieldRef<"users", 'String'>
     readonly created_at: FieldRef<"users", 'DateTime'>
     readonly role: FieldRef<"users", 'user_role'>
+    readonly status: FieldRef<"users", 'String'>
   }
     
 
@@ -5717,7 +5730,6 @@ export namespace Prisma {
     position: string | null
     contact_num: number | null
     user_id: number | null
-    status: string | null
   }
 
   export type LibrarianMaxAggregateOutputType = {
@@ -5725,7 +5737,6 @@ export namespace Prisma {
     position: string | null
     contact_num: number | null
     user_id: number | null
-    status: string | null
   }
 
   export type LibrarianCountAggregateOutputType = {
@@ -5733,7 +5744,6 @@ export namespace Prisma {
     position: number
     contact_num: number
     user_id: number
-    status: number
     _all: number
   }
 
@@ -5755,7 +5765,6 @@ export namespace Prisma {
     position?: true
     contact_num?: true
     user_id?: true
-    status?: true
   }
 
   export type LibrarianMaxAggregateInputType = {
@@ -5763,7 +5772,6 @@ export namespace Prisma {
     position?: true
     contact_num?: true
     user_id?: true
-    status?: true
   }
 
   export type LibrarianCountAggregateInputType = {
@@ -5771,7 +5779,6 @@ export namespace Prisma {
     position?: true
     contact_num?: true
     user_id?: true
-    status?: true
     _all?: true
   }
 
@@ -5866,7 +5873,6 @@ export namespace Prisma {
     position: string | null
     contact_num: number
     user_id: number
-    status: string | null
     _count: LibrarianCountAggregateOutputType | null
     _avg: LibrarianAvgAggregateOutputType | null
     _sum: LibrarianSumAggregateOutputType | null
@@ -5893,7 +5899,6 @@ export namespace Prisma {
     position?: boolean
     contact_num?: boolean
     user_id?: boolean
-    status?: boolean
     activity_logs?: boolean | librarian$activity_logsArgs<ExtArgs>
     users?: boolean | usersDefaultArgs<ExtArgs>
     _count?: boolean | LibrarianCountOutputTypeDefaultArgs<ExtArgs>
@@ -5904,7 +5909,6 @@ export namespace Prisma {
     position?: boolean
     contact_num?: boolean
     user_id?: boolean
-    status?: boolean
     users?: boolean | usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["librarian"]>
 
@@ -5913,7 +5917,6 @@ export namespace Prisma {
     position?: boolean
     contact_num?: boolean
     user_id?: boolean
-    status?: boolean
     users?: boolean | usersDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["librarian"]>
 
@@ -5922,10 +5925,9 @@ export namespace Prisma {
     position?: boolean
     contact_num?: boolean
     user_id?: boolean
-    status?: boolean
   }
 
-  export type librarianOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"employee_id" | "position" | "contact_num" | "user_id" | "status", ExtArgs["result"]["librarian"]>
+  export type librarianOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"employee_id" | "position" | "contact_num" | "user_id", ExtArgs["result"]["librarian"]>
   export type librarianInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     activity_logs?: boolean | librarian$activity_logsArgs<ExtArgs>
     users?: boolean | usersDefaultArgs<ExtArgs>
@@ -5949,7 +5951,6 @@ export namespace Prisma {
       position: string | null
       contact_num: number
       user_id: number
-      status: string | null
     }, ExtArgs["result"]["librarian"]>
     composites: {}
   }
@@ -6379,7 +6380,6 @@ export namespace Prisma {
     readonly position: FieldRef<"librarian", 'String'>
     readonly contact_num: FieldRef<"librarian", 'Int'>
     readonly user_id: FieldRef<"librarian", 'Int'>
-    readonly status: FieldRef<"librarian", 'String'>
   }
     
 
@@ -17049,7 +17049,8 @@ export namespace Prisma {
     profile_picture: 'profile_picture',
     password: 'password',
     created_at: 'created_at',
-    role: 'role'
+    role: 'role',
+    status: 'status'
   };
 
   export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
@@ -17080,8 +17081,7 @@ export namespace Prisma {
     employee_id: 'employee_id',
     position: 'position',
     contact_num: 'contact_num',
-    user_id: 'user_id',
-    status: 'status'
+    user_id: 'user_id'
   };
 
   export type LibrarianScalarFieldEnum = (typeof LibrarianScalarFieldEnum)[keyof typeof LibrarianScalarFieldEnum]
@@ -17368,6 +17368,7 @@ export namespace Prisma {
     password?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
+    status?: StringNullableFilter<"users"> | string | null
     user_activity_logs?: User_activity_logsListRelationFilter
     activity_logs?: Activity_logsListRelationFilter
     faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
@@ -17389,6 +17390,7 @@ export namespace Prisma {
     password?: SortOrder
     created_at?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
     user_activity_logs?: user_activity_logsOrderByRelationAggregateInput
     activity_logs?: activity_logsOrderByRelationAggregateInput
     faculty?: facultyOrderByWithRelationInput
@@ -17413,6 +17415,7 @@ export namespace Prisma {
     password?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
+    status?: StringNullableFilter<"users"> | string | null
     user_activity_logs?: User_activity_logsListRelationFilter
     activity_logs?: Activity_logsListRelationFilter
     faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
@@ -17434,6 +17437,7 @@ export namespace Prisma {
     password?: SortOrder
     created_at?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
     _count?: usersCountOrderByAggregateInput
     _avg?: usersAvgOrderByAggregateInput
     _max?: usersMaxOrderByAggregateInput
@@ -17455,6 +17459,7 @@ export namespace Prisma {
     password?: StringWithAggregatesFilter<"users"> | string
     created_at?: DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null
     role?: Enumuser_roleNullableWithAggregatesFilter<"users"> | $Enums.user_role | null
+    status?: StringNullableWithAggregatesFilter<"users"> | string | null
   }
 
   export type facultyWhereInput = {
@@ -17574,7 +17579,6 @@ export namespace Prisma {
     position?: StringNullableFilter<"librarian"> | string | null
     contact_num?: IntFilter<"librarian"> | number
     user_id?: IntFilter<"librarian"> | number
-    status?: StringNullableFilter<"librarian"> | string | null
     activity_logs?: Activity_logsListRelationFilter
     users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }
@@ -17584,7 +17588,6 @@ export namespace Prisma {
     position?: SortOrderInput | SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
-    status?: SortOrderInput | SortOrder
     activity_logs?: activity_logsOrderByRelationAggregateInput
     users?: usersOrderByWithRelationInput
   }
@@ -17597,7 +17600,6 @@ export namespace Prisma {
     NOT?: librarianWhereInput | librarianWhereInput[]
     position?: StringNullableFilter<"librarian"> | string | null
     contact_num?: IntFilter<"librarian"> | number
-    status?: StringNullableFilter<"librarian"> | string | null
     activity_logs?: Activity_logsListRelationFilter
     users?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }, "employee_id" | "employee_id" | "user_id">
@@ -17607,7 +17609,6 @@ export namespace Prisma {
     position?: SortOrderInput | SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
-    status?: SortOrderInput | SortOrder
     _count?: librarianCountOrderByAggregateInput
     _avg?: librarianAvgOrderByAggregateInput
     _max?: librarianMaxOrderByAggregateInput
@@ -17623,7 +17624,6 @@ export namespace Prisma {
     position?: StringNullableWithAggregatesFilter<"librarian"> | string | null
     contact_num?: IntWithAggregatesFilter<"librarian"> | number
     user_id?: IntWithAggregatesFilter<"librarian"> | number
-    status?: StringNullableWithAggregatesFilter<"librarian"> | string | null
   }
 
   export type papersWhereInput = {
@@ -18312,6 +18312,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -18333,6 +18334,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -18353,6 +18355,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -18374,6 +18377,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -18395,6 +18399,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
   }
 
   export type usersUpdateManyMutationInput = {
@@ -18407,6 +18412,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type usersUncheckedUpdateManyInput = {
@@ -18420,6 +18426,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type facultyCreateInput = {
@@ -18529,7 +18536,6 @@ export namespace Prisma {
     employee_id: bigint | number
     position?: string | null
     contact_num: number
-    status?: string | null
     activity_logs?: activity_logsCreateNestedManyWithoutLibrarianInput
     users: usersCreateNestedOneWithoutLibrarianInput
   }
@@ -18539,7 +18545,6 @@ export namespace Prisma {
     position?: string | null
     contact_num: number
     user_id: number
-    status?: string | null
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutLibrarianInput
   }
 
@@ -18547,7 +18552,6 @@ export namespace Prisma {
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
-    status?: NullableStringFieldUpdateOperationsInput | string | null
     activity_logs?: activity_logsUpdateManyWithoutLibrarianNestedInput
     users?: usersUpdateOneRequiredWithoutLibrarianNestedInput
   }
@@ -18557,7 +18561,6 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
-    status?: NullableStringFieldUpdateOperationsInput | string | null
     activity_logs?: activity_logsUncheckedUpdateManyWithoutLibrarianNestedInput
   }
 
@@ -18566,14 +18569,12 @@ export namespace Prisma {
     position?: string | null
     contact_num: number
     user_id: number
-    status?: string | null
   }
 
   export type librarianUpdateManyMutationInput = {
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
-    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type librarianUncheckedUpdateManyInput = {
@@ -18581,7 +18582,6 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
-    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type papersCreateInput = {
@@ -19430,6 +19430,7 @@ export namespace Prisma {
     password?: SortOrder
     created_at?: SortOrder
     role?: SortOrder
+    status?: SortOrder
   }
 
   export type usersAvgOrderByAggregateInput = {
@@ -19447,6 +19448,7 @@ export namespace Prisma {
     password?: SortOrder
     created_at?: SortOrder
     role?: SortOrder
+    status?: SortOrder
   }
 
   export type usersMinOrderByAggregateInput = {
@@ -19460,6 +19462,7 @@ export namespace Prisma {
     password?: SortOrder
     created_at?: SortOrder
     role?: SortOrder
+    status?: SortOrder
   }
 
   export type usersSumOrderByAggregateInput = {
@@ -19673,7 +19676,6 @@ export namespace Prisma {
     position?: SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
-    status?: SortOrder
   }
 
   export type librarianAvgOrderByAggregateInput = {
@@ -19687,7 +19689,6 @@ export namespace Prisma {
     position?: SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
-    status?: SortOrder
   }
 
   export type librarianMinOrderByAggregateInput = {
@@ -19695,7 +19696,6 @@ export namespace Prisma {
     position?: SortOrder
     contact_num?: SortOrder
     user_id?: SortOrder
-    status?: SortOrder
   }
 
   export type librarianSumOrderByAggregateInput = {
@@ -21241,7 +21241,6 @@ export namespace Prisma {
     employee_id: bigint | number
     position?: string | null
     contact_num: number
-    status?: string | null
     activity_logs?: activity_logsCreateNestedManyWithoutLibrarianInput
   }
 
@@ -21249,7 +21248,6 @@ export namespace Prisma {
     employee_id: bigint | number
     position?: string | null
     contact_num: number
-    status?: string | null
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutLibrarianInput
   }
 
@@ -21462,7 +21460,6 @@ export namespace Prisma {
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
-    status?: NullableStringFieldUpdateOperationsInput | string | null
     activity_logs?: activity_logsUpdateManyWithoutLibrarianNestedInput
   }
 
@@ -21470,7 +21467,6 @@ export namespace Prisma {
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
-    status?: NullableStringFieldUpdateOperationsInput | string | null
     activity_logs?: activity_logsUncheckedUpdateManyWithoutLibrarianNestedInput
   }
 
@@ -21596,6 +21592,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
@@ -21616,6 +21613,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
@@ -21651,6 +21649,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
@@ -21671,6 +21670,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
@@ -21690,6 +21690,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -21710,6 +21711,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -21745,6 +21747,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -21765,6 +21768,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -21817,6 +21821,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -21837,6 +21842,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -21888,6 +21894,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -21908,6 +21915,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -22187,6 +22195,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -22207,6 +22216,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -22284,6 +22294,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -22304,6 +22315,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -22323,6 +22335,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -22343,6 +22356,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -22378,6 +22392,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -22398,6 +22413,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -22411,7 +22427,6 @@ export namespace Prisma {
     employee_id: bigint | number
     position?: string | null
     contact_num: number
-    status?: string | null
     users: usersCreateNestedOneWithoutLibrarianInput
   }
 
@@ -22420,7 +22435,6 @@ export namespace Prisma {
     position?: string | null
     contact_num: number
     user_id: number
-    status?: string | null
   }
 
   export type librarianCreateOrConnectWithoutActivity_logsInput = {
@@ -22438,6 +22452,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
@@ -22458,6 +22473,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
@@ -22487,7 +22503,6 @@ export namespace Prisma {
     employee_id?: BigIntFieldUpdateOperationsInput | bigint | number
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
-    status?: NullableStringFieldUpdateOperationsInput | string | null
     users?: usersUpdateOneRequiredWithoutLibrarianNestedInput
   }
 
@@ -22496,7 +22511,6 @@ export namespace Prisma {
     position?: NullableStringFieldUpdateOperationsInput | string | null
     contact_num?: IntFieldUpdateOperationsInput | number
     user_id?: IntFieldUpdateOperationsInput | number
-    status?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type usersUpsertWithoutActivity_logsInput = {
@@ -22520,6 +22534,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
@@ -22540,6 +22555,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
@@ -22559,6 +22575,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
@@ -22579,6 +22596,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
@@ -22650,6 +22668,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
@@ -22670,6 +22689,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
@@ -22731,6 +22751,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -22751,6 +22772,7 @@ export namespace Prisma {
     password: string
     created_at?: Date | string | null
     role?: $Enums.user_role | null
+    status?: string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -22786,6 +22808,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -22806,6 +22829,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput

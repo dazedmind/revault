@@ -60,6 +60,7 @@ export default function UsersTable({
     return {
       name: displayName,
       subtitle: user.position || user.employeeID,
+      status: user.status,
     };
   };
 
@@ -188,7 +189,7 @@ export default function UsersTable({
                 <TableCell className="py-3 align-middle">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      user.status === "Active"
+                      user.status === "ACTIVE"
                         ? "bg-green-500/20 text-green-500"
                         : "bg-red-500/20 text-red-500"
                     }`}
