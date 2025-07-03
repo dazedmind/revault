@@ -354,34 +354,34 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       );
     };
 
-    // const preventContextMenu = (e: MouseEvent) => {
-    //   const target = e.target as Element;
+    const preventContextMenu = (e: MouseEvent) => {
+      const target = e.target as Element;
       
-    //   // Allow right-click on toolbar elements
-    //   if (isToolbarElement(target)) {
-    //     return true;
-    //   }
+      // Allow right-click on toolbar elements
+      if (isToolbarElement(target)) {
+        return true;
+      }
       
-    //   e.preventDefault();
+      e.preventDefault();
       
-    //   // Log security event
-    //   fetch('/api/log-security-event', {
-    //     method: 'POST',
-    //     headers: { 
-    //       'Content-Type': 'application/json',
-    //       'Authorization': `Bearer ${getToken()}`
-    //     },
-    //     body: JSON.stringify({
-    //       event: 'RIGHT_CLICK_BLOCKED',
-    //       userEmail,
-    //       documentId: paperId,
-    //       timestamp: new Date().toISOString(),
-    //       details: `Right-click blocked on page ${currentPage} (react-pdf secure viewer)`
-    //     })
-    //   }).catch(() => {});
+      // Log security event
+      fetch('/api/log-security-event', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({
+          event: 'RIGHT_CLICK_BLOCKED',
+          userEmail,
+          documentId: paperId,
+          timestamp: new Date().toISOString(),
+          details: `Right-click blocked on page ${currentPage} (react-pdf secure viewer)`
+        })
+      }).catch(() => {});
       
-    //   return false;
-    // };
+      return false;
+    };
 
     const preventDragStart = (e: DragEvent) => {
       const target = e.target as Element;

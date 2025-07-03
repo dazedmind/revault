@@ -26,6 +26,7 @@ import {
   CheckCircle,
   AlertCircle,
   FileCheck,
+  XCircle,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { toast, Toaster } from "sonner";
@@ -52,8 +53,172 @@ const UploadFile = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isChunkedUpload, setIsChunkedUpload] = useState(false);
+  const [validationStatus, setValidationStatus] = useState<'idle' | 'validating' | 'valid' | 'invalid'>('idle');
 
-  // Keep all your existing functions exactly as they are
+  // Advanced PDF validation function
+  const validatePDFFile = async (file: File): Promise<{ isValid: boolean; errorMessage?: string }> => {
+    console.log("🔍 Starting comprehensive PDF validation...");
+    
+    // 1. Check file extension
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      return { isValid: false, errorMessage: "File must have a .pdf extension" };
+    }
+
+    // 2. Check MIME type (basic check, can be spoofed)
+    if (file.type !== 'application/pdf') {
+      console.warn("⚠️ MIME type is not application/pdf:", file.type);
+    }
+
+    try {
+      // 3. Read file header to check PDF magic bytes
+      const arrayBuffer = await file.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      
+      // PDF files must start with "%PDF-" (hex: 25 50 44 46 2D)
+      const pdfHeader = [0x25, 0x50, 0x44, 0x46, 0x2D]; // %PDF-
+      const fileHeader = uint8Array.slice(0, 5);
+      
+      console.log("📄 File header bytes:", Array.from(fileHeader).map(b => b.toString(16)).join(' '));
+      console.log("📄 Expected PDF header:", pdfHeader.map(b => b.toString(16)).join(' '));
+      
+      const hasValidPDFHeader = pdfHeader.every((byte, index) => fileHeader[index] === byte);
+      
+      if (!hasValidPDFHeader) {
+        // Check for common fake file signatures
+        const fileSignatures = {
+          // Microsoft Office formats
+          'D0CF11E0': 'Microsoft Office document (DOC/XLS/PPT)',
+          '504B0304': 'ZIP-based file (DOCX/XLSX/PPTX)',
+          '504B0506': 'Empty ZIP file',
+          '504B0708': 'ZIP file',
+          
+          // Excel specific
+          '090008000600': 'Excel XLS file',
+          'FFFE': 'Excel/Word file with BOM',
+          
+          // Images
+          'FFD8FF': 'JPEG image',
+          '89504E47': 'PNG image',
+          '47494638': 'GIF image',
+          'FFE0': 'JPEG/JFIF image',
+          
+          // Other formats
+          '89504E470D0A1A0A': 'PNG image',
+          '424D': 'Bitmap image',
+          '49492A00': 'TIFF image',
+          '4D4D002A': 'TIFF image (big endian)',
+        };
+
+        const headerHex = Array.from(uint8Array.slice(0, 16))
+          .map(b => b.toString(16).toUpperCase().padStart(2, '0'))
+          .join('');
+        
+        console.log("🔍 Full file header (hex):", headerHex);
+        
+        // Check against known file signatures
+        for (const [signature, description] of Object.entries(fileSignatures)) {
+          if (headerHex.startsWith(signature)) {
+            return { 
+              isValid: false, 
+              errorMessage: `This appears to be a ${description}, not a PDF file. Please upload a genuine PDF document.` 
+            };
+          }
+        }
+        
+        return { 
+          isValid: false, 
+          errorMessage: "This file does not appear to be a valid PDF. The file header is incorrect." 
+        };
+      }
+
+      // 4. Additional PDF structure validation
+      const fileContent = new TextDecoder('latin1').decode(uint8Array);
+      
+      // Check for PDF version in header
+      const versionMatch = fileContent.match(/%PDF-(\d+\.\d+)/);
+      if (!versionMatch) {
+        return { 
+          isValid: false, 
+          errorMessage: "Invalid PDF: No version information found in header." 
+        };
+      }
+      
+      console.log("📄 PDF Version:", versionMatch[1]);
+      
+      // Check for essential PDF elements
+      const hasEOF = fileContent.includes('%%EOF');
+      const hasXref = fileContent.includes('xref') || fileContent.includes('/Root');
+      
+      if (!hasEOF) {
+        return { 
+          isValid: false, 
+          errorMessage: "Invalid PDF: Missing end-of-file marker." 
+        };
+      }
+      
+      // 5. Try to validate with PDF.js-like approach
+      try {
+        // Attempt to read with pdfToText (this will fail for fake PDFs)
+        const testText = await pdfToText(file);
+        console.log("✅ PDF text extraction test passed");
+      } catch (pdfError) {
+        console.error("❌ PDF text extraction failed:", pdfError);
+        return { 
+          isValid: false, 
+          errorMessage: "This file cannot be processed as a PDF. It may be corrupted or not a genuine PDF file." 
+        };
+      }
+
+      // 6. File size sanity check
+      if (file.size < 100) {
+        return { 
+          isValid: false, 
+          errorMessage: "File is too small to be a valid PDF document." 
+        };
+      }
+
+      // 7. Check for suspicious patterns that indicate renamed files
+      const suspiciousPatterns = [
+        // Excel patterns
+        'Microsoft Excel',
+        'Workbook',
+        'xl/workbook.xml',
+        'xl/sharedStrings.xml',
+        '[Content_Types].xml',
+        
+        // Word patterns
+        'Microsoft Word',
+        'word/document.xml',
+        'word/_rels/',
+        
+        // PowerPoint patterns
+        'Microsoft PowerPoint',
+        'ppt/presentation.xml',
+        'ppt/slides/',
+      ];
+
+      const contentCheck = fileContent.toLowerCase();
+      for (const pattern of suspiciousPatterns) {
+        if (contentCheck.includes(pattern.toLowerCase())) {
+          return { 
+            isValid: false, 
+            errorMessage: `This appears to be a ${pattern.includes('Excel') ? 'Microsoft Excel' : pattern.includes('Word') ? 'Microsoft Word' : 'Microsoft Office'} file renamed as PDF. Please convert it to PDF properly.` 
+          };
+        }
+      }
+
+      console.log("✅ PDF validation passed all checks");
+      return { isValid: true };
+
+    } catch (error) {
+      console.error("❌ PDF validation error:", error);
+      return { 
+        isValid: false, 
+        errorMessage: "Could not validate file. Please ensure it's a proper PDF document." 
+      };
+    }
+  };
+
   function fixSplitAccents(text) {
     return text
       .replace(/n\s*̃\s*a/gi, "ña")
@@ -65,139 +230,138 @@ const UploadFile = () => {
       .replace(/([A-Za-z])\s*ú\s*([A-Za-z])/gi, "$1ú$2");
   }
 
-  // Replace your handleUpload function with this:
-const uploadFileInChunks = async (file: File, metadata: any) => {
-  const CHUNK_SIZE = 1024 * 1024 * 2; // 2MB chunks (safe for Vercel)
-  const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-  const uploadId = Date.now().toString();
+  const uploadFileInChunks = async (file: File, metadata: any) => {
+    const CHUNK_SIZE = 1024 * 1024 * 2; // 2MB chunks (safe for Vercel)
+    const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+    const uploadId = Date.now().toString();
 
-  console.log(`📦 Starting chunked upload: ${totalChunks} chunks of ${CHUNK_SIZE} bytes each`);
-  setIsChunkedUpload(true);
-  setUploadProgress(0);
-
-  try {
-    for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-      const start = chunkIndex * CHUNK_SIZE;
-      const end = Math.min(start + CHUNK_SIZE, file.size);
-      const chunk = file.slice(start, end);
-
-      console.log(`📤 Uploading chunk ${chunkIndex + 1}/${totalChunks} (${chunk.size} bytes)`);
-
-      const formData = new FormData();
-      formData.append('chunk', chunk);
-      formData.append('chunkIndex', chunkIndex.toString());
-      formData.append('totalChunks', totalChunks.toString());
-      formData.append('uploadId', uploadId);
-      formData.append('fileName', file.name);
-      
-      // Add metadata only on the last chunk to avoid duplication
-      if (chunkIndex === totalChunks - 1) {
-        Object.keys(metadata).forEach(key => {
-          if (metadata[key] !== null && metadata[key] !== undefined) {
-            formData.append(key, metadata[key]);
-          }
-        });
-      }
-
-      const response = await fetch('/api/upload-chunk', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || `Chunk ${chunkIndex + 1} upload failed`);
-      }
-
-      // Update progress
-      const progress = ((chunkIndex + 1) / totalChunks) * 100;
-      setUploadProgress(progress);
-      console.log(`✅ Chunk ${chunkIndex + 1}/${totalChunks} uploaded (${progress.toFixed(1)}%)`);
-
-      // Small delay to prevent overwhelming the server
-      if (chunkIndex < totalChunks - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    }
-
-    return { success: true, message: "File uploaded successfully!" };
-  } catch (error) {
-    console.error("❌ Chunked upload failed:", error);
-    throw error;
-  } finally {
-    setIsChunkedUpload(false);
+    console.log(`📦 Starting chunked upload: ${totalChunks} chunks of ${CHUNK_SIZE} bytes each`);
+    setIsChunkedUpload(true);
     setUploadProgress(0);
-  }
-};
 
-const handleUpload = async () => {
-  if (!selectedFile) {
-    toast.error("Please select a PDF file first.");
-    return;
-  }
+    try {
+      for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+        const start = chunkIndex * CHUNK_SIZE;
+        const end = Math.min(start + CHUNK_SIZE, file.size);
+        const chunk = file.slice(start, end);
 
-  // Validate required fields
-  if (!title || !author || !course || !department || !year) {
-    toast.error("Please fill in all required fields.");
-    return;
-  }
+        console.log(`📤 Uploading chunk ${chunkIndex + 1}/${totalChunks} (${chunk.size} bytes)`);
 
-  try {
-    setIsLoading(true);
-    
-    const metadata = {
-      title,
-      author,
-      abstract: fullText,
-      course,
-      department,
-      year,
-      keywords: JSON.stringify(keywords)
-    };
+        const formData = new FormData();
+        formData.append('chunk', chunk);
+        formData.append('chunkIndex', chunkIndex.toString());
+        formData.append('totalChunks', totalChunks.toString());
+        formData.append('uploadId', uploadId);
+        formData.append('fileName', file.name);
+        
+        // Add metadata only on the last chunk to avoid duplication
+        if (chunkIndex === totalChunks - 1) {
+          Object.keys(metadata).forEach(key => {
+            if (metadata[key] !== null && metadata[key] !== undefined) {
+              formData.append(key, metadata[key]);
+            }
+          });
+        }
 
-    console.log("📤 Starting upload with metadata:");
-    console.log("File:", selectedFile.name, selectedFile.size, "bytes");
-    console.log("Title:", title);
+        const response = await fetch('/api/upload-chunk', {
+          method: 'POST',
+          body: formData,
+        });
 
-    // Use chunked upload for files larger than 3MB, regular upload for smaller files
-    if (selectedFile.size > 3 * 1024 * 1024) {
-      console.log("📦 File is large, using chunked upload");
-      await uploadFileInChunks(selectedFile, metadata);
-    } else {
-      console.log("📄 File is small, using regular upload");
-      // Fallback to regular upload for small files
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      Object.keys(metadata).forEach(key => {
-        formData.append(key, metadata[key]);
-      });
+        const result = await response.json();
 
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
+        if (!response.ok) {
+          throw new Error(result.message || `Chunk ${chunkIndex + 1} upload failed`);
+        }
 
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message || "Upload failed");
+        // Update progress
+        const progress = ((chunkIndex + 1) / totalChunks) * 100;
+        setUploadProgress(progress);
+        console.log(`✅ Chunk ${chunkIndex + 1}/${totalChunks} uploaded (${progress.toFixed(1)}%)`);
+
+        // Small delay to prevent overwhelming the server
+        if (chunkIndex < totalChunks - 1) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
       }
+
+      return { success: true, message: "File uploaded successfully!" };
+    } catch (error) {
+      console.error("❌ Chunked upload failed:", error);
+      throw error;
+    } finally {
+      setIsChunkedUpload(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.error("Please select a PDF file first.");
+      return;
     }
 
-    toast.success("Upload successful!");
-    handleClearFile();
-
-  } catch (error: any) {
-    console.error("Upload error:", error);
-    if (error.message?.includes("P2002")) {
-      toast.error("A paper with this title already exists. Please use a different title.");
-    } else {
-      toast.error(error.message || "Upload failed. Please try again.");
+    // Validate required fields
+    if (!title || !author || !course || !department || !year) {
+      toast.error("Please fill in all required fields.");
+      return;
     }
-  } finally {
-    setIsLoading(false);
-  }
-};
+
+    try {
+      setIsLoading(true);
+      
+      const metadata = {
+        title,
+        author,
+        abstract: fullText,
+        course,
+        department,
+        year,
+        keywords: JSON.stringify(keywords)
+      };
+
+      console.log("📤 Starting upload with metadata:");
+      console.log("File:", selectedFile.name, selectedFile.size, "bytes");
+      console.log("Title:", title);
+
+      // Use chunked upload for files larger than 3MB, regular upload for smaller files
+      if (selectedFile.size > 3 * 1024 * 1024) {
+        console.log("📦 File is large, using chunked upload");
+        await uploadFileInChunks(selectedFile, metadata);
+      } else {
+        console.log("📄 File is small, using regular upload");
+        // Fallback to regular upload for small files
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        Object.keys(metadata).forEach(key => {
+          formData.append(key, metadata[key]);
+        });
+
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message || "Upload failed");
+        }
+      }
+
+      toast.success("Upload successful!");
+      handleClearFile();
+
+    } catch (error: any) {
+      console.error("Upload error:", error);
+      if (error.message?.includes("P2002")) {
+        toast.error("A paper with this title already exists. Please use a different title.");
+      } else {
+        toast.error(error.message || "Upload failed. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const startProgressAnimation = () => {
     setProgress(0);
@@ -218,11 +382,35 @@ const handleUpload = async () => {
     }, interval);
   };
 
-  // Modify your extractText function to also store the file
+  // Enhanced extractText function with PDF validation
   async function extractText(event) {
     const file = event.target.files[0];
-    if (!file || file.type !== "application/pdf") return;
+    if (!file) return;
 
+    // Reset validation status
+    setValidationStatus('validating');
+    
+    // Comprehensive PDF validation
+    console.log("🔍 Validating PDF file...");
+    const validation = await validatePDFFile(file);
+    
+    if (!validation.isValid) {
+      console.error("❌ PDF validation failed:", validation.errorMessage);
+      setValidationStatus('invalid');
+      toast.error(validation.errorMessage || "Invalid PDF file", {
+        duration: 5000,
+      });
+      
+      // Clear the file input
+      if (ref.current) {
+        ref.current.value = "";
+      }
+      return;
+    }
+
+    console.log("✅ PDF validation passed");
+    setValidationStatus('valid');
+    
     // Store the file for later upload
     setSelectedFile(file);
     setPdfUrl(URL.createObjectURL(file));
@@ -258,7 +446,7 @@ const handleUpload = async () => {
 
       const sanitized = firstPageText.replace(/\s+/g, " ").trim();
 
-      console.log("🚀 Sending to extraction API...");
+      console.log("🚀 Extracting text...");
       const response = await fetch("/api/extract", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -323,6 +511,7 @@ const handleUpload = async () => {
       setProgress(100);
     }
   }
+
   const handleSaveTitle = () => {
     setIsEditingTitle(false);
     if (!title) {
@@ -344,7 +533,6 @@ const handleUpload = async () => {
     }
   };
 
-  // Update your handleClearFile function to also clear the selected file:
   const handleClearFile = () => {
     if (ref.current) {
       ref.current.value = "";
@@ -358,11 +546,12 @@ const handleUpload = async () => {
     setKeywords([]);
     setKey(Date.now());
     setPdfUrl("");
-    setSelectedFile(null); // Clear the selected file
+    setSelectedFile(null);
     setIsEditingTitle(false);
     setIsEditingAuthors(false);
     setIsEditingAbstract(false);
     setIsTermsAccepted(true);
+    setValidationStatus('idle');
   };
 
   useEffect(() => setMounted(true), []);
@@ -424,26 +613,56 @@ const handleUpload = async () => {
                 <label
                   htmlFor="uploadFile1"
                   className={`flex-1 relative group cursor-pointer transition-all duration-300 ${
-                    isLoading
+                    isLoading || validationStatus === 'validating'
                       ? "pointer-events-none opacity-50"
                       : "hover:scale-[1.02]"
                   }`}
                 >
                   <div
                     className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
-                      pdfUrl
-                        ? "border-green-300  dark:border-green-700 "
+                      validationStatus === 'valid' && pdfUrl
+                        ? "border-green-300 dark:border-green-700"
+                        : validationStatus === 'invalid'
+                        ? "border-red-300 dark:border-red-700"
                         : "border-gold/30 hover:border-gold/60 hover:bg-gold/5"
                     }`}
                   >
-                    {pdfUrl ? (
+                    {validationStatus === 'validating' ? (
+                      <div className="space-y-3">
+                        <div className="flex justify-center">
+                          <div className="animate-spin w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full"></div>
+                        </div>
+                        <div>
+                          <p className="text-blue-700 dark:text-blue-400 font-semibold">
+                            Validating PDF...
+                          </p>
+                          <p className="text-sm text-blue-600 dark:text-blue-500">
+                            Checking file integrity and format
+                          </p>
+                        </div>
+                      </div>
+                    ) : validationStatus === 'invalid' ? (
+                      <div className="space-y-3">
+                        <div className="flex justify-center">
+                          <XCircle className="w-12 h-12 text-red-500" />
+                        </div>
+                        <div>
+                          <p className="text-red-700 dark:text-red-400 font-semibold">
+                            Invalid PDF File
+                          </p>
+                          <p className="text-sm text-red-600 dark:text-red-500">
+                            Please select a genuine PDF document
+                          </p>
+                        </div>
+                      </div>
+                    ) : validationStatus === 'valid' && pdfUrl ? (
                       <div className="space-y-3">
                         <div className="flex justify-center">
                           <CheckCircle className="w-12 h-12 text-green-500" />
                         </div>
                         <div>
                           <p className="text-green-700 dark:text-green-400 font-semibold">
-                            PDF Uploaded Successfully
+                             PDF Uploaded Successfully
                           </p>
                           <p className="text-sm text-green-600 dark:text-green-500">
                             {selectedFile &&
@@ -470,8 +689,7 @@ const handleUpload = async () => {
                           </p>
                         </div>
                         <div className="text-xs text-gray-400 dark:text-gray-500">
-                          PDF only • Max 30MB • Larger files may take longer to
-                          process
+                          <div>PDF only • Max 30MB</div>
                         </div>
                       </div>
                     )}
@@ -482,21 +700,23 @@ const handleUpload = async () => {
                     id="uploadFile1"
                     ref={ref}
                     className="hidden"
-                    accept="application/pdf"
+                    accept="application/pdf,.pdf"
                     onChange={extractText}
                     name="file-input"
                     key={ref.current?.value}
-                    disabled={isLoading}
+                    disabled={isLoading || validationStatus === 'validating'}
                   />
                 </label>
               </div>
 
-              {isLoading && (
+              {(isLoading || validationStatus === 'validating') && (
                 <div className="mt-6 space-y-3">
                   <div className="flex items-center gap-3">
                     <div className="animate-spin w-5 h-5 border-2 border-gold border-t-transparent rounded-full"></div>
                     <span className="text-sm font-medium text-gold">
-                      {isChunkedUpload 
+                      {validationStatus === 'validating' 
+                        ? "Validating PDF file..."
+                        : isChunkedUpload 
                         ? `Uploading chunks... ${uploadProgress.toFixed(1)}%`
                         : progress < 100
                         ? "Extracting text from PDF..."
@@ -508,7 +728,10 @@ const handleUpload = async () => {
                     <div
                       className="bg-gradient-to-r from-gold to-gold-fg h-full rounded-full transition-all duration-300 ease-out"
                       style={{ 
-                        width: `${isChunkedUpload ? uploadProgress : progress}%` 
+                        width: `${
+                          validationStatus === 'validating' ? 50 :
+                          isChunkedUpload ? uploadProgress : progress
+                        }%` 
                       }}
                     />
                   </div>
@@ -554,8 +777,8 @@ const handleUpload = async () => {
                     className={`w-full p-4 rounded-xl border transition-all duration-200 resize-none ${
                       isEditingTitle
                         ? "border-gold bg-gold/5 focus:ring-2 focus:ring-gold/20 focus:border-gold"
-                        : "border-white-5  cursor-default"
-                    }  outline-none`}
+                        : "border-white-5 cursor-default"
+                    } outline-none`}
                     value={title.toUpperCase()}
                     onChange={(e) => setTitle(e.target.value.toUpperCase())}
                     readOnly={!isEditingTitle}
@@ -764,7 +987,7 @@ const handleUpload = async () => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* PDF Preview */}
-            {pdfUrl && (
+            {pdfUrl && validationStatus === 'valid' && (
               <div
                 className={`bg-secondary rounded-2xl shadow-sm border ${theme === "light" ? "border-white-50" : "border-white-5"} p-6`}
               >
@@ -782,8 +1005,63 @@ const handleUpload = async () => {
               </div>
             )}
 
+            {/* File Validation Status */}
+            {selectedFile && (
+              <div
+                className={`bg-secondary rounded-2xl shadow-sm border ${theme === "light" ? "border-white-50" : "border-white-5"} p-6`}
+              >
+                <h3 className="text-lg font-semibold mb-4">File Validation</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    {validationStatus === 'validating' ? (
+                      <div className="animate-spin w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                    ) : validationStatus === 'valid' ? (
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    ) : validationStatus === 'invalid' ? (
+                      <XCircle className="w-5 h-5 text-red-500" />
+                    ) : (
+                      <AlertCircle className="w-5 h-5 text-amber-500" />
+                    )}
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {validationStatus === 'validating' 
+                        ? "Validating PDF format..."
+                        : validationStatus === 'valid' 
+                        ? "Valid PDF document"
+                        : validationStatus === 'invalid' 
+                        ? "Invalid PDF file"
+                        : "No file selected"
+                      }
+                    </span>
+                  </div>
+                  
+                  {validationStatus === 'valid' && (
+                    <>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          File header verified
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          PDF structure validated
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          Text extraction possible
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Upload Progress */}
-            {pdfUrl && (
+            {pdfUrl && validationStatus === 'valid' && (
               <div
                 className={`bg-secondary rounded-2xl shadow-sm border ${theme === "light" ? "border-white-50" : "border-white-5"} p-6`}
               >
@@ -792,7 +1070,7 @@ const handleUpload = async () => {
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-green-500" />
                     <span className="text-sm text-gray-600 dark:text-gray-400">
-                      PDF uploaded
+                      PDF validated and uploaded
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
@@ -842,9 +1120,9 @@ const handleUpload = async () => {
 
             <button
               onClick={handleUpload}
-              disabled={!isFormValid || isLoading}
+              disabled={!isFormValid || isLoading || validationStatus !== 'valid'}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-white transition-all duration-300 cursor-pointer ${
-                isFormValid && !isLoading
+                isFormValid && !isLoading && validationStatus === 'valid'
                   ? "bg-gradient-to-r from-gold to-gold-fg hover:brightness-120 hover:shadow-lg shadow-gold"
                   : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"
               }`}
