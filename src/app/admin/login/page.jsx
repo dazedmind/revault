@@ -52,7 +52,15 @@ const AdminLogin = () => {
 
     // Check if response is OK (status 200-299)
     if (!response.ok) {
-      setErrorMessage("Login failed. Please check your credentials.");
+      // Try to parse the response to get specific error message
+      const errorResult = await response.json().catch(() => null);
+      
+      if (errorResult && errorResult.status === "INACTIVE") {
+        setErrorMessage("Account is disabled please contact your admin.");
+      } else {
+        setErrorMessage("Login failed. Please check your credentials.");
+      }
+      
       setShowErrorModal(true);
       setIsLoading(false);
       return;

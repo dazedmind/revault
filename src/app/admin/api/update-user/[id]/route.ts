@@ -295,6 +295,7 @@ export async function PUT(
         ext_name: extension || null,
         email,
         role: mappedRole,
+        status: status || "",
       };
 
       // Add password if provided
@@ -359,6 +360,7 @@ export async function PUT(
             role: mappedRole,
             employeeID,
             position: position || mappedRole,
+            status: status || "",
             password: !!password
           });
 
@@ -398,7 +400,7 @@ export async function PUT(
       employeeID: result.librarian.employee_id.toString(),
       email: result.user.email,
       role: result.user.role || "",
-      status: status || "Active",
+      status: status || "",
       userAccess: finalUserAccess,
       contactNum: result.librarian.contact_num.toString(),
       position: result.librarian.position || "",

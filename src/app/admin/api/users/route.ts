@@ -33,7 +33,7 @@ export async function GET() {
       employeeID: user.librarian?.employee_id?.toString() || "", // Convert number to string
       email: user.email,
       role: user.role || "",
-      status: "Active", // You can add a status field to your schema if needed
+      status: user.status || "", // You can add a status field to your schema if needed
       userAccess: getUserAccessFromRole(user.role || ""),
       contactNum: user.librarian?.contact_num?.toString() || "0",
       position: user.librarian?.position || "",

@@ -130,7 +130,8 @@ exports.Prisma.UsersScalarFieldEnum = {
   profile_picture: 'profile_picture',
   password: 'password',
   created_at: 'created_at',
-  role: 'role'
+  role: 'role',
+  status: 'status'
 };
 
 exports.Prisma.FacultyScalarFieldEnum = {
@@ -152,8 +153,7 @@ exports.Prisma.LibrarianScalarFieldEnum = {
   employee_id: 'employee_id',
   position: 'position',
   contact_num: 'contact_num',
-  user_id: 'user_id',
-  status: 'status'
+  user_id: 'user_id'
 };
 
 exports.Prisma.PapersScalarFieldEnum = {

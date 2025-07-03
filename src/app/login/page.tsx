@@ -202,7 +202,7 @@ const LogIn = () => {
                 </button>
               </div>
 
-              <div className="flex flex-row justify-end mt-5">
+              <div className="flex flex-row justify-end mt-5 mx-8 md:mx-0">
                 <p 
                   className="text-xs text-gold font-bold cursor-pointer hover:underline"
                   onClick={handleForgotPasswordClick}

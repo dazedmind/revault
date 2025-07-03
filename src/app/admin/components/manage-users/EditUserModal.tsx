@@ -250,8 +250,8 @@ export default function EditUserModal({
                     onChange={onInputChange}
                     className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] pr-8 appearance-none"
                   >
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
+                    <option value="ACTIVE">Active</option>
+                    <option value="INACTIVE">Inactive</option>
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
                     <svg
