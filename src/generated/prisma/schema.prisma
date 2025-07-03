@@ -206,6 +206,7 @@ enum activity_type {
   BACKUP_COMPLETED
   BACKUP_FAILED
   BACKUP_DOWNLOADED
+  PERMANENT_DELETE
 }
 
 enum user_role {
