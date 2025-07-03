@@ -1,8 +1,9 @@
 // src/app/api/back-up/download/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';  
 import { Storage } from '@google-cloud/storage';
 import jwt from 'jsonwebtoken';
+
 
 const prisma = new PrismaClient();
 const SECRET_KEY = process.env.JWT_SECRET_KEY || 'your-secret-key';
@@ -50,8 +51,13 @@ async function initializeStorage() {
   }
 }
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
+
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.split(' ')[1] || req.cookies.get('authToken')?.value;
     
@@ -65,7 +71,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
 
     const backup = await prisma.backup_jobs.findUnique({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     if (!backup || backup.status !== 'completed' || !backup.download_url) {
