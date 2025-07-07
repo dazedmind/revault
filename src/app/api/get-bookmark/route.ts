@@ -21,8 +21,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
     }
 
-    // 🔒 RBAC CHECK: Only STUDENT and FACULTY can view bookmarks
-    // Get user role from database to ensure accuracy
     const user = await prisma.users.findUnique({
       where: { user_id: payload.user_id },
       select: { role: true }
@@ -30,13 +28,6 @@ export async function GET(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    if (!['STUDENT', 'FACULTY'].includes(user.role)) {
-      console.log(`❌ Bookmark access denied for role: ${user.role}`);
-      return NextResponse.json({ 
-        error: 'Access denied. Only students and faculty can view bookmarks.' 
-      }, { status: 403 });
     }
 
     // Fetch bookmarks for the user

@@ -17,6 +17,7 @@ import {
   IdCard,
   File,
   Plus,
+  Bookmark,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -182,10 +183,16 @@ export default function AdminNavBar() {
                 </Link>
 
                 <DropdownMenuSeparator />
+                <Link href="/admin/bookmarks">
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Bookmark />
+                      My Bookmarks
+                  </DropdownMenuItem>
+                </Link>
                 <Link href="/admin/settings/general/edit-profile">
-                <DropdownMenuItem className="cursor-pointer">
-                  <Settings />
-                    Settings
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Settings />
+                      Settings
                   </DropdownMenuItem>
                 </Link>
                 

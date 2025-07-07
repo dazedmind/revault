@@ -266,7 +266,27 @@ const DocsCard = (props) => {
                     <span>Read</span>
                   </button>
                 </Link>
-
+                      <button
+                          onClick={() =>
+                            isBookmarked
+                              ? handleUnbookmark(paper_id)
+                              : handleBookmark(paper_id)
+                          }
+                          className={`p-2.5 rounded-lg transition-all duration-200 cursor-pointer ${
+                            isBookmarked
+                              ? "text-yale-blue bg-blue-100 hover:bg-blue-200"
+                              : "text-gray-600 dark:text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                          }`}
+                          title={
+                            isBookmarked ? "Remove bookmark" : "Add bookmark"
+                          }
+                        >
+                          {isBookmarked ? (
+                            <GoBookmarkFill className="text-lg" />
+                          ) : (
+                            <GoBookmark className="text-lg" />
+                          )}
+                        </button>
                 {/* Secondary Actions */}
                 <div className="flex items-center gap-1">
                   {(() => {

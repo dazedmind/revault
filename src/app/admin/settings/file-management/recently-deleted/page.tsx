@@ -16,7 +16,7 @@ import {
   ChevronRight,
   X,
 } from "lucide-react";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 
 interface DeletedPaper {
   paper_id: number;
@@ -612,6 +612,7 @@ const RecentlyDeletedPage = () => {
          </div>
        </div>
       )}
+      <Toaster />
     </div>
   );
 };
