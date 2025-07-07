@@ -516,6 +516,7 @@ function ManageUserContent() {
         onPasswordChange={handleEditPasswordChange}
         onCancel={handleCancelEdit}
         onSave={handleSaveEdit}
+        isEditingSelf={editingUserId === currentEditUser?.id}
       />
 
       {/* ─── Add User Modal ─── */}

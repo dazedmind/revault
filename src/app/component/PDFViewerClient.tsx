@@ -599,13 +599,13 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
         /* Ensure toolbar buttons are clickable */
         .toolbar button {
           pointer-events: auto !important;
-          z-index: 50 !important;
+          z-index: 30 !important;
           cursor: pointer !important;
         }
 
         .toolbar input {
           pointer-events: auto !important;
-          z-index: 50 !important;
+          z-index: 30 !important;
         }
 
         /* Print protection */

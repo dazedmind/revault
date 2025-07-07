@@ -262,7 +262,7 @@ const DocsCardUser: React.FC<DocsCardUserProps> = (props) => {
                           }`}
                         >
                           <GoPencil className="text-lg" />
-                          <span className="hidden sm:inline">Edit</span>
+                          <span className="hidden sm:inline">Edit Details</span>
                         </button>
                       </Link>
                       

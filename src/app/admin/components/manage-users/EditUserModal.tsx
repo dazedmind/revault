@@ -29,6 +29,8 @@ interface EditUserModalProps {
   onPasswordChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onCancel: () => void;
   onSave: () => void;
+  isEditingSelf: boolean; // <-- add this line
+
 }
 
 export default function EditUserModal({
@@ -41,6 +43,7 @@ export default function EditUserModal({
   onPasswordChange,
   onCancel,
   onSave,
+  isEditingSelf, // <-- add this line
 }: EditUserModalProps) {
   if (!show || !user) return null;
 
@@ -248,10 +251,11 @@ export default function EditUserModal({
                     name="status"
                     value={user.status}
                     onChange={onInputChange}
-                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] pr-8 appearance-none"
+                    className={`w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] ${isEditingSelf ? "cursor-not-allowed" : ""} pr-8 appearance-none`}
+                    disabled={isEditingSelf}
                   >
-                    <option value="ACTIVE">Active</option>
-                    <option value="INACTIVE">Inactive</option>
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="INACTIVE">INACTIVE</option>
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
                     <svg

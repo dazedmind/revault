@@ -20,6 +20,7 @@ export async function saveAdminStaffInformation(formData: any) {
       confirmPassword,
       employeeID,
       position,
+      status,
       role,
     } = formData;
 
@@ -32,6 +33,7 @@ export async function saveAdminStaffInformation(formData: any) {
       role,
       employeeID,
       position,
+      status,
       hasPassword: !!password,
       hasConfirmPassword: !!confirmPassword,
     });
