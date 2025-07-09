@@ -28,6 +28,7 @@ const LogIn = () => {
   const [forgotPasswordMessage, setForgotPasswordMessage] = useState("");
   const [showForgotPasswordSuccess, setShowForgotPasswordSuccess] = useState(false);
 
+   const [showAccessDeniedModal, setShowAccessDeniedModal] = useState(false);
   // useAntiCopy();
 
   const [formData, setFormData] = useState({
@@ -62,13 +63,19 @@ const LogIn = () => {
       }),
     });
 
+    if (response.status === 423) {
+      setErrorMessage("Account locked. Please try again in 24 hours.");
+      setShowAccessDeniedModal(true);
+      return;
+    }
+
     // Check if response is OK (status 200-299)
     if (!response.ok) {
       setErrorMessage("Login failed. Please check your credentials.");
       setShowErrorModal(true);
       return;
     }
-
+    
     // Try to parse the response body
     const result = await response.json().catch((error) => {
       console.error("Failed to parse JSON:", error);
@@ -265,6 +272,21 @@ const LogIn = () => {
             </button>
           </div>
         </div>
+      )}
+
+      {showAccessDeniedModal && (
+      <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+        <div className="bg-accent border-2 rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+          <h2 className="text-2xl font-bold text-gold mb-4">Account Locked</h2>
+          <p className=" mb-6">{errorMessage}</p>
+          <button
+            className="cursor-pointer px-6 py-2 bg-gold hover:brightness-105 text-white rounded-lg font-semibold"
+            onClick={handleCloseErrorModal}
+          >
+            Okay
+          </button>
+        </div>
+      </div>
       )}
 
       {/* Forgot Password Modal */}

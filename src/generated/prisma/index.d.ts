@@ -2170,10 +2170,12 @@ export namespace Prisma {
 
   export type UsersAvgAggregateOutputType = {
     user_id: number | null
+    login_attempts: number | null
   }
 
   export type UsersSumAggregateOutputType = {
     user_id: number | null
+    login_attempts: number | null
   }
 
   export type UsersMinAggregateOutputType = {
@@ -2188,6 +2190,8 @@ export namespace Prisma {
     created_at: Date | null
     role: $Enums.user_role | null
     status: string | null
+    login_attempts: number | null
+    locked_until: Date | null
   }
 
   export type UsersMaxAggregateOutputType = {
@@ -2202,6 +2206,8 @@ export namespace Prisma {
     created_at: Date | null
     role: $Enums.user_role | null
     status: string | null
+    login_attempts: number | null
+    locked_until: Date | null
   }
 
   export type UsersCountAggregateOutputType = {
@@ -2216,16 +2222,20 @@ export namespace Prisma {
     created_at: number
     role: number
     status: number
+    login_attempts: number
+    locked_until: number
     _all: number
   }
 
 
   export type UsersAvgAggregateInputType = {
     user_id?: true
+    login_attempts?: true
   }
 
   export type UsersSumAggregateInputType = {
     user_id?: true
+    login_attempts?: true
   }
 
   export type UsersMinAggregateInputType = {
@@ -2240,6 +2250,8 @@ export namespace Prisma {
     created_at?: true
     role?: true
     status?: true
+    login_attempts?: true
+    locked_until?: true
   }
 
   export type UsersMaxAggregateInputType = {
@@ -2254,6 +2266,8 @@ export namespace Prisma {
     created_at?: true
     role?: true
     status?: true
+    login_attempts?: true
+    locked_until?: true
   }
 
   export type UsersCountAggregateInputType = {
@@ -2268,6 +2282,8 @@ export namespace Prisma {
     created_at?: true
     role?: true
     status?: true
+    login_attempts?: true
+    locked_until?: true
     _all?: true
   }
 
@@ -2369,6 +2385,8 @@ export namespace Prisma {
     created_at: Date | null
     role: $Enums.user_role | null
     status: string | null
+    login_attempts: number
+    locked_until: Date | null
     _count: UsersCountAggregateOutputType | null
     _avg: UsersAvgAggregateOutputType | null
     _sum: UsersSumAggregateOutputType | null
@@ -2402,6 +2420,8 @@ export namespace Prisma {
     created_at?: boolean
     role?: boolean
     status?: boolean
+    login_attempts?: boolean
+    locked_until?: boolean
     user_activity_logs?: boolean | users$user_activity_logsArgs<ExtArgs>
     activity_logs?: boolean | users$activity_logsArgs<ExtArgs>
     faculty?: boolean | users$facultyArgs<ExtArgs>
@@ -2425,6 +2445,8 @@ export namespace Prisma {
     created_at?: boolean
     role?: boolean
     status?: boolean
+    login_attempts?: boolean
+    locked_until?: boolean
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2439,6 +2461,8 @@ export namespace Prisma {
     created_at?: boolean
     role?: boolean
     status?: boolean
+    login_attempts?: boolean
+    locked_until?: boolean
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectScalar = {
@@ -2453,9 +2477,11 @@ export namespace Prisma {
     created_at?: boolean
     role?: boolean
     status?: boolean
+    login_attempts?: boolean
+    locked_until?: boolean
   }
 
-  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "first_name" | "mid_name" | "last_name" | "ext_name" | "email" | "profile_picture" | "password" | "created_at" | "role" | "status", ExtArgs["result"]["users"]>
+  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "first_name" | "mid_name" | "last_name" | "ext_name" | "email" | "profile_picture" | "password" | "created_at" | "role" | "status" | "login_attempts" | "locked_until", ExtArgs["result"]["users"]>
   export type usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user_activity_logs?: boolean | users$user_activity_logsArgs<ExtArgs>
     activity_logs?: boolean | users$activity_logsArgs<ExtArgs>
@@ -2494,6 +2520,8 @@ export namespace Prisma {
       created_at: Date | null
       role: $Enums.user_role | null
       status: string | null
+      login_attempts: number
+      locked_until: Date | null
     }, ExtArgs["result"]["users"]>
     composites: {}
   }
@@ -2936,6 +2964,8 @@ export namespace Prisma {
     readonly created_at: FieldRef<"users", 'DateTime'>
     readonly role: FieldRef<"users", 'user_role'>
     readonly status: FieldRef<"users", 'String'>
+    readonly login_attempts: FieldRef<"users", 'Int'>
+    readonly locked_until: FieldRef<"users", 'DateTime'>
   }
     
 
@@ -17090,7 +17120,9 @@ export namespace Prisma {
     password: 'password',
     created_at: 'created_at',
     role: 'role',
-    status: 'status'
+    status: 'status',
+    login_attempts: 'login_attempts',
+    locked_until: 'locked_until'
   };
 
   export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
@@ -17412,6 +17444,8 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
     status?: StringNullableFilter<"users"> | string | null
+    login_attempts?: IntFilter<"users"> | number
+    locked_until?: DateTimeNullableFilter<"users"> | Date | string | null
     user_activity_logs?: User_activity_logsListRelationFilter
     activity_logs?: Activity_logsListRelationFilter
     faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
@@ -17434,6 +17468,8 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
+    login_attempts?: SortOrder
+    locked_until?: SortOrderInput | SortOrder
     user_activity_logs?: user_activity_logsOrderByRelationAggregateInput
     activity_logs?: activity_logsOrderByRelationAggregateInput
     faculty?: facultyOrderByWithRelationInput
@@ -17459,6 +17495,8 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     role?: Enumuser_roleNullableFilter<"users"> | $Enums.user_role | null
     status?: StringNullableFilter<"users"> | string | null
+    login_attempts?: IntFilter<"users"> | number
+    locked_until?: DateTimeNullableFilter<"users"> | Date | string | null
     user_activity_logs?: User_activity_logsListRelationFilter
     activity_logs?: Activity_logsListRelationFilter
     faculty?: XOR<FacultyNullableScalarRelationFilter, facultyWhereInput> | null
@@ -17481,6 +17519,8 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     role?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
+    login_attempts?: SortOrder
+    locked_until?: SortOrderInput | SortOrder
     _count?: usersCountOrderByAggregateInput
     _avg?: usersAvgOrderByAggregateInput
     _max?: usersMaxOrderByAggregateInput
@@ -17503,6 +17543,8 @@ export namespace Prisma {
     created_at?: DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null
     role?: Enumuser_roleNullableWithAggregatesFilter<"users"> | $Enums.user_role | null
     status?: StringNullableWithAggregatesFilter<"users"> | string | null
+    login_attempts?: IntWithAggregatesFilter<"users"> | number
+    locked_until?: DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null
   }
 
   export type facultyWhereInput = {
@@ -18371,6 +18413,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -18393,6 +18437,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -18414,6 +18460,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -18436,6 +18484,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -18458,6 +18508,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
   }
 
   export type usersUpdateManyMutationInput = {
@@ -18471,6 +18523,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type usersUncheckedUpdateManyInput = {
@@ -18485,6 +18539,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type facultyCreateInput = {
@@ -19510,10 +19566,13 @@ export namespace Prisma {
     created_at?: SortOrder
     role?: SortOrder
     status?: SortOrder
+    login_attempts?: SortOrder
+    locked_until?: SortOrder
   }
 
   export type usersAvgOrderByAggregateInput = {
     user_id?: SortOrder
+    login_attempts?: SortOrder
   }
 
   export type usersMaxOrderByAggregateInput = {
@@ -19528,6 +19587,8 @@ export namespace Prisma {
     created_at?: SortOrder
     role?: SortOrder
     status?: SortOrder
+    login_attempts?: SortOrder
+    locked_until?: SortOrder
   }
 
   export type usersMinOrderByAggregateInput = {
@@ -19542,10 +19603,13 @@ export namespace Prisma {
     created_at?: SortOrder
     role?: SortOrder
     status?: SortOrder
+    login_attempts?: SortOrder
+    locked_until?: SortOrder
   }
 
   export type usersSumOrderByAggregateInput = {
     user_id?: SortOrder
+    login_attempts?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -20410,6 +20474,14 @@ export namespace Prisma {
     set?: $Enums.user_role | null
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type user_activity_logsUpdateManyWithoutUsersNestedInput = {
     create?: XOR<user_activity_logsCreateWithoutUsersInput, user_activity_logsUncheckedCreateWithoutUsersInput> | user_activity_logsCreateWithoutUsersInput[] | user_activity_logsUncheckedCreateWithoutUsersInput[]
     connectOrCreate?: user_activity_logsCreateOrConnectWithoutUsersInput | user_activity_logsCreateOrConnectWithoutUsersInput[]
@@ -20508,14 +20580,6 @@ export namespace Prisma {
     update?: password_reset_tokensUpdateWithWhereUniqueWithoutUserInput | password_reset_tokensUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: password_reset_tokensUpdateManyWithWhereWithoutUserInput | password_reset_tokensUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: password_reset_tokensScalarWhereInput | password_reset_tokensScalarWhereInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput = {
@@ -21711,6 +21775,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
@@ -21732,6 +21798,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
@@ -21768,6 +21836,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
@@ -21789,6 +21859,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
@@ -21809,6 +21881,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -21830,6 +21904,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -21866,6 +21942,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -21887,6 +21965,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -21940,6 +22020,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -21961,6 +22043,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -22013,6 +22097,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -22034,6 +22120,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -22332,6 +22420,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -22353,6 +22443,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -22437,6 +22529,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -22458,6 +22552,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -22478,6 +22574,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -22499,6 +22597,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -22535,6 +22635,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -22556,6 +22658,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
@@ -22595,6 +22699,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
@@ -22616,6 +22722,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
@@ -22677,6 +22785,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
@@ -22698,6 +22808,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
@@ -22718,6 +22830,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
     librarian?: librarianCreateNestedOneWithoutUsersInput
@@ -22739,6 +22853,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
     librarian?: librarianUncheckedCreateNestedOneWithoutUsersInput
@@ -22817,6 +22933,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
     librarian?: librarianUpdateOneWithoutUsersNestedInput
@@ -22838,6 +22956,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput
     librarian?: librarianUncheckedUpdateOneWithoutUsersNestedInput
@@ -22906,6 +23026,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsCreateNestedManyWithoutUsersInput
     faculty?: facultyCreateNestedOneWithoutUsersInput
@@ -22927,6 +23049,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     role?: $Enums.user_role | null
     status?: string | null
+    login_attempts?: number
+    locked_until?: Date | string | null
     user_activity_logs?: user_activity_logsUncheckedCreateNestedManyWithoutUsersInput
     activity_logs?: activity_logsUncheckedCreateNestedManyWithoutUsersInput
     faculty?: facultyUncheckedCreateNestedOneWithoutUsersInput
@@ -22963,6 +23087,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUpdateManyWithoutUsersNestedInput
     faculty?: facultyUpdateOneWithoutUsersNestedInput
@@ -22984,6 +23110,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: NullableEnumuser_roleFieldUpdateOperationsInput | $Enums.user_role | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
+    login_attempts?: IntFieldUpdateOperationsInput | number
+    locked_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_activity_logs?: user_activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     activity_logs?: activity_logsUncheckedUpdateManyWithoutUsersNestedInput
     faculty?: facultyUncheckedUpdateOneWithoutUsersNestedInput

@@ -25,6 +25,8 @@ model users {
   activity_logs          activity_logs[]
   faculty                faculty?
   librarian              librarian?
+  login_attempts         Int                      @default(0) 
+  locked_until           DateTime?
   students               students?
   user_bookmarks         user_bookmarks[]
   backup_jobs            backup_jobs[]

@@ -131,7 +131,9 @@ exports.Prisma.UsersScalarFieldEnum = {
   password: 'password',
   created_at: 'created_at',
   role: 'role',
-  status: 'status'
+  status: 'status',
+  login_attempts: 'login_attempts',
+  locked_until: 'locked_until'
 };
 
 exports.Prisma.FacultyScalarFieldEnum = {
