@@ -9,13 +9,13 @@ interface User {
   middleName: string;
   lastName: string;
   extension: string;
-  employeeID: string; // Changed from employeeId
+  employeeID: string;
   email: string;
   role: string;
   status: string;
   userAccess: string;
-  contactNum: string; // Added
-  position: string; // Added
+  contactNum: string;
+  position: string;
   name: string;
 }
 
@@ -29,8 +29,7 @@ interface EditUserModalProps {
   onPasswordChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onCancel: () => void;
   onSave: () => void;
-  isEditingSelf: boolean; // <-- add this line
-
+  isEditingSelf: boolean;
 }
 
 export default function EditUserModal({
@@ -43,7 +42,7 @@ export default function EditUserModal({
   onPasswordChange,
   onCancel,
   onSave,
-  isEditingSelf, // <-- add this line
+  isEditingSelf,
 }: EditUserModalProps) {
   if (!show || !user) return null;
 
@@ -60,23 +59,33 @@ export default function EditUserModal({
   // Get the automatic position for the current user access
   const automaticPosition = getPositionFromUserAccess(user.userAccess);
 
+  // RBAC pattern - Get current user role from localStorage
+  const currentUserRole =
+    typeof window !== "undefined" ? localStorage.getItem("userType") : null;
+
+  // Check if current user can assign Admin role
+  const canAssignAdminRole = currentUserRole === "ADMIN";
+
   return (
     <div className="fixed inset-0 flex items-center bg-black/50 backdrop-blur-sm justify-center z-50">
-      <div className={`p-6 rounded-lg bg-accent border-1 ${theme === "light" ? "border-white-50" : "border-white-5"} w-full max-w-md relative z-10 max-h-[90vh] flex flex-col`}>
+      <div
+        className={`p-6 rounded-lg bg-accent border-1 ${
+          theme === "light" ? "border-white-50" : "border-white-5"
+        } w-full max-w-md relative z-10 max-h-[90vh] overflow-y-auto`}
+      >
         {/* Close Button */}
         <button
           onClick={onCancel}
-          className="absolute top-5 right-11 p-1 rounded-full hover:bg-tertiary cursor-pointer transition-colors z-20"
+          className="absolute top-4 right-4 p-1 rounded-full hover:bg-tertiary cursor-pointer transition-colors z-20"
           title="Close"
         >
-          <X className="w-5 h-5 " />
+          <X className="w-5 h-5" />
         </button>
 
-        {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto pr-2 -mr-2">
           <div className="space-y-6">
+            {/* Personal Information Section */}
             <div>
-              <h1 className="text-3xl font-bold mb-4 text-gold">Update User</h1>
               <h3 className="text-lg font-bold mb-4 text-gold">
                 Personal Information
               </h3>
@@ -136,6 +145,12 @@ export default function EditUserModal({
               </div>
             </div>
 
+            <div
+              className={`h-0.5 w-auto my-4 ${
+                theme === "light" ? "bg-white-50" : "bg-white-5"
+              }`}
+            ></div>
+
             {/* Employee Information Section */}
             <div>
               <h3 className="text-lg font-bold mb-4 text-gold">
@@ -148,7 +163,7 @@ export default function EditUserModal({
                   </label>
                   <input
                     type="text"
-                    name="employeeID" // Changed from employeeId
+                    name="employeeID"
                     value={user.employeeID}
                     onChange={onInputChange}
                     placeholder="e.g. 1234567890"
@@ -178,7 +193,10 @@ export default function EditUserModal({
                         Librarian-in-Charge
                       </option>
                       <option value="Admin Assistant">Admin Assistant</option>
-                      <option value="Admin">Admin</option>
+                      {/* Only show Admin option if current user is ADMIN */}
+                      {canAssignAdminRole && (
+                        <option value="Admin">Admin</option>
+                      )}
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
                       <svg
@@ -190,6 +208,18 @@ export default function EditUserModal({
                       </svg>
                     </div>
                   </div>
+                  {/* Show information about restricted options for ASSISTANT users */}
+                  {!canAssignAdminRole && (
+                    <p className="text-xs text-yellow-500 mt-1">
+                      💡 Admin role assignment requires ADMIN permissions
+                    </p>
+                  )}
+                  {/* Special handling for existing Admin users being edited by Assistant */}
+                  {!canAssignAdminRole && user.userAccess === "Admin" && (
+                    <p className="text-xs text-orange-500 mt-1">
+                      ⚠️ Current user is Admin - role change restricted
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -217,7 +247,7 @@ export default function EditUserModal({
                   name="position"
                   value={automaticPosition}
                   onChange={onInputChange}
-                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] cursor-not-allowed"
+                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] cursor-not-allowed opacity-70"
                   disabled
                   readOnly
                 />
@@ -236,7 +266,7 @@ export default function EditUserModal({
                   name="contactNum"
                   value={user.contactNum}
                   onChange={onInputChange}
-                  placeholder="e.g. 09171234567"
+                  placeholder="e.g. +639123456789"
                   className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                 />
                 <p className="text-xs text-gray-400 mt-1">
@@ -251,7 +281,11 @@ export default function EditUserModal({
                     name="status"
                     value={user.status}
                     onChange={onInputChange}
-                    className={`w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] ${isEditingSelf ? "cursor-not-allowed" : ""} pr-8 appearance-none`}
+                    className={`w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] pr-8 appearance-none ${
+                      isEditingSelf
+                        ? "cursor-not-allowed opacity-60"
+                        : "cursor-pointer"
+                    }`}
                     disabled={isEditingSelf}
                   >
                     <option value="ACTIVE">ACTIVE</option>
@@ -267,8 +301,19 @@ export default function EditUserModal({
                     </svg>
                   </div>
                 </div>
+                {isEditingSelf && (
+                  <p className="text-xs text-yellow-500 mt-1">
+                    💡 Cannot change your own account status
+                  </p>
+                )}
               </div>
             </div>
+
+            <div
+              className={`h-0.5 w-auto my-4 ${
+                theme === "light" ? "bg-white-50" : "bg-white-5"
+              }`}
+            ></div>
 
             {/* Password Section */}
             <div>
@@ -300,30 +345,36 @@ export default function EditUserModal({
                   value={passwords.confirmPassword}
                   onChange={onPasswordChange}
                   className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
+                  minLength={6}
                 />
               </div>
+
               {passwordError && (
                 <p className="text-red-500 text-sm mt-2">{passwordError}</p>
               )}
             </div>
-          </div>
-        </div>
 
-        {/* Sticky button section */}
-        <div className="sticky bottom-0 bg-inherit pt-4 mt-4 border-t border-gray-600">
-          <div className="flex justify-end gap-4">
-            <button
-              onClick={onCancel}
-              className="px-4 py-2 rounded-[12px] bg-transparent border border-gray-600 hover:bg-opacity-10 hover:bg-gray-600 transition-colors cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={onSave}
-              className="px-4 py-2 rounded-[12px] transition-colors bg-gold hover:opacity-90 cursor-pointer"
-            >
-              Save Changes
-            </button>
+            <div
+              className={`h-0.5 w-auto my-4 ${
+                theme === "light" ? "bg-white-50" : "bg-white-5"
+              }`}
+            ></div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={onCancel}
+                className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={onSave}
+                className="px-4 py-2 bg-gold text-white rounded-md hover:bg-gold/80 transition-colors cursor-pointer"
+              >
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
       </div>

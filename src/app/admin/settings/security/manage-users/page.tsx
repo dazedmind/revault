@@ -85,7 +85,7 @@ function ManageUserContent() {
     employeeID: "",
     email: "",
     role: "LIBRARIAN",
-    status: "ACTIVE",
+    status: "ACTIVE", // ✅ FIXED: Set to "ACTIVE" instead of empty string
     userAccess: "Librarian-in-Charge",
     contactNum: "",
     position: "Librarian-in-Charge",
@@ -105,6 +105,53 @@ function ManageUserContent() {
       "Librarian-in-Charge": "Librarian-in-Charge",
     };
     return positionMapping[userAccess] || "";
+  };
+
+  const getCurrentUserId = (): number | null => {
+    if (typeof window === "undefined") return null;
+
+    try {
+      const token = localStorage.getItem("authToken");
+      if (!token) return null;
+
+      // Decode the JWT token to get user ID
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.user_id || null;
+    } catch (error) {
+      console.error("Error getting current user ID:", error);
+      return null;
+    }
+  };
+
+  const getCurrentUserEmail = (): string | null => {
+    if (typeof window === "undefined") return null;
+
+    try {
+      const token = localStorage.getItem("authToken");
+      if (!token) return null;
+
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.email || null;
+    } catch (error) {
+      console.error("Error getting current user email:", error);
+      return null;
+    }
+  };
+
+  // Helper function to check if editing self
+  const isEditingSelf = (user: FrontendUser): boolean => {
+    const currentUserId = getCurrentUserId();
+    const currentUserEmail = getCurrentUserEmail();
+
+    // Try matching by user ID first (most reliable)
+    if (currentUserId && user.id === currentUserId) {
+      return true;
+    }
+    // Fallback to email matching
+    if (currentUserEmail && user.email === currentUserEmail) {
+      return true;
+    }
+    return false;
   };
 
   const getRoleFromUserAccess = (userAccess: string): string => {
@@ -268,6 +315,9 @@ function ManageUserContent() {
     if (!currentEditUser) return;
     setShowEditModal(false);
 
+    // Check if editing self
+    const editingSelfUser = isEditingSelf(currentEditUser);
+
     // Validate passwords if provided
     if (passwords.newPassword || passwords.confirmPassword) {
       if (passwords.newPassword !== passwords.confirmPassword) {
@@ -286,6 +336,16 @@ function ManageUserContent() {
         updateData.password = passwords.newPassword;
       }
 
+      // If editing self, prevent certain changes
+      if (editingSelfUser) {
+        // Get original user data to prevent unauthorized self-changes
+        const originalUser = users.find((u) => u.id === currentEditUser.id);
+        if (originalUser) {
+          // Preserve original status (can't change own status)
+          updateData.status = originalUser.status;
+        }
+      }
+
       const res = await fetch(`/admin/api/update-user/${currentEditUser.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -298,15 +358,22 @@ function ManageUserContent() {
 
       // Find original user for change message
       const originalUser = users.find((u) => u.id === currentEditUser.id);
-      const changeMessage = originalUser
-        ? generateChangeMessage(originalUser, currentEditUser)
-        : `User updated successfully`;
+      let changeMessage = `User updated successfully`;
+
+      if (editingSelfUser) {
+        changeMessage = "Your profile has been updated successfully";
+      } else if (originalUser) {
+        changeMessage = generateChangeMessage(originalUser, currentEditUser);
+      }
 
       // Show success toast
-      toast.success("User Updated Successfully", {
-        description: changeMessage,
-        duration: 4000,
-      });
+      toast.success(
+        editingSelfUser ? "Profile Updated" : "User Updated Successfully",
+        {
+          description: changeMessage,
+          duration: 4000,
+        },
+      );
 
       // Update local state
       setUsers((prev) =>
@@ -327,10 +394,13 @@ function ManageUserContent() {
       const errorMessage =
         err instanceof Error ? err.message : "Please try again.";
 
-      toast.error("Failed to Update User", {
-        description: errorMessage,
-        duration: 4000,
-      });
+      toast.error(
+        editingSelfUser ? "Failed to Update Profile" : "Failed to Update User",
+        {
+          description: errorMessage,
+          duration: 4000,
+        },
+      );
     }
   };
 
@@ -343,7 +413,7 @@ function ManageUserContent() {
     setPasswordError("");
   };
 
-  // ─── Add user handlers ───
+  // ─── Add user handlers ─── (FIXED)
   const handleAddClick = () => {
     // Reset form and show modal
     setNewUser({
@@ -354,7 +424,7 @@ function ManageUserContent() {
       employeeID: "",
       email: "",
       role: "LIBRARIAN",
-      status: "",
+      status: "ACTIVE", // ✅ FIXED: Set to "ACTIVE" instead of empty string
       userAccess: "Librarian-in-Charge",
       contactNum: "",
       position: "Librarian-in-Charge",
@@ -388,6 +458,7 @@ function ManageUserContent() {
     setNewUserPasswords((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Also fix the reset after successful user creation (FIXED)
   const handleAddUser = async () => {
     setShowAddModal(false);
 
@@ -441,8 +512,19 @@ function ManageUserContent() {
         duration: 4000,
       });
 
-      // Update local state
-      setUsers((prev) => [...prev, result.user]);
+      // ✅ IMPORTANT: Refresh the users list instead of manual state update
+      // This ensures we get the complete user object from the server
+      const refreshRes = await fetch("/admin/api/users", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (refreshRes.ok) {
+        const refreshData = await refreshRes.json();
+        if (refreshData.success && Array.isArray(refreshData.users)) {
+          setUsers(refreshData.users);
+        }
+      }
 
       // Close modal and reset form
       setNewUser({
@@ -453,7 +535,7 @@ function ManageUserContent() {
         employeeID: "",
         email: "",
         role: "LIBRARIAN",
-        status: "",
+        status: "ACTIVE", // ✅ FIXED: Set to "ACTIVE" instead of empty string
         userAccess: "Librarian-in-Charge",
         contactNum: "",
         position: "Librarian-in-Charge",
@@ -516,7 +598,7 @@ function ManageUserContent() {
         onPasswordChange={handleEditPasswordChange}
         onCancel={handleCancelEdit}
         onSave={handleSaveEdit}
-        isEditingSelf={editingUserId === currentEditUser?.id}
+        isEditingSelf={currentEditUser ? isEditingSelf(currentEditUser) : false} // ✅ FIXED: Proper self-editing detection
       />
 
       {/* ─── Add User Modal ─── */}
@@ -539,7 +621,8 @@ function ManageUserContent() {
         <span className="flex items-center gap-2">
           <button
             onClick={handleRefresh}
-            className=" p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200">
+            className=" p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200"
+          >
             <RefreshCcw className="w-4 h-4" />
           </button>
           <button
@@ -550,16 +633,7 @@ function ManageUserContent() {
             <Plus className="w-4 h-4 md:hidden" />
           </button>
         </span>
- 
       </div>
-
-      {/* <div className="flex justify-end w-auto">
-        <button
-         onClick={handleRefresh}
-         className=" p-2 px-4 font-sans flex items-center gap-2 rounded-lg cursor-pointer hover:brightness-110 transition-all duration-200">
-          <RefreshCcw className="w-4 h-4" />
-        </button>
-      </div> */}
 
       <div
         className={`h-0.5 w-auto my-4 ${
@@ -569,10 +643,8 @@ function ManageUserContent() {
 
       {/* ─── Admin/Staff Section ─── */}
       <div className="mb-8">
-
-
-        {/* ─── Instruction Text ─── */}
-        <div className="mb-4">
+        {/* Enhanced instruction text */}
+        <div className="mb-4 space-y-2">
           <p className="text-sm text-gray-600 dark:text-gray-400 italic">
             💡 Click on any user to select them and update their information.
           </p>

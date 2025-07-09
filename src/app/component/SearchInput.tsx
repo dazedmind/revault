@@ -13,6 +13,19 @@ import {
 } from "lucide-react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+// Debounce utility function
+function debounce(func: Function, wait: number) {
+  let timeout: NodeJS.Timeout;
+  return function executedFunction(...args: any[]) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
 const SearchInput = ({ placeholder = "Search papers..." }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -36,7 +49,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
 
   // Debounced search function
   const debouncedSearch = useCallback(
-    debounce(async (searchQuery) => {
+    debounce(async (searchQuery: string) => {
       if (!searchQuery.trim() || searchQuery.length < 2) {
         setResults([]);
         setLoading(false);
@@ -47,7 +60,8 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
       try {
         const params = new URLSearchParams({
           q: searchQuery,
-          limit: "6", // Limit results for dropdown
+          limit: "100", // 🔧 FIX: Get same amount as PapersArea
+          sortBy: "relevance", // 🔧 FIX: Ensure relevance sorting
         });
 
         console.log("🔍 Searching for:", searchQuery);
@@ -61,7 +75,12 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
         console.log("📥 Search response:", data);
 
         if (data.success) {
-          setResults(data.results || []);
+          // 🔧 FIX: Filter and slice to get top 6 relevant results
+          const relevantResults = (data.results || [])
+            .filter((paper) => paper.relevanceScore >= 1.0) // Same filter as PapersArea
+            .slice(0, 6); // Take only top 6 for dropdown
+
+          setResults(relevantResults);
         } else {
           console.error("Search failed:", data.error);
           setResults([]);
@@ -87,7 +106,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
   );
 
   // Handle input change
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
     setSelectedIndex(-1);
@@ -104,7 +123,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
   };
 
   // Handle clicking on a search result
-  const handleResultClick = (paper) => {
+  const handleResultClick = (paper: any) => {
     if (paper.isError) return; // Don't navigate for error results
 
     setIsOpen(false);
@@ -168,7 +187,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
   };
 
   // Handle keyboard navigation
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!isOpen) {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -237,7 +256,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (isMobileSearchOpen) return; // Don't close on mobile overlay
 
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -250,21 +269,22 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMobileSearchOpen]);
 
-  // Prevent body scroll when mobile search is open - FIXED
+  // Prevent body scroll when mobile search is open
   useEffect(() => {
     if (isMobileSearchOpen) {
       // Store original body styles
       const originalStyle = window.getComputedStyle(document.body);
       const originalOverflow = originalStyle.overflow;
       const originalPaddingRight = originalStyle.paddingRight;
-      
+
       // Calculate scrollbar width to prevent layout shift
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+
       // Apply styles to prevent body scroll
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = `${scrollbarWidth}px`;
-      
+
       return () => {
         // Restore original styles
         document.body.style.overflow = originalOverflow;
@@ -273,8 +293,13 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
     }
   }, [isMobileSearchOpen]);
 
-  // Highlight matching text
-  const highlightText = (text, query) => {
+  // Utility function to escape special regex characters
+  const escapeRegExp = (string: string) => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  };
+
+  // Highlight matching text - using original styling
+  const highlightText = (text: string, query: string) => {
     if (!text || !query) return text;
 
     const queryTerms = query.toLowerCase().split(/\s+/);
@@ -282,7 +307,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
 
     queryTerms.forEach((term) => {
       if (term.length > 1) {
-        const regex = new RegExp(`(${term})`, "gi");
+        const regex = new RegExp(`(${escapeRegExp(term)})`, "gi");
         highlightedText = highlightedText.replace(
           regex,
           '<strong class="text-yale-blue">$1</strong>',
@@ -291,6 +316,27 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
     });
 
     return highlightedText;
+  };
+
+  // Function to get the display text for abstract - USE BACKEND HIGHLIGHTS IF AVAILABLE
+  const getAbstractDisplay = (paper: any, query: string) => {
+    // CRITICAL: Use the backend's intelligent highlight if available
+    if (paper.highlights && paper.highlights.abstract) {
+      console.log(
+        "🎯 Using backend intelligent snippet:",
+        paper.highlights.abstract,
+      );
+      return highlightText(paper.highlights.abstract, query);
+    }
+
+    // Fallback to original abstract if no highlights
+    if (paper.abstract) {
+      console.log("⚠️ Using fallback abstract (first 150 chars)");
+      const fallbackText = paper.abstract.substring(0, 150) + "...";
+      return highlightText(fallbackText, query);
+    }
+
+    return "No abstract available";
   };
 
   return (
@@ -374,7 +420,9 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                             <h4
                               className="font-medium text-sm line-clamp-2"
                               dangerouslySetInnerHTML={{
-                                __html: highlightText(paper.title, query),
+                                __html: paper.highlights?.title
+                                  ? highlightText(paper.highlights.title, query)
+                                  : highlightText(paper.title, query),
                               }}
                             />
 
@@ -403,30 +451,14 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                               )}
                             </div>
 
-                            {paper.highlights?.abstract && (
-                              <p
-                                className="text-xs text-white-5 mt-1 line-clamp-2"
-                                dangerouslySetInnerHTML={{
-                                  __html: highlightText(
-                                    paper.highlights.abstract.substring(
-                                      0,
-                                      100,
-                                    ) + "...",
-                                    query,
-                                  ),
-                                }}
-                              />
-                            )}
+                            {/* CRITICAL: Use the intelligent abstract display */}
+                            <p
+                              className="text-xs text-white-5 mt-1 line-clamp-2"
+                              dangerouslySetInnerHTML={{
+                                __html: getAbstractDisplay(paper, query),
+                              }}
+                            />
                           </div>
-
-                          {paper.relevanceScore > 0 && (
-                            <div className="text-xs text-green-500 font-medium">
-                              {Math.min(paper.relevanceScore * 10, 100).toFixed(
-                                0,
-                              )}
-                              %
-                            </div>
-                          )}
                         </div>
                       </div>
                     ))}
@@ -474,7 +506,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
         <Search className="w-5 h-5 text-gray-400 dark:text-gray-500" />
       </button>
 
-      {/* Mobile Search Overlay - FIXED LAYOUT */}
+      {/* Mobile Search Overlay */}
       {isMobileSearchOpen && (
         <div className="md:hidden fixed inset-0 z-50 bg-primary font-[Inter] flex flex-col">
           {/* Mobile Search Header - Fixed */}
@@ -545,7 +577,9 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                           <h4
                             className="font-medium text-base line-clamp-3 mb-2"
                             dangerouslySetInnerHTML={{
-                              __html: highlightText(paper.title, query),
+                              __html: paper.highlights?.title
+                                ? highlightText(paper.highlights.title, query)
+                                : highlightText(paper.title, query),
                             }}
                           />
 
@@ -574,28 +608,14 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                             )}
                           </div>
 
-                          {paper.highlights?.abstract && (
-                            <p
-                              className="text-sm text-white-5 line-clamp-3"
-                              dangerouslySetInnerHTML={{
-                                __html: highlightText(
-                                  paper.highlights.abstract.substring(0, 150) +
-                                    "...",
-                                  query,
-                                ),
-                              }}
-                            />
-                          )}
+                          {/* CRITICAL: Use the intelligent abstract display for mobile too */}
+                          <p
+                            className="text-sm text-white-5 line-clamp-3"
+                            dangerouslySetInnerHTML={{
+                              __html: getAbstractDisplay(paper, query),
+                            }}
+                          />
                         </div>
-
-                        {paper.relevanceScore > 0 && (
-                          <div className="text-sm text-green-500 font-medium">
-                            {Math.min(paper.relevanceScore * 10, 100).toFixed(
-                              0,
-                            )}
-                            %
-                          </div>
-                        )}
                       </div>
                     </div>
                   ))}
@@ -644,18 +664,5 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
     </>
   );
 };
-
-// Debounce utility function
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
 
 export default SearchInput;

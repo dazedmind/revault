@@ -8,11 +8,11 @@ interface NewUser {
   middleName: string;
   lastName: string;
   extension: string;
-  employeeID: string; // Changed from employeeId
+  employeeID: string;
   email: string;
   userAccess: string;
-  contactNum: string; // Added for librarian
-  position: string; // Added optional position field
+  contactNum: string;
+  position: string;
   status: string;
 }
 
@@ -54,21 +54,30 @@ export default function AddUserModal({
   // Get the automatic position for the current user access
   const automaticPosition = getPositionFromUserAccess(newUser.userAccess);
 
+  // RBAC pattern - Get current user role from localStorage
+  const currentUserRole =
+    typeof window !== "undefined" ? localStorage.getItem("userType") : null;
+
   return (
     <div className="fixed inset-0 flex items-center bg-black/50 backdrop-blur-sm justify-center z-50">
-      <div className={`p-6 rounded-lg bg-accent border-1 ${theme === "light" ? "border-white-50" : "border-white-5"} w-full max-w-md relative z-10 max-h-[90vh] overflow-y-auto`}>
+      <div
+        className={`p-6 rounded-lg bg-accent border-1 ${
+          theme === "light" ? "border-white-50" : "border-white-5"
+        } w-full max-w-md relative z-10 max-h-[90vh] overflow-y-auto`}
+      >
         {/* Close Button */}
         <button
           onClick={onCancel}
           className="absolute top-4 right-4 p-1 rounded-full hover:bg-tertiary cursor-pointer transition-colors z-20"
           title="Close"
         >
-          <X className="w-5 h-5 " />
+          <X className="w-5 h-5" />
         </button>
 
         <div className="flex-1 overflow-y-auto pr-2 -mr-2">
-            <div className="space-y-6">
-              <div>
+          <div className="space-y-6">
+            {/* Personal Information Section */}
+            <div>
               <h3 className="text-lg font-bold mb-4 text-gold">
                 Personal Information
               </h3>
@@ -82,7 +91,7 @@ export default function AddUserModal({
                     name="fullName"
                     value={newUser.fullName}
                     onChange={onInputChange}
-                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md  text-sm h-[45px]"
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                     required
                   />
                 </div>
@@ -127,172 +136,199 @@ export default function AddUserModal({
                 </div>
               </div>
             </div>
-          </div>
 
-          <div
-            className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}
-          ></div>
+            <div
+              className={`h-0.5 w-auto my-4 ${
+                theme === "light" ? "bg-white-50" : "bg-white-5"
+              }`}
+            ></div>
 
-          {/* Employee Information Section */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-gold">
-              Employee Information
-            </h3>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div>
+            {/* Employee Information Section */}
+            <div>
+              <h3 className="text-lg font-bold mb-4 text-gold">
+                Employee Information
+              </h3>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Employee ID *
+                  </label>
+                  <input
+                    type="text"
+                    name="employeeID"
+                    value={newUser.employeeID}
+                    onChange={onInputChange}
+                    placeholder="e.g. 1234567890"
+                    maxLength={10}
+                    pattern="[0-9]{10}"
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
+                    required
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Must be exactly 10 digits starting with 1
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    User Access *
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="userAccess"
+                      value={newUser.userAccess}
+                      onChange={onInputChange}
+                      className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] pr-8 appearance-none"
+                      required
+                    >
+                      <option value="">Select Role</option>
+                      <option value="Librarian-in-Charge">
+                        Librarian-in-Charge
+                      </option>
+                      <option value="Admin Assistant">Admin Assistant</option>
+                      {/* Only show Admin option if current user is ADMIN */}
+                      {currentUserRole === "ADMIN" && (
+                        <option value="Admin">Admin</option>
+                      )}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                      <svg
+                        className="fill-current h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                      </svg>
+                    </div>
+                  </div>
+                  {/* Show information about restricted options for ASSISTANT users */}
+                  {currentUserRole === "ASSISTANT" && (
+                    <p className="text-xs text-yellow-500 mt-1">
+                      💡 Admin role creation requires ADMIN permissions
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  Employee ID *
+                  Email Address *
                 </label>
                 <input
-                  type="text"
-                  name="employeeID" // Changed from employeeId
-                  value={newUser.employeeID}
+                  type="email"
+                  name="email"
+                  value={newUser.email}
                   onChange={onInputChange}
                   className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
                   required
                 />
               </div>
-              <div>
+
+              {/* Position field - automatically set based on user access and disabled */}
+              <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
-                  User Access *
+                  Position *
                 </label>
-                <div className="relative">
-                  <select
-                    name="userAccess"
-                    value={newUser.userAccess}
-                    onChange={onInputChange}
-                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] pr-8 appearance-none"
-                    required
-                  >
-                    <option value="">Select Role</option>
-                    <option value="Librarian-in-Charge">
-                      Librarian-in-Charge
-                    </option>
-                    <option value="Admin Assistant">Admin Assistant</option>
-                    <option value="Admin">Admin</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                    <svg
-                      className="fill-current h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                    </svg>
-                  </div>
-                </div>
+                <input
+                  type="text"
+                  name="position"
+                  value={automaticPosition}
+                  onChange={onInputChange}
+                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] cursor-not-allowed opacity-70"
+                  disabled
+                  readOnly
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Position is automatically assigned based on User Access role
+                </p>
+              </div>
+
+              {/* Contact Number - Now optional for all roles */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Contact Number (Optional)
+                </label>
+                <input
+                  type="tel"
+                  name="contactNum"
+                  value={newUser.contactNum}
+                  onChange={onInputChange}
+                  placeholder="e.g. +639123456789"
+                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Optional contact information
+                </p>
               </div>
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Email Address *
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={newUser.email}
-                onChange={onInputChange}
-                className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
-                required
-              />
-            </div>
+            <div
+              className={`h-0.5 w-auto my-4 ${
+                theme === "light" ? "bg-white-50" : "bg-white-5"
+              }`}
+            ></div>
 
-            {/* Position field - automatically set based on user access and disabled */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Position *
-              </label>
-              <input
-                type="text"
-                name="position"
-                value={automaticPosition}
-                onChange={onInputChange}
-                className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px] cursor-not-allowed"
-                disabled
-                readOnly
-              />
-              <p className="text-xs text-gray-400 mt-1">
-                Position is automatically assigned based on User Access role
-              </p>
-            </div>
-
-            {/* Contact Number - Now optional for all roles */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Contact Number (Optional)
-              </label>
-              <input
-                type="tel"
-                name="contactNum"
-                value={newUser.contactNum}
-                onChange={onInputChange}
-                placeholder="e.g. 09171234567"
-                className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
-              />
-              <p className="text-xs text-gray-400 mt-1">
-                Optional contact information
-              </p>
-            </div>
-          </div>
-
-          <div
-            className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-white-5"}`}
-          ></div>
-          {/* Account Section */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-gold">
-              Account Information
-            </h3>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Password * (Minimum 6 characters)
-              </label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Enter Password (Minimum 6 characters)"
-                value={newUserPasswords.password}
-                onChange={onPasswordChange}
-                className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
-                required
-                minLength={6}
-              />
-            </div>
+            {/* Security Section */}
             <div>
-              <label className="block text-sm font-medium mb-4">
-                Confirm Password *
-              </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Enter Password Again"
-                value={newUserPasswords.confirmPassword}
-                onChange={onPasswordChange}
-                className="w-full p-2 pl-3 border border-[#444] rounded-md text-sm h-[45px]"
-                required
-              />
-            </div>
-            {newUserPasswordError && (
-              <p className="text-red-500 text-sm mt-2">
-                {newUserPasswordError}
-              </p>
-            )}
-          </div>
+              <h3 className="text-lg font-bold mb-4 text-gold">
+                Security Information
+              </h3>
+              <div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">
+                    Password *
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={newUserPasswords.password}
+                    onChange={onPasswordChange}
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">
+                    Confirm Password *
+                  </label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={newUserPasswords.confirmPassword}
+                    onChange={onPasswordChange}
+                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
+                    required
+                  />
+                </div>
+              </div>
 
-          <div className="flex justify-end gap-4 pt-4">
-            <button
-              onClick={onCancel}
-              className="px-4 py-2 rounded-[12px] bg-transparent border border-gray-600 hover:bg-opacity-10 hover:bg-gray-600 transition-colors cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={onAddUser}
-              className="px-4 py-2 rounded-[12px] transition-colors bg-gold hover:opacity-90 cursor-pointer"
-            >
-              Add User
-            </button>
+              {newUserPasswordError && (
+                <p className="text-red-500 text-sm mt-2">
+                  {newUserPasswordError}
+                </p>
+              )}
+            </div>
+
+            <div
+              className={`h-0.5 w-auto my-4 ${
+                theme === "light" ? "bg-white-50" : "bg-white-5"
+              }`}
+            ></div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={onCancel}
+                className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={onAddUser}
+                className="px-4 py-2 bg-gold text-white rounded-md hover:bg-gold/80 transition-colors cursor-pointer"
+              >
+                Add User
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -1,57 +1,103 @@
-// Papers Search API - Focused Implementation
-// File: src/app/api/papers/search/route.ts
+// Fixed search API route with proper TypeScript types
+// File: src/app/api/search/route.ts
 
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+// Type definitions
+interface Paper {
+  paper_id: number;
+  title: string | null;
+  author: string | null;
+  abstract: string | null;
+  keywords: string[] | null;
+  department: string | null;
+  course: string | null;
+  year: number | null;
+  created_at: Date;
+  paper_url: string | null;
+  is_deleted: boolean;
+}
+
+interface EnhancedPaper extends Paper {
+  relevanceScore: number;
+  highlights: {
+    title?: string;
+    abstract?: string;
+    author?: string;
+  };
+  matchedFields: string[];
+}
+
+interface SearchFilters {
+  department?: string | null;
+  year?: number | null;
+  course?: string | null;
+  author?: string | null;
+}
+
+interface Match {
+  start: number;
+  end: number;
+  score: number;
+  type: "phrase" | "term";
+  term?: string;
+}
+
+interface Region {
+  start: number;
+  end: number;
+  matches: Match[];
+  score: number;
+}
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    
-    // Search parameters
-    const query = searchParams.get('q')?.trim();
-    const department = searchParams.get('department');
-    const year = searchParams.get('year');
-    const course = searchParams.get('course');
-    const author = searchParams.get('author');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100); // Max 100
-    const page = Math.max(parseInt(searchParams.get('page') || '1'), 1);
-    const sortBy = searchParams.get('sortBy') || 'relevance'; // relevance, date, title
-    
-    // Validation
+
+    const query = searchParams.get("q")?.trim();
+    const department = searchParams.get("department");
+    const year = searchParams.get("year");
+    const course = searchParams.get("course");
+    const author = searchParams.get("author");
+    const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 100);
+    const page = Math.max(parseInt(searchParams.get("page") || "1"), 1);
+    const sortBy = searchParams.get("sortBy") || "relevance";
+
     if (!query || query.length < 2) {
-      return NextResponse.json({
-        error: 'Search query must be at least 2 characters long',
-        suggestions: ['Try using more specific keywords', 'Check spelling', 'Use different terms']
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: "Search query must be at least 2 characters long",
+          suggestions: [
+            "Try using more specific keywords",
+            "Check spelling",
+            "Use different terms",
+          ],
+        },
+        { status: 400 },
+      );
     }
 
-    const skip = (page - 1) * limit;
-    
-    // Build search conditions
+    // 🔧 FIX: Get ALL matching results first (no pagination at DB level)
     const searchConditions = buildSearchConditions(query, {
       department,
       year: year ? parseInt(year) : null,
       course,
-      author
+      author,
     });
 
-    console.log('🔍 Search query:', query);
-    console.log('📊 Search conditions:', searchConditions);
+    console.log("🔍 Search query:", query);
 
-    // Get total count for pagination
+    // Get total count for pagination info
     const totalCount = await prisma.papers.count({
-      where: searchConditions
+      where: searchConditions,
     });
 
-    // Build orderBy clause
-    const orderBy = buildOrderBy(sortBy);
-
-    // Execute search query
+    // 🔧 FIX: Get ALL results first, then sort and paginate in JavaScript
     const papers = await prisma.papers.findMany({
       where: {
         ...searchConditions,
-        is_deleted: false // Exclude deleted papers
+        is_deleted: false,
       },
       select: {
         paper_id: true,
@@ -64,159 +110,392 @@ export async function GET(req: NextRequest) {
         year: true,
         created_at: true,
         paper_url: true,
-        is_deleted: true
+        is_deleted: true,
       },
-      orderBy: orderBy as any,
-      skip,
-      take: limit
+      // 🔧 FIX: Don't limit at DB level - get all results
+      orderBy: [{ created_at: "desc" }], // Simple ordering for DB
     });
 
-    // Calculate relevance scores and highlight matches
-    const enhancedResults = papers.map(paper => {
+    // 🔧 FIX: Calculate relevance scores for ALL results
+    const enhancedResults = papers.map((paper) => {
       const relevanceScore = calculateRelevanceScore(paper, query);
-      const highlights = generateHighlights(paper, query);
-      
+      const highlights = generateEnhancedHighlights(paper, query);
+
       return {
         ...paper,
         relevanceScore,
         highlights,
-        matchedFields: getMatchedFields(paper, query)
+        matchedFields: getMatchedFields(paper, query),
       };
     });
 
-    // Sort by relevance if requested
-    if (sortBy === 'relevance') {
-      enhancedResults.sort((a, b) => b.relevanceScore - a.relevanceScore);
-    }
+    // 🔧 FIX: Filter and sort ALL results consistently
+    const relevantResults = enhancedResults
+      .filter((paper) => paper.relevanceScore >= 1.0) // Filter low relevance
+      .sort((a, b) => {
+        // Consistent sorting logic
+        if (sortBy === "relevance") {
+          // Primary: relevance score (descending)
+          if (b.relevanceScore !== a.relevanceScore) {
+            return b.relevanceScore - a.relevanceScore;
+          }
+          // Secondary: creation date (most recent first)
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
+        }
 
-    // Calculate pagination info
-    const totalPages = Math.ceil(totalCount / limit);
+        // Other sorting options
+        switch (sortBy) {
+          case "date":
+            return (
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
+            );
+          case "title":
+            return (a.title || "").localeCompare(b.title || "");
+          case "year":
+            return (b.year || 0) - (a.year || 0);
+          case "author":
+            return (a.author || "").localeCompare(b.author || "");
+          default:
+            return (
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
+            );
+        }
+      });
+
+    // 🔧 FIX: Now paginate the sorted results
+    const skip = (page - 1) * limit;
+    const paginatedResults = relevantResults.slice(skip, skip + limit);
+
+    // Calculate pagination info based on filtered results
+    const totalRelevant = relevantResults.length;
+    const totalPages = Math.ceil(totalRelevant / limit);
     const hasNext = page < totalPages;
     const hasPrev = page > 1;
 
-    // Search suggestions for no results
-    const suggestions = totalCount === 0 ? await generateSearchSuggestions(query) : [];
+    const suggestions =
+      totalRelevant === 0 ? await generateSearchSuggestions(query) : [];
 
-    return NextResponse.json({
+    const responseData = {
       success: true,
-      query,
-      results: enhancedResults,
+      results: paginatedResults,
       pagination: {
-        currentPage: page,
-        totalPages,
-        totalResults: totalCount,
-        resultsPerPage: limit,
+        total: totalRelevant,
+        totalOriginal: totalCount,
+        pages: totalPages,
+        current: page,
         hasNext,
         hasPrev,
-        showing: {
-          from: skip + 1,
-          to: Math.min(skip + limit, totalCount),
-          total: totalCount
-        }
+        limit,
       },
-      filters: {
-        department,
-        year,
-        course,
-        author,
-        sortBy
+      query: {
+        search: query,
+        filters: { department, year, course, author },
+        sortBy,
       },
-      searchTime: Date.now() - Date.now(), // Would be calculated properly
-      suggestions: suggestions.length > 0 ? suggestions : undefined
-    });
+      suggestions,
+      performance: {
+        searchTime: Date.now(),
+        resultsFound: paginatedResults.length,
+        totalRelevant: totalRelevant,
+      },
+    };
 
+    console.log(
+      `✅ Search completed: ${paginatedResults.length}/${totalRelevant} relevant results (${totalCount} total)`,
+    );
+    return NextResponse.json(responseData);
   } catch (error) {
-    console.error('❌ Papers search error:', error);
-    return NextResponse.json({
-      error: 'Search failed',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined,
-      query: req.url
-    }, { status: 500 });
+    console.error("❌ Search API error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Internal server error",
+        details:
+          process.env.NODE_ENV === "development"
+            ? (error as Error).message
+            : undefined,
+      },
+      { status: 500 },
+    );
   }
 }
+// Enhanced highlight generation with intelligent snippet extraction
+function generateEnhancedHighlights(
+  paper: Paper,
+  query: string,
+): { title?: string; abstract?: string; author?: string } {
+  const queryTerms = query
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((term) => term.length > 1);
+  const highlights: { title?: string; abstract?: string; author?: string } = {};
 
-// Build search conditions for Prisma query
-function buildSearchConditions(query, filters) {
-  const conditions = [];
-  
-  // Text search across multiple fields
-  const searchTerms = query.toLowerCase().split(/\s+/).filter(term => term.length > 1);
-  
-  if (searchTerms.length > 0) {
-    const textSearchConditions = {
-      OR: [
-        // Title search (highest priority)
-        {
-          title: {
-            contains: query,
-            mode: 'insensitive'
-          }
-        },
-        // Abstract search
-        {
-          abstract: {
-            contains: query,
-            mode: 'insensitive'
-          }
-        },
-        // Author search
-        {
-          author: {
-            contains: query,
-            mode: 'insensitive'
-          }
-        },
-        // Keywords search
-        {
-          keywords: {
-            hasSome: searchTerms
-          }
-        },
-        // Individual terms search
-        ...searchTerms.map(term => ({
-          OR: [
-            { title: { contains: term, mode: 'insensitive' } },
-            { abstract: { contains: term, mode: 'insensitive' } },
-            { author: { contains: term, mode: 'insensitive' } }
-          ]
-        }))
-      ]
-    };
-    
-    conditions.push(textSearchConditions);
+  // Enhanced highlight text function that finds the best matching snippet
+  const highlightText = (
+    text: string | null,
+    maxLength: number = 300,
+  ): string => {
+    if (!text) return "";
+
+    const textLower = text.toLowerCase();
+    const queryLower = query.toLowerCase();
+
+    // Find all positions where query terms appear
+    const matches: Match[] = [];
+
+    // First, check for exact phrase matches
+    if (textLower.includes(queryLower)) {
+      let pos = textLower.indexOf(queryLower);
+      while (pos !== -1) {
+        matches.push({
+          start: pos,
+          end: pos + queryLower.length,
+          score: 10, // High score for exact phrase match
+          type: "phrase",
+        });
+        pos = textLower.indexOf(queryLower, pos + 1);
+      }
+    }
+
+    // Then find individual term matches
+    queryTerms.forEach((term) => {
+      if (term.length < 2) return;
+
+      let pos = textLower.indexOf(term);
+      while (pos !== -1) {
+        // Check if this position is already covered by a phrase match
+        const isOverlapping = matches.some(
+          (match) => pos >= match.start && pos < match.end,
+        );
+
+        if (!isOverlapping) {
+          matches.push({
+            start: pos,
+            end: pos + term.length,
+            score: 3, // Lower score for individual terms
+            type: "term",
+            term: term,
+          });
+        }
+        pos = textLower.indexOf(term, pos + 1);
+      }
+    });
+
+    if (matches.length === 0) {
+      // No matches found, return beginning of text
+      return text.length <= maxLength
+        ? text
+        : text.substring(0, maxLength) + "...";
+    }
+
+    // Find the best snippet that contains the most matches
+    const bestSnippet = findBestSnippet(text, matches, maxLength);
+
+    return bestSnippet;
+  };
+
+  // Generate highlights for different fields
+  if (paper.title) {
+    highlights.title = highlightText(paper.title, 200);
   }
 
-  // Filter conditions
+  if (paper.abstract) {
+    highlights.abstract = highlightText(paper.abstract, 350);
+  }
+
+  if (paper.author) {
+    highlights.author = highlightText(paper.author, 100);
+  }
+
+  return highlights;
+}
+
+// Find the best snippet that contains the most relevant matches
+function findBestSnippet(
+  text: string,
+  matches: Match[],
+  maxLength: number,
+): string {
+  if (matches.length === 0) {
+    return text.length <= maxLength
+      ? text
+      : text.substring(0, maxLength) + "...";
+  }
+
+  // If text is short enough, return the whole text
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  // Group nearby matches to find the best region
+  const regions: Region[] = [];
+  let currentRegion: Region = {
+    start: matches[0].start,
+    end: matches[0].end,
+    matches: [matches[0]],
+    score: matches[0].score,
+  };
+
+  for (let i = 1; i < matches.length; i++) {
+    const match = matches[i];
+    const distance = match.start - currentRegion.end;
+
+    // If matches are close (within 80 characters), group them
+    if (distance <= 80) {
+      currentRegion.end = Math.max(currentRegion.end, match.end);
+      currentRegion.matches.push(match);
+      currentRegion.score += match.score;
+    } else {
+      // Start a new region
+      regions.push(currentRegion);
+      currentRegion = {
+        start: match.start,
+        end: match.end,
+        matches: [match],
+        score: match.score,
+      };
+    }
+  }
+  regions.push(currentRegion);
+
+  // Find the region with the highest score
+  const bestRegion = regions.reduce((best, region) =>
+    region.score > best.score ? region : best,
+  );
+
+  // Calculate snippet boundaries around the best region
+  const regionCenter = (bestRegion.start + bestRegion.end) / 2;
+  const halfLength = Math.floor(maxLength / 2);
+
+  let snippetStart = Math.max(0, regionCenter - halfLength);
+  let snippetEnd = Math.min(text.length, snippetStart + maxLength);
+
+  // Adjust start if we hit the end
+  if (snippetEnd === text.length) {
+    snippetStart = Math.max(0, snippetEnd - maxLength);
+  }
+
+  // Try to break at sentence boundaries for better readability
+  const adjustedBoundaries = adjustToSentenceBoundaries(
+    text,
+    snippetStart,
+    snippetEnd,
+    maxLength,
+  );
+  snippetStart = adjustedBoundaries.start;
+  snippetEnd = adjustedBoundaries.end;
+
+  let snippet = text.substring(snippetStart, snippetEnd);
+
+  // Add ellipsis if needed
+  if (snippetStart > 0) {
+    snippet = "..." + snippet.trim();
+  }
+  if (snippetEnd < text.length) {
+    snippet = snippet.trim() + "...";
+  }
+
+  return snippet;
+}
+
+// Adjust snippet boundaries to sentence boundaries when possible
+function adjustToSentenceBoundaries(
+  text: string,
+  start: number,
+  end: number,
+  maxLength: number,
+): { start: number; end: number } {
+  const sentenceEnders = /[.!?]\s+/g;
+
+  // Find sentence boundaries near the start
+  let adjustedStart = start;
+  if (start > 0) {
+    // Look backwards for the start of a sentence
+    const beforeStart = text.substring(Math.max(0, start - 100), start);
+    const matches = Array.from(beforeStart.matchAll(sentenceEnders));
+    const lastSentenceMatch = matches[matches.length - 1];
+
+    if (lastSentenceMatch && lastSentenceMatch.index !== undefined) {
+      const sentenceStart =
+        start - 100 + lastSentenceMatch.index + lastSentenceMatch[0].length;
+      if (sentenceStart > start - 50) {
+        // Don't go too far back
+        adjustedStart = sentenceStart;
+      }
+    }
+  }
+
+  // Find sentence boundaries near the end
+  let adjustedEnd = end;
+  if (end < text.length) {
+    // Look forward for the end of a sentence
+    const afterEnd = text.substring(end, Math.min(text.length, end + 100));
+    const sentenceEndMatch = afterEnd.match(sentenceEnders);
+    if (sentenceEndMatch && sentenceEndMatch.index !== undefined) {
+      const newEnd = end + sentenceEndMatch.index + sentenceEndMatch[0].length;
+      if (newEnd < end + 50) {
+        // Don't go too far forward
+        adjustedEnd = newEnd;
+      }
+    }
+  }
+
+  // Make sure we don't exceed our maximum length too much
+  if (adjustedEnd - adjustedStart > maxLength + 50) {
+    adjustedEnd = adjustedStart + maxLength;
+  }
+
+  return { start: adjustedStart, end: adjustedEnd };
+}
+
+// Build search conditions
+function buildSearchConditions(query: string, filters: SearchFilters) {
+  const conditions: any[] = [];
+  const queryTerms = query
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((term) => term.length > 1);
+
+  // Text search conditions
+  const textSearchConditions: any[] = [];
+
+  queryTerms.forEach((term) => {
+    textSearchConditions.push(
+      { title: { contains: term, mode: "insensitive" } },
+      { abstract: { contains: term, mode: "insensitive" } },
+      { author: { contains: term, mode: "insensitive" } },
+      { keywords: { has: term } },
+    );
+  });
+
+  if (textSearchConditions.length > 0) {
+    conditions.push({ OR: textSearchConditions });
+  }
+
+  // Additional filters
   if (filters.department) {
     conditions.push({
-      department: {
-        contains: filters.department,
-        mode: 'insensitive'
-      }
+      department: { contains: filters.department, mode: "insensitive" },
     });
   }
 
   if (filters.year) {
-    conditions.push({
-      year: filters.year
-    });
+    conditions.push({ year: filters.year });
   }
 
   if (filters.course) {
     conditions.push({
-      course: {
-        contains: filters.course,
-        mode: 'insensitive'
-      }
+      course: { contains: filters.course, mode: "insensitive" },
     });
   }
 
   if (filters.author) {
     conditions.push({
-      author: {
-        contains: filters.author,
-        mode: 'insensitive'
-      }
+      author: { contains: filters.author, mode: "insensitive" },
     });
   }
 
@@ -224,39 +503,38 @@ function buildSearchConditions(query, filters) {
 }
 
 // Build orderBy clause
-function buildOrderBy(sortBy) {
+function buildOrderBy(sortBy: string) {
   switch (sortBy) {
-    case 'date':
-      return [{ created_at: 'desc' }, { paper_id: 'desc' }];
-    case 'title':
-      return [{ title: 'asc' }];
-    case 'year':
-      return [{ year: 'desc' }, { created_at: 'desc' }];
-    case 'author':
-      return [{ author: 'asc' }];
-    case 'relevance':
+    case "date":
+      return [{ created_at: "desc" }, { paper_id: "desc" }];
+    case "title":
+      return [{ title: "asc" }];
+    case "year":
+      return [{ year: "desc" }, { created_at: "desc" }];
+    case "author":
+      return [{ author: "asc" }];
+    case "relevance":
     default:
-      // Relevance sorting will be done in JavaScript after scoring
-      return [{ created_at: 'desc' }];
+      return [{ created_at: "desc" }];
   }
 }
 
-// Calculate relevance score for a paper
-function calculateRelevanceScore(paper, query) {
+// Calculate relevance score
+function calculateRelevanceScore(paper: Paper, query: string): number {
   const queryLower = query.toLowerCase();
-  const queryTerms = queryLower.split(/\s+/).filter(term => term.length > 1);
-  
+  const queryTerms = queryLower.split(/\s+/).filter((term) => term.length > 1);
+
   let score = 0;
-  
+
   // Title matches (highest weight)
   if (paper.title) {
     const titleLower = paper.title.toLowerCase();
     if (titleLower.includes(queryLower)) {
-      score += 10; // Exact phrase match in title
+      score += 10;
     }
-    queryTerms.forEach(term => {
+    queryTerms.forEach((term) => {
       if (titleLower.includes(term)) {
-        score += 5; // Individual term match in title
+        score += 5;
       }
     });
   }
@@ -265,11 +543,11 @@ function calculateRelevanceScore(paper, query) {
   if (paper.abstract) {
     const abstractLower = paper.abstract.toLowerCase();
     if (abstractLower.includes(queryLower)) {
-      score += 3; // Exact phrase match in abstract
+      score += 3;
     }
-    queryTerms.forEach(term => {
+    queryTerms.forEach((term) => {
       if (abstractLower.includes(term)) {
-        score += 1; // Individual term match in abstract
+        score += 1;
       }
     });
   }
@@ -278,16 +556,16 @@ function calculateRelevanceScore(paper, query) {
   if (paper.author) {
     const authorLower = paper.author.toLowerCase();
     if (authorLower.includes(queryLower)) {
-      score += 4; // Author match
+      score += 4;
     }
   }
 
   // Keywords matches
   if (paper.keywords && Array.isArray(paper.keywords)) {
-    const keywordsLower = paper.keywords.map(k => k.toLowerCase());
-    queryTerms.forEach(term => {
-      if (keywordsLower.some(keyword => keyword.includes(term))) {
-        score += 3; // Keyword match
+    const keywordsLower = paper.keywords.map((k) => k.toLowerCase());
+    queryTerms.forEach((term) => {
+      if (keywordsLower.some((keyword) => keyword.includes(term))) {
+        score += 3;
       }
     });
   }
@@ -300,158 +578,123 @@ function calculateRelevanceScore(paper, query) {
   return parseFloat(score.toFixed(2));
 }
 
-// Generate highlights for search results
-function generateHighlights(paper, query) {
-  const queryTerms = query.toLowerCase().split(/\s+/).filter(term => term.length > 1);
-  const highlights: { [key: string]: string | null } = {};
-
-  // Helper function to highlight text
-  const highlightText = (text, maxLength = 200) => {
-    if (!text) return null;
-    
-    const textLower = text.toLowerCase();
-    let highlightedText = text;
-    
-    // Find the best snippet containing query terms
-    let bestSnippet = text;
-    let snippetStart = 0;
-    
-    // Try to find a snippet containing the most query terms
-    queryTerms.forEach(term => {
-      const index = textLower.indexOf(term);
-      if (index !== -1) {
-        const start = Math.max(0, index - 50);
-        const end = Math.min(text.length, index + maxLength);
-        const snippet = text.substring(start, end);
-        
-        if (snippet.length > bestSnippet.length || 
-            snippet.toLowerCase().split(term).length > bestSnippet.toLowerCase().split(term).length) {
-          bestSnippet = snippet;
-          snippetStart = start;
-        }
-      }
-    });
-
-    // Truncate if needed
-    if (bestSnippet.length > maxLength) {
-      bestSnippet = (snippetStart > 0 ? '...' : '') + 
-                   bestSnippet.substring(0, maxLength) + 
-                   '...';
-    }
-
-    return bestSnippet;
-  };
-
-  // Generate highlights for different fields
-  if (paper.title) {
-    highlights.title = highlightText(paper.title, 100);
-  }
-
-  if (paper.abstract) {
-    highlights.abstract = highlightText(paper.abstract, 300);
-  }
-
-  if (paper.author) {
-    highlights.author = highlightText(paper.author, 100);
-  }
-
-  return highlights;
-}
-
-// Get matched fields for a paper
-function getMatchedFields(paper, query) {
+// Get matched fields
+function getMatchedFields(paper: Paper, query: string): string[] {
   const queryLower = query.toLowerCase();
-  const matchedFields = [];
+  const matchedFields: string[] = [];
 
   if (paper.title?.toLowerCase().includes(queryLower)) {
-    matchedFields.push('title');
+    matchedFields.push("title");
   }
   if (paper.abstract?.toLowerCase().includes(queryLower)) {
-    matchedFields.push('abstract');
+    matchedFields.push("abstract");
   }
   if (paper.author?.toLowerCase().includes(queryLower)) {
-    matchedFields.push('author');
+    matchedFields.push("author");
   }
-  if (paper.keywords?.some(k => k.toLowerCase().includes(queryLower))) {
-    matchedFields.push('keywords');
+  if (paper.keywords?.some((k) => k.toLowerCase().includes(queryLower))) {
+    matchedFields.push("keywords");
   }
 
   return matchedFields;
 }
 
-// Generate search suggestions when no results found
-async function generateSearchSuggestions(query) {
+function sortResultsByRelevance(results) {
+  return results.sort((a, b) => {
+    // Primary sort: relevance score (descending)
+    if (b.relevanceScore !== a.relevanceScore) {
+      return b.relevanceScore - a.relevanceScore;
+    }
+
+    // Secondary sort: creation date (most recent first)
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+}
+
+// Generate search suggestions
+async function generateSearchSuggestions(query: string): Promise<string[]> {
   try {
-    // Get common keywords and terms from database
     const popularKeywords = await prisma.papers.findMany({
       select: { keywords: true },
       take: 100,
-      orderBy: { created_at: 'desc' }
+      orderBy: { created_at: "desc" },
     });
 
     const allKeywords = popularKeywords
-      .flatMap(p => p.keywords || [])
-      .map(k => k.toLowerCase())
-      .filter(k => k.length > 2);
+      .flatMap((p) => p.keywords || [])
+      .map((k) => k.toLowerCase())
+      .filter((k) => k.length > 2);
 
-    const keywordCounts = {};
-    allKeywords.forEach(keyword => {
+    const keywordCounts: { [key: string]: number } = {};
+    allKeywords.forEach((keyword) => {
       keywordCounts[keyword] = (keywordCounts[keyword] || 0) + 1;
     });
 
-    // Find similar keywords using simple string similarity
     const suggestions = Object.keys(keywordCounts)
-      .filter(keyword => {
-        const similarity = calculateStringSimilarity(query.toLowerCase(), keyword);
+      .filter((keyword) => {
+        const similarity = calculateStringSimilarity(
+          query.toLowerCase(),
+          keyword,
+        );
         return similarity > 0.3 && keyword !== query.toLowerCase();
       })
       .sort((a, b) => keywordCounts[b] - keywordCounts[a])
       .slice(0, 5);
 
-    return suggestions.length > 0 ? suggestions : [
-      'Try using more general terms',
-      'Check your spelling',
-      'Use different keywords',
-      'Browse by department or year'
-    ];
-
+    return suggestions.length > 0
+      ? suggestions
+      : [
+          "Try using more general terms",
+          "Check your spelling",
+          "Use different keywords",
+          "Browse by department or year",
+        ];
   } catch (error) {
-    console.error('Failed to generate suggestions:', error);
+    console.error("Failed to generate suggestions:", error);
     return [
-      'Try using more general terms',
-      'Check your spelling',
-      'Use different keywords'
+      "Try using more general terms",
+      "Check your spelling",
+      "Use different keywords",
     ];
   }
 }
 
 // Simple string similarity calculation
-function calculateStringSimilarity(str1, str2) {
+function calculateStringSimilarity(str1: string, str2: string): number {
   const longer = str1.length > str2.length ? str1 : str2;
   const shorter = str1.length > str2.length ? str2 : str1;
-  
+
   if (longer.length === 0) return 1.0;
-  
-  const distance = levenshteinDistance(longer, shorter);
-  return (longer.length - distance) / longer.length;
+
+  const editDistance = levenshteinDistance(longer, shorter);
+  return (longer.length - editDistance) / longer.length;
 }
 
-function levenshteinDistance(str1, str2) {
-  const matrix = Array(str2.length + 1).fill(0).map(() => Array(str1.length + 1).fill(0));
-  
-  for (let i = 0; i <= str1.length; i++) matrix[0][i] = i;
-  for (let j = 0; j <= str2.length; j++) matrix[j][0] = j;
-  
-  for (let j = 1; j <= str2.length; j++) {
-    for (let i = 1; i <= str1.length; i++) {
-      const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
-      matrix[j][i] = Math.min(
-        matrix[j][i - 1] + 1,
-        matrix[j - 1][i] + 1,
-        matrix[j - 1][i - 1] + cost
-      );
+// Levenshtein distance calculation
+function levenshteinDistance(str1: string, str2: string): number {
+  const matrix: number[][] = [];
+
+  for (let i = 0; i <= str2.length; i++) {
+    matrix[i] = [i];
+  }
+
+  for (let j = 0; j <= str1.length; j++) {
+    matrix[0][j] = j;
+  }
+
+  for (let i = 1; i <= str2.length; i++) {
+    for (let j = 1; j <= str1.length; j++) {
+      if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1, // substitution
+          matrix[i][j - 1] + 1, // insertion
+          matrix[i - 1][j] + 1, // deletion
+        );
+      }
     }
   }
-  
+
   return matrix[str2.length][str1.length];
 }
