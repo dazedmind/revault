@@ -343,17 +343,15 @@ const PapersReport: React.FC<Props> = ({ papers, filters }) => {
             <Text style={styles.headerSubtitle}>
               College of Information Systems and Technology Management
             </Text>
-            <Text style={styles.headerDate}>
-              Generated on {new Date().toLocaleDateString()} at{" "}
-              {new Date().toLocaleTimeString()}
-            </Text>
+    
           </View>
 
           {/* Main content container to ensure full page usage */}
           <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
             {/* Report Title */}
             <View>
-              <Text style={styles.reportTitle}>Research Papers Report</Text>
+              <Text style={styles.reportTitle}>Report as of {new Date().toLocaleDateString()} at{" "}
+              {new Date().toLocaleTimeString()}</Text>
             </View>
 
             {/* Filter Information - only on first page */}

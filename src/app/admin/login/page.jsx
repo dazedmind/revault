@@ -12,6 +12,7 @@ import { GoEye } from "react-icons/go";
 
 const AdminLogin = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showAccessDeniedModal, setShowAccessDeniedModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +25,11 @@ const AdminLogin = () => {
   const handleCloseErrorModal = () => {
     setIsLoading(false);
     setShowErrorModal(false);
+  };
+
+  const handleCloseAccessDeniedModal = () => {
+    setIsLoading(false);
+    setShowAccessDeniedModal(false);
   };
 
   // Handle Input Changes
@@ -49,6 +55,14 @@ const AdminLogin = () => {
         password: formData.password, // Correctly using formData.password
       }),
     });
+
+
+    if (response.status === 423) {
+      setErrorMessage("Account is locked. Please try again in 24 hours or contact your administrator.");
+      setShowAccessDeniedModal(true);
+      setIsLoading(false);
+      return;
+    }
 
     // Check if response is OK (status 200-299)
     if (!response.ok) {
@@ -178,6 +192,21 @@ const AdminLogin = () => {
             </button>
           </div>
         </div>
+      )}
+
+  {showAccessDeniedModal && (
+      <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+        <div className="bg-accent border-2 rounded-2xl shadow-lg p-8 max-w-md w-full text-center animate-modal-in">
+          <h2 className="text-2xl font-bold text-gold mb-4">Account Locked</h2>
+          <p className=" mb-6">{errorMessage}</p>
+          <button
+            className="cursor-pointer px-6 py-2 bg-gold hover:brightness-105 text-white rounded-lg font-semibold"
+            onClick={handleCloseAccessDeniedModal}
+          >
+            Okay
+          </button>
+        </div>
+      </div>
       )}
     </div>
   );
