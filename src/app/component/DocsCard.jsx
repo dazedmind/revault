@@ -1,4 +1,4 @@
-// Enhanced DocsCard.jsx with intelligent highlighting
+// Clean DocsCard.jsx without bookmark activity logging
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,7 +25,7 @@ const DocsCard = (props) => {
     searchQuery,
   } = props;
 
-  // Helper function to log document interactions
+  // Helper function to log document interactions (ONLY for read button)
   const logDocumentInteraction = async (activity, activityType) => {
     try {
       console.log("🔍 DocsCard: Attempting to log activity:", {
@@ -53,7 +53,7 @@ const DocsCard = (props) => {
     }
   };
 
-  // Handle read button click with activity logging
+  // Handle read button click with activity logging (KEEP this one)
   const handleReadButtonClick = async (e) => {
     // Log the read button click as VIEW_DOCUMENT
     await logDocumentInteraction(
@@ -62,12 +62,102 @@ const DocsCard = (props) => {
     );
   };
 
-  // ✅ ENHANCED: Intelligent highlighting functions
+  // Check bookmark status
+  const checkBookmarkStatus = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
+    try {
+      const res = await fetch(`/api/bookmark/check/${paper_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setIsBookmarked(data.isBookmarked);
+      }
+    } catch (error) {
+      console.error("Error checking bookmark status:", error);
+    }
+  };
+
+  // ✅ CLEAN: Remove bookmark without activity logging
+  const handleUnbookmark = async (paperId) => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      toast.error("Please log in to manage bookmarks.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/bookmark/${paperId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to remove bookmark");
+
+      toast.success(data.message || "Bookmark removed successfully");
+      setIsBookmarked(false);
+      setBookmarkCount((prev) => Math.max(0, prev - 1));
+
+      // ✅ NO ACTIVITY LOGGING for bookmarks
+    } catch (err) {
+      console.error("Unbookmark error:", err);
+      toast.error(
+        err.message || "An error occurred while removing the bookmark.",
+      );
+    }
+  };
+
+  // ✅ CLEAN: Add bookmark without activity logging
+  const handleBookmark = async (paperId) => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      toast.error("Please log in to bookmark papers.");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/bookmark", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ paperId }), // Using paperId consistently
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to bookmark paper");
+
+      toast.success(data.message || "Paper bookmarked successfully");
+      setIsBookmarked(true);
+      setBookmarkCount((prev) => prev + 1);
+
+      // ✅ NO ACTIVITY LOGGING for bookmarks
+    } catch (err) {
+      console.error("Bookmark error:", err);
+      toast.error(err.message || "An error occurred while bookmarking.");
+    }
+  };
+
+  useEffect(() => {
+    if (paper_id) {
+      checkBookmarkStatus();
+    }
+  }, [paper_id]);
+
+  // Utility functions
   const escapeRegExp = (string) => {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   };
 
-  // Enhanced highlight text function - using original styling
   const highlightText = (text, query) => {
     if (!text || !query) return text;
 
@@ -90,9 +180,7 @@ const DocsCard = (props) => {
     return highlightedText;
   };
 
-  // Function to get intelligent description display - PRIORITIZE BACKEND HIGHLIGHTS
   const getIntelligentDescription = (description, query) => {
-    // If we have backend highlights (intelligent snippets), use them first
     if (props.highlights && props.highlights.abstract) {
       console.log(
         "🎯 DocsCard: Using backend intelligent snippet for description",
@@ -100,18 +188,15 @@ const DocsCard = (props) => {
       return highlightText(props.highlights.abstract, query);
     }
 
-    // Fallback: Try to find the best snippet manually if no backend highlights
     if (description && query) {
       console.log("🔍 DocsCard: Creating intelligent snippet for description");
       const bestSnippet = findBestSnippet(description, query, 200);
       return highlightText(bestSnippet, query);
     }
 
-    // Final fallback: truncate and highlight normally
     return highlightText(truncateText(description), query);
   };
 
-  // Function to find the best snippet containing search terms
   const findBestSnippet = (text, query, maxLength = 200) => {
     if (!text || !query) return text;
 
@@ -121,10 +206,8 @@ const DocsCard = (props) => {
       .split(/\s+/)
       .filter((term) => term.length > 1);
 
-    // Find all match positions
     const matches = [];
 
-    // Check for exact phrase matches first
     if (textLower.includes(queryLower)) {
       let pos = textLower.indexOf(queryLower);
       while (pos !== -1) {
@@ -137,11 +220,9 @@ const DocsCard = (props) => {
       }
     }
 
-    // Find individual term matches
     queryTerms.forEach((term) => {
       let pos = textLower.indexOf(term);
       while (pos !== -1) {
-        // Check if already covered by phrase match
         const isOverlapping = matches.some(
           (match) => pos >= match.start && pos < match.end,
         );
@@ -158,41 +239,34 @@ const DocsCard = (props) => {
     });
 
     if (matches.length === 0) {
-      // No matches found, return truncated text
       return text.length <= maxLength
         ? text
         : text.substring(0, maxLength) + "...";
     }
 
-    // If text is short enough, return it all
     if (text.length <= maxLength) {
       return text;
     }
 
-    // Find the region with the most matches
     const bestMatch = matches.reduce((best, current) =>
       current.score > best.score ? current : best,
     );
 
-    // Calculate snippet boundaries around the best match
     const matchCenter = (bestMatch.start + bestMatch.end) / 2;
     const halfLength = Math.floor(maxLength / 2);
 
     let snippetStart = Math.max(0, matchCenter - halfLength);
     let snippetEnd = Math.min(text.length, snippetStart + maxLength);
 
-    // Adjust start if we hit the end
     if (snippetEnd === text.length) {
       snippetStart = Math.max(0, snippetEnd - maxLength);
     }
 
-    // Try to break at sentence boundaries
     snippetStart = findSentenceStart(text, snippetStart);
     snippetEnd = findSentenceEnd(text, snippetEnd);
 
     let snippet = text.substring(snippetStart, snippetEnd);
 
-    // Add ellipsis if needed
     if (snippetStart > 0) {
       snippet = "..." + snippet.trim();
     }
@@ -203,7 +277,6 @@ const DocsCard = (props) => {
     return snippet;
   };
 
-  // Helper function to find sentence start
   const findSentenceStart = (text, position) => {
     const beforeText = text.substring(Math.max(0, position - 50), position);
     const lastSentence = beforeText.match(/[.!?]\s+([^.!?]*)$/);
@@ -219,7 +292,6 @@ const DocsCard = (props) => {
     return position;
   };
 
-  // Helper function to find sentence end
   const findSentenceEnd = (text, position) => {
     const afterText = text.substring(
       position,
@@ -232,12 +304,10 @@ const DocsCard = (props) => {
     return position;
   };
 
-  // Enhanced truncate function
   const truncateText = (text, maxLength = 150) => {
-    if (!text) return "";
+    if (!text) return "No description available";
     if (text.length <= maxLength) return text;
 
-    // Try to break at sentence boundary
     const truncated = text.substring(0, maxLength);
     const lastSentence = truncated.lastIndexOf(". ");
 
@@ -247,99 +317,6 @@ const DocsCard = (props) => {
 
     return truncated + "...";
   };
-
-  // Bookmark-related functions
-  const checkBookmarkStatus = async () => {
-    const token = localStorage.getItem("authToken");
-    if (!token) return;
-
-    try {
-      const res = await fetch(`/api/bookmark/check/${paper_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setIsBookmarked(data.isBookmarked);
-      }
-    } catch (error) {
-      console.error("Error checking bookmark status:", error);
-    }
-  };
-
-  const handleUnbookmark = async (paperId) => {
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      toast.error("You're not logged in.");
-      return;
-    }
-
-    try {
-      const res = await fetch(`/api/bookmark/${paperId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.ok) {
-        setIsBookmarked(false);
-        toast.success("Paper removed from bookmarks");
-
-        // Log the unbookmark activity
-        await logDocumentInteraction(
-          DOCUMENT_ACTIVITIES.UNBOOKMARK,
-          ACTIVITY_TYPES.BOOKMARK_DOCUMENT,
-        );
-      } else {
-        toast.error("Failed to remove bookmark");
-      }
-    } catch (error) {
-      console.error("Error removing bookmark:", error);
-      toast.error("Failed to remove bookmark");
-    }
-  };
-
-  const handleBookmark = async (paperId) => {
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      toast.error("You're not logged in.");
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/bookmark", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ paperId }),
-      });
-
-      if (res.ok) {
-        setIsBookmarked(true);
-        toast.success("Paper bookmarked successfully");
-
-        // Log the bookmark activity
-        await logDocumentInteraction(
-          DOCUMENT_ACTIVITIES.BOOKMARK,
-          ACTIVITY_TYPES.BOOKMARK_DOCUMENT,
-        );
-      } else {
-        toast.error("Failed to bookmark paper");
-      }
-    } catch (error) {
-      console.error("Error bookmarking paper:", error);
-      toast.error("Failed to bookmark paper");
-    }
-  };
-
-  useEffect(() => {
-    checkBookmarkStatus();
-  }, [paper_id]);
 
   return (
     <div
@@ -457,6 +434,7 @@ const DocsCard = (props) => {
             {/* Action Buttons */}
             <div className="flex items-center justify-between">
               <div className="flex items-center w-full md:w-auto gap-2">
+                {/* Read Button - KEEP activity logging for this */}
                 <Link
                   href={`/view-file/${props.paper_id}`}
                   className="flex-1"
@@ -468,6 +446,7 @@ const DocsCard = (props) => {
                   </button>
                 </Link>
 
+                {/* Bookmark Button - NO activity logging */}
                 <button
                   onClick={() =>
                     isBookmarked

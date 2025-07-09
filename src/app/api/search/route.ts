@@ -55,7 +55,6 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
 
-    // Search parameters
     const query = searchParams.get("q")?.trim();
     const department = searchParams.get("department");
     const year = searchParams.get("year");
@@ -65,7 +64,6 @@ export async function GET(req: NextRequest) {
     const page = Math.max(parseInt(searchParams.get("page") || "1"), 1);
     const sortBy = searchParams.get("sortBy") || "relevance";
 
-    // Validation
     if (!query || query.length < 2) {
       return NextResponse.json(
         {
@@ -80,9 +78,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const skip = (page - 1) * limit;
-
-    // Build search conditions
+    // 🔧 FIX: Get ALL matching results first (no pagination at DB level)
     const searchConditions = buildSearchConditions(query, {
       department,
       year: year ? parseInt(year) : null,
@@ -92,16 +88,13 @@ export async function GET(req: NextRequest) {
 
     console.log("🔍 Search query:", query);
 
-    // Get total count for pagination
+    // Get total count for pagination info
     const totalCount = await prisma.papers.count({
       where: searchConditions,
     });
 
-    // Build orderBy clause
-    const orderBy = buildOrderBy(sortBy);
-
-    // Execute search query
-    const papers = (await prisma.papers.findMany({
+    // 🔧 FIX: Get ALL results first, then sort and paginate in JavaScript
+    const papers = await prisma.papers.findMany({
       where: {
         ...searchConditions,
         is_deleted: false,
@@ -119,13 +112,12 @@ export async function GET(req: NextRequest) {
         paper_url: true,
         is_deleted: true,
       },
-      orderBy: orderBy as any,
-      skip,
-      take: limit,
-    })) as Paper[];
+      // 🔧 FIX: Don't limit at DB level - get all results
+      orderBy: [{ created_at: "desc" }], // Simple ordering for DB
+    });
 
-    // Calculate relevance scores and generate enhanced highlights
-    const enhancedResults: EnhancedPaper[] = papers.map((paper) => {
+    // 🔧 FIX: Calculate relevance scores for ALL results
+    const enhancedResults = papers.map((paper) => {
       const relevanceScore = calculateRelevanceScore(paper, query);
       const highlights = generateEnhancedHighlights(paper, query);
 
@@ -137,25 +129,62 @@ export async function GET(req: NextRequest) {
       };
     });
 
-    // Sort by relevance if requested
-    if (sortBy === "relevance") {
-      enhancedResults.sort((a, b) => b.relevanceScore - a.relevanceScore);
-    }
+    // 🔧 FIX: Filter and sort ALL results consistently
+    const relevantResults = enhancedResults
+      .filter((paper) => paper.relevanceScore >= 1.0) // Filter low relevance
+      .sort((a, b) => {
+        // Consistent sorting logic
+        if (sortBy === "relevance") {
+          // Primary: relevance score (descending)
+          if (b.relevanceScore !== a.relevanceScore) {
+            return b.relevanceScore - a.relevanceScore;
+          }
+          // Secondary: creation date (most recent first)
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
+        }
 
-    // Calculate pagination info
-    const totalPages = Math.ceil(totalCount / limit);
+        // Other sorting options
+        switch (sortBy) {
+          case "date":
+            return (
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
+            );
+          case "title":
+            return (a.title || "").localeCompare(b.title || "");
+          case "year":
+            return (b.year || 0) - (a.year || 0);
+          case "author":
+            return (a.author || "").localeCompare(b.author || "");
+          default:
+            return (
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
+            );
+        }
+      });
+
+    // 🔧 FIX: Now paginate the sorted results
+    const skip = (page - 1) * limit;
+    const paginatedResults = relevantResults.slice(skip, skip + limit);
+
+    // Calculate pagination info based on filtered results
+    const totalRelevant = relevantResults.length;
+    const totalPages = Math.ceil(totalRelevant / limit);
     const hasNext = page < totalPages;
     const hasPrev = page > 1;
 
-    // Search suggestions for no results
     const suggestions =
-      totalCount === 0 ? await generateSearchSuggestions(query) : [];
+      totalRelevant === 0 ? await generateSearchSuggestions(query) : [];
 
     const responseData = {
       success: true,
-      results: enhancedResults,
+      results: paginatedResults,
       pagination: {
-        total: totalCount,
+        total: totalRelevant,
+        totalOriginal: totalCount,
         pages: totalPages,
         current: page,
         hasNext,
@@ -170,11 +199,14 @@ export async function GET(req: NextRequest) {
       suggestions,
       performance: {
         searchTime: Date.now(),
-        resultsFound: enhancedResults.length,
+        resultsFound: paginatedResults.length,
+        totalRelevant: totalRelevant,
       },
     };
 
-    console.log(`✅ Search completed: ${enhancedResults.length} results found`);
+    console.log(
+      `✅ Search completed: ${paginatedResults.length}/${totalRelevant} relevant results (${totalCount} total)`,
+    );
     return NextResponse.json(responseData);
   } catch (error) {
     console.error("❌ Search API error:", error);
@@ -191,7 +223,6 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-
 // Enhanced highlight generation with intelligent snippet extraction
 function generateEnhancedHighlights(
   paper: Paper,
@@ -566,6 +597,18 @@ function getMatchedFields(paper: Paper, query: string): string[] {
   }
 
   return matchedFields;
+}
+
+function sortResultsByRelevance(results) {
+  return results.sort((a, b) => {
+    // Primary sort: relevance score (descending)
+    if (b.relevanceScore !== a.relevanceScore) {
+      return b.relevanceScore - a.relevanceScore;
+    }
+
+    // Secondary sort: creation date (most recent first)
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
 }
 
 // Generate search suggestions

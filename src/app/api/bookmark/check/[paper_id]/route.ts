@@ -14,14 +14,28 @@ export async function GET(req: NextRequest, context: any) {
   const { paper_id } = context.params;
 
   try {
-    const authHeader = req.headers.get('authorization');
-    const token = authHeader?.split(' ')[1];
-    const payload = jwt.verify(token, process.env.JWT_SECRET_KEY!);
+    const authHeader = req.headers.get("authorization");
+    const token = authHeader?.split(" ")[1];
 
-    if (!paper_id || typeof payload !== 'object' || !("user_id" in payload)) {
-      return NextResponse.json({ error: 'Missing data' }, { status: 400 });
+    // 🔧 FIX: Handle case when no token is provided (user not logged in)
+    if (!token) {
+      // Return not bookmarked for non-authenticated users
+      return NextResponse.json({ isBookmarked: false });
     }
 
+    let payload;
+    try {
+      payload = jwt.verify(token, SECRET_KEY!);
+    } catch (error) {
+      // Invalid token, return not bookmarked
+      return NextResponse.json({ isBookmarked: false });
+    }
+
+    if (!paper_id || typeof payload !== "object" || !("user_id" in payload)) {
+      return NextResponse.json({ error: "Missing data" }, { status: 400 });
+    }
+
+    // ✅ No role check - any authenticated user can check bookmark status
     const bookmark = await prisma.user_bookmarks.findFirst({
       where: {
         user_id: (payload as any).user_id,

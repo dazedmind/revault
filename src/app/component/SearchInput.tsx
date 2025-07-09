@@ -60,7 +60,8 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
       try {
         const params = new URLSearchParams({
           q: searchQuery,
-          limit: "6", // Limit results for dropdown
+          limit: "100", // 🔧 FIX: Get same amount as PapersArea
+          sortBy: "relevance", // 🔧 FIX: Ensure relevance sorting
         });
 
         console.log("🔍 Searching for:", searchQuery);
@@ -74,7 +75,12 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
         console.log("📥 Search response:", data);
 
         if (data.success) {
-          setResults(data.results || []);
+          // 🔧 FIX: Filter and slice to get top 6 relevant results
+          const relevantResults = (data.results || [])
+            .filter((paper) => paper.relevanceScore >= 1.0) // Same filter as PapersArea
+            .slice(0, 6); // Take only top 6 for dropdown
+
+          setResults(relevantResults);
         } else {
           console.error("Search failed:", data.error);
           setResults([]);
