@@ -17,7 +17,13 @@ export async function POST(req: Request) {
     );
   }
 
-  
+  if (idNumber == null) {
+    return Response.json(
+      { success: false, message: "Please enter your ID number and password" },
+      { status: 400 },
+    );
+  }
+
   // 🧠 Determine role based on first digit
   const firstDigit = idNumber[0];
   const numberLength = idNumber.length;
@@ -35,6 +41,7 @@ export async function POST(req: Request) {
   let userRecord: any = null;
   let studentData: any = null;
   let facultyData: any = null;
+
   if (role === "STUDENT") {
     const student = await prisma.students.findUnique({
       where: { student_num: BigInt(idNumber) },
@@ -44,7 +51,7 @@ export async function POST(req: Request) {
     if (student && student.users) {
       userRecord = student.users;
       studentData = student;
-    }
+    } 
   } else if (role === "FACULTY") {
     const faculty = await prisma.faculty.findUnique({
       where: { employee_id: BigInt(idNumber) },
@@ -54,8 +61,8 @@ export async function POST(req: Request) {
     if (faculty && faculty.users) {
       userRecord = faculty.users;
       facultyData = faculty;
-    }
-  }
+    } 
+  } 
 
   if (!userRecord) {
     console.log(`Login attempt failed: User not found for ID ${idNumber}`);

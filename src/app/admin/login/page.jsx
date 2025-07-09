@@ -58,11 +58,23 @@ const AdminLogin = () => {
 
 
     if (response.status === 423) {
-      setErrorMessage("Account is locked. Please try again in 24 hours or contact your administrator.");
+      setErrorMessage("Account locked. Please try again in 24 hours.");
       setShowAccessDeniedModal(true);
-      setIsLoading(false);
       return;
     }
+
+    if (response.status === 404) {
+      setErrorMessage("User not found. Please check your credentials.");
+      setShowErrorModal(true);
+      return;
+    }
+  
+    if (response.status === 400) {
+      setErrorMessage("Please enter your ID number and password.");
+      setShowErrorModal(true);
+      return;
+    }
+
 
     // Check if response is OK (status 200-299)
     if (!response.ok) {

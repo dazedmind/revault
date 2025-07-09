@@ -48,7 +48,15 @@ const LogIn = () => {
 
   // Handle Input Changes
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    // For idNumber field, only allow numeric characters
+    if (name === 'idNumber') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      setFormData({ ...formData, [name]: numericValue });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -68,6 +76,7 @@ const LogIn = () => {
       }),
     });
 
+    // Check specific error statuses first
     if (response.status === 423) {
       setErrorMessage("Account locked. Please try again in 24 hours.");
       setShowAccessDeniedModal(true);
@@ -75,7 +84,13 @@ const LogIn = () => {
     }
 
     if (response.status === 404) {
-      setErrorMessage("User not found. Please check your credentials.");
+      setErrorMessage("User not found. Please check your credentials or create an account.");
+      setShowErrorModal(true);
+      return;
+    }
+  
+    if (response.status === 400) {
+      setErrorMessage("Please enter your ID number and password.");
       setShowErrorModal(true);
       return;
     }

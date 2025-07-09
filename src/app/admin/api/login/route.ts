@@ -11,24 +11,16 @@ export async function POST(req: Request) {
   const { idNumber, password } = await req.json();
 
   if (!idNumber || !password) {
-    // 📝 ADDED LOGGING
-    await prisma.activity_logs.create({
-      data: {
-        employee_id: 0,
-        user_id: 0,
-        name: "Unknown",
-        activity: "Login failed - missing credentials",
-        activity_type: activity_type.LOGIN,
-        user_agent: req.headers.get("user-agent") || "",
-        ip_address: req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown",
-        status: "failed",
-        created_at: new Date(),
-      },
-    });
-
     return Response.json(
       { success: false, message: "Missing credentials" },
       { status: 400 }
+    );
+  }
+
+  if (idNumber == null) {
+    return Response.json(
+      { success: false, message: "Please enter your ID number and password" },
+      { status: 400 },
     );
   }
 
@@ -44,21 +36,6 @@ export async function POST(req: Request) {
   }
 
   if (!userRecord) {
-    // 📝 ADDED LOGGING
-    await prisma.activity_logs.create({
-      data: {
-        employee_id: 0,
-        user_id: 0,
-        name: "Unknown",
-        activity: `Login failed - user not found for ID ${idNumber}`,
-        activity_type: activity_type.LOGIN,
-        user_agent: req.headers.get("user-agent") || "",
-        ip_address: req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown",
-        status: "failed",
-        created_at: new Date(),
-      },
-    });
-
     console.log(`Login attempt failed: User not found for ID ${idNumber}`);
     return Response.json(
       { success: false, message: "User not found" },
