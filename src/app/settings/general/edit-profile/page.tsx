@@ -124,7 +124,7 @@ function EditProfileContent() {
     try {
       console.log("🔍 Fetching admin profile...");
       
-      const res = await fetch("/admin/api/profile", {
+      const res = await fetch("/api/profile", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
