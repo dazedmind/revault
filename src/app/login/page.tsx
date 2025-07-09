@@ -41,6 +41,11 @@ const LogIn = () => {
     setShowErrorModal(false);
   };
 
+  const handleCloseAccessDeniedModal = () => {
+    setIsLoading(false);
+    setShowAccessDeniedModal(false);
+  };
+
   // Handle Input Changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -66,6 +71,12 @@ const LogIn = () => {
     if (response.status === 423) {
       setErrorMessage("Account locked. Please try again in 24 hours.");
       setShowAccessDeniedModal(true);
+      return;
+    }
+
+    if (response.status === 404) {
+      setErrorMessage("User not found. Please check your credentials.");
+      setShowErrorModal(true);
       return;
     }
 
@@ -261,7 +272,7 @@ const LogIn = () => {
       {/* Error Modal */}
       {showErrorModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-accent border-2 rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+          <div className="bg-accent border-2 rounded-2xl shadow-lg p-8 max-w-md w-full text-center animate-modal-in">
             <h2 className="text-2xl font-bold text-gold mb-4">Login Failed</h2>
             <p className=" mb-6">{errorMessage}</p>
             <button
@@ -276,12 +287,12 @@ const LogIn = () => {
 
       {showAccessDeniedModal && (
       <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-        <div className="bg-accent border-2 rounded-2xl shadow-lg p-8 max-w-md w-full text-center">
+        <div className="bg-accent border-2 rounded-2xl shadow-lg p-8 max-w-md w-full text-center animate-modal-in">
           <h2 className="text-2xl font-bold text-gold mb-4">Account Locked</h2>
           <p className=" mb-6">{errorMessage}</p>
           <button
             className="cursor-pointer px-6 py-2 bg-gold hover:brightness-105 text-white rounded-lg font-semibold"
-            onClick={handleCloseErrorModal}
+            onClick={handleCloseAccessDeniedModal}
           >
             Okay
           </button>
@@ -292,7 +303,7 @@ const LogIn = () => {
       {/* Forgot Password Modal */}
       {showForgotPasswordModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-          <div className="bg-white border-2 rounded-2xl shadow-lg p-8 max-w-md w-full mx-4">
+          <div className="bg-white border-2 rounded-2xl shadow-lg p-8 max-w-md w-full mx-4 animate-modal-in">
             {!showForgotPasswordSuccess ? (
               <form onSubmit={handleForgotPasswordSubmit}>
                 <h2 className="text-2xl font-bold text-gold mb-4 text-center">Reset Password</h2>

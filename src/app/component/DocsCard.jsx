@@ -320,7 +320,7 @@ const DocsCard = (props) => {
 
   return (
     <div
-      className={`group transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl ${
+      className={`group relative transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl ${
         theme === "light"
           ? "bg-white border border-gray-200 hover:shadow-gold/20"
           : "bg-darker border border-white-5 hover:shadow-lg"

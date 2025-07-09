@@ -15,7 +15,7 @@ function FileMenuButton({ icon, label, onClick }) {
       >
         <div className={`rounded-md p-2 hover:bg-card-foreground`}>{icon}</div>
       </button>
-      <Tooltip id="file-menu-tooltip" />
+      <Tooltip id="file-menu-tooltip" className="z-100" />
     </div>
   );
 }

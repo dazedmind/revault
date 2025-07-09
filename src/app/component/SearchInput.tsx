@@ -343,7 +343,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
     <>
       {/* Desktop Search Input */}
       <div
-        className="hidden md:block relative flex-1 max-w-lg z-50 font-[Inter]"
+        className="hidden md:block relative flex-1 max-w-lg z-40 font-[Inter]"
         ref={searchRef}
       >
         <div className="relative">

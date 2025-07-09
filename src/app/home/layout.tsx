@@ -187,7 +187,7 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
 
       {/* Welcome Popup with enhanced animations */}
       {showPopup && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center z-40 animate-fade-in">
+        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center z-50 animate-fade-in">
           <div className="flex flex-col items-center justify-center text-center bg-accent p-6 w-lg mx-4 rounded-lg transform animate-popup-bounce shadow-2xl border border-gold/20">
             <div className="text-4xl mb-2 animate-bounce">🎉</div>
             <h2 className="text-2xl font-bold text-gold-fg mb-2 animate-slide-down">

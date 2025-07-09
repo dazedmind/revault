@@ -74,8 +74,8 @@ function MyBookmarks() {
   return (
     <div>
       <AdminNavBar />
-      <main className='flex flex-col items-center justify-center bg-accent min-h-screen'>
-        <div className="flex flex-col gap-5 md:mx-24 align-middle">
+      <main className='flex bg-accent min-h-screen'>
+        <div className="flex flex-row gap-5 md:mx-24 align-middle">
           <div className="flex flex-col w-full gap-5 my-6 align-middle p-8">
             <div className="flex flex-row justify-between items-center">
               <h1 className="text-3xl font-bold">My Bookmarks</h1>

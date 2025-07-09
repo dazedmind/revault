@@ -18,6 +18,10 @@ module.exports = {
     extend: {
       backgroundOpacity: {
         '10': '0.1',
+      },
+      zIndex: {
+        '60': '60',
+        '100': '100',
       }
     },
   },
