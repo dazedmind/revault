@@ -136,27 +136,42 @@ export async function POST(req: Request) {
     }
 
     // Log failed login attempt with current attempt count
+
     try {
-      console.log(`Attempting to create activity log for failed login...`);
-      console.log(`Data: student_num=${userRecord.student_num}, user_id=${userRecord.user_id}, name=${userRecord.first_name}`);
-      
+      // First, find any existing paper to use as a reference
+      let validPaperId = 1; // Default to paper ID 1 if it exists
+      try {
+        const firstPaper = await prisma.papers.findFirst({
+          select: { paper_id: true },
+          orderBy: { paper_id: "asc" },
+        });
+        if (firstPaper) {
+          validPaperId = firstPaper.paper_id;
+        }
+      } catch (paperError) {
+        console.log("No papers found, using paper_id 1");
+      }
+  
       await prisma.user_activity_logs.create({
         data: {
-          employee_id: facultyData?.employee_id || BigInt(0),
-          student_num: studentData?.student_num || BigInt(0),
-          user_id: parseInt(userRecord.user_id),
-          name: userRecord.first_name,
+          user_id: userRecord.user_id,
+          paper_id: validPaperId, // Use a valid paper ID since it's required
+          name: `${userRecord.first_name || ""} ${userRecord.last_name || ""}`.trim(),
           activity: `Failed login attempt (${currentAttempts}/${MAX_LOGIN_ATTEMPTS})`,
           activity_type: activity_type.LOGIN,
-          user_agent: req.headers.get('user-agent') || '',
           status: "failed",
+          user_agent: req.headers.get("user-agent") || "",
           created_at: new Date(),
+          employee_id: facultyData?.employee_id || BigInt(0),
+          student_num: studentData?.student_num || BigInt(0),
         },
       });
-      console.log(`✅ Failed login attempt logged: ${currentAttempts}/${MAX_LOGIN_ATTEMPTS} for user ${userRecord.first_name}`);
-    } catch (err) {
-      console.error("❌ Failed to log failed login activity:", err);
-      console.error("Error details:", err.message);
+      console.log(
+        `✅ Login activity logged for ${role}: ${userRecord.first_name}`,
+      );
+    } catch (logError) {
+      console.error("❌ Failed to log login activity:", logError);
+      // Don't block login on log failure
     }
 
     // Check if account should be locked
@@ -183,26 +198,43 @@ export async function POST(req: Request) {
         );
       }
 
+
       // Log account lock
       try {
-        console.log(`Creating account lock activity log...`);
+        // First, find any existing paper to use as a reference
+        let validPaperId = 1; // Default to paper ID 1 if it exists
+        try {
+          const firstPaper = await prisma.papers.findFirst({
+            select: { paper_id: true },
+            orderBy: { paper_id: "asc" },
+          });
+          if (firstPaper) {
+            validPaperId = firstPaper.paper_id;
+          }
+        } catch (paperError) {
+          console.log("No papers found, using paper_id 1");
+        }
+    
         await prisma.user_activity_logs.create({
           data: {
-            employee_id: facultyData?.employee_id || BigInt(0),
-            student_num: studentData?.student_num || BigInt(0),
-            user_id: parseInt(userRecord.user_id),
-            name: userRecord.first_name,
+            user_id: userRecord.user_id,
+            paper_id: validPaperId, // Use a valid paper ID since it's required
+            name: `${userRecord.first_name || ""} ${userRecord.last_name || ""}`.trim(),
             activity: `Account locked due to ${MAX_LOGIN_ATTEMPTS} failed login attempts`,
             activity_type: activity_type.LOGIN,
-            user_agent: req.headers.get('user-agent') || '',
             status: "locked",
+            user_agent: req.headers.get("user-agent") || "",
             created_at: new Date(),
+            employee_id: facultyData?.employee_id || BigInt(0),
+            student_num: studentData?.student_num || BigInt(0),
           },
         });
-        console.log(`✅ Account locked logged for user ${userRecord.first_name} (ID: ${idNumber})`);
-      } catch (err) {
-        console.error("❌ Failed to log account lock activity:", err);
-        console.error("Error details:", err.message);
+        console.log(
+          `✅ Login activity logged for ${role}: ${userRecord.first_name}`,
+        );
+      } catch (logError) {
+        console.error("❌ Failed to log login activity:", logError);
+        // Don't block login on log failure
       }
 
       return Response.json(
@@ -255,25 +287,40 @@ export async function POST(req: Request) {
 
   // ✅ Save successful login activity log
   try {
-    console.log(`Creating successful login activity log...`);
+    // First, find any existing paper to use as a reference
+    let validPaperId = 1; // Default to paper ID 1 if it exists
+    try {
+      const firstPaper = await prisma.papers.findFirst({
+        select: { paper_id: true },
+        orderBy: { paper_id: "asc" },
+      });
+      if (firstPaper) {
+        validPaperId = firstPaper.paper_id;
+      }
+    } catch (paperError) {
+      console.log("No papers found, using paper_id 1");
+    }
+
     await prisma.user_activity_logs.create({
       data: {
-        employee_id: facultyData?.employee_id || BigInt(0),
-        student_num: studentData?.student_num || BigInt(0),
-        user_id: parseInt(userRecord.user_id),
-        name: userRecord.first_name,
+        user_id: userRecord.user_id,
+        paper_id: validPaperId, // Use a valid paper ID since it's required
+        name: `${userRecord.first_name || ""} ${userRecord.last_name || ""}`.trim(),
         activity: `Logged in successfully`,
         activity_type: activity_type.LOGIN,
-        user_agent: req.headers.get('user-agent') || '',
         status: "success",
+        user_agent: req.headers.get("user-agent") || "",
         created_at: new Date(),
+        employee_id: facultyData?.employee_id || BigInt(0),
+        student_num: studentData?.student_num || BigInt(0),
       },
     });
-    console.log(`✅ Successful login logged for user ${userRecord.first_name} (ID: ${idNumber})`);
-  } catch (err) {
-    console.error("❌ Failed to log login activity:", err);
-    console.error("Error details:", err.message);
-    // Optional: don't block login on log failure
+    console.log(
+      `✅ Login activity logged for ${role}: ${userRecord.first_name}`,
+    );
+  } catch (logError) {
+    console.error("❌ Failed to log login activity:", logError);
+    // Don't block login on log failure
   }
 
   const headers = new Headers();
@@ -294,4 +341,27 @@ export async function POST(req: Request) {
     }),
     { headers },
   );
+}
+
+
+function getClientIP(req: Request): string {
+  // Try different headers in order of preference
+  const forwardedFor = req.headers.get("x-forwarded-for");
+  const realIP = req.headers.get("x-real-ip");
+  const clientIP = req.headers.get("x-client-ip");
+
+  if (forwardedFor) {
+    // x-forwarded-for can contain multiple IPs, take the first one
+    return forwardedFor.split(",")[0].trim();
+  }
+
+  if (realIP) {
+    return realIP.trim();
+  }
+
+  if (clientIP) {
+    return clientIP.trim();
+  }
+
+  return "unknown";
 }
