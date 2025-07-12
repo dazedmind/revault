@@ -1,7 +1,9 @@
+// src/app/actions/saveAdminStaffInformation.ts
 "use server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { user_role } from "@prisma/client"; // Changed from user_role to UserRole
+import { user_role } from "@prisma/client";
+import { validateNewUserRole, type RoleName } from "@/lib/roleValidation";
 
 export async function saveAdminStaffInformation(formData: any) {
   console.log(
@@ -65,6 +67,26 @@ export async function saveAdminStaffInformation(formData: any) {
       );
     }
 
+    // 🆕 NEW: Role limit validation
+    console.log("🔍 Checking role limits for:", role);
+    try {
+      const roleValidation = await validateNewUserRole(role as RoleName);
+
+      if (!roleValidation.isValid) {
+        console.log("❌ Role limit exceeded:", roleValidation.message);
+        throw new Error(roleValidation.message);
+      }
+
+      console.log("✅ Role limit validation passed:", roleValidation.message);
+    } catch (roleError) {
+      console.error("❌ Role validation error:", roleError);
+      if (roleError instanceof Error) {
+        throw new Error(`Role validation failed: ${roleError.message}`);
+      } else {
+        throw new Error("Role validation failed: Unknown error");
+      }
+    }
+
     // All admin/staff roles require employee ID
     if (!employeeID) {
       console.log("❌ Missing employee ID");
@@ -106,25 +128,16 @@ export async function saveAdminStaffInformation(formData: any) {
       throw new Error("Employee ID already exists.");
     }
 
-    console.log("✅ All validations passed, starting database operations...");
-
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("✅ Password hashed successfully");
+    console.log("🔐 Password hashed successfully");
 
-    // Use transaction to ensure data consistency
+    // Use transaction to create user and librarian records
     const result = await prisma.$transaction(async (tx) => {
-      // Create user record first
-      console.log("📝 Creating user with data:", {
-        first_name: firstName,
-        mid_name: middleName || null,
-        last_name: lastName,
-        ext_name: ext || null,
-        email,
-        role: role as user_role, // Changed from user_role to UserRole
-        created_at: new Date(),
-      });
+      console.log("🏁 Starting transaction to create user and librarian...");
 
-      const user = await tx.users.create({
+      // Create user record
+      const newUser = await tx.users.create({
         data: {
           first_name: firstName,
           mid_name: middleName || null,
@@ -132,57 +145,48 @@ export async function saveAdminStaffInformation(formData: any) {
           ext_name: ext || null,
           email,
           password: hashedPassword,
-          role: role as user_role, // Changed from user_role to UserRole
+          role: role as user_role,
+          status: status || "ACTIVE", // Default to ACTIVE if not provided
           created_at: new Date(),
         },
       });
 
-      console.log("✅ User created successfully:", {
-        user_id: user.user_id,
-        email: user.email,
-        role: user.role,
+      console.log("✅ User created with ID:", newUser.user_id);
+
+      // Create librarian record
+      const newLibrarian = await tx.librarian.create({
+        data: {
+          employee_id: empId,
+          position: position || role, // Use position if provided, otherwise use role
+          contact_num: 0, // Default contact number - can be updated later
+          user_id: newUser.user_id,
+        },
       });
 
-      // ALL admin/staff roles go into the librarian table
-      const librarianData = {
-        employee_id: empId, // Regular number (Int)
-        position: position || role, // Use role as default position if not provided
-        contact_num: 0, // Always use 0 since we don't collect contact numbers
-        user_id: user.user_id,
-      };
+      console.log("✅ Librarian record created with employee_id:", empId);
 
-      console.log("📝 Creating librarian record with data:", librarianData);
-
-      const librarianRecord = await tx.librarian.create({
-        data: librarianData,
-      });
-
-      console.log("✅ Librarian record created successfully:", librarianRecord);
-
-      return {
-        user,
-        librarianRecord,
-        type: role.toLowerCase(),
-      };
+      return { user: newUser, librarian: newLibrarian };
     });
 
-    console.log(`🎉 User and ${role} info saved in librarian table!`);
+    console.log("🎉 Transaction completed successfully");
 
+    // Return success response with user info (excluding password)
     return {
       success: true,
-      message: `${role.toLowerCase()} created successfully`,
-      data: {
-        userId: result.user.user_id,
+      message: "Admin/Staff user created successfully",
+      user: {
+        id: result.user.user_id,
+        firstName: result.user.first_name,
+        lastName: result.user.last_name,
         email: result.user.email,
         role: result.user.role,
-        type: result.type,
-        employeeId: result.librarianRecord.employee_id, // Regular number
-        position: result.librarianRecord.position,
+        status: result.user.status,
+        employeeID: empId.toString(),
+        position: result.librarian.position,
       },
     };
   } catch (err) {
-    console.error("💥 Save admin/staff error:", err);
-    console.error("Error details:", {
+    console.error("💥 Error in saveAdminStaffInformation:", {
       message: err instanceof Error ? err.message : "Unknown error",
       stack: err instanceof Error ? err.stack : "No stack trace",
     });
