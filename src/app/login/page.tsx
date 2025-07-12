@@ -422,7 +422,7 @@ const LogIn = () => {
                 There is no account associated with the email address <strong>{forgotPasswordEmail}</strong>.
               </p>
               <p className="text-gray-500 mb-6 text-xs">
-                Please check your email address or create a new account if you don't have one.
+                Please check your email address or create a new account if you don&apos;t have one.
               </p>
               
               <div className="flex gap-3 justify-center">
