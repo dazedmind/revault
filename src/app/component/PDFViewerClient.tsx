@@ -32,8 +32,9 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfBlob, setPdfBlob] = useState<string | null>(null);
 
-  // Add this ref
-  const wasVisible = useRef(document.visibilityState === "visible");
+  // Add refs for screenshot detection
+  const screenshotAttempts = useRef(0);
+  const pdfContainerRef = useRef<HTMLDivElement>(null);
 
   // Load PDF.js components
   useEffect(() => {
@@ -72,7 +73,7 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
   // Get authentication token
   const getToken = () => localStorage.getItem("authToken");
 
-  // Security logging function
+  // Simplified security logging function - ONLY for specific screenshot attempts
   const logSecurityEvent = useCallback(async (eventType: string, details: string) => {
     try {
       // Get user email from JWT token to ensure accuracy
@@ -99,7 +100,8 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
           userEmail: currentUserEmail,
           documentId: paperId,
           timestamp: new Date().toISOString(),
-          details: `${details} on page ${currentPage} (react-pdf secure viewer)`
+          details: `${details} on page ${currentPage} (react-pdf secure viewer)`,
+          screenshotAttempts: screenshotAttempts.current
         })
       });
       console.log(`🔒 Security event logged: ${eventType} - ${details}`);
@@ -380,7 +382,26 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [goToPrevPage, goToNextPage]);
 
-  // Security event handlers with screenshot attempt logging
+
+  useEffect(() => {
+    // Mouse leave detection
+    const handleMouseLeave = () => {
+      logSecurityEvent(
+        'POTENTIAL_SCREENSHOT',
+        `Mouse left window or screen dimmed - potential screenshot (Attempt #${screenshotAttempts.current})`
+      );
+    };
+
+
+
+    document.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [logSecurityEvent]);
+
+  // SIMPLIFIED Security event handlers - ONLY log specific screenshot attempts
   useEffect(() => {
     const isToolbarElement = (element: Element): boolean => {
       return !!(
@@ -393,7 +414,7 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       );
     };
 
-    // Log right-click attempts (potential screenshot attempts)
+    // Basic right-click prevention (no logging)
     const preventContextMenu = (e: MouseEvent) => {
       const target = e.target as Element;
       
@@ -403,14 +424,11 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       }
       
       e.preventDefault();
-      
-      // Log security event for potential screenshot attempt
-      logSecurityEvent('POTENTIAL_SCREENSHOT_ATTEMPT', 'Right-click blocked - possible screenshot attempt');
-      
       toast.warning('Right-click disabled in secure mode');
       return false;
     };
 
+    // Basic drag prevention (no logging)
     const preventDragStart = (e: DragEvent) => {
       const target = e.target as Element;
       
@@ -420,10 +438,10 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       }
       
       e.preventDefault();
-      logSecurityEvent('DRAG_ATTEMPT_BLOCKED', 'Content drag attempt blocked');
       return false;
     };
 
+    // Basic text selection prevention (no logging)
     const preventSelectStart = (e: Event) => {
       const target = e.target as Element;
       
@@ -433,10 +451,10 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       }
       
       e.preventDefault();
-      logSecurityEvent('TEXT_SELECTION_BLOCKED', 'Text selection attempt blocked');
       return false;
     };
 
+    // SPECIFIC keyboard shortcut detection - ONLY log the 4 specified actions
     const preventKeyboardShortcuts = (e: KeyboardEvent) => {
       const target = e.target as Element;
       const isCtrl = e.ctrlKey || e.metaKey;
@@ -446,70 +464,67 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
         return true;
       }
       
-      // Block common shortcuts and log potential screenshot attempts
-      if (isCtrl && ['s', 'p', 'c', 'v', 'x'].includes(e.key.toLowerCase())) {
+      // ONLY log and block these 4 specific screenshot attempts
+      if (isCtrl && ['s', 'p', 'c'].includes(e.key.toLowerCase())) {
         e.preventDefault();
         
-        // Log specific shortcut attempts
-        let eventType = 'KEYBOARD_SHORTCUT_BLOCKED';
-        let details = `Blocked: Ctrl+${e.key.toUpperCase()}`;
+
+        // Add this useEffect after the existing security event handlers useEffect
+  
+        // Increment screenshot attempts for these specific keys
         
-        // Specific logging for potential screenshot/copy attempts
+        // Log ONLY these specific attempts
+        let eventType = '';
+        let details = '';
+        
         switch (e.key.toLowerCase()) {
           case 'p':
-            eventType = 'PRINT_ATTEMPT_BLOCKED';
-            details = 'Print attempt blocked - potential document copying';
+            eventType = 'CTRL_P';
+            details = `Ctrl+P blocked - print attempt`;
             break;
           case 's':
-            eventType = 'SAVE_ATTEMPT_BLOCKED';
-            details = 'Save attempt blocked - potential document copying';
+            eventType = 'CTRL_S';
+            details = `Ctrl+S blocked - save attempt`;
             break;
           case 'c':
-            eventType = 'COPY_ATTEMPT_BLOCKED';
-            details = 'Copy attempt blocked - potential content extraction';
+            eventType = 'CTRL_C';
+            details = `Ctrl+C blocked - copy attempt (Screenshot attempt #${screenshotAttempts.current})`;
             break;
         }
         
-        logSecurityEvent(eventType, details);
+        if (eventType) {
+          logSecurityEvent(eventType, details);
+        }
         
         toast.warning(`${e.key.toUpperCase()} operation disabled in secure mode`);
         return false;
       }
 
-      // Log Print Screen key attempts
+      // Log Print Screen attempts
       if (e.key === 'PrintScreen') {
         e.preventDefault();
-        logSecurityEvent('PRINT_SCREEN_ATTEMPT', 'Print Screen key blocked - screenshot attempt detected');
+        screenshotAttempts.current++;
+        logSecurityEvent(
+          'PRINT_SCREEN_ATTEMPT', 
+          `Print Screen blocked - screenshot attempt (Screenshot attempt #${screenshotAttempts.current})`
+        );
         toast.error('Screenshots disabled in secure mode');
         return false;
       }
 
-      // Log Win+Shift+S (Windows screenshot tool)
+      // Block other common shortcuts without logging
+      if (isCtrl && ['v', 'x', 'a'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        toast.warning(`${e.key.toUpperCase()} operation disabled in secure mode`);
+        return false;
+      }
+
+      // Block Windows screenshot tool without logging
       if (e.metaKey && e.shiftKey && e.key.toLowerCase() === 's') {
         e.preventDefault();
-        logSecurityEvent('WINDOWS_SCREENSHOT_TOOL_BLOCKED', 'Windows screenshot tool (Win+Shift+S) blocked');
         toast.error('Screenshot tools disabled in secure mode');
         return false;
       }
-    };
-
-    // Detect potential screenshot tools and dev tools
-    const detectDevTools = () => {
-      // Check if dev tools are open (rough detection)
-      let devtools = {open: false, orientation: null};
-      const threshold = 160;
-
-      setInterval(() => {
-        if (window.outerHeight - window.innerHeight > threshold || 
-            window.outerWidth - window.innerWidth > threshold) {
-          if (!devtools.open) {
-            devtools.open = true;
-            logSecurityEvent('DEV_TOOLS_DETECTED', 'Developer tools potentially opened - security monitoring active');
-          }
-        } else {
-          devtools.open = false;
-        }
-      }, 500);
     };
 
     // Add all event listeners
@@ -517,9 +532,6 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
     document.addEventListener('dragstart', preventDragStart);
     document.addEventListener('selectstart', preventSelectStart);
     document.addEventListener('keydown', preventKeyboardShortcuts);
-
-    // Start dev tools detection
-    detectDevTools();
 
     return () => {
       document.removeEventListener('contextmenu', preventContextMenu);
@@ -608,6 +620,26 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
           z-index: 30 !important;
         }
 
+        /* Fixed PDF container dimensions - prevents layout shift during loading/zooming */
+        .pdf-fixed-container {
+          width: 100% !important;
+          max-width: 1200px !important; /* Match toolbar max-width */
+          min-height: 800px !important; /* Larger minimum height */
+          height: calc(100vh - 200px) !important; /* Full height minus toolbar and security notice */
+          overflow: auto !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          position: relative !important;
+          margin: 0 auto !important; /* Center the container */
+        }
+
+        /* Zoom container that doesn't affect outer layout */
+        .pdf-zoom-container {
+          transform-origin: center center !important;
+          transition: transform 0.2s ease-in-out !important;
+        }
+
         /* Print protection */
         @media print {
           .secure-pdf-viewer {
@@ -626,7 +658,7 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
       `}</style>
 
       {/* Toolbar */}
-      <div className={`toolbar flex items-center justify-between p-4 border-b w-auto md:w-3xl ${
+      <div className={`toolbar flex items-center justify-between p-4 border-b w-full max-w-6xl mx-auto ${
         theme === 'light' ? 'bg-white border-gray-300' : 'bg-dusk border-white-5'
       }`}>
         {/* Navigation */}
@@ -640,7 +672,7 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
           </button>
           
           <span className=" py-1 text-sm">
-             {currentPage} of {numPages}
+             {currentPage} of {numPages || '?'}
           </span>
           
           <button
@@ -659,11 +691,11 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
           <input
             type="number"
             min={1}
-            max={numPages}
+            max={numPages || 999}
             value={currentPage}
             onChange={(e) => {
               const page = parseInt(e.target.value);
-              if (!isNaN(page) && page >= 1 && page <= numPages) {
+              if (!isNaN(page) && page >= 1 && page <= (numPages || 999)) {
                 goToPage(page);
               }
             }}
@@ -695,106 +727,142 @@ const PDFViewerClient: React.FC<PDFViewerClientProps> = ({
         </div>
       </div>
 
-      {/* PDF Viewer */}
+      {/* PDF Viewer with Fixed Container */}
       <div className="flex-1 overflow-auto flex items-center justify-center p-4">
-        {pdfBlob && !pdfError ? (
-          <div className="relative">
-            {pdfLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
-                <Loader2 className="w-8 h-8 animate-spin text-white" />
+        {/* Fixed-size container that matches toolbar width and doesn't change during loading or zooming */}
+        <div 
+          ref={pdfContainerRef}
+          className="pdf-fixed-container border border-gray-300 dark:border-gray-600 shadow-lg rounded-lg"
+        >
+          {pdfLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+              <div className="text-center text-white">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
+                <p>Loading secure PDF...</p>
               </div>
-            )}
-            
-            <WatermarkOverlay userEmail={userEmail} />
-            {Document && Page && (
-              <Document
-                file={pdfBlob}
-                onLoadSuccess={onDocumentLoadSuccess}
-                onLoadError={onDocumentLoadError}
-                loading={
-                  <div className="flex items-center justify-center p-8">
-                    <Loader2 className="w-8 h-8 animate-spin" />
-                    <span className="ml-2">Loading PDF...</span>
-                  </div>
-                }
-                error={
-                  <div className="flex flex-col items-center justify-center p-8 bg-red-50 dark:bg-red-900/20 rounded">
-                    <p className="text-red-600 dark:text-red-400 mb-4">Failed to load PDF</p>
+            </div>
+          )}
+          
+          <WatermarkOverlay userEmail={userEmail} />
+          
+          {pdfBlob && !pdfError ? (
+            <div 
+              className="pdf-zoom-container"
+              style={{
+                transform: `scale(${scale}) rotate(${rotation}deg)`,
+              }}
+            >
+              {Document && Page && (
+                <Document
+                  file={pdfBlob}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  onLoadError={onDocumentLoadError}
+                  loading={
+                    <div className="flex items-center justify-center p-8">
+                      <Loader2 className="w-8 h-8 animate-spin" />
+                      <span className="ml-2">Loading PDF...</span>
+                    </div>
+                  }
+                  error={
+                    <div className="flex flex-col items-center justify-center p-8 bg-red-50 dark:bg-red-900/20 rounded">
+                      <p className="text-red-600 dark:text-red-400 mb-4">Failed to load PDF</p>
+                      <button
+                        onClick={() => {
+                          setPdfError(false);
+                          setPdfLoading(true);
+                          fetchPaper();
+                        }}
+                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  }
+                  className="shadow-lg"
+                  options={pdfOptions}
+                >
+                  <Page
+                    pageNumber={currentPage}
+                    scale={1.0} // Keep base scale at 1.0, use CSS transform for zooming
+                    rotate={0}  // Keep base rotation at 0, use CSS transform for rotating
+                    onLoadSuccess={onPageLoadSuccess}
+                    // Explicitly disable text and annotation layers
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                    loading={
+                      <div className="flex items-center justify-center w-full h-96 bg-gray-100">
+                        <Loader2 className="w-8 h-8 animate-spin" />
+                      </div>
+                    }
+                    error={
+                      <div className="flex items-center justify-center w-full h-96 bg-red-50 dark:bg-red-900/20">
+                        <p className="text-red-600 dark:text-red-400">Failed to load page {currentPage}</p>
+                      </div>
+                    }
+                    className="border border-gray-300 dark:border-gray-600"
+                  />
+                </Document>
+              )}
+            </div>
+          ) : (
+            // Error/Loading state with fixed dimensions
+            <div className="flex flex-col items-center justify-center w-full h-full p-8 bg-gray-50 dark:bg-gray-800 rounded">
+              <div className="text-center max-w-md mx-auto">
+                {pdfLoading ? (
+                  <>
+                    <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Loader2 className="w-10 h-10 text-blue-600 dark:text-blue-400 animate-spin" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-3">
+                      Loading PDF...
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                      Preparing secure document viewer
+                    </p>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div className="bg-blue-600 h-2 rounded-full animate-pulse w-3/4"></div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <svg className="w-10 h-10 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold mb-3 text-red-600 dark:text-red-400">
+                      PDF Not Available
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      The PDF file could not be loaded in secure mode.
+                    </p>
+                    <p className="text-xs text-gray-500 mb-6">
+                      Check the browser console for detailed error information.
+                    </p>
                     <button
                       onClick={() => {
                         setPdfError(false);
                         setPdfLoading(true);
                         fetchPaper();
                       }}
-                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                      className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300 font-medium"
                     >
-                      Retry
+                      Retry Loading
                     </button>
-                  </div>
-                }
-                className="shadow-lg"
-                options={pdfOptions}
-              >
-                <Page
-                  pageNumber={currentPage}
-                  scale={scale}
-                  rotate={rotation}
-                  onLoadSuccess={onPageLoadSuccess}
-                  // Explicitly disable text and annotation layers
-                  renderTextLayer={false}
-                  renderAnnotationLayer={false}
-                  loading={
-                    <div className="flex items-center justify-center w-full h-96 bg-gray-100">
-                      <Loader2 className="w-8 h-8 animate-spin" />
-                    </div>
-                  }
-                  error={
-                    <div className="flex items-center justify-center w-full h-96 bg-red-50 dark:bg-red-900/20">
-                      <p className="text-red-600 dark:text-red-400">Failed to load page {currentPage}</p>
-                    </div>
-                  }
-                  className="border border-gray-300 dark:border-gray-600"
-                />
-              </Document>
-            )}
-          </div>
-        ) : (
-          // Error state
-          <div className="flex flex-col items-center justify-center w-full h-96 p-8 bg-gray-100 rounded border">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Loader2 className="w-8 h-8 text-red-600 dark:text-red-400" />
+                  </>
+                )}
               </div>
-              <h3 className="text-lg font-semibold mb-2">
-                PDF Not Available
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                The PDF file could not be loaded in secure mode.
-              </p>
-              <p className="text-xs text-gray-500 mb-4">
-                Check the browser console for detailed error information.
-              </p>
-              <button
-                onClick={() => {
-                  setPdfError(false);
-                  setPdfLoading(true);
-                  fetchPaper();
-                }}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-all duration-300"
-              >
-                Retry
-              </button>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Security Notice & Keyboard Shortcuts */}
+      {/* Simplified Security Notice */}
       <div className={`text-xs p-3 border-t text-center ${
         theme === 'light' ? 'bg-yale-blue/10 border-yale-blue-fg text-yale-blue-fg' : 'bg-yale-blue/20 border-yale-blue-fg text-yale-blue'
       }`}>
-        🔒 SECURE MODE: All interactions monitored • Content watermarked • Text selection disabled<br/>
-        Shortcuts: ← → (navigate) • + - (zoom) • R (rotate) • 0 (reset) • Unauthorized sharing prohibited
+        🔒 SECURE MODE: Content protection active • Unauthorized sharing prohibited<br/>
+        Shortcuts: ← → (navigate) • + - (zoom) • R (rotate) • 0 (reset)
       </div>
     </div>
   );

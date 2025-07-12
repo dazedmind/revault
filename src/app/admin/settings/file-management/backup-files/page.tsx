@@ -369,18 +369,10 @@ function Backup() {
       
       {/* Statistics Cards */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className={`p-4 rounded-lg ${theme === 'light' ? 'bg-white' : 'bg-midnight'} border border-gray-200 dark:border-white-5`}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Total Files</p>
-                <p className="text-2xl font-bold">{stats.total_files.toLocaleString()}</p>
-              </div>
-              <FaDatabase className="text-blue-500 text-2xl" />
-            </div>
-          </div>
+        <div className="flex flex-col md:flex-row w-full gap-4 mb-6">
+  
           
-          <div className={`p-4 rounded-lg ${theme === 'light' ? 'bg-white' : 'bg-midnight'} border border-gray-200 dark:border-white-5`}>
+          <div className={`p-4 w-full rounded-lg ${theme === 'light' ? 'bg-white' : 'bg-midnight'} border border-gray-200 dark:border-white-5`}>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total Size</p>
@@ -390,7 +382,7 @@ function Backup() {
             </div>
           </div>
           
-          <div className={`p-4 rounded-lg ${theme === 'light' ? 'bg-white' : 'bg-midnight'} border border-gray-200 dark:border-white-5`}>
+          <div className={`p-4 w-full rounded-lg ${theme === 'light' ? 'bg-white' : 'bg-midnight'} border border-gray-200 dark:border-white-5`}>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Last Backup</p>
@@ -400,7 +392,7 @@ function Backup() {
             </div>
           </div>
           
-          <div className={`p-4 rounded-lg ${theme === 'light' ? 'bg-white' : 'bg-midnight'} border border-gray-200 dark:border-white-5`}>
+          <div className={`p-4 w-full rounded-lg ${theme === 'light' ? 'bg-white' : 'bg-midnight'} border border-gray-200 dark:border-white-5`}>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Storage Used</p>

@@ -20,7 +20,8 @@ const LogIn = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [showEmailNotFoundModal, setShowEmailNotFoundModal] = useState(false);
+
   // Forgot Password States
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
@@ -142,7 +143,7 @@ const LogIn = () => {
     e.preventDefault();
     setIsForgotPasswordLoading(true);
     setForgotPasswordMessage("");
-
+  
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(forgotPasswordEmail)) {
@@ -150,7 +151,7 @@ const LogIn = () => {
       setIsForgotPasswordLoading(false);
       return;
     }
-
+  
     try {
       const response = await fetch("/api/forgot-password", {
         method: "POST",
@@ -161,13 +162,19 @@ const LogIn = () => {
           email: forgotPasswordEmail,
         }),
       });
-
+  
       const result = await response.json();
-
+  
       if (response.ok) {
+        // Success - email exists and reset instructions sent
         setShowForgotPasswordSuccess(true);
         setForgotPasswordMessage(result.message || "Password reset instructions have been sent to your email.");
+      } else if (response.status === 404) {
+        // ✅ NEW: Handle email not found case
+        setShowForgotPasswordModal(false); // Close forgot password modal
+        setShowEmailNotFoundModal(true); // Show email not found modal
       } else {
+        // Other errors
         setForgotPasswordMessage(result.error || "Failed to send reset instructions.");
       }
     } catch (error) {
@@ -178,6 +185,13 @@ const LogIn = () => {
     }
   };
 
+  const handleCloseEmailNotFoundModal = () => {
+    setShowEmailNotFoundModal(false);
+    setForgotPasswordEmail("");
+    setForgotPasswordMessage("");
+    setShowForgotPasswordSuccess(false);
+    setIsForgotPasswordLoading(false);
+  };
   // ALWAYS CLEARS TOKEN ON LOGIN PAGE LOAD
   useEffect(() => {
     localStorage.removeItem("authToken");
@@ -388,6 +402,39 @@ const LogIn = () => {
                 </button>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {showEmailNotFoundModal && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white border-2 rounded-2xl shadow-lg p-8 max-w-md w-full mx-4 animate-modal-in">
+            <div className="text-center">
+              {/* Error Icon */}
+              <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+              </div>
+              
+              <h2 className="text-2xl font-bold text-gold mb-4">Account Not Found</h2>
+              <p className="text-gray-600 mb-6 text-sm">
+                There is no account associated with the email address <strong>{forgotPasswordEmail}</strong>.
+              </p>
+              <p className="text-gray-500 mb-6 text-xs">
+                Please check your email address or create a new account if you don't have one.
+              </p>
+              
+              <div className="flex gap-3 justify-center">
+                <button
+                  type="button"
+                  onClick={handleCloseEmailNotFoundModal}
+                  className="px-6 py-2 cursor-pointer bg-gold hover:brightness-105 text-white rounded-lg font-semibold transition-all duration-300"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -20,10 +20,20 @@ import MultipleSelector, {
 } from "@/app/admin/components/EventTypeMultiSelect";
 import ActivityLogsSection from "@/app/admin/components/ActivityLogsSection";
 import UserActivityLogsSection from "@/app/admin/components/UserActivityLogsSection";
-import { Download, FileText, Users, ChevronDown, ChevronUp, UserCog } from "lucide-react";
+import { 
+  Download, 
+  FileText, 
+  Users, 
+  ChevronDown, 
+  ChevronUp, 
+  UserCog, 
+  Shield,
+  Activity,
+  Database
+} from "lucide-react";
 
 // Admin activity logs interfaces
-interface Activity {
+interface ActivityLog {
   name: string;
   activity: string;
   created_at: string;
@@ -73,6 +83,10 @@ function ActivityLogContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  // Tab Management State
+  const initialActiveTab = searchParams.get("tab") || "admin";
+  const [activeTab, setActiveTab] = useState<'admin' | 'users'>(initialActiveTab as 'admin' | 'users');
+
   // Admin Activity Logs State
   const initialUserId = searchParams.get("userId") || "all";
   const initialActivityTypes = searchParams.get("activityTypes") || "all";
@@ -91,23 +105,18 @@ function ActivityLogContent() {
   const [page, setPage] = useState<number>(initialPage);
   const [limit] = useState<number>(initialLimit);
 
-  const [logs, setLogs] = useState<Activity[]>([]);
+  const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [users, setUsers] = useState<UserOption[]>([]);
   const [total, setTotal] = useState<number>(0);
 
   // User Activity Logs State
   const initialUserUserId = searchParams.get("userUserId") || "all";
-  const initialUserActivityTypes =
-    searchParams.get("userActivityTypes") || "all";
+  const initialUserActivityTypes = searchParams.get("userActivityTypes") || "all";
   const initialUserRole = searchParams.get("userRole") || "all";
   const initialUserPage = Number(searchParams.get("userPage")) || 1;
-  const initialShowUserLogs = searchParams.get("showUserLogs") === "true";
 
-  const [selectedUserUser, setSelectedUserUser] =
-    useState<string>(initialUserUserId);
-  const [selectedUserEventTypes, setSelectedUserEventTypes] = useState<
-    Option[]
-  >(
+  const [selectedUserUser, setSelectedUserUser] = useState<string>(initialUserUserId);
+  const [selectedUserEventTypes, setSelectedUserEventTypes] = useState<Option[]>(
     initialUserActivityTypes === "all"
       ? []
       : initialUserActivityTypes.split(",").map((val) => ({
@@ -115,8 +124,7 @@ function ActivityLogContent() {
           label: val.replaceAll("_", " "),
         })),
   );
-  const [selectedUserRole, setSelectedUserRole] =
-    useState<string>(initialUserRole);
+  const [selectedUserRole, setSelectedUserRole] = useState<string>(initialUserRole);
   const [userPage, setUserPage] = useState<number>(initialUserPage);
   const [userLimit] = useState<number>(10);
 
@@ -125,11 +133,7 @@ function ActivityLogContent() {
   const [userTotal, setUserTotal] = useState<number>(0);
   const [userLogsLoading, setUserLogsLoading] = useState(false);
 
-  // Collapsible state for User Activity Logs
-  const [showUserLogs, setShowUserLogs] = useState(initialShowUserLogs);
-
-  const currentUserRole =
-    typeof window !== "undefined" ? localStorage.getItem("userType") : null;
+  const currentUserRole = typeof window !== "undefined" ? localStorage.getItem("userType") : null;
 
   useEffect(() => {
     setMounted(true);
@@ -138,6 +142,7 @@ function ActivityLogContent() {
   // URL parameter management
   const updateQueryParams = useCallback(
     (params: {
+      tab?: string;
       userId?: string;
       activityTypes?: string;
       page?: number;
@@ -146,62 +151,61 @@ function ActivityLogContent() {
       userActivityTypes?: string;
       userRole?: string;
       userPage?: number;
-      showUserLogs?: boolean;
     }) => {
-      const search = new URLSearchParams(searchParams.toString());
-
-      if (params.userId !== undefined) search.set("userId", params.userId);
-      if (params.activityTypes !== undefined)
-        search.set("activityTypes", params.activityTypes);
-      if (params.page !== undefined) search.set("page", params.page.toString());
-      if (params.limit !== undefined)
-        search.set("limit", params.limit.toString());
-      if (params.userUserId !== undefined)
-        search.set("userUserId", params.userUserId);
-      if (params.userActivityTypes !== undefined)
-        search.set("userActivityTypes", params.userActivityTypes);
-      if (params.userRole !== undefined)
-        search.set("userRole", params.userRole);
-      if (params.userPage !== undefined)
-        search.set("userPage", params.userPage.toString());
-      if (params.showUserLogs !== undefined)
-        search.set("showUserLogs", params.showUserLogs.toString());
-
-      router.push(
-        `/admin/settings/security/activity-logs?${search.toString()}`,
-      );
+      const url = new URL(window.location.href);
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          url.searchParams.set(key, value.toString());
+        }
+      });
+      router.push(url.pathname + url.search);
     },
-    [router, searchParams],
+    [router],
   );
 
-  // Admin Activity Logs Functions
-  const generatePDFReport = () => {
-    const params = new URLSearchParams();
-    params.set("userId", selectedUser);
-    const eventTypesString =
-      selectedEventTypes.length === 0
-        ? "all"
-        : selectedEventTypes.map((opt) => opt.value).join(",");
-    params.set("activityTypes", eventTypesString);
-    params.set("page", page.toString());
-    params.set("limit", limit.toString());
-
-    const previewUrl = `/admin/activity-logs-preview-pdf?${params.toString()}`;
-    window.open(previewUrl, "_blank");
-  };
-
-  // Handle User Logs Toggle
-  const handleUserLogsToggle = () => {
-    const newShowState = !showUserLogs;
-    setShowUserLogs(newShowState);
-    updateQueryParams({ showUserLogs: newShowState });
+  // Handle tab change
+  const handleTabChange = (tab: 'admin' | 'users') => {
+    setActiveTab(tab);
+    updateQueryParams({ tab });
     
-    // Fetch data when opening for the first time
-    if (newShowState && regularUsers.length === 0) {
+    // Fetch data for the selected tab if not already loaded
+    if (tab === 'users' && regularUsers.length === 0) {
       fetchRegularUsers();
     }
-    if (newShowState) {
+    if (tab === 'users') {
       fetchUserLogs();
+    }
+  };
+
+  // Generate PDF report function
+  const generatePDFReport = async () => {
+    try {
+      const params = new URLSearchParams();
+      
+      if (activeTab === 'admin') {
+        params.set("userId", selectedUser);
+        const eventTypesString = selectedEventTypes.length === 0
+          ? "all"
+          : selectedEventTypes.map((opt) => opt.value).join(",");
+        params.set("activityTypes", eventTypesString);
+        params.set("page", page.toString());
+        params.set("limit", limit.toString());
+      } else {
+        // For user logs, we could create a separate PDF endpoint
+        // For now, we'll use the admin endpoint but could be extended
+        params.set("userId", selectedUserUser);
+        const eventTypesString = selectedUserEventTypes.length === 0
+          ? "all"
+          : selectedUserEventTypes.map((opt) => opt.value).join(",");
+        params.set("activityTypes", eventTypesString);
+        params.set("page", userPage.toString());
+        params.set("limit", userLimit.toString());
+      }
+
+      const previewUrl = `/admin/activity-logs-preview-pdf?${params.toString()}`;
+      window.open(previewUrl, "_blank");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
     }
   };
 
@@ -234,9 +238,8 @@ function ActivityLogContent() {
   };
 
   // Separate function for fetching user logs
- // Wrap fetchUserLogs in useCallback
   const fetchUserLogs = useCallback(async () => {
-    if (!showUserLogs) return;
+    if (activeTab !== 'users') return;
 
     try {
       setUserLogsLoading(true);
@@ -282,7 +285,7 @@ function ActivityLogContent() {
       setUserLogsLoading(false);
     }
   }, [
-    showUserLogs,
+    activeTab,
     selectedUserUser,
     selectedUserEventTypes,
     selectedUserRole,
@@ -290,15 +293,6 @@ function ActivityLogContent() {
     userLimit,
   ]);
 
-  // Update the useEffect to include fetchUserLogs in dependencies
-  useEffect(() => {
-    if (!mounted || !showUserLogs) return;
-    fetchUserLogs();
-  }, [
-    mounted,
-    showUserLogs,
-    fetchUserLogs, // Add this dependency
-  ]);
   // Fetch admin users for dropdown
   useEffect(() => {
     if (!mounted) return;
@@ -338,7 +332,7 @@ function ActivityLogContent() {
 
   // Fetch admin activity logs
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || activeTab !== 'admin') return;
 
     const params = new URLSearchParams();
     params.set("userId", selectedUser);
@@ -368,7 +362,7 @@ function ActivityLogContent() {
           total: number;
           page: number;
           limit: number;
-          logs: Activity[];
+          logs: ActivityLog[];
         }) => {
           if (data.success) {
             const fetchedLogs = Array.isArray(data.logs) ? data.logs : [];
@@ -385,27 +379,23 @@ function ActivityLogContent() {
         setLogs([]);
         setTotal(0);
       });
-  }, [mounted, selectedUser, selectedEventTypes, page, limit]);
+  }, [mounted, activeTab, selectedUser, selectedEventTypes, page, limit]);
 
   // Fetch user activity logs when dependencies change
   useEffect(() => {
-    if (!mounted || !showUserLogs) return;
+    if (!mounted || activeTab !== 'users') return;
     fetchUserLogs();
   }, [
     mounted,
-    showUserLogs,
-    selectedUserUser,
-    selectedUserEventTypes,
-    selectedUserRole,
-    userPage,
-    userLimit,
+    activeTab,
+    fetchUserLogs,
   ]);
 
   if (!mounted) {
     return (
-      <div className="flex flex-col w-auto bg-midnight p-6 mb-8 rounded-xl border-1 border-white-5">
+      <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mb-8 rounded-xl border-1 border-white-5`}>
         <h1 className="text-2xl font-bold ml-1">Activity Logs</h1>
-        <div className="h-0.5 w-auto my-4 bg-dusk"></div>
+        <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
         <div className="animate-pulse space-y-4">
           <div className="flex gap-4">
             <div className="h-10 bg-gray-700 rounded w-64"></div>
@@ -445,233 +435,174 @@ function ActivityLogContent() {
   const facultyCount = regularUsers.filter((u) => u.role === "FACULTY").length;
 
   return (
-    <div className="space-y-8">
-      {/* Admin Activity Logs Section */}
-      <div className="flex flex-col w-auto p-6 mb-8 rounded-xl border-1 border-white-5">
-        <div className="flex flex-row items-center justify-between">
-          <span className="flex items-center gap-2">
-            <UserCog className="w-6 h-6" />
-            <h1 className="text-2xl font-bold ml-1">Admin Activity Logs</h1>
-          </span>
- 
+    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 pb-10 rounded-xl border-1 border-white-5`}>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold ml-1">Activity Logs</h1>
+        <button
+          onClick={generatePDFReport}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+        >
+          <Download className="w-4 h-4" />
+          Generate Report
+        </button>
+      </div>
+      
+      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
 
-          {(currentUserRole === "ADMIN" || currentUserRole === "ASSISTANT") && (
-            <div className="flex items-center gap-3">
-              <button
-                onClick={generatePDFReport}
-                className="cursor-pointer flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 shadow-sm"
-                title="Preview PDF Report"
-              >
-                <FileText className="w-4 h-4" />
-                <span>Generate Audit Trail</span>
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div
-          className={`h-0.5 w-auto my-4 ${theme === "light" ? "bg-white-50" : "bg-dusk"}`}
-        />
-
-        {/* Admin Filters */}
-        <div className="flex flex-row items-end space-x-8 mb-6 overflow-visible">
-          {/* Username Filter */}
-          <div className="flex flex-col">
-            <Label className="text-sm mb-1">Admin User</Label>
-            <Select
-              value={selectedUser}
-              onValueChange={(val) => {
-                setSelectedUser(val);
-                setPage(1);
-                updateQueryParams({ userId: val, page: 1 });
-              }}
-            >
-              <SelectTrigger className="w-64 dark:bg-primary">
-                <SelectValue placeholder="All" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="all">All Admin Users</SelectItem>
-                  {users.map((u) => (
-                    <SelectItem key={u.userId} value={u.userId.toString()}>
-                      {u.name}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Event Type Multi-Select */}
-          <div className="flex flex-col w-auto">
-            <Label className="text-sm mb-1">Event type</Label>
-            <MultipleSelector
-              options={eventOptions}
-              value={selectedEventTypes}
-              onChange={(newSelected) => {
-                setSelectedEventTypes(newSelected);
-                setPage(1);
-                const typesString =
-                  newSelected.length === 0
-                    ? "all"
-                    : newSelected.map((o) => o.value).join(",");
-                updateQueryParams({ activityTypes: typesString, page: 1 });
-              }}
-              placeholder="Select event types..."
-              hidePlaceholderWhenSelected={false}
-              maxSelected={eventOptions.length}
-              creatable={false}
-              className="border border-input rounded-md"
-              badgeClassName="bg-blue-100 text-blue-800"
-            />
-          </div>
-        </div>
-
-        {/* Admin Activity Logs Table */}
-        <ActivityLogsSection
-          logs={logs}
-          page={page}
-          limit={limit}
-          total={total}
-          onPageChange={(newPage) => {
-            setPage(newPage);
-            updateQueryParams({ page: newPage });
-          }}
-          currentFilters={{
-            userId: selectedUser,
-            activityTypes:
-              selectedEventTypes.length === 0
-                ? "all"
-                : selectedEventTypes.map((opt) => opt.value).join(","),
-          }}
-        />
+      {/* Tab Navigation */}
+      <div className={`flex space-x-1 mb-6 p-2 gap-1 rounded-lg ${theme === 'light' ? 'bg-tertiary' : 'bg-dusk'}`}>
+        {[
+          { 
+            id: 'admin', 
+            label: 'Admin & Staff Logs', 
+            icon: Shield,
+            description: 'View activity logs for administrators, assistants, and librarians'
+          },
+          { 
+            id: 'users', 
+            label: 'User Activity Logs', 
+            icon: Users,
+            description: 'View activity logs for students and faculty members'
+          }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => handleTabChange(tab.id as 'admin' | 'users')}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors cursor-pointer ${
+              activeTab === tab.id
+                ? 'bg-yale-blue text-white'
+                : `${theme === 'light' ? 'bg-tertiary hover:bg-gray-200' : 'bg-dusk hover:bg-dusk-fg'}`
+            }`}
+            title={tab.description}
+          >
+            <tab.icon className="w-4 h-4" />
+            <span>{tab.label}</span>
+          </button>
+        ))}
       </div>
 
-      {/* User Activity Logs Section - Collapsible */}
-      <div className="flex flex-col w-auto p-6 mb-8 rounded-xl border-1 border-white-5">
-
-        {/* Collapsible Header */}
-        <div
-          className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer transition-all duration-200 hover:shadow-md ${
-            theme === "light"
-              ? "bg-gray-50 border-gray-200 hover:bg-gray-100"
-              : "bg-gray-800/50 border-gray-600 hover:bg-gray-800/70"
-          }`}
-          onClick={handleUserLogsToggle}
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              {showUserLogs ? (
-                <ChevronUp className="w-5 h-5 text-gray-500" />
-              ) : (
-                <ChevronDown className="w-5 h-5 text-gray-500" />
-              )}
-              <Users className="w-6 h-6" />
-              <h2 className="text-xl font-semibold">User Activity Logs</h2>
+      {/* Tab Content */}
+      {activeTab === 'admin' && (
+        <div className="space-y-6">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
+            {/* User Selector */}
+            <div className="flex-1 space-y-2">
+              <Label className="text-sm font-medium">Select Admin/Staff User</Label>
+              <Select value={selectedUser} onValueChange={setSelectedUser}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a user" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="all">All Admin/Staff Users</SelectItem>
+                    {users.map((user) => (
+                      <SelectItem key={user.userId} value={user.userId.toString()}>
+                        {user.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
-           
+
+            {/* Activity Type Selector */}
+            <div className="flex-1 space-y-2">
+              <Label className="text-sm font-medium">Activity Types</Label>
+              <MultipleSelector
+                value={selectedEventTypes}
+                onChange={setSelectedEventTypes}
+                defaultOptions={eventOptions}
+                placeholder="Select activity types..."
+                emptyIndicator={
+                  <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                    No event types found.
+                  </p>
+                }
+              />
+            </div>
           </div>
 
-          <div className="text-sm text-gray-400 italic">
-            {showUserLogs ? "Click to hide" : "Click to view"}
-          </div>
+          {/* Admin Activity Logs Section */}
+          <ActivityLogsSection
+            logs={logs}
+            page={page}
+            limit={limit}
+            total={total}
+            onPageChange={(newPage) => {
+              setPage(newPage);
+              updateQueryParams({ page: newPage });
+            }}
+            currentFilters={{
+              userId: selectedUser,
+              activityTypes: selectedEventTypes.map(opt => opt.value).join(",")
+            }}
+          />
         </div>
+      )}
 
-        {/* Collapsible Content */}
-        {showUserLogs && (
-          <div className="mt-4 space-y-4">
-            <div
-              className={`h-0.5 w-auto ${theme === "light" ? "bg-white-50" : "bg-dusk"}`}
-            />
-
-
-            {/* User Filters */}
-            <div className="flex flex-row items-end space-x-8 mb-6 overflow-visible">
-              {/* User Filter */}
-              <div className="flex flex-col">
-                <Label className="text-sm mb-1">User</Label>
-                <Select
-                  value={selectedUserUser}
-                  onValueChange={(val) => {
-                    setSelectedUserUser(val);
-                    setUserPage(1);
-                    updateQueryParams({ userUserId: val, userPage: 1 });
-                  }}
-                >
-                  <SelectTrigger className="w-64 dark:bg-primary">
-                    <SelectValue placeholder="All" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="all">All Users</SelectItem>
-                      {regularUsers.map((u) => (
-                        <SelectItem key={u.userId} value={u.userId.toString()}>
-                          <div>
-                            <div className="font-medium">{u.name}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {u.role} - {u.details}
-                            </div>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* User Role Filter */}
-              <div className="flex flex-col">
-                <Label className="text-sm mb-1">User Role</Label>
-                <Select
-                  value={selectedUserRole}
-                  onValueChange={(val) => {
-                    setSelectedUserRole(val);
-                    setUserPage(1);
-                    updateQueryParams({ userRole: val, userPage: 1 });
-                  }}
-                >
-                  <SelectTrigger className="w-48 dark:bg-primary">
-                    <SelectValue placeholder="All Roles" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="all">All Roles</SelectItem>
-                      <SelectItem value="STUDENT">Students</SelectItem>
-                      <SelectItem value="FACULTY">Faculty</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Event Type Multi-Select for Users */}
-              <div className="flex flex-col w-auto">
-                <Label className="text-sm mb-1">Event type</Label>
-                <MultipleSelector
-                  options={userEventOptions}
-                  value={selectedUserEventTypes}
-                  onChange={(newSelected) => {
-                    setSelectedUserEventTypes(newSelected);
-                    setUserPage(1);
-                    const typesString =
-                      newSelected.length === 0
-                        ? "all"
-                        : newSelected.map((o) => o.value).join(",");
-                    updateQueryParams({
-                      userActivityTypes: typesString,
-                      userPage: 1,
-                    });
-                  }}
-                  placeholder="Select event types..."
-                  hidePlaceholderWhenSelected={false}
-                  maxSelected={userEventOptions.length}
-                  creatable={false}
-                  className="border border-input rounded-md"
-                  badgeClassName="bg-green-100 text-green-800"
-                />
-              </div>
+      {activeTab === 'users' && (
+        <div className="space-y-6">
+          {/* User Activity Logs Controls */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-end">
+            {/* User Selector */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Select User</Label>
+              <Select value={selectedUserUser} onValueChange={setSelectedUserUser}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a user" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="all">All Users</SelectItem>
+                    {regularUsers.map((user) => (
+                      <SelectItem key={user.userId} value={user.userId.toString()}>
+                        <div className="flex flex-col">
+                          <span>{user.name}</span>
+                          <span className="text-xs text-gray-500">{user.details}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* User Activity Logs Table */}
+            {/* Role Filter */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">User Role</Label>
+              <Select value={selectedUserRole} onValueChange={setSelectedUserRole}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="all">All Roles</SelectItem>
+                    <SelectItem value="STUDENT">Students ({studentCount})</SelectItem>
+                    <SelectItem value="FACULTY">Faculty ({facultyCount})</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Activity Type Selector */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Activity Types</Label>
+              <MultipleSelector
+                value={selectedUserEventTypes}
+                onChange={setSelectedUserEventTypes}
+                defaultOptions={userEventOptions}
+                placeholder="Select activity types..."
+                emptyIndicator={
+                  <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                    No event types found.
+                  </p>
+                }
+              />
+            </div>
+          </div>
+
+          {/* User Activity Logs Section */}
+          <div className="space-y-4">
             {userLogsLoading ? (
               <div className="space-y-4">
                 <div className="h-12 bg-secondary rounded animate-pulse"></div>
@@ -691,15 +622,14 @@ function ActivityLogContent() {
               />
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Debug info (remove in production) */}
       {process.env.NODE_ENV === "development" && (
         <div className="mt-4 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs">
-          <p>
-            <strong>Debug Info:</strong>
-          </p>
+          <p><strong>Debug Info:</strong></p>
+          <p>Active tab: {activeTab}</p>
           <p>Admin users loaded: {users.length}</p>
           <p>Admin logs loaded: {logs.length}</p>
           <p>Regular users loaded: {regularUsers.length}</p>
@@ -707,7 +637,6 @@ function ActivityLogContent() {
           <p>Selected admin user: {selectedUser}</p>
           <p>Selected regular user: {selectedUserUser}</p>
           <p>Selected user role: {selectedUserRole}</p>
-          <p>Show user logs: {showUserLogs.toString()}</p>
         </div>
       )}
     </div>
@@ -715,10 +644,11 @@ function ActivityLogContent() {
 }
 
 function ActivityLogsLoading() {
+  const { theme } = useTheme();
   return (
-    <div className="flex flex-col w-auto bg-midnight p-6 mb-8 rounded-xl border-1 border-white-5">
+    <div className={`flex flex-col w-auto ${theme === 'light' ? 'bg-secondary border-white-50' : 'bg-midnight'} p-6 mb-8 rounded-xl border-1 border-white-5`}>
       <h1 className="text-2xl ml-1">Activity Logs</h1>
-      <div className="h-0.5 w-auto my-4 bg-dusk"></div>
+      <div className={`h-0.5 w-auto my-4 ${theme === 'light' ? 'bg-white-50' : 'bg-dusk'}`}></div>
       <div className="animate-pulse space-y-4">
         <div className="flex gap-4">
           <div className="h-10 bg-gray-700 rounded w-64"></div>
