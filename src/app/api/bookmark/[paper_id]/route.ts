@@ -1,3 +1,4 @@
+// src/app/api/bookmark/[paper_id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
@@ -6,7 +7,7 @@ const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: Promise<{ paper_id: string }> },
+  context: { params: Promise<{ paper_id: string }> },
 ) {
   try {
     const authHeader = req.headers.get("authorization");
@@ -20,7 +21,7 @@ export async function POST(
     }
 
     const payload = (await jwt.verify(token, SECRET_KEY)) as any;
-    const { paper_id } = await params;
+    const { paper_id } = await context.params;
 
     if (!paper_id || !payload?.user_id) {
       return NextResponse.json({ error: "Missing data" }, { status: 400 });
@@ -60,7 +61,7 @@ export async function POST(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ paper_id: string }> },
+  context: { params: Promise<{ paper_id: string }> },
 ) {
   try {
     const authHeader = req.headers.get("authorization");
@@ -74,7 +75,7 @@ export async function DELETE(
     }
 
     const payload = (await jwt.verify(token, SECRET_KEY)) as any;
-    const { paper_id } = await params;
+    const { paper_id } = await context.params;
 
     if (!paper_id || !payload?.user_id) {
       return NextResponse.json({ error: "Missing data" }, { status: 400 });
