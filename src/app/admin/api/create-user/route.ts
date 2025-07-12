@@ -8,16 +8,32 @@ import { activity_type } from "@prisma/client";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
 
+// Type definition for the result from saveAdminStaffInformation
+interface SaveAdminStaffResult {
+  success: boolean;
+  message: string;
+  user: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    status: string;
+    employeeID: string;
+    position: string;
+  };
+}
+
 // Helper function to extract admin info from JWT token
 async function getAdminInfo(request: Request) {
   try {
-    const authHeader = request.headers.get('authorization');
-    const cookieHeader = request.headers.get('cookie');
-    
+    const authHeader = request.headers.get("authorization");
+    const cookieHeader = request.headers.get("cookie");
+
     let token: string | null = null;
 
     // Try to get token from Authorization header first
-    if (authHeader && authHeader.startsWith('Bearer ')) {
+    if (authHeader && authHeader.startsWith("Bearer ")) {
       token = authHeader.substring(7);
     }
     // Fallback to cookie
@@ -33,7 +49,7 @@ async function getAdminInfo(request: Request) {
     }
 
     const payload = jwt.verify(token, SECRET_KEY) as any;
-    
+
     // Get admin user details from database
     const adminUser = await prisma.users.findUnique({
       where: { user_id: payload.user_id },
@@ -41,10 +57,10 @@ async function getAdminInfo(request: Request) {
         librarian: {
           select: {
             employee_id: true,
-            position: true
-          }
-        }
-      }
+            position: true,
+          },
+        },
+      },
     });
 
     return adminUser;
@@ -63,7 +79,7 @@ function convertBigIntToString(obj: any): any {
     return obj.map(convertBigIntToString);
   } else if (obj && typeof obj === "object") {
     return Object.fromEntries(
-      Object.entries(obj).map(([k, v]) => [k, convertBigIntToString(v)])
+      Object.entries(obj).map(([k, v]) => [k, convertBigIntToString(v)]),
     );
   } else if (typeof obj === "bigint") {
     return obj.toString();
@@ -140,20 +156,25 @@ export async function POST(req: Request) {
     });
 
     console.log("📞 Calling saveAdminStaffInformation action...");
-    const result = await saveAdminStaffInformation(formData);
+    const result = (await saveAdminStaffInformation(
+      formData,
+    )) as SaveAdminStaffResult;
     console.log("✅ Action completed successfully:", result);
 
     // 🚨 ADD ACTIVITY LOG for user creation by ADMIN
     if (adminUser && adminUser.role === "ADMIN" && result.success) {
       try {
-        const newUserName = `${formData.firstName} ${formData.lastName}${formData.ext ? " " + formData.ext : ""}`.trim();
+        const newUserName =
+          `${formData.firstName} ${formData.lastName}${formData.ext ? " " + formData.ext : ""}`.trim();
         const userDetails = [
           `Name: ${newUserName}`,
           `Email: ${formData.email}`,
           `Role: ${role}`,
           `Employee ID: ${formData.employeeID}`,
-          formData.position && `Position: ${formData.position}`
-        ].filter(Boolean).join(", ");
+          formData.position && `Position: ${formData.position}`,
+        ]
+          .filter(Boolean)
+          .join(", ");
 
         await prisma.activity_logs.create({
           data: {
@@ -162,8 +183,11 @@ export async function POST(req: Request) {
             name: `${adminUser.first_name} ${adminUser.last_name}`.trim(),
             activity: `Created new user account: ${userDetails}`,
             activity_type: activity_type.ADD_USER,
-            user_agent: req.headers.get('user-agent') || '',
-            ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown',
+            user_agent: req.headers.get("user-agent") || "",
+            ip_address:
+              req.headers.get("x-forwarded-for") ||
+              req.headers.get("x-real-ip") ||
+              "unknown",
             status: "success",
             created_at: new Date(),
           },
@@ -177,12 +201,15 @@ export async function POST(req: Request) {
     }
 
     return new NextResponse(
-      JSON.stringify({
-        success: true,
-        message: result.message,
-        user: result.data,
-      }, replacer),
-      { status: 201, headers: { "Content-Type": "application/json" } }
+      JSON.stringify(
+        {
+          success: true,
+          message: result.message,
+          user: result.user,
+        },
+        replacer,
+      ),
+      { status: 201, headers: { "Content-Type": "application/json" } },
     );
   } catch (error) {
     console.error("💥 Error in create-user route:", error);
@@ -205,8 +232,11 @@ export async function POST(req: Request) {
             name: `${adminUser.first_name} ${adminUser.last_name}`.trim(),
             activity: `Failed to create user account: ${errorMessage}`,
             activity_type: activity_type.ADD_USER,
-            user_agent: req.headers.get('user-agent') || '',
-            ip_address: req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown',
+            user_agent: req.headers.get("user-agent") || "",
+            ip_address:
+              req.headers.get("x-forwarded-for") ||
+              req.headers.get("x-real-ip") ||
+              "unknown",
             status: "failed",
             created_at: new Date(),
           },

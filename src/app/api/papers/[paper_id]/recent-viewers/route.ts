@@ -18,13 +18,13 @@ interface JWTPayload {
 
 async function verifyAndGetPayload(req: NextRequest): Promise<JWTPayload> {
   // Try to get token from Authorization header first
-  const authHeader = req.headers.get('authorization');
+  const authHeader = req.headers.get("authorization");
   let token: string | null = null;
 
-  if (authHeader && authHeader.startsWith('Bearer ')) {
+  if (authHeader && authHeader.startsWith("Bearer ")) {
     token = authHeader.substring(7);
   }
-  
+
   // Fallback to cookie
   if (!token) {
     token = req.cookies.get("authToken")?.value || null;
@@ -43,10 +43,11 @@ async function verifyAndGetPayload(req: NextRequest): Promise<JWTPayload> {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ paper_id: string }> }
+  context: { params: Promise<{ paper_id: string }> },
 ) {
   try {
-    const { paper_id } = await params;
+    // Fix: Properly await the params Promise
+    const { paper_id } = await context.params;
     console.log("🔍 Fetching recent viewers for paper:", paper_id);
 
     // 1) Verify JWT and get user info
@@ -56,7 +57,7 @@ export async function GET(
       console.log("❌ JWT verification failed:", err.message);
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -100,10 +101,10 @@ export async function GET(
 
     // 3) Process and deduplicate by user (keep only the most recent view per user)
     const viewerMap = new Map();
-    
+
     for (const log of recentLogs) {
       const userId = log.user_id;
-      
+
       // Skip if we already have a more recent entry for this user
       if (viewerMap.has(userId)) {
         continue;
@@ -113,7 +114,7 @@ export async function GET(
       if (log.users) {
         const viewer = {
           user_id: log.users.user_id,
-          name: `${log.users.first_name} ${log.users.last_name || ''}`.trim(),
+          name: `${log.users.first_name} ${log.users.last_name || ""}`.trim(),
           role: log.users.role,
           last_viewed: log.created_at,
           // ✅ ONLY STUDENT AND FACULTY INFO - NO LIBRARIAN!
@@ -143,19 +144,19 @@ export async function GET(
       recent_viewers: recentViewers,
       total_unique_viewers: viewerMap.size,
     });
-
   } catch (error) {
     console.error("❌ Error fetching recent viewers:", error);
-    
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-    
+
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
+
     return NextResponse.json(
       {
         success: false,
         message: "Failed to fetch recent viewers",
         error: errorMessage,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

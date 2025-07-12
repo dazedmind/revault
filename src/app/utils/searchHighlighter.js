@@ -91,12 +91,24 @@ export class SearchHighlighter {
   }
 
   /**
-   * Extract meaningful terms from search query
+   * Extract meaningful terms from search query with exact match support
    * @param {string} query - Search query
    * @returns {string[]} Array of search terms
    */
   extractQueryTerms(query) {
-    // Remove special characters and split by whitespace
+    // 🔥 NEW: Check for exact match (quoted query) - trim whitespace first
+    const trimmedQuery = query.trim();
+    const isExactMatch =
+      trimmedQuery.startsWith('"') &&
+      trimmedQuery.endsWith('"') &&
+      trimmedQuery.length > 2;
+
+    if (isExactMatch) {
+      // 🔥 NEW: Return the exact phrase as a single term (trim after removing quotes)
+      return [trimmedQuery.slice(1, -1).trim().toLowerCase()];
+    }
+
+    // 🔧 EXISTING: Regular term extraction (unchanged)
     const terms = query
       .toLowerCase()
       .replace(/[^\w\s]/g, " ")
@@ -123,7 +135,7 @@ export class SearchHighlighter {
   }
 
   /**
-   * Create regex pattern for highlighting
+   * Create regex pattern for highlighting with exact match support
    * @param {string[]} terms - Search terms
    * @param {boolean} caseSensitive - Case sensitivity
    * @returns {RegExp|null} Regex pattern
@@ -131,6 +143,15 @@ export class SearchHighlighter {
   createSearchPattern(terms, caseSensitive = false) {
     if (!terms.length) return null;
 
+    // 🔥 NEW: Check if we have a single term that might be an exact phrase
+    if (terms.length === 1 && terms[0].includes(" ")) {
+      // This is likely an exact phrase from quoted search
+      const phrase = terms[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const flags = caseSensitive ? "g" : "gi";
+      return new RegExp(phrase, flags);
+    }
+
+    // 🔧 EXISTING: Regular pattern creation (unchanged)
     // Escape special regex characters
     const escapedTerms = terms.map((term) =>
       term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),

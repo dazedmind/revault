@@ -161,23 +161,42 @@ const DocsCard = (props) => {
   const highlightText = (text, query) => {
     if (!text || !query) return text;
 
-    const queryTerms = query
-      .toLowerCase()
-      .split(/\s+/)
-      .filter((term) => term.length > 1);
-    let highlightedText = text;
+    // 🔥 NEW: Handle quoted queries for highlighting (same logic as SearchInput)
+    const trimmedQuery = query.trim();
+    const isQuotedQuery =
+      trimmedQuery.startsWith('"') && trimmedQuery.endsWith('"');
 
-    queryTerms.forEach((term) => {
-      if (term.length > 1) {
-        const regex = new RegExp(`(${escapeRegExp(term)})`, "gi");
-        highlightedText = highlightedText.replace(
+    if (isQuotedQuery) {
+      // For quoted queries, highlight the exact phrase
+      const exactPhrase = trimmedQuery.slice(1, -1).trim();
+      if (exactPhrase) {
+        const regex = new RegExp(`(${escapeRegExp(exactPhrase)})`, "gi");
+        return text.replace(
           regex,
           '<strong class="text-yale-blue">$1</strong>',
         );
       }
-    });
+      return text;
+    } else {
+      // ORIGINAL: For regular queries, highlight individual terms (unchanged)
+      const queryTerms = query
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((term) => term.length > 1);
+      let highlightedText = text;
 
-    return highlightedText;
+      queryTerms.forEach((term) => {
+        if (term.length > 1) {
+          const regex = new RegExp(`(${escapeRegExp(term)})`, "gi");
+          highlightedText = highlightedText.replace(
+            regex,
+            '<strong class="text-yale-blue">$1</strong>',
+          );
+        }
+      });
+
+      return highlightedText;
+    }
   };
 
   const getIntelligentDescription = (description, query) => {

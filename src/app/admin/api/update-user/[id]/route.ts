@@ -4,96 +4,74 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { activity_type } from "@prisma/client";
+import {
+  validateRoleChange,
+  validateStatusChange,
+  type RoleName,
+} from "@/lib/roleValidation";
 
 const SECRET_KEY = process.env.JWT_SECRET_KEY!;
 
-// Helper function to extract admin info from JWT token
+// Helper function to get admin user info from token
 async function getAdminInfo(request: Request) {
   try {
-    const authHeader = request.headers.get('authorization');
-    const cookieHeader = request.headers.get('cookie');
-    
-    let token: string | null = null;
-
-    // Try to get token from Authorization header first
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.substring(7);
-    }
-    // Fallback to cookie
-    else if (cookieHeader) {
-      const tokenMatch = cookieHeader.match(/authToken=([^;]+)/);
-      if (tokenMatch) {
-        token = tokenMatch[1];
-      }
-    }
+    let token = request.headers.get("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
-      return null;
+      const cookies = request.headers.get("cookie");
+      const authTokenMatch = cookies?.match(/authToken=([^;]+)/);
+      token = authTokenMatch?.[1];
     }
 
+    if (!token) return null;
+
     const payload = jwt.verify(token, SECRET_KEY) as any;
-    
-    // Get admin user details from database
+
     const adminUser = await prisma.users.findUnique({
       where: { user_id: payload.user_id },
       include: {
         librarian: {
           select: {
             employee_id: true,
-            position: true
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     return adminUser;
   } catch (error) {
-    console.error("Error extracting admin info:", error);
+    console.error("Error getting admin info:", error);
     return null;
   }
 }
 
 // Helper function to generate change description
-function generateChangeDescription(originalUser: any, updatedData: any): string {
+function generateChangeDescription(original: any, updated: any): string {
   const changes: string[] = [];
 
-  // Check for name changes
-  if (originalUser.first_name !== updatedData.first_name) {
-    changes.push(`First name: "${originalUser.first_name}" → "${updatedData.first_name}"`);
+  if (original.first_name !== updated.first_name) {
+    changes.push(
+      `first name from "${original.first_name}" to "${updated.first_name}"`,
+    );
   }
-  if (originalUser.mid_name !== (updatedData.mid_name || "")) {
-    changes.push(`Middle name: "${originalUser.mid_name || ""}" → "${updatedData.mid_name || ""}"`);
+  if (original.last_name !== updated.last_name) {
+    changes.push(
+      `last name from "${original.last_name}" to "${updated.last_name}"`,
+    );
   }
-  if (originalUser.last_name !== updatedData.last_name) {
-    changes.push(`Last name: "${originalUser.last_name}" → "${updatedData.last_name}"`);
+  if (original.email !== updated.email) {
+    changes.push(`email from "${original.email}" to "${updated.email}"`);
   }
-  if (originalUser.ext_name !== (updatedData.ext_name || "")) {
-    changes.push(`Extension: "${originalUser.ext_name || ""}" → "${updatedData.ext_name || ""}"`);
+  if (original.role !== updated.role) {
+    changes.push(`role from "${original.role}" to "${updated.role}"`);
   }
-  if (originalUser.email !== updatedData.email) {
-    changes.push(`Email: "${originalUser.email}" → "${updatedData.email}"`);
+  if ((original.status || "ACTIVE") !== (updated.status || "ACTIVE")) {
+    changes.push(
+      `status from "${original.status || "ACTIVE"}" to "${updated.status || "ACTIVE"}"`,
+    );
   }
-  if (originalUser.role !== updatedData.role) {
-    changes.push(`Role: "${originalUser.role}" → "${updatedData.role}"`);
-  }
-
-  // Check for librarian changes
-  if (originalUser.librarian) {
-    const originalEmpId = originalUser.librarian.employee_id.toString();
-    const newEmpId = updatedData.employeeID || "";
-    if (originalEmpId !== newEmpId) {
-      changes.push(`Employee ID: "${originalEmpId}" → "${newEmpId}"`);
-    }
-
-    const originalPosition = originalUser.librarian.position || "";
-    const newPosition = updatedData.position || "";
-    if (originalPosition !== newPosition) {
-      changes.push(`Position: "${originalPosition}" → "${newPosition}"`);
-    }
-  }
-
-  if (updatedData.password) {
-    changes.push("Password updated");
+  if (updated.password) {
+    changes.push("password changed");
   }
 
   return changes.length > 0 ? changes.join(", ") : "No changes detected";
@@ -216,7 +194,9 @@ export async function PUT(
       );
     }
 
-    console.log("✅ All validations passed, starting update...");
+    console.log(
+      "✅ All basic validations passed, getting original user data...",
+    );
 
     // Get admin info for activity logging
     const adminUser = await getAdminInfo(request);
@@ -231,10 +211,10 @@ export async function PUT(
         librarian: {
           select: {
             employee_id: true,
-            position: true
-          }
-        }
-      }
+            position: true,
+          },
+        },
+      },
     });
 
     if (!originalUser) {
@@ -247,13 +227,94 @@ export async function PUT(
 
     // Map userAccess to role
     const accessToRoleMap: { [key: string]: string } = {
-      "Admin": "ADMIN",
-      "Admin Assistant": "ASSISTANT", 
+      Admin: "ADMIN",
+      "Admin Assistant": "ASSISTANT",
       "Librarian-in-Charge": "LIBRARIAN",
     };
 
     const mappedRole = accessToRoleMap[finalUserAccess] || finalUserAccess;
     const empId = parseInt(employeeID);
+
+    // 🆕 NEW: Role validation logic
+    console.log("🔍 Checking role and status validations...");
+
+    try {
+      // Check if role is changing
+      if (originalUser.role !== mappedRole) {
+        console.log(
+          `🔄 Role change detected: ${originalUser.role} → ${mappedRole}`,
+        );
+
+        const roleValidation = await validateRoleChange(
+          mappedRole as RoleName,
+          userId,
+        );
+
+        if (!roleValidation.isValid) {
+          console.log(
+            "❌ Role change validation failed:",
+            roleValidation.message,
+          );
+          return NextResponse.json(
+            { success: false, message: roleValidation.message },
+            { status: 400 },
+          );
+        }
+
+        console.log(
+          "✅ Role change validation passed:",
+          roleValidation.message,
+        );
+      }
+
+      // Check if status is changing to ACTIVE
+      const originalStatus = originalUser.status || "ACTIVE";
+      const newStatus = status || "ACTIVE";
+
+      if (originalStatus !== "ACTIVE" && newStatus === "ACTIVE") {
+        console.log(
+          `🔄 Status change to ACTIVE detected: ${originalStatus} → ${newStatus}`,
+        );
+
+        const statusValidation = await validateStatusChange(
+          mappedRole as RoleName,
+          newStatus,
+          userId,
+        );
+
+        if (!statusValidation.isValid) {
+          console.log(
+            "❌ Status change validation failed:",
+            statusValidation.message,
+          );
+          return NextResponse.json(
+            { success: false, message: statusValidation.message },
+            { status: 400 },
+          );
+        }
+
+        console.log(
+          "✅ Status change validation passed:",
+          statusValidation.message,
+        );
+      }
+    } catch (roleError) {
+      console.error("❌ Role/status validation error:", roleError);
+      if (roleError instanceof Error) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: `Validation failed: ${roleError.message}`,
+          },
+          { status: 400 },
+        );
+      } else {
+        return NextResponse.json(
+          { success: false, message: "Validation failed: Unknown error" },
+          { status: 500 },
+        );
+      }
+    }
 
     // Check for existing user with same email or employee ID (excluding current user)
     const existingUser = await prisma.users.findFirst({
@@ -284,6 +345,8 @@ export async function PUT(
         { status: 400 },
       );
     }
+
+    console.log("✅ All validations passed, starting update transaction...");
 
     // Use transaction to update both tables and log activity
     const result = await prisma.$transaction(async (tx) => {
@@ -350,7 +413,8 @@ export async function PUT(
       // 🚨 ADD ACTIVITY LOG for user changes by ADMIN
       if (adminUser && adminUser.role === "ADMIN") {
         try {
-          const targetUserName = `${fullName} ${lastName}${extension ? " " + extension : ""}`.trim();
+          const targetUserName =
+            `${fullName} ${lastName}${extension ? " " + extension : ""}`.trim();
           const changeDescription = generateChangeDescription(originalUser, {
             first_name: fullName,
             mid_name: middleName || null,
@@ -361,7 +425,7 @@ export async function PUT(
             employeeID,
             position: position || mappedRole,
             status: status || "",
-            password: !!password
+            password: !!password,
           });
 
           await tx.activity_logs.create({
@@ -371,8 +435,11 @@ export async function PUT(
               name: `${adminUser.first_name} ${adminUser.last_name}`.trim(),
               activity: `Updated user profile for "${targetUserName}": ${changeDescription}`,
               activity_type: activity_type.MODIFY_USER,
-              user_agent: request.headers.get('user-agent') || '',
-              ip_address: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+              user_agent: request.headers.get("user-agent") || "",
+              ip_address:
+                request.headers.get("x-forwarded-for") ||
+                request.headers.get("x-real-ip") ||
+                "unknown",
               status: "success",
               created_at: new Date(),
             },
@@ -433,22 +500,21 @@ export async function PUT(
         );
       }
 
-      if (error.message.includes("Record to update not found")) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: "User or associated record not found.",
-          },
-          { status: 404 },
-        );
-      }
+      return NextResponse.json(
+        {
+          success: false,
+          message: error.message,
+        },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json(
-      { success: false, message: "Failed to update user" },
+      {
+        success: false,
+        message: "An unexpected error occurred while updating user.",
+      },
       { status: 500 },
     );
-  } finally {
-    await prisma.$disconnect();
   }
-} 
+}
