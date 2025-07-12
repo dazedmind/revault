@@ -50,7 +50,13 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
   // Debounced search function
   const debouncedSearch = useCallback(
     debounce(async (searchQuery: string) => {
-      if (!searchQuery.trim() || searchQuery.length < 2) {
+      // 🔥 ONLY CHANGE: Check if it's a quoted query and preserve quotes
+      const trimmedQuery = searchQuery.trim();
+      const isQuotedQuery =
+        trimmedQuery.startsWith('"') && trimmedQuery.endsWith('"');
+      const queryToSend = isQuotedQuery ? trimmedQuery : trimmedQuery;
+
+      if (!queryToSend || queryToSend.length < 2) {
         setResults([]);
         setLoading(false);
         return;
@@ -59,12 +65,12 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
       setLoading(true);
       try {
         const params = new URLSearchParams({
-          q: searchQuery,
+          q: queryToSend, // 🔥 ONLY CHANGE: Use properly formatted query
           limit: "100", // 🔧 FIX: Get same amount as PapersArea
           sortBy: "relevance", // 🔧 FIX: Ensure relevance sorting
         });
 
-        console.log("🔍 Searching for:", searchQuery);
+        console.log("🔍 Searching for:", queryToSend);
         const response = await fetch(`/api/search?${params}`);
 
         if (!response.ok) {
@@ -134,7 +140,13 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
 
   // Handle search submission (Enter key or search button)
   const handleSearchSubmit = () => {
-    if (!query.trim()) return;
+    // 🔥 ONLY CHANGE: Check if it's a quoted query and preserve quotes
+    const trimmedQuery = query.trim();
+    const isQuotedQuery =
+      trimmedQuery.startsWith('"') && trimmedQuery.endsWith('"');
+    const queryToSubmit = isQuotedQuery ? trimmedQuery : trimmedQuery;
+
+    if (!queryToSubmit) return;
 
     setIsOpen(false);
     setIsMobileSearchOpen(false);
@@ -142,7 +154,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
     // If we're on homepage, update the URL with search query
     if (pathname === "/home") {
       const newSearchParams = new URLSearchParams(searchParams as any);
-      newSearchParams.set("q", query.trim());
+      newSearchParams.set("q", queryToSubmit); // 🔥 ONLY CHANGE: Use properly formatted query
       newSearchParams.delete("page"); // Reset to page 1 when searching
 
       const newUrl = `${pathname}?${newSearchParams.toString()}`;
@@ -150,7 +162,7 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
       router.replace(newUrl, { scroll: false });
     } else {
       // Navigate to home page if not on homepage
-      const searchParamsNew = new URLSearchParams({ q: query.trim() });
+      const searchParamsNew = new URLSearchParams({ q: queryToSubmit }); // 🔥 ONLY CHANGE: Use properly formatted query
       router.push(`/home?${searchParamsNew}`);
     }
   };
@@ -302,20 +314,39 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
   const highlightText = (text: string, query: string) => {
     if (!text || !query) return text;
 
-    const queryTerms = query.toLowerCase().split(/\s+/);
-    let highlightedText = text;
+    // 🔥 ONLY CHANGE: Handle quoted queries for highlighting
+    const trimmedQuery = query.trim();
+    const isQuotedQuery =
+      trimmedQuery.startsWith('"') && trimmedQuery.endsWith('"');
 
-    queryTerms.forEach((term) => {
-      if (term.length > 1) {
-        const regex = new RegExp(`(${escapeRegExp(term)})`, "gi");
-        highlightedText = highlightedText.replace(
+    if (isQuotedQuery) {
+      // For quoted queries, highlight the exact phrase
+      const exactPhrase = trimmedQuery.slice(1, -1).trim();
+      if (exactPhrase) {
+        const regex = new RegExp(`(${escapeRegExp(exactPhrase)})`, "gi");
+        return text.replace(
           regex,
           '<strong class="text-yale-blue">$1</strong>',
         );
       }
-    });
+      return text;
+    } else {
+      // ORIGINAL: For regular queries, highlight individual terms (unchanged)
+      const queryTerms = query.toLowerCase().split(/\s+/);
+      let highlightedText = text;
 
-    return highlightedText;
+      queryTerms.forEach((term) => {
+        if (term.length > 1) {
+          const regex = new RegExp(`(${escapeRegExp(term)})`, "gi");
+          highlightedText = highlightedText.replace(
+            regex,
+            '<strong class="text-yale-blue">$1</strong>',
+          );
+        }
+      });
+
+      return highlightedText;
+    }
   };
 
   // Function to get the display text for abstract - USE BACKEND HIGHLIGHTS IF AVAILABLE
@@ -422,38 +453,47 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                               dangerouslySetInnerHTML={{
                                 __html: paper.highlights?.title
                                   ? highlightText(paper.highlights.title, query)
-                                  : highlightText(paper.title, query),
+                                  : highlightText(
+                                      paper.title || "Untitled",
+                                      query,
+                                    ),
                               }}
                             />
-
-                            <div className="flex items-center gap-3 mt-1 text-xs">
-                              {paper.author && (
-                                <div className="flex items-center gap-1">
-                                  <User className="w-3 h-3" />
-                                  <span className="truncate max-w-28">
-                                    {paper.author}
-                                  </span>
-                                </div>
-                              )}
+                            <div className="flex items-center gap-2 mt-1 text-xs text-gray-500 dark:text-gray-400">
+                              <User className="w-3 h-3" />
+                              <span
+                                className="truncate"
+                                dangerouslySetInnerHTML={{
+                                  __html: paper.highlights?.author
+                                    ? highlightText(
+                                        paper.highlights.author,
+                                        query,
+                                      )
+                                    : highlightText(
+                                        paper.author || "Unknown Author",
+                                        query,
+                                      ),
+                                }}
+                              />
                               {paper.year && (
-                                <div className="flex items-center gap-1">
+                                <>
+                                  <span className="text-gray-300">•</span>
                                   <Calendar className="w-3 h-3" />
                                   <span>{paper.year}</span>
-                                </div>
+                                </>
                               )}
                               {paper.department && (
-                                <div className="flex items-center gap-1">
+                                <>
+                                  <span className="text-gray-300">•</span>
                                   <Building className="w-3 h-3" />
-                                  <span className="truncate max-w-24">
+                                  <span className="truncate">
                                     {paper.department}
                                   </span>
-                                </div>
+                                </>
                               )}
                             </div>
-
-                            {/* CRITICAL: Use the intelligent abstract display */}
                             <p
-                              className="text-xs text-white-5 mt-1 line-clamp-2"
+                              className="text-xs text-muted-foreground mt-1 line-clamp-2"
                               dangerouslySetInnerHTML={{
                                 __html: getAbstractDisplay(paper, query),
                               }}
@@ -462,28 +502,21 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                         </div>
                       </div>
                     ))}
-
-                  {results.some((r) => r.isError) && (
-                    <div className="px-4 py-3 text-center text-red-600 dark:text-red-400">
-                      <p className="text-sm">Search temporarily unavailable</p>
-                      <p className="text-xs">Please try again later</p>
-                    </div>
-                  )}
                 </div>
 
-                {!results.some((r) => r.isError) && (
-                  <div className="border-t border-gray-200 px-4 py-3 bg-secondary">
+                {/* View all results footer */}
+                {results.filter((r) => !r.isError).length > 0 && (
+                  <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-3">
                     <button
                       onClick={handleViewAllResults}
-                      className="cursor-pointer w-full text-left text-sm text-gold hover:text-gold/80 font-medium flex items-center justify-between transition-colors"
+                      className="w-full text-center text-sm text-gold hover:text-gold/80 transition-colors"
                     >
-                      <span>View all results for &quot;{query}&quot;</span>
-                      <Search className="w-4 h-4" />
+                      View all results for &quot;{query}&quot;
                     </button>
                   </div>
                 )}
               </>
-            ) : query.trim().length >= 2 && !loading ? (
+            ) : query.trim().length >= 2 ? (
               <div className="p-4 text-center">
                 <FileText className="w-8 h-8 mx-auto mb-2 text-gray-300 dark:text-gray-600" />
                 <p className="text-sm">
@@ -554,63 +587,56 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
           <div className="flex-1 min-h-0 overflow-y-auto bg-accent">
             {loading && results.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin mb-4 text-gold" />
-                <p className="text-sm">Searching papers...</p>
+                <Loader2 className="w-8 h-8 mb-4 animate-spin text-gold" />
+                <p className="text-base">Searching...</p>
               </div>
             ) : results.length > 0 ? (
-              <div className="divide-y divide-white-5 dark:divide-gray-700">
+              <div className="divide-y divide-gray-200 dark:divide-gray-700">
                 {results
                   .filter((result) => !result.isError)
                   .map((paper, index) => (
                     <div
                       key={paper.paper_id}
                       onClick={() => handleResultClick(paper)}
-                      className={`p-4 cursor-pointer hover:bg-gold/80 transition-colors active:bg-gold/60 ${
+                      className={`p-4 cursor-pointer transition-colors ${
                         selectedIndex === index
                           ? "bg-gold/10 dark:bg-gold/20"
-                          : ""
+                          : "hover:bg-gray-50 dark:hover:bg-gray-800"
                       }`}
                     >
                       <div className="flex items-start gap-3">
                         <FileText className="w-5 h-5 text-yale-blue mt-1 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <h4
-                            className="font-medium text-base line-clamp-3 mb-2"
+                            className="font-medium text-base line-clamp-2 mb-2"
                             dangerouslySetInnerHTML={{
                               __html: paper.highlights?.title
                                 ? highlightText(paper.highlights.title, query)
-                                : highlightText(paper.title, query),
+                                : highlightText(
+                                    paper.title || "Untitled",
+                                    query,
+                                  ),
                             }}
                           />
-
-                          <div className="flex flex-wrap items-center gap-3 mb-2 text-sm">
-                            {paper.author && (
-                              <div className="flex items-center gap-1">
-                                <User className="w-4 h-4" />
-                                <span className="truncate max-w-40">
-                                  {paper.author}
-                                </span>
-                              </div>
-                            )}
-                            {paper.year && (
-                              <div className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
-                                <span>{paper.year}</span>
-                              </div>
-                            )}
-                            {paper.department && (
-                              <div className="flex items-center gap-1">
-                                <Building className="w-4 h-4" />
-                                <span className="truncate max-w-32">
-                                  {paper.department}
-                                </span>
-                              </div>
-                            )}
+                          <div className="flex items-center gap-2 mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <User className="w-4 h-4" />
+                            <span
+                              className="truncate"
+                              dangerouslySetInnerHTML={{
+                                __html: paper.highlights?.author
+                                  ? highlightText(
+                                      paper.highlights.author,
+                                      query,
+                                    )
+                                  : highlightText(
+                                      paper.author || "Unknown Author",
+                                      query,
+                                    ),
+                              }}
+                            />
                           </div>
-
-                          {/* CRITICAL: Use the intelligent abstract display for mobile too */}
                           <p
-                            className="text-sm text-white-5 line-clamp-3"
+                            className="text-sm text-muted-foreground line-clamp-3"
                             dangerouslySetInnerHTML={{
                               __html: getAbstractDisplay(paper, query),
                             }}
@@ -620,26 +646,19 @@ const SearchInput = ({ placeholder = "Search papers..." }) => {
                     </div>
                   ))}
 
-                {results.some((r) => r.isError) && (
-                  <div className="p-8 text-center text-red-600 dark:text-red-400">
-                    <p className="text-base">Search temporarily unavailable</p>
-                    <p className="text-sm mt-1">Please try again later</p>
-                  </div>
-                )}
-
-                {!results.some((r) => r.isError) && query.trim() && (
-                  <div className="p-4 border-t border-white-5 dark:border-gray-700 bg-secondary">
+                {/* View all results footer for mobile */}
+                {results.filter((r) => !r.isError).length > 0 && (
+                  <div className="p-4 border-t border-gray-200 dark:border-gray-700">
                     <button
                       onClick={handleViewAllResults}
-                      className="w-full p-3 text-gold hover:text-gold/80 font-medium flex items-center justify-center gap-2 transition-colors rounded-lg hover:bg-gold/10"
+                      className="w-full text-center text-base text-gold hover:text-gold/80 transition-colors py-2"
                     >
-                      <span>View all results for &quot;{query}&quot;</span>
-                      <Search className="w-4 h-4" />
+                      View all results for &quot;{query}&quot;
                     </button>
                   </div>
                 )}
               </div>
-            ) : query.trim().length >= 2 && !loading ? (
+            ) : query.trim().length >= 2 ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <FileText className="w-12 h-12 mb-4 text-gray-300 dark:text-gray-600" />
                 <p className="text-base mb-1">
