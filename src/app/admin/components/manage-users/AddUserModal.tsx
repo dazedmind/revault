@@ -1,7 +1,7 @@
 // app/admin/components/manage-users/AddUserModal.tsx
 "use client";
 import { ChangeEvent, useEffect, useState, useCallback } from "react";
-import { X, AlertCircle, CheckCircle } from "lucide-react";
+import { X, AlertCircle, CheckCircle, Info, AlertTriangle } from "lucide-react";
 
 interface NewUser {
   fullName: string;
@@ -33,6 +33,14 @@ interface PasswordValidation {
   hasLowercase: boolean;
   hasNumber: boolean;
   hasSymbol: boolean;
+}
+
+// 🆕 NEW: Enhanced validation message interface
+interface ValidationMessage {
+  type: "success" | "error" | "info" | "warning";
+  message: string;
+  icon?: string;
+  actionRequired?: string;
 }
 
 interface AddUserModalProps {
@@ -76,9 +84,9 @@ export default function AddUserModal({
     [key: string]: boolean;
   }>({});
 
-  // Role validation states
-  const [roleValidationMessage, setRoleValidationMessage] = useState("");
-  const [roleValidationError, setRoleValidationError] = useState("");
+  // 🆕 ENHANCED: Role validation with rich UI feedback
+  const [roleValidation, setRoleValidation] =
+    useState<ValidationMessage | null>(null);
 
   // Employee ID validation states
   const [employeeIDChecking, setEmployeeIDChecking] = useState(false);
@@ -185,8 +193,12 @@ export default function AddUserModal({
     }
   }, []);
 
+  // 🆕 ENHANCED: Role validation with UI-friendly feedback
   const validateRoleSelection = useCallback(async () => {
-    if (!newUser.userAccess) return;
+    if (!newUser.userAccess) {
+      setRoleValidation(null);
+      return;
+    }
 
     const roleMapping: { [key: string]: string } = {
       Admin: "ADMIN",
@@ -195,7 +207,10 @@ export default function AddUserModal({
     };
 
     const role = roleMapping[newUser.userAccess];
-    if (!role) return;
+    if (!role) {
+      setRoleValidation(null);
+      return;
+    }
 
     try {
       const response = await fetch("/admin/api/role-validation", {
@@ -216,20 +231,104 @@ export default function AddUserModal({
       const data = await response.json();
 
       if (data.success && data.validation) {
-        if (data.validation.isValid) {
-          setRoleValidationMessage(data.validation.message);
-          setRoleValidationError("");
+        const { isValid, message, currentCount, limit, available } =
+          data.validation;
+
+        if (isValid) {
+          // Determine message type based on availability
+          if (available <= 1) {
+            setRoleValidation({
+              type: "warning",
+              message: `${role} role: ${available} slot remaining (${currentCount}/${limit})`,
+              icon: "⚠️",
+              actionRequired:
+                available === 0
+                  ? "Deactivate an existing account first"
+                  : "Limited slots available",
+            });
+          } else {
+            setRoleValidation({
+              type: "success",
+              message: `${role} role: ${available} slots available (${currentCount}/${limit})`,
+              icon: "✅",
+            });
+          }
         } else {
-          setRoleValidationError(data.validation.message);
-          setRoleValidationMessage("");
+          setRoleValidation({
+            type: "error",
+            message: message,
+            icon: "❌",
+            actionRequired:
+              "Deactivate an existing account or choose a different role",
+          });
         }
       }
     } catch (error) {
       console.error("Role validation error:", error);
-      setRoleValidationError("Failed to validate role availability");
-      setRoleValidationMessage("");
+      setRoleValidation({
+        type: "error",
+        message: "Failed to validate role availability",
+        icon: "❌",
+      });
     }
   }, [newUser.userAccess]);
+
+  // 🆕 NEW: Helper function to get validation message styling
+  const getValidationMessageStyle = (type: ValidationMessage["type"]) => {
+    const baseClass = "mt-2 p-3 rounded-md border text-xs";
+
+    switch (type) {
+      case "success":
+        return `${baseClass} ${
+          theme === "light"
+            ? "bg-green-50 border-green-200 text-green-700"
+            : "bg-green-950/20 border-green-800 text-green-300"
+        }`;
+      case "error":
+        return `${baseClass} ${
+          theme === "light"
+            ? "bg-red-50 border-red-200 text-red-700"
+            : "bg-red-950/20 border-red-800 text-red-300"
+        }`;
+      case "warning":
+        return `${baseClass} ${
+          theme === "light"
+            ? "bg-yellow-50 border-yellow-200 text-yellow-700"
+            : "bg-yellow-950/20 border-yellow-800 text-yellow-300"
+        }`;
+      case "info":
+        return `${baseClass} ${
+          theme === "light"
+            ? "bg-blue-50 border-blue-200 text-blue-700"
+            : "bg-blue-950/20 border-blue-800 text-blue-300"
+        }`;
+      default:
+        return baseClass;
+    }
+  };
+
+  // 🆕 NEW: Helper function to get validation icon component
+  const getValidationIcon = (
+    type: ValidationMessage["type"],
+    customIcon?: string,
+  ) => {
+    if (customIcon) {
+      return <span className="text-sm">{customIcon}</span>;
+    }
+
+    switch (type) {
+      case "success":
+        return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case "error":
+        return <AlertCircle className="w-4 h-4 text-red-500" />;
+      case "warning":
+        return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+      case "info":
+        return <Info className="w-4 h-4 text-blue-500" />;
+      default:
+        return <Info className="w-4 h-4" />;
+    }
+  };
 
   const validateForm = useCallback(() => {
     const errors: FormErrors = {};
@@ -271,8 +370,9 @@ export default function AddUserModal({
       errors.confirmPassword = "Passwords do not match";
     }
 
-    if (roleValidationError) {
-      errors.role = roleValidationError;
+    // Role validation errors
+    if (roleValidation?.type === "error") {
+      errors.role = roleValidation.message;
     }
 
     setFormErrors(errors);
@@ -280,16 +380,16 @@ export default function AddUserModal({
     // Form is valid if no errors and role validation passes
     setIsFormValid(
       Object.keys(errors).length === 0 &&
-        !roleValidationError &&
-        roleValidationMessage !== "",
+        roleValidation?.type !== "error" &&
+        !employeeIDChecking,
     );
   }, [
     newUser,
     newUserPasswords,
     passwordValidation,
     passwordsMatch,
-    roleValidationError,
-    roleValidationMessage,
+    roleValidation,
+    employeeIDChecking,
   ]);
 
   // Validate password in real-time
@@ -321,8 +421,7 @@ export default function AddUserModal({
     if (newUser.userAccess) {
       validateRoleSelection();
     } else {
-      setRoleValidationMessage("");
-      setRoleValidationError("");
+      setRoleValidation(null);
     }
   }, [newUser.userAccess, validateRoleSelection]);
 
@@ -364,8 +463,7 @@ export default function AddUserModal({
     if (!show) {
       setTouchedFields({});
       setFormErrors({});
-      setRoleValidationMessage("");
-      setRoleValidationError("");
+      setRoleValidation(null);
       setEmployeeIDExists(false);
       setEmployeeIDChecking(false);
     }
@@ -401,49 +499,12 @@ export default function AddUserModal({
       confirmPassword: true,
     });
 
-    // Force validation check
-    setTimeout(() => {
-      const currentlyValid =
-        newUser.fullName.trim() &&
-        newUser.lastName.trim() &&
-        newUser.email.trim() &&
-        validateEmail(newUser.email) &&
-        newUser.employeeID.trim() &&
-        validateEmployeeID(newUser.employeeID) &&
-        !employeeIDExists &&
-        !employeeIDChecking &&
-        newUser.userAccess &&
-        newUserPasswords.password &&
-        Object.values(passwordValidation).every(Boolean) &&
-        newUserPasswords.confirmPassword &&
-        passwordsMatch &&
-        !roleValidationError;
-
-      console.log("Form validation on submit:", {
-        fullName: newUser.fullName.trim(),
-        lastName: newUser.lastName.trim(),
-        email: newUser.email.trim(),
-        emailValid: validateEmail(newUser.email),
-        employeeID: newUser.employeeID.trim(),
-        employeeIDValid: validateEmployeeID(newUser.employeeID),
-        employeeIDExists,
-        employeeIDChecking,
-        userAccess: newUser.userAccess,
-        password: newUserPasswords.password,
-        passwordValid: Object.values(passwordValidation).every(Boolean),
-        confirmPassword: newUserPasswords.confirmPassword,
-        passwordsMatch,
-        roleValidationError,
-        currentlyValid,
-      });
-
-      if (currentlyValid) {
-        console.log("Form is valid, calling onAddUser");
-        onAddUser();
-      } else {
-        console.log("Form is not valid, cannot submit");
-      }
-    }, 100);
+    if (isFormValid) {
+      console.log("Form is valid, calling onAddUser");
+      onAddUser();
+    } else {
+      console.log("Form is not valid, cannot submit");
+    }
   };
 
   return (
@@ -548,7 +609,7 @@ export default function AddUserModal({
               </div>
             </div>
 
-            {/* Email Field - I accidentally removed this! */}
+            {/* Email Field */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">
                 Email Address *
@@ -585,169 +646,157 @@ export default function AddUserModal({
               <h3 className="text-lg font-bold mb-4 text-gold">
                 Employee Information
               </h3>
-              <div className="grid grid-cols-1 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Employee ID *
-                  </label>
-                  <input
-                    type="text"
-                    name="employeeID"
-                    value={newUser.employeeID}
+
+              {/* Employee ID Field - Full Row */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Employee ID *
+                </label>
+                <input
+                  type="text"
+                  name="employeeID"
+                  value={newUser.employeeID}
+                  onChange={onInputChange}
+                  onBlur={() => handleFieldBlur("employeeID")}
+                  placeholder="e.g. 1234567890"
+                  maxLength={10}
+                  pattern="[0-9]{10}"
+                  className={`w-full p-2 pl-3 bg-accent border rounded-md text-sm h-[45px] ${
+                    (touchedFields.employeeID && formErrors.employeeID) ||
+                    employeeIDExists
+                      ? "border-red-500"
+                      : "border-[#444]"
+                  }`}
+                  required
+                />
+                {/* Real-time validation indicators */}
+                {employeeIDChecking ? (
+                  <p className="text-blue-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    Checking employee ID...
+                  </p>
+                ) : employeeIDExists ? (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    Employee ID already exists in database
+                  </p>
+                ) : touchedFields.employeeID && formErrors.employeeID ? (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {formErrors.employeeID}
+                  </p>
+                ) : newUser.employeeID &&
+                  validateEmployeeID(newUser.employeeID) &&
+                  !employeeIDExists &&
+                  !employeeIDChecking ? (
+                  <p className="text-green-500 text-xs mt-1 flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3" />
+                    Employee ID is available
+                  </p>
+                ) : (
+                  <p className="text-xs text-gray-400 mt-1">
+                    Must be exactly 10 digits starting with 1
+                  </p>
+                )}
+              </div>
+
+              {/* User Access Field - Full Row */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  User Access *
+                </label>
+                <div className="relative">
+                  <select
+                    name="userAccess"
+                    value={newUser.userAccess}
                     onChange={onInputChange}
-                    onBlur={() => handleFieldBlur("employeeID")}
-                    placeholder="e.g. 1234567890"
-                    maxLength={10}
-                    pattern="[0-9]{10}"
-                    className={`w-full p-2 pl-3 bg-accent border rounded-md text-sm h-[45px] ${
-                      (touchedFields.employeeID && formErrors.employeeID) ||
-                      employeeIDExists
-                        ? "border-red-500"
-                        : "border-[#444]"
+                    className={`w-full p-2 pl-3 bg-accent border rounded-md text-sm h-[45px] pr-8 appearance-none ${
+                      formErrors.userAccess ? "border-red-500" : "border-[#444]"
                     }`}
                     required
-                  />
-                  {/* Real-time validation indicators */}
-                  {employeeIDChecking ? (
-                    <p className="text-blue-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      Checking employee ID...
-                    </p>
-                  ) : employeeIDExists ? (
-                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      Employee ID already exists in database
-                    </p>
-                  ) : touchedFields.employeeID && formErrors.employeeID ? (
-                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {formErrors.employeeID}
-                    </p>
-                  ) : newUser.employeeID &&
-                    validateEmployeeID(newUser.employeeID) &&
-                    !employeeIDExists &&
-                    !employeeIDChecking ? (
-                    <p className="text-green-500 text-xs mt-1 flex items-center gap-1">
-                      <CheckCircle className="w-3 h-3" />
-                      Employee ID is available
-                    </p>
-                  ) : (
-                    <p className="text-xs text-gray-400 mt-1">
-                      Must be exactly 10 digits starting with 1
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    User Access *
-                  </label>
-                  <div className="relative">
-                    <select
-                      name="userAccess"
-                      value={newUser.userAccess}
-                      onChange={onInputChange}
-                      className={`w-full p-2 pl-3 bg-accent border rounded-md text-sm h-[45px] pr-8 appearance-none ${
-                        formErrors.userAccess
-                          ? "border-red-500"
-                          : "border-[#444]"
-                      }`}
-                      required
+                  >
+                    <option value="">Select Role</option>
+                    <option value="Librarian-in-Charge">
+                      Librarian-in-Charge
+                    </option>
+                    <option value="Admin Assistant">Admin Assistant</option>
+                    {/* Only show Admin option if current user is ADMIN */}
+                    {currentUserRole === "ADMIN" && (
+                      <option value="Admin">Admin</option>
+                    )}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
                     >
-                      <option value="">Select Role</option>
-                      <option value="Librarian-in-Charge">
-                        Librarian-in-Charge
-                      </option>
-                      <option value="Admin Assistant">Admin Assistant</option>
-                      {/* Only show Admin option if current user is ADMIN */}
-                      {currentUserRole === "ADMIN" && (
-                        <option value="Admin">Admin</option>
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
+                {formErrors.userAccess && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {formErrors.userAccess}
+                  </p>
+                )}
+              </div>
+
+              {/* 🆕 ENHANCED: Role Validation Messages with Rich UI */}
+              {roleValidation && (
+                <div className={getValidationMessageStyle(roleValidation.type)}>
+                  <div className="flex items-start gap-2">
+                    {getValidationIcon(
+                      roleValidation.type,
+                      roleValidation.icon,
+                    )}
+                    <div className="flex-1">
+                      <span>{roleValidation.message}</span>
+                      {roleValidation.actionRequired && (
+                        <div className="mt-1 text-xs opacity-80">
+                          <strong>Action needed:</strong>{" "}
+                          {roleValidation.actionRequired}
+                        </div>
                       )}
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                      <svg
-                        className="fill-current h-4 w-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                      </svg>
                     </div>
                   </div>
-                  {formErrors.userAccess && (
-                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {formErrors.userAccess}
-                    </p>
-                  )}
                 </div>
+              )}
 
-                {/* Role Validation Messages */}
-                {roleValidationMessage && (
-                  <div
-                    className={`p-3 rounded-lg border ${
-                      theme === "light"
-                        ? "bg-green-50 border-green-200"
-                        : "bg-green-950/20 border-green-800"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span className="text-sm text-green-700 dark:text-green-300">
-                        {roleValidationMessage}
-                      </span>
-                    </div>
-                  </div>
-                )}
+              {/* Position Field - Full Row */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Position
+                </label>
+                <input
+                  type="text"
+                  name="position"
+                  value={automaticPosition}
+                  readOnly
+                  className="w-full p-2 pl-3 border border-[#444] rounded-md text-sm h-[45px] cursor-not-allowed opacity-70"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Automatically set based on user access level
+                </p>
+              </div>
 
-                {roleValidationError && (
-                  <div
-                    className={`p-3 rounded-lg border ${
-                      theme === "light"
-                        ? "bg-red-50 border-red-200"
-                        : "bg-red-950/20 border-red-800"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 text-red-500" />
-                      <span className="text-sm text-red-700 dark:text-red-300">
-                        {roleValidationError}
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Position
-                  </label>
-                  <input
-                    type="text"
-                    name="position"
-                    value={automaticPosition}
-                    readOnly
-                    className="w-full p-2 pl-3 border border-[#444] rounded-md text-sm h-[45px] cursor-not-allowed"
-                  />
-                  <p className="text-xs text-gray-400 mt-1">
-                    Automatically set based on user access level
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Contact Number
-                  </label>
-                  <input
-                    type="text"
-                    name="contactNum"
-                    value={newUser.contactNum}
-                    onChange={onInputChange}
-                    placeholder="e.g. +639123456789"
-                    className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
-                  />
-                  <p className="text-xs text-gray-400 mt-1">
-                    Optional contact information
-                  </p>
-                </div>
+              {/* Contact Number Field - Full Row */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Contact Number
+                </label>
+                <input
+                  type="text"
+                  name="contactNum"
+                  value={newUser.contactNum}
+                  onChange={onInputChange}
+                  placeholder="e.g. +639123456789"
+                  className="w-full p-2 pl-3 bg-accent border border-[#444] rounded-md text-sm h-[45px]"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Optional contact information
+                </p>
               </div>
             </div>
 
@@ -851,6 +900,41 @@ export default function AddUserModal({
                   </div>
                 </div>
               )}
+
+              {/* Password Match Indicator */}
+              {newUserPasswords.password &&
+                newUserPasswords.confirmPassword && (
+                  <div
+                    className={`mb-4 p-3 rounded-lg border ${
+                      passwordsMatch
+                        ? theme === "light"
+                          ? "bg-green-50 border-green-200"
+                          : "bg-green-950/20 border-green-800"
+                        : theme === "light"
+                          ? "bg-red-50 border-red-200"
+                          : "bg-red-950/20 border-red-800"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      {passwordsMatch ? (
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                      ) : (
+                        <AlertCircle className="w-4 h-4 text-red-500" />
+                      )}
+                      <span
+                        className={`text-sm ${
+                          passwordsMatch
+                            ? "text-green-700 dark:text-green-300"
+                            : "text-red-700 dark:text-red-300"
+                        }`}
+                      >
+                        {passwordsMatch
+                          ? "Passwords match"
+                          : "Passwords do not match"}
+                      </span>
+                    </div>
+                  </div>
+                )}
             </div>
 
             {/* Sticky Action Buttons */}
@@ -867,60 +951,15 @@ export default function AddUserModal({
               </button>
               <button
                 onClick={handleSubmit}
-                disabled={employeeIDChecking}
+                disabled={!isFormValid || employeeIDChecking}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  !employeeIDChecking &&
-                  newUser.fullName.trim() &&
-                  newUser.lastName.trim() &&
-                  newUser.email.trim() &&
-                  validateEmail(newUser.email) &&
-                  newUser.employeeID.trim() &&
-                  validateEmployeeID(newUser.employeeID) &&
-                  !employeeIDExists &&
-                  newUser.userAccess &&
-                  newUserPasswords.password &&
-                  newUserPasswords.password.length >= 6 &&
-                  /[A-Z]/.test(newUserPasswords.password) &&
-                  /[a-z]/.test(newUserPasswords.password) &&
-                  /\d/.test(newUserPasswords.password) &&
-                  /[!@#$%^&*(),.?":{}|<>]/.test(newUserPasswords.password) &&
-                  newUserPasswords.confirmPassword &&
-                  newUserPasswords.password ===
-                    newUserPasswords.confirmPassword &&
-                  !roleValidationError
+                  isFormValid && !employeeIDChecking
                     ? "bg-gold text-white hover:bg-gold/90 cursor-pointer"
                     : "bg-gray-400 text-gray-600 cursor-not-allowed"
                 }`}
               >
                 {employeeIDChecking ? "Checking..." : "Add User"}
               </button>
-
-              {/* Debug Info */}
-              {/* <div className="text-xs text-gray-500 p-2 bg-gray-100 dark:bg-gray-800 rounded">
-                Debug: fullName: {newUser.fullName.trim() ? "✓" : "✗"} |
-                lastName: {newUser.lastName.trim() ? "✓" : "✗"} | email:{" "}
-                {newUser.email.trim() && validateEmail(newUser.email)
-                  ? "✓"
-                  : "✗"}{" "}
-                | employeeID:{" "}
-                {newUser.employeeID.trim() &&
-                validateEmployeeID(newUser.employeeID) &&
-                !employeeIDExists &&
-                !employeeIDChecking
-                  ? "✓"
-                  : "✗"}{" "}
-                | userAccess: {newUser.userAccess ? "✓" : "✗"} | password:{" "}
-                {newUserPasswords.password &&
-                Object.values(passwordValidation).every(Boolean)
-                  ? "✓"
-                  : "✗"}{" "}
-                | confirmPassword:{" "}
-                {newUserPasswords.confirmPassword && passwordsMatch ? "✓" : "✗"}{" "}
-                | roleValidation: {!roleValidationError ? "✓" : "✗"} |
-                employeeIDExists: {employeeIDExists ? "TRUE" : "FALSE"} |
-                employeeIDChecking: {employeeIDChecking ? "TRUE" : "FALSE"} |
-                hasEmployeeIDError: {formErrors.employeeID ? "TRUE" : "FALSE"}
-              </div> */}
             </div>
           </div>
         </div>

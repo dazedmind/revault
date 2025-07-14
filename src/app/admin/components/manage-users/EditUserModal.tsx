@@ -1,7 +1,7 @@
 // app/admin/components/manage-users/EditUserModal.tsx
 "use client";
 import { ChangeEvent, useEffect, useState, useCallback } from "react";
-import { X, AlertCircle, CheckCircle } from "lucide-react";
+import { X, AlertCircle, CheckCircle, Info, AlertTriangle } from "lucide-react";
 
 interface User {
   id: number;
@@ -37,6 +37,14 @@ interface PasswordValidation {
   hasLowercase: boolean;
   hasNumber: boolean;
   hasSymbol: boolean;
+}
+
+// 🆕 NEW: Enhanced validation message interface
+interface ValidationMessage {
+  type: "success" | "error" | "info" | "warning";
+  message: string;
+  icon?: string;
+  actionRequired?: string;
 }
 
 interface EditUserModalProps {
@@ -82,11 +90,11 @@ export default function EditUserModal({
     [key: string]: boolean;
   }>({});
 
-  // Role validation states
-  const [roleValidationMessage, setRoleValidationMessage] = useState("");
-  const [roleValidationError, setRoleValidationError] = useState("");
-  const [statusValidationMessage, setStatusValidationMessage] = useState("");
-  const [statusValidationError, setStatusValidationError] = useState("");
+  // 🆕 ENHANCED: Role and status validation with rich UI feedback
+  const [roleValidation, setRoleValidation] =
+    useState<ValidationMessage | null>(null);
+  const [statusValidation, setStatusValidation] =
+    useState<ValidationMessage | null>(null);
 
   // Employee ID validation states
   const [employeeIDChecking, setEmployeeIDChecking] = useState(false);
@@ -183,6 +191,7 @@ export default function EditUserModal({
     [user?.id],
   );
 
+  // 🆕 ENHANCED: Role validation with UI-friendly feedback
   const validateRoleSelection = useCallback(async () => {
     if (!user || !originalUser) return;
 
@@ -195,7 +204,10 @@ export default function EditUserModal({
     const newRole = roleMapping[user.userAccess];
     const originalRole = roleMapping[originalUser.userAccess];
 
-    if (!newRole) return;
+    if (!newRole) {
+      setRoleValidation(null);
+      return;
+    }
 
     // Only validate if role is actually changing
     if (newRole !== originalRole) {
@@ -220,25 +232,62 @@ export default function EditUserModal({
 
         if (data.success && data.validation) {
           if (data.validation.isValid) {
-            setRoleValidationMessage(data.validation.message);
-            setRoleValidationError("");
+            setRoleValidation({
+              type: "success",
+              message: data.validation.message,
+              icon: "✅",
+            });
           } else {
-            setRoleValidationError(data.validation.message);
-            setRoleValidationMessage("");
+            setRoleValidation({
+              type: "error",
+              message: data.validation.message,
+              icon: "❌",
+              actionRequired:
+                "Deactivate an existing account or choose a different role",
+            });
           }
         }
       } catch (error) {
         console.error("Role validation error:", error);
-        setRoleValidationError("Failed to validate role change");
-        setRoleValidationMessage("");
+        setRoleValidation({
+          type: "error",
+          message: "Failed to validate role change",
+          icon: "❌",
+        });
       }
     } else {
-      // No role change, clear validation messages
-      setRoleValidationMessage("");
-      setRoleValidationError("");
+      // No role change, show current role info
+      try {
+        const response = await fetch("/admin/api/role-validation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "validateNewUser",
+            role: newRole,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.validation) {
+            const { currentCount, limit, available } = data.validation;
+            setRoleValidation({
+              type: available <= 1 ? "warning" : "info",
+              message: `Current ${newRole.toLowerCase()} users: ${currentCount}/${limit} active accounts`,
+              icon: "📊",
+            });
+          }
+        }
+      } catch (error) {
+        // Silent fail for info message
+        setRoleValidation(null);
+      }
     }
   }, [user, originalUser]);
 
+  // 🆕 ENHANCED: Status validation with contextual messaging
   const validateStatusSelection = useCallback(async () => {
     if (!user || !originalUser) return;
 
@@ -252,9 +301,15 @@ export default function EditUserModal({
     const originalStatus = originalUser.status || "ACTIVE";
     const newStatus = user.status || "ACTIVE";
 
-    if (!role) return;
+    if (!role) {
+      setStatusValidation(null);
+      return;
+    }
 
-    // Only validate if status is changing from INACTIVE to ACTIVE
+    // Clear previous validation
+    setStatusValidation(null);
+
+    // If changing from INACTIVE to ACTIVE, check limits
     if (originalStatus !== "ACTIVE" && newStatus === "ACTIVE") {
       try {
         const response = await fetch("/admin/api/role-validation", {
@@ -278,24 +333,124 @@ export default function EditUserModal({
 
         if (data.success && data.validation) {
           if (data.validation.isValid) {
-            setStatusValidationMessage(data.validation.message);
-            setStatusValidationError("");
+            setStatusValidation({
+              type: "success",
+              message: `Can activate this ${role.toLowerCase()} user. ${data.validation.available} slot(s) available.`,
+              icon: "✅",
+            });
           } else {
-            setStatusValidationError(data.validation.message);
-            setStatusValidationMessage("");
+            setStatusValidation({
+              type: "error",
+              message: data.validation.message,
+              icon: "❌",
+              actionRequired: `Deactivate another ${role.toLowerCase()} user first to free up a slot.`,
+            });
           }
         }
       } catch (error) {
         console.error("Status validation error:", error);
-        setStatusValidationError("Failed to validate status change");
-        setStatusValidationMessage("");
+        setStatusValidation({
+          type: "error",
+          message: "Failed to validate status change",
+          icon: "❌",
+        });
       }
-    } else {
-      // No problematic status change, clear validation messages
-      setStatusValidationMessage("");
-      setStatusValidationError("");
+    }
+    // If changing from ACTIVE to INACTIVE, show informational message
+    else if (originalStatus === "ACTIVE" && newStatus === "INACTIVE") {
+      setStatusValidation({
+        type: "info",
+        message: `This will deactivate the ${role.toLowerCase()} user and free up 1 slot for new users.`,
+        icon: "ℹ️",
+      });
+    }
+    // If no status change, show current role limits info
+    else if (originalStatus === newStatus && newStatus === "ACTIVE") {
+      try {
+        const response = await fetch("/admin/api/role-validation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "validateNewUser", // Check current role limits
+            role: role,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.validation) {
+            const { currentCount, limit, available } = data.validation;
+            setStatusValidation({
+              type: available === 0 ? "warning" : "info",
+              message: `Current ${role.toLowerCase()} users: ${currentCount}/${limit} active accounts`,
+              icon: "📊",
+            });
+          }
+        }
+      } catch (error) {
+        // Silent fail for info message
+      }
     }
   }, [user, originalUser]);
+
+  // 🆕 NEW: Helper function to get validation message styling
+  const getValidationMessageStyle = (type: ValidationMessage["type"]) => {
+    const baseClass = "mt-2 p-3 rounded-md border text-xs";
+
+    switch (type) {
+      case "success":
+        return `${baseClass} ${
+          theme === "light"
+            ? "bg-green-50 border-green-200 text-green-700"
+            : "bg-green-950/20 border-green-800 text-green-300"
+        }`;
+      case "error":
+        return `${baseClass} ${
+          theme === "light"
+            ? "bg-red-50 border-red-200 text-red-700"
+            : "bg-red-950/20 border-red-800 text-red-300"
+        }`;
+      case "warning":
+        return `${baseClass} ${
+          theme === "light"
+            ? "bg-yellow-50 border-yellow-200 text-yellow-700"
+            : "bg-yellow-950/20 border-yellow-800 text-yellow-300"
+        }`;
+      case "info":
+        return `${baseClass} ${
+          theme === "light"
+            ? "bg-blue-50 border-blue-200 text-blue-700"
+            : "bg-blue-950/20 border-blue-800 text-blue-300"
+        }`;
+      default:
+        return baseClass;
+    }
+  };
+
+  // 🆕 NEW: Helper function to get validation icon component
+  const getValidationIcon = (
+    type: ValidationMessage["type"],
+    customIcon?: string,
+  ) => {
+    if (customIcon) {
+      return <span className="text-sm">{customIcon}</span>;
+    }
+
+    switch (type) {
+      case "success":
+        return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case "error":
+        return <AlertCircle className="w-4 h-4 text-red-500" />;
+      case "warning":
+        return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+      case "info":
+        return <Info className="w-4 h-4 text-blue-500" />;
+      default:
+        return <Info className="w-4 h-4" />;
+    }
+  };
 
   const validateForm = useCallback(() => {
     if (!user) return;
@@ -353,12 +508,12 @@ export default function EditUserModal({
     }
 
     // Role and status validation errors
-    if (roleValidationError) {
-      errors.role = roleValidationError;
+    if (roleValidation?.type === "error") {
+      errors.role = roleValidation.message;
     }
 
-    if (statusValidationError) {
-      errors.status = statusValidationError;
+    if (statusValidation?.type === "error") {
+      errors.status = statusValidation.message;
     }
 
     setFormErrors(errors);
@@ -370,8 +525,8 @@ export default function EditUserModal({
     passwords,
     passwordValidation,
     passwordsMatch,
-    roleValidationError,
-    statusValidationError,
+    roleValidation,
+    statusValidation,
     touchedFields,
     employeeIDExists,
     employeeIDChecking,
@@ -449,10 +604,8 @@ export default function EditUserModal({
     if (!show) {
       setTouchedFields({});
       setFormErrors({});
-      setRoleValidationMessage("");
-      setRoleValidationError("");
-      setStatusValidationMessage("");
-      setStatusValidationError("");
+      setRoleValidation(null);
+      setStatusValidation(null);
       setEmployeeIDExists(false);
       setEmployeeIDChecking(false);
     }
@@ -633,245 +786,195 @@ export default function EditUserModal({
               <h3 className="text-lg font-bold mb-4 text-gold">
                 Employee Information
               </h3>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Employee ID *
-                  </label>
-                  <input
-                    type="text"
-                    name="employeeID"
-                    value={user.employeeID}
+              {/* Employee ID Field - Full Row */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Employee ID *
+                </label>
+                <input
+                  type="text"
+                  name="employeeID"
+                  value={user.employeeID}
+                  onChange={onInputChange}
+                  onBlur={() => handleFieldBlur("employeeID")}
+                  placeholder="e.g. 1234567890"
+                  maxLength={10}
+                  pattern="[0-9]{10}"
+                  className={`w-full p-2 pl-3 bg-accent border rounded-md text-sm h-[45px] ${
+                    (touchedFields.employeeID && formErrors.employeeID) ||
+                    employeeIDExists
+                      ? "border-red-500"
+                      : "border-[#444]"
+                  }`}
+                  required
+                />
+                {/* Real-time validation indicators */}
+                {employeeIDChecking ? (
+                  <p className="text-blue-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    Checking employee ID...
+                  </p>
+                ) : employeeIDExists ? (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    Employee ID already exists in database
+                  </p>
+                ) : touchedFields.employeeID && formErrors.employeeID ? (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {formErrors.employeeID}
+                  </p>
+                ) : user.employeeID &&
+                  validateEmployeeID(user.employeeID) &&
+                  !employeeIDExists &&
+                  !employeeIDChecking ? (
+                  <p className="text-green-500 text-xs mt-1 flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3" />
+                    Employee ID is available
+                  </p>
+                ) : (
+                  <p className="text-xs text-gray-400 mt-1">
+                    Must be exactly 10 digits starting with 1
+                  </p>
+                )}
+              </div>
+
+              {/* User Access Field - Full Row */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  User Access *
+                </label>
+                <div className="relative">
+                  <select
+                    name="userAccess"
+                    value={user.userAccess}
                     onChange={onInputChange}
-                    onBlur={() => handleFieldBlur("employeeID")}
-                    placeholder="e.g. 1234567890"
-                    maxLength={10}
-                    pattern="[0-9]{10}"
-                    className={`w-full p-2 pl-3 bg-accent border rounded-md text-sm h-[45px] ${
-                      (touchedFields.employeeID && formErrors.employeeID) ||
-                      employeeIDExists
+                    onBlur={() => handleFieldBlur("userAccess")}
+                    disabled={isEditingSelf} // Users cannot change their own role
+                    className={`w-full p-2 pl-3 bg-accent border rounded-md text-sm h-[45px] pr-8 appearance-none ${
+                      touchedFields.userAccess && formErrors.userAccess
                         ? "border-red-500"
                         : "border-[#444]"
+                    } ${
+                      isEditingSelf
+                        ? "cursor-not-allowed opacity-60"
+                        : "cursor-pointer"
                     }`}
                     required
-                  />
-                  {/* Real-time validation indicators */}
-                  {employeeIDChecking ? (
-                    <p className="text-blue-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      Checking employee ID...
-                    </p>
-                  ) : employeeIDExists ? (
-                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      Employee ID already exists in database
-                    </p>
-                  ) : touchedFields.employeeID && formErrors.employeeID ? (
-                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {formErrors.employeeID}
-                    </p>
-                  ) : user.employeeID &&
-                    validateEmployeeID(user.employeeID) &&
-                    !employeeIDExists &&
-                    !employeeIDChecking ? (
-                    <p className="text-green-500 text-xs mt-1 flex items-center gap-1">
-                      <CheckCircle className="w-3 h-3" />
-                      Employee ID is available
-                    </p>
-                  ) : (
-                    <p className="text-xs text-gray-400 mt-1">
-                      Must be exactly 10 digits starting with 1
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    User Access *
-                  </label>
-                  <div className="relative">
-                    <select
-                      name="userAccess"
-                      value={user.userAccess}
-                      onChange={onInputChange}
-                      onBlur={() => handleFieldBlur("userAccess")}
-                      disabled={isEditingSelf} // Users cannot change their own role
-                      className={`w-full p-2 pl-3 bg-accent border rounded-md text-sm h-[45px] pr-8 appearance-none ${
-                        touchedFields.userAccess && formErrors.userAccess
-                          ? "border-red-500"
-                          : "border-[#444]"
-                      } ${
-                        isEditingSelf
-                          ? "cursor-not-allowed opacity-60"
-                          : "cursor-pointer"
-                      }`}
-                      required
+                  >
+                    <option value="">Select Role</option>
+                    <option value="Librarian-in-Charge">
+                      Librarian-in-Charge
+                    </option>
+                    <option value="Admin Assistant">Admin Assistant</option>
+                    {/* Only show Admin option if current user is ADMIN */}
+                    {canAssignAdminRole && <option value="Admin">Admin</option>}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
                     >
-                      <option value="">Select Role</option>
-                      <option value="Librarian-in-Charge">
-                        Librarian-in-Charge
-                      </option>
-                      <option value="Admin Assistant">Admin Assistant</option>
-                      {/* Only show Admin option if current user is ADMIN */}
-                      {canAssignAdminRole && (
-                        <option value="Admin">Admin</option>
-                      )}
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                      <svg
-                        className="fill-current h-4 w-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                      </svg>
-                    </div>
-                  </div>
-                  {touchedFields.userAccess && formErrors.userAccess && (
-                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {formErrors.userAccess}
-                    </p>
-                  )}
-                  {isEditingSelf && (
-                    <p className="text-xs text-yellow-500 mt-1">
-                      💡 Cannot change your own role
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Role Validation Messages */}
-              {roleValidationMessage && !isEditingSelf && (
-                <div
-                  className={`mb-4 p-3 rounded-lg border ${
-                    theme === "light"
-                      ? "bg-green-50 border-green-200"
-                      : "bg-green-950/20 border-green-800"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-sm text-green-700 dark:text-green-300">
-                      {roleValidationMessage}
-                    </span>
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
                   </div>
                 </div>
-              )}
-
-              {roleValidationError && !isEditingSelf && (
-                <div
-                  className={`mb-4 p-3 rounded-lg border ${
-                    theme === "light"
-                      ? "bg-red-50 border-red-200"
-                      : "bg-red-950/20 border-red-800"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 text-red-500" />
-                    <span className="text-sm text-red-700 dark:text-red-300">
-                      {roleValidationError}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Position
-                  </label>
-                  <input
-                    type="text"
-                    name="position"
-                    value={automaticPosition}
-                    readOnly
-                    className="w-full p-2 pl-3 border border-[#444] rounded-md text-sm h-[45px] cursor-not-allowed"
-                  />
-                  <p className="text-xs text-gray-400 mt-1">
-                    Automatically set based on user access level
+                {touchedFields.userAccess && formErrors.userAccess && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {formErrors.userAccess}
                   </p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Status
-                  </label>
-                  <div className="relative">
-                    <select
-                      name="status"
-                      value={user.status}
-                      onChange={onInputChange}
-                      disabled={isEditingSelf} // Users cannot change their own status
-                      className={`w-full p-2 pl-3 bg-accent border rounded-md text-sm h-[45px] pr-8 appearance-none ${
-                        formErrors.status ? "border-red-500" : "border-[#444]"
-                      } ${
-                        isEditingSelf
-                          ? "cursor-not-allowed opacity-60"
-                          : "cursor-pointer"
-                      }`}
-                    >
-                      <option value="ACTIVE">ACTIVE</option>
-                      <option value="INACTIVE">INACTIVE</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                      <svg
-                        className="fill-current h-4 w-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                      </svg>
-                    </div>
-                  </div>
-                  {formErrors.status && (
-                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {formErrors.status}
-                    </p>
-                  )}
-                  {isEditingSelf && (
-                    <p className="text-xs text-yellow-500 mt-1">
-                      💡 Cannot change your own account status
-                    </p>
-                  )}
-                </div>
+                )}
+                {isEditingSelf && (
+                  <p className="text-xs text-yellow-500 mt-1">
+                    💡 Cannot change your own role
+                  </p>
+                )}
               </div>
 
-              {/* Status Validation Messages */}
-              {statusValidationMessage && !isEditingSelf && (
-                <div
-                  className={`mb-4 p-3 rounded-lg border ${
-                    theme === "light"
-                      ? "bg-green-50 border-green-200"
-                      : "bg-green-950/20 border-green-800"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-sm text-green-700 dark:text-green-300">
-                      {statusValidationMessage}
-                    </span>
+              {/* 🆕 ENHANCED: Role Validation Messages with Rich UI */}
+              {roleValidation && !isEditingSelf && (
+                <div className={getValidationMessageStyle(roleValidation.type)}>
+                  <div className="flex items-start gap-2">
+                    {getValidationIcon(
+                      roleValidation.type,
+                      roleValidation.icon,
+                    )}
+                    <div className="flex-1">
+                      <span>{roleValidation.message}</span>
+                      {roleValidation.actionRequired && (
+                        <div className="mt-1 text-xs opacity-80">
+                          <strong>Action needed:</strong>{" "}
+                          {roleValidation.actionRequired}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
 
-              {statusValidationError && !isEditingSelf && (
-                <div
-                  className={`mb-4 p-3 rounded-lg border ${
-                    theme === "light"
-                      ? "bg-red-50 border-red-200"
-                      : "bg-red-950/20 border-red-800"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 text-red-500" />
-                    <span className="text-sm text-red-700 dark:text-red-300">
-                      {statusValidationError}
-                    </span>
+              {/* Position Field - Full Row */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">
+                  Position
+                </label>
+                <input
+                  type="text"
+                  name="position"
+                  value={automaticPosition}
+                  readOnly
+                  className="w-full p-2 pl-3 border border-[#444] rounded-md text-sm h-[45px] cursor-not-allowed opacity-70"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Automatically set based on user access level
+                </p>
+              </div>
+
+              {/* Status Field - Full Row */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Status</label>
+                <div className="relative">
+                  <select
+                    name="status"
+                    value={user.status}
+                    onChange={onInputChange}
+                    disabled={isEditingSelf} // Users cannot change their own status
+                    className={`w-full p-2 pl-3 bg-accent border rounded-md text-sm h-[45px] pr-8 appearance-none ${
+                      formErrors.status ? "border-red-500" : "border-[#444]"
+                    } ${
+                      isEditingSelf
+                        ? "cursor-not-allowed opacity-60"
+                        : "cursor-pointer"
+                    }`}
+                  >
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="INACTIVE">INACTIVE</option>
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
                   </div>
                 </div>
-              )}
+                {formErrors.status && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {formErrors.status}
+                  </p>
+                )}
+                {isEditingSelf && (
+                  <p className="text-xs text-yellow-500 mt-1">
+                    💡 Cannot change your own account status
+                  </p>
+                )}
+              </div>
 
+              {/* Contact Number Field - Full Row */}
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">
                   Contact Number

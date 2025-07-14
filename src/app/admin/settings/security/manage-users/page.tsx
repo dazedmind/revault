@@ -313,7 +313,6 @@ function ManageUserContent() {
 
   const handleSaveEdit = async () => {
     if (!currentEditUser) return;
-    setShowEditModal(false);
 
     // Check if editing self
     const editingSelfUser = isEditingSelf(currentEditUser);
@@ -330,6 +329,58 @@ function ManageUserContent() {
       }
     }
 
+    // ✅ NEW: Pre-validate role/status changes before API call
+    const originalUser = users.find((u) => u.id === currentEditUser.id);
+    if (originalUser) {
+      // Check if status is changing from INACTIVE to ACTIVE
+      const originalStatus = originalUser.status || "ACTIVE";
+      const newStatus = currentEditUser.status || "ACTIVE";
+
+      if (originalStatus !== "ACTIVE" && newStatus === "ACTIVE") {
+        // Pre-validate status change
+        try {
+          const roleMapping: { [key: string]: string } = {
+            Admin: "ADMIN",
+            "Admin Assistant": "ASSISTANT",
+            "Librarian-in-Charge": "LIBRARIAN",
+          };
+
+          const role = roleMapping[currentEditUser.userAccess];
+
+          const response = await fetch("/admin/api/role-validation", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              action: "validateStatusChange",
+              role: role,
+              status: newStatus,
+              userId: currentEditUser.id,
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.validation && !data.validation.isValid) {
+              // ✅ Show validation error in toast BEFORE closing modal
+              toast.error("Cannot Activate User", {
+                description: data.validation.message,
+                duration: 6000,
+              });
+              return; // Don't proceed with update
+            }
+          }
+        } catch (validationError) {
+          console.error("Pre-validation error:", validationError);
+          // Continue with API call if validation check fails
+        }
+      }
+    }
+
+    // Close modal only AFTER validation passes
+    setShowEditModal(false);
+
     try {
       const updateData: any = { ...currentEditUser };
       if (passwords.newPassword) {
@@ -338,10 +389,8 @@ function ManageUserContent() {
 
       // If editing self, prevent certain changes
       if (editingSelfUser) {
-        // Get original user data to prevent unauthorized self-changes
         const originalUser = users.find((u) => u.id === currentEditUser.id);
         if (originalUser) {
-          // Preserve original status (can't change own status)
           updateData.status = originalUser.status;
         }
       }
@@ -352,11 +401,15 @@ function ManageUserContent() {
         body: JSON.stringify(updateData),
       });
 
+      const responseData = await res.json();
+
       if (!res.ok) {
-        throw new Error(`Failed to update user (${res.status})`);
+        const errorMessage =
+          responseData.message || `Failed to update user (${res.status})`;
+        throw new Error(errorMessage);
       }
 
-      // Find original user for change message
+      // Success handling...
       const originalUser = users.find((u) => u.id === currentEditUser.id);
       let changeMessage = `User updated successfully`;
 
@@ -366,7 +419,6 @@ function ManageUserContent() {
         changeMessage = generateChangeMessage(originalUser, currentEditUser);
       }
 
-      // Show success toast
       toast.success(
         editingSelfUser ? "Profile Updated" : "User Updated Successfully",
         {
@@ -382,8 +434,7 @@ function ManageUserContent() {
         ),
       );
 
-      // Close modal and reset states
-      setShowEditModal(false);
+      // Reset states
       setCurrentEditUser(null);
       setEditingUserId(null);
       setSelectedUserId(null);
