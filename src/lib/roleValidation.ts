@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 // Define role limits configuration
 export const ROLE_LIMITS = {
-  ADMIN: 1, // Chief Librarian - max 1 active account
+  ADMIN: 2, // Chief Librarian - max 2 active accounts
   ASSISTANT: 2, // Chief's Secretary - max 2 active accounts
   LIBRARIAN: 5, // Librarian-in-Charge - max 5 active accounts
 } as const;
@@ -28,6 +28,13 @@ export interface RoleValidationResult {
   currentCount: number;
   limit: number;
   available: number;
+}
+
+// 🆕 NEW: Interface for UI-friendly validation result
+export interface UIValidationResult extends RoleValidationResult {
+  messageType: "success" | "error" | "info" | "warning";
+  actionRequired?: string;
+  icon?: string;
 }
 
 /**
@@ -82,7 +89,7 @@ export async function validateNewUserRole(
   if (roleInfo.isAtLimit) {
     return {
       isValid: false,
-      message: `Cannot create new ${role} user. Maximum limit of ${roleInfo.limit} active accounts reached. Currently have ${roleInfo.activeCount} active accounts.`,
+      message: `Cannot create new ${role} user. Maximum limit of ${roleInfo.limit} active accounts reached. Currently have ${roleInfo.activeCount} active accounts. Deactivate an account to free a slot.`,
       currentCount: roleInfo.activeCount,
       limit: roleInfo.limit,
       available: 0,
@@ -150,19 +157,229 @@ export async function validateStatusChange(
   newStatus: string,
   excludeUserId?: number,
 ): Promise<RoleValidationResult> {
-  // Only validate when changing TO active status
-  if (newStatus !== "ACTIVE") {
+  try {
+    // Only validate when changing TO active status
+    if (newStatus !== "ACTIVE") {
+      return {
+        isValid: true,
+        message: "", // ✅ Remove confusing "INACTIVE is allowed" message
+        currentCount: 0,
+        limit: ROLE_LIMITS[role],
+        available: ROLE_LIMITS[role],
+      };
+    }
+
+    // Count active users excluding the user being updated
+    const count = await prisma.users.count({
+      where: {
+        role: role,
+        OR: [{ status: "ACTIVE" }, { status: null }, { status: "" }],
+        ...(excludeUserId && { user_id: { not: excludeUserId } }),
+      },
+    });
+
+    const limit = ROLE_LIMITS[role];
+    const available = Math.max(0, limit - count);
+
+    console.log(`📊 Status change validation for ${role}:`, {
+      currentActiveCount: count,
+      limit,
+      available,
+      excludeUserId,
+      newStatus,
+    });
+
+    if (count >= limit) {
+      return {
+        isValid: false,
+        message: `❌ Cannot activate ${role} user. Maximum limit of ${limit} active accounts reached. Currently have ${count} active accounts. Deactivate another ${role.toLowerCase()} user first to free up a slot.`,
+        currentCount: count,
+        limit,
+        available: 0,
+      };
+    }
+
     return {
       isValid: true,
-      message: "Status change to INACTIVE is allowed.",
+      message: `✅ Can activate ${role} user. ${available} slot(s) available (${count}/${limit} currently active).`,
+      currentCount: count,
+      limit,
+      available,
+    };
+  } catch (error) {
+    console.error(`❌ Error validating status change for ${role}:`, error);
+    throw new Error(`Failed to validate status change for ${role}`);
+  }
+}
+
+/**
+ * 🆕 NEW: Enhanced status validation for UI with contextual messages
+ */
+export async function validateStatusChangeForUI(
+  role: RoleName,
+  currentStatus: string,
+  newStatus: string,
+  excludeUserId?: number,
+): Promise<UIValidationResult> {
+  try {
+    const normalizedCurrentStatus = currentStatus || "ACTIVE";
+    const normalizedNewStatus = newStatus || "ACTIVE";
+
+    // Get current role info for context
+    const roleInfo = await getRoleCountInfo(role);
+    const count = excludeUserId
+      ? await prisma.users.count({
+          where: {
+            role: role,
+            OR: [{ status: "ACTIVE" }, { status: null }, { status: "" }],
+            user_id: { not: excludeUserId },
+          },
+        })
+      : roleInfo.activeCount;
+
+    const limit = ROLE_LIMITS[role];
+    const available = Math.max(0, limit - count);
+
+    // If changing from INACTIVE to ACTIVE
+    if (
+      normalizedCurrentStatus !== "ACTIVE" &&
+      normalizedNewStatus === "ACTIVE"
+    ) {
+      if (count >= limit) {
+        return {
+          isValid: false,
+          message: `Cannot activate ${role.toLowerCase()} user. Maximum limit of ${limit} active accounts reached. Currently have ${count} active accounts.`,
+          messageType: "error",
+          icon: "❌",
+          actionRequired: `Deactivate another ${role.toLowerCase()} user first to free up a slot.`,
+          currentCount: count,
+          limit,
+          available: 0,
+        };
+      }
+
+      return {
+        isValid: true,
+        message: `Can activate this ${role.toLowerCase()} user. ${available} slot(s) available.`,
+        messageType: "success",
+        icon: "✅",
+        currentCount: count,
+        limit,
+        available,
+      };
+    }
+
+    // If changing from ACTIVE to INACTIVE
+    if (
+      normalizedCurrentStatus === "ACTIVE" &&
+      normalizedNewStatus === "INACTIVE"
+    ) {
+      return {
+        isValid: true,
+        message: `This will deactivate the ${role.toLowerCase()} user and free up 1 slot for new users.`,
+        messageType: "info",
+        icon: "ℹ️",
+        currentCount: count,
+        limit,
+        available: available + 1, // Will have one more slot after deactivation
+      };
+    }
+
+    // If no status change and currently active, show current stats
+    if (
+      normalizedCurrentStatus === normalizedNewStatus &&
+      normalizedNewStatus === "ACTIVE"
+    ) {
+      return {
+        isValid: true,
+        message: `Current ${role.toLowerCase()} users: ${count}/${limit} active accounts`,
+        messageType: count >= limit ? "warning" : "info",
+        icon: "📊",
+        currentCount: count,
+        limit,
+        available,
+      };
+    }
+
+    // Default case (no meaningful change)
+    return {
+      isValid: true,
+      message: "",
+      messageType: "info",
+      currentCount: count,
+      limit,
+      available,
+    };
+  } catch (error) {
+    console.error(`❌ Error validating status change for UI:`, error);
+    return {
+      isValid: false,
+      message: "Failed to validate status change",
+      messageType: "error",
+      icon: "❌",
       currentCount: 0,
       limit: ROLE_LIMITS[role],
-      available: ROLE_LIMITS[role],
+      available: 0,
     };
   }
+}
 
-  // Use the same logic as role change validation
-  return validateRoleChange(role, excludeUserId);
+/**
+ * 🆕 NEW: Get validation message for role selection in forms
+ */
+export async function getRoleSelectionInfo(
+  role: RoleName,
+): Promise<UIValidationResult> {
+  try {
+    const roleInfo = await getRoleCountInfo(role);
+
+    if (roleInfo.isAtLimit) {
+      return {
+        isValid: false,
+        message: `${role} role is at capacity (${roleInfo.activeCount}/${roleInfo.limit})`,
+        messageType: "warning",
+        icon: "⚠️",
+        actionRequired:
+          "Deactivate an existing account or choose a different role",
+        currentCount: roleInfo.activeCount,
+        limit: roleInfo.limit,
+        available: 0,
+      };
+    }
+
+    if (roleInfo.available <= 1) {
+      return {
+        isValid: true,
+        message: `${role} role: ${roleInfo.available} slot remaining (${roleInfo.activeCount}/${roleInfo.limit})`,
+        messageType: "warning",
+        icon: "⚠️",
+        currentCount: roleInfo.activeCount,
+        limit: roleInfo.limit,
+        available: roleInfo.available,
+      };
+    }
+
+    return {
+      isValid: true,
+      message: `${role} role: ${roleInfo.available} slots available (${roleInfo.activeCount}/${roleInfo.limit})`,
+      messageType: "success",
+      icon: "✅",
+      currentCount: roleInfo.activeCount,
+      limit: roleInfo.limit,
+      available: roleInfo.available,
+    };
+  } catch (error) {
+    console.error(`❌ Error getting role selection info:`, error);
+    return {
+      isValid: false,
+      message: "Failed to get role information",
+      messageType: "error",
+      icon: "❌",
+      currentCount: 0,
+      limit: ROLE_LIMITS[role],
+      available: 0,
+    };
+  }
 }
 
 /**
